@@ -186,7 +186,7 @@
     <string name="title_edit_group" msgid="8602752287270586734">"Remove contacts"</string>
     <string name="local_profile_title" msgid="2021416826991393684">"My local profile"</string>
     <string name="external_profile_title" msgid="8034998767621359438">"My <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> profile"</string>
-    <string name="contact_editor_prompt_zero_accounts" msgid="6648376557574360096">"Take a moment to add an account that will back up your contacts to Google."</string>
+    <string name="contact_editor_prompt_zero_accounts" msgid="6648376557574360096">"Take a moment to add an account that will back up your contacts."</string>
     <string name="contact_editor_prompt_one_account" msgid="3087691056345099310">"New contacts will be saved to <xliff:g id="ACCOUNT_NAME">%1$s</xliff:g>."</string>
     <string name="contact_editor_prompt_multiple_accounts" msgid="8565761674283473549">"Choose a default account for new contacts:"</string>
     <string name="contact_editor_title_new_contact" msgid="3042788718983070111">"Create new contact"</string>
