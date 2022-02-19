@@ -46,6 +46,7 @@ import com.android.vcard.VCardEntryCounter;
 import com.android.vcard.VCardParser;
 import com.android.vcard.VCardParser_V21;
 import com.android.vcard.VCardParser_V30;
+import com.android.vcard.VCardParser_V40;
 import com.android.vcard.VCardSourceDetector;
 import com.android.vcard.exception.VCardException;
 import com.android.vcard.exception.VCardNestedException;
@@ -126,9 +127,20 @@ public class NfcImportVCardActivity extends Activity implements ServiceConnectio
                     parser.addInterpreter(detector);
                     parser.parse(is);
                 } catch (VCardVersionException e2) {
-                    FeedbackHelper.sendFeedback(this, TAG, "vcard with unsupported version", e2);
-                    showFailureNotification(R.string.fail_reason_not_supported);
-                    return null;
+                    is.reset();
+                    vcardVersion = ImportVCardActivity.VCARD_VERSION_V40;
+                    parser = new VCardParser_V40();
+                    try {
+                        counter = new VCardEntryCounter();
+                        detector = new VCardSourceDetector();
+                        parser.addInterpreter(counter);
+                        parser.addInterpreter(detector);
+                        parser.parse(is);
+                    } catch (VCardVersionException e3) {
+                        FeedbackHelper.sendFeedback(this, TAG, "vcard with unsupported version", e2);
+                        showFailureNotification(R.string.fail_reason_not_supported);
+                        return null;
+                    }
                 }
             } finally {
                 try {
