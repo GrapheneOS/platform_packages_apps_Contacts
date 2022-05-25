@@ -32,10 +32,6 @@ public class StructuredPostalUtils {
     }
 
     public static Intent getViewPostalAddressDirectionsIntent(String postalAddress) {
-        return new Intent(Intent.ACTION_VIEW, getPostalAddressDirectionsUri(postalAddress));
-    }
-
-    public static Uri getPostalAddressDirectionsUri(String postalAddress) {
-        return Uri.parse("https://maps.google.com/maps?daddr=" + Uri.encode(postalAddress));
+        return new Intent(Intent.ACTION_VIEW, getPostalAddressUri(postalAddress));
     }
 }
