@@ -29,8 +29,6 @@ public class RequestImportVCardPermissionsActivity extends RequestPermissionsAct
             permission.GET_ACCOUNTS,
             permission.READ_CONTACTS,
             permission.WRITE_CONTACTS,
-            // Storage group
-            permission.READ_EXTERNAL_STORAGE,
     };
 
     @Override
