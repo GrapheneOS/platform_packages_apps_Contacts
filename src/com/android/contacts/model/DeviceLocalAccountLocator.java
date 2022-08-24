@@ -41,17 +41,7 @@ public final class DeviceLocalAccountLocator {
 
     /** Returns a list of device local accounts */
     public List<AccountWithDataSet> getDeviceLocalAccounts() {
-        @SuppressWarnings("MissingPermission")
-        final Account[] accounts =
-                mAccountManager.getAccountsByType(GoogleAccountType.ACCOUNT_TYPE);
-
-        if (accounts.length > 0
-                && !mLocalAccount.get(0).hasData(mContext)
-                && !isDeviceLocalDefaultAccount()) {
-            return Collections.emptyList();
-        } else {
-            return mLocalAccount;
-        }
+        return mLocalAccount;
     }
 
     private boolean isDeviceLocalDefaultAccount() {
