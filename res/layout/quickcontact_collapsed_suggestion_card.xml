@@ -59,6 +59,6 @@
                 android:paddingEnd="@dimen/editor_round_button_padding_right"
                 android:paddingTop="@dimen/editor_round_button_padding_top"
                 android:paddingBottom="@dimen/editor_round_button_padding_bottom"/>
-    </LinearLayout>>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>
