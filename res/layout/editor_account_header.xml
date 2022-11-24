@@ -67,7 +67,7 @@
     <ImageView
         android:id="@+id/account_expander_icon"
         android:src="@drawable/quantum_ic_expand_more_vd_theme_24"
-        android:tint="@color/quantum_black_secondary_text"
+        android:tint="@color/text_color_secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|end"
