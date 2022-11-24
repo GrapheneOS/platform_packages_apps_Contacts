@@ -17,7 +17,6 @@
 package com.android.contacts.interactions;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
@@ -36,6 +35,7 @@ import android.provider.ContactsContract.Contacts.Entity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
