@@ -14,16 +14,10 @@
      limitations under the License.
 -->
 <resources>
-    <color name="ic_add_contact_shortcut_background">#F5F5F5</color>
-
-    <!-- 87% black -->
-    <color name="quantum_black_text">#dd000000</color>
-
-    <!-- 54% black -->
-    <color name="quantum_black_secondary_text">#89000000</color>
-
-    <!-- 38% black -->
-    <color name="quantum_black_hint_text">#61000000</color>
+    <color name="fab_icon_color">#F5F5F5</color>
+    <color name="text_color">#dd000000</color>
+    <color name="text_color_secondary">#89000000</color>
+    <color name="hint_text_color">#61000000</color>
 
     <color name="quickcontact_entry_sub_header_text_color">#737373</color>
     <color name="quickcontact_entry_header_text_color">#202020</color>
