@@ -53,7 +53,7 @@
             android:id="@+id/account_header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:colorBackground"
+            android:background="?android:attr/colorBackground"
             android:focusable="true"
             android:minHeight="48dp"
             android:orientation="horizontal"
