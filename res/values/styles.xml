@@ -576,7 +576,7 @@ background and text color. See also android:style/Widget.Holo.TextView.ListSepar
     </style>
 
     <style name="DrawerItemTextInactiveStyle">
-        <item name="android:textColor">@color/quantum_black_text</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -584,7 +584,7 @@ background and text color. See also android:style/Widget.Holo.TextView.ListSepar
         <item name="android:layout_gravity">center_vertical|start</item>
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
-        <item name="android:textColor">@color/quantum_black_secondary_text</item>
+        <item name="android:textColor">@color/text_color_secondary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
