@@ -16,7 +16,6 @@
 
 package com.android.contacts.list;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +28,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import com.android.contacts.R;
 import com.android.contacts.model.AccountTypeManager;
 
@@ -39,7 +40,7 @@ import java.util.List;
  * Shows a list of all available accounts, letting the user select under which account to view
  * contacts.
  */
-public class AccountFilterActivity extends Activity implements AdapterView.OnItemClickListener {
+public class AccountFilterActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static final int SUBACTIVITY_CUSTOMIZE_FILTER = 0;
 
@@ -63,7 +64,7 @@ public class AccountFilterActivity extends Activity implements AdapterView.OnIte
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
