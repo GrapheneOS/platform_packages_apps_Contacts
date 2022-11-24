@@ -41,7 +41,7 @@
         <TextView
             android:id="@+id/display_name"
             android:textSize="16sp"
-            android:textColor="@color/quantum_black_text"
+            android:textColor="@color/text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"/>
@@ -63,7 +63,7 @@
             <TextView
                 android:id="@+id/account_name"
                 android:textSize="13sp"
-                android:textColor="@color/quantum_black_secondary_text"
+                android:textColor="@color/text_color_secondary"
                 android:maxLines="1"
                 android:ellipsize="middle"
                 android:layout_width="wrap_content"
