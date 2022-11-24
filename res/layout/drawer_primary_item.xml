@@ -40,6 +40,6 @@
         android:textSize="@dimen/nav_new_badge_font_size"
         android:textStyle="bold"
         android:textAllCaps="true"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorPrimary"
         android:text="@string/menu_assistant_new_badge"/>
 </LinearLayout>
