@@ -18,7 +18,7 @@
         android:color="@color/contacts_accent_color">
      <item android:id="@android:id/mask">
           <shape android:shape="oval">
-               <solid android:color="@android:color/white" />
+               <solid android:color="?android:attr/colorPrimary" />
           </shape>
      </item>
 </ripple>
