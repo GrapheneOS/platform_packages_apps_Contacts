@@ -19,7 +19,7 @@ package com.android.contacts.datepicker;
 // This is a fork of the standard Android DatePicker that additionally allows toggling the year
 // on/off.
 
-import android.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
