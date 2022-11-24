@@ -277,7 +277,7 @@
         <item name="android:listViewStyle">@style/ListViewStyle</item>
     </style>
 
-    <style name="ContactListFilterTheme" parent="@style/PeopleTheme">
+    <style name="ContactListFilterTheme" parent="@style/PeopleThemeAppCompat">
         <item name="android:listViewStyle">@style/ListViewStyle</item>
         <item name="android:actionButtonStyle">@style/FilterActionButtonStyle</item>
     </style>
