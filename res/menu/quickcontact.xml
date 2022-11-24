@@ -19,10 +19,12 @@
 
     <item
         android:id="@+id/menu_star"
+        android:iconTint="@color/actionbar_icon_color"
         android:showAsAction="always" />
 
     <item
         android:id="@+id/menu_edit"
+        android:iconTint="@color/actionbar_icon_color"
         android:showAsAction="always" />
 
     <item
