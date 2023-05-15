@@ -521,7 +521,11 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 onCreateGroupMenuItemClicked();
                 return true;
             }
-            case ContactsRequest.ACTION_VIEW_GROUP:
+            case ContactsRequest.ACTION_VIEW_GROUP: {
+                mShouldSwitchToGroupView = true;
+                mIsLaunchedIntoGroupView = true;
+                return true;
+            }
             case ContactsRequest.ACTION_EDIT_GROUP: {
                 mShouldSwitchToGroupView = true;
                 return true;
@@ -801,6 +805,10 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             closeDrawer();
             return;
         }
+        if (mIsLaunchedIntoGroupView) {
+            finish();
+            return;
+        }
 
         // Handle the back event in "second level".
         if (isGroupView()) {
@@ -906,12 +914,17 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         }
         outState.putInt(KEY_CONTACTS_VIEW, mCurrentView.ordinal());
         outState.putParcelable(KEY_GROUP_URI, mGroupUri);
+        outState.putBoolean(KEY_LAUNCHED_INTO_GROUP_VIEW, mIsLaunchedIntoGroupView);
     }
+
+    private static final String KEY_LAUNCHED_INTO_GROUP_VIEW = "isLaunchedIntoGroupView";
+    private boolean mIsLaunchedIntoGroupView;
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mGroupUri = savedInstanceState.getParcelable(KEY_GROUP_URI);
+        mIsLaunchedIntoGroupView = savedInstanceState.getBoolean(KEY_LAUNCHED_INTO_GROUP_VIEW, false);
     }
 
     private void onGroupDeleted(final Intent intent) {
