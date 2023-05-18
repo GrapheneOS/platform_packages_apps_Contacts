@@ -16,15 +16,19 @@
 
 package com.android.contacts.list;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.icu.text.MessageFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import androidx.core.view.ViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
@@ -36,6 +40,7 @@ import android.widget.TextView;
 
 import com.android.contacts.R;
 import com.android.contacts.activities.ActionBarAdapter;
+import com.android.contacts.activities.ContactSelectionActivity;
 import com.android.contacts.group.GroupMembersFragment;
 import com.android.contacts.list.MultiSelectEntryContactListAdapter.SelectedContactsListener;
 import com.android.contacts.logging.ListEvent.ActionType;
@@ -51,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeSet;
 
 /**
@@ -446,5 +452,41 @@ public abstract class MultiSelectContactsListFragment<T extends MultiSelectEntry
      */
     public ActionBarAdapter getActionBarAdapter() {
         return null;
+    }
+
+    protected boolean isLaunchedForPickerIntent() {
+        return getArguments().getBoolean(Intent.EXTRA_ALLOW_MULTIPLE, false);
+    }
+
+    protected void maybeUpdateMenuItemSendForPickerIntent(MenuItem item) {
+        if (isLaunchedForPickerIntent()) {
+            updateMenuItemSendForPickerIntent(item);
+        }
+    }
+
+    protected void updateMenuItemSendForPickerIntent(MenuItem item) {
+        ((TextView) item.getActionView()).setText(R.string.multi_picker_select_action);
+        item.setTitle(R.string.multi_picker_select_action);
+    }
+
+    protected void setResultAndFinish(long[] itemIds, Uri baseUri, String itemMimeType) {
+        var activity = (ContactSelectionActivity) getActivity();
+
+        ClipData cd = null;
+        for (long itemId : itemIds) {
+            Uri uri = baseUri.buildUpon().appendPath(Long.toString(itemId)).build();
+            var cdi = new ClipData.Item(uri);
+            if (cd == null) {
+                String[] mimes = { itemMimeType };
+                cd = new ClipData("", mimes, cdi);
+            } else {
+                cd.addItem(cdi);
+            }
+        }
+
+        var i = new Intent();
+        i.setClipData(Objects.requireNonNull(cd));
+
+        activity.returnPickerResult(i);
     }
 }
