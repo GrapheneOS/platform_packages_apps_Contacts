@@ -159,8 +159,6 @@ public class ContactSelectionActivity extends AppCompatContactsActivity implemen
         // Postal address pickers (and legacy pickers) don't support search, so just show
         // "HomeAsUp" button and title.
         mIsSearchSupported = mRequest.getActionCode() != ContactsRequest.ACTION_PICK_POSTAL
-                && mRequest.getActionCode() != ContactsRequest.ACTION_PICK_EMAILS
-                && mRequest.getActionCode() != ContactsRequest.ACTION_PICK_PHONES
                 && !mRequest.isLegacyCompatibilityMode();
         configureSearchMode();
     }
