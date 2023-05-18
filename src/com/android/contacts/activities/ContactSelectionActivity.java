@@ -169,8 +169,6 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
         // "HomeAsUp" button and title.
         mIsSearchSupported =
                 mRequest.getActionCode() != ContactsRequest.ACTION_PICK_POSTAL
-                        && mRequest.getActionCode() != ContactsRequest.ACTION_PICK_EMAILS
-                        && mRequest.getActionCode() != ContactsRequest.ACTION_PICK_PHONES
                         && !mRequest.isLegacyCompatibilityMode();
         configureSearchMode();
     }
