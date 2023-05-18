@@ -52,6 +52,7 @@ import com.android.contacts.list.EmailAddressPickerFragment;
 import com.android.contacts.list.GroupMemberPickerFragment;
 import com.android.contacts.list.JoinContactListFragment;
 import com.android.contacts.list.LegacyPhoneNumberPickerFragment;
+import com.android.contacts.list.MultiContactsPickerFragment;
 import com.android.contacts.list.MultiSelectContactsListFragment;
 import com.android.contacts.list.MultiSelectContactsListFragment.OnCheckBoxListActionListener;
 import com.android.contacts.list.MultiSelectEmailAddressesListFragment;
@@ -221,6 +222,11 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
                     titleResId = R.string.contactPickerActivityTitle;
                     break;
                 }
+            case ContactsRequest.ACTION_PICK_CONTACTS:
+                {
+                    titleResId = R.string.pickerSelectContactsActivityTitle;
+                    break;
+                }
             case ContactsRequest.ACTION_PICK_OR_CREATE_CONTACT:
                 {
                     titleResId = R.string.contactPickerActivityTitle;
@@ -302,6 +308,13 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
                     ContactPickerFragment fragment = new ContactPickerFragment();
                     fragment.setIncludeFavorites(mRequest.shouldIncludeFavorites());
                     fragment.setListType(ListEvent.ListType.PICK_CONTACT);
+                    mListFragment = fragment;
+                    break;
+                }
+
+            case ContactsRequest.ACTION_PICK_CONTACTS:
+                {
+                    var fragment = new MultiContactsPickerFragment();
                     mListFragment = fragment;
                     break;
                 }
@@ -452,6 +465,8 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
         } else if (mListFragment instanceof GroupMemberPickerFragment) {
             ((GroupMemberPickerFragment) mListFragment)
                     .setListener(new GroupMemberPickerListener());
+            getMultiSelectListFragment().setCheckBoxListListener(this);
+        } else if (mListFragment instanceof MultiContactsPickerFragment) {
             getMultiSelectListFragment().setCheckBoxListListener(this);
         } else {
             throw new IllegalStateException("Unsupported list fragment type: " + mListFragment);
