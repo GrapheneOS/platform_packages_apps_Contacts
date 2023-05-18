@@ -40,7 +40,6 @@ public class MultiSelectPhoneNumbersListFragment
     public MultiSelectPhoneNumbersListFragment() {
         setPhotoLoaderEnabled(true);
         setSectionHeaderDisplayEnabled(false);
-        setSearchMode(false);
         setHasOptionsMenu(true);
         setListType(ListEvent.ListType.PICK_PHONE);
     }
