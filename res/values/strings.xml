@@ -1549,4 +1549,6 @@
     <!-- Text of Negative Button in dialog -->
     <string name="no_button">No</string>
 
+    <string name="multi_picker_select_action">Select</string>
+
 </resources>
