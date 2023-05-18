@@ -89,7 +89,11 @@ public class ContactsIntentResolver {
                 request.setActionCode(ContactsRequest.ACTION_PICK_CONTACT);
                 request.setLegacyCompatibilityMode(true);
             } else if (Phone.CONTENT_TYPE.equals(resolvedType)) {
-                request.setActionCode(ContactsRequest.ACTION_PICK_PHONE);
+                if (intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)) {
+                    request.setActionCode(ContactsRequest.ACTION_PICK_PHONES);
+                } else {
+                    request.setActionCode(ContactsRequest.ACTION_PICK_PHONE);
+                }
             } else if (Phones.CONTENT_TYPE.equals(resolvedType)) {
                 request.setActionCode(ContactsRequest.ACTION_PICK_PHONE);
                 request.setLegacyCompatibilityMode(true);
@@ -99,7 +103,11 @@ public class ContactsIntentResolver {
                 request.setActionCode(ContactsRequest.ACTION_PICK_POSTAL);
                 request.setLegacyCompatibilityMode(true);
             } else if (Email.CONTENT_TYPE.equals(resolvedType)) {
-                request.setActionCode(ContactsRequest.ACTION_PICK_EMAIL);
+                if (intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)) {
+                    request.setActionCode(ContactsRequest.ACTION_PICK_EMAILS);
+                } else {
+                    request.setActionCode(ContactsRequest.ACTION_PICK_EMAIL);
+                }
             } else if (Groups.CONTENT_TYPE.equals(resolvedType)) {
                 request.setActionCode(ContactsRequest.ACTION_PICK_GROUP_MEMBERS);
                 request.setAccountWithDataSet(new AccountWithDataSet(
