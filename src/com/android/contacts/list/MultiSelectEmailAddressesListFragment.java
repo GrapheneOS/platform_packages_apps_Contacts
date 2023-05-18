@@ -17,6 +17,7 @@ package com.android.contacts.list;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -68,6 +69,8 @@ public class MultiSelectEmailAddressesListFragment
                 onOptionsItemSelected(item);
             }
         });
+
+        maybeUpdateMenuItemSendForPickerIntent(item);
     }
 
     @Override
@@ -78,6 +81,14 @@ public class MultiSelectEmailAddressesListFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_send) {
+
+            if (isLaunchedForPickerIntent()) {
+                setResultAndFinish(getSelectedContactIdsArray(),
+                        ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
+                return true;
+            }
+
             final String scheme = getActivity().getIntent().getStringExtra(
                     UiIntentActions.SELECTION_SEND_SCHEME);
             final String title = getActivity().getIntent().getStringExtra(
