@@ -62,6 +62,7 @@ public class ContactsRequest {
 
     /** Show all contacts and pick them when clicking */
     public static final int ACTION_PICK_CONTACT = 60;
+    public static final int ACTION_PICK_CONTACTS = 61;
 
     /** Show all contacts as well as the option to create a new one */
     public static final int ACTION_PICK_OR_CREATE_CONTACT = 70;
