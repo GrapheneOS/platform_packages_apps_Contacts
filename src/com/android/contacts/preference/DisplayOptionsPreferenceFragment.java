@@ -25,6 +25,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.icu.text.MessageFormat;
@@ -402,8 +404,12 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             AccountFilterUtil.startAccountFilterActivityForResult(
                     this, REQUEST_CODE_CUSTOM_CONTACTS_FILTER, filter);
         } else if (KEY_DEFAULT_ACCOUNT.equals(prefKey)) {
+            String packageName = getSetDefaultAccountActivityPackage();
             Intent intent = new Intent(Settings.ACTION_SET_DEFAULT_ACCOUNT);
-            startActivityForResult(intent, REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2);
+            if (packageName != null) {
+                intent.setPackage(packageName);
+                startActivityForResult(intent, REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2);
+            }
         }
         return false;
     }
@@ -415,7 +421,8 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             AccountFilterUtil.handleAccountFilterResult(
                     ContactListFilterController.getInstance(getContext()), resultCode, data);
             setCustomContactsFilterSummary();
-        } else if (requestCode == REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2) {
+        } else if (requestCode == REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2
+                && resultCode == Activity.RESULT_OK) {
             final Preference defaultAccountPreference = findPreference(KEY_DEFAULT_ACCOUNT);
             if (defaultAccountPreference != null) {
                 defaultAccountPreference.setSummary(getDefaultAccountSummary());
@@ -455,6 +462,22 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
         }
     }
 
+    private String getSetDefaultAccountActivityPackage() {
+        // Only preloaded Contacts App has the permission to call setDefaultAccount.
+        Intent intent = new Intent(Settings.ACTION_SET_DEFAULT_ACCOUNT);
+        PackageManager packageManager = getContext().getPackageManager();
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            if (packageManager.checkPermission(
+                    com.android.contacts.SystemApis.SET_DEFAULT_ACCOUNT_FOR_CONTACTS,
+                    packageName)
+                    == PackageManager.PERMISSION_GRANTED) {
+                return packageName;
+            }
+        }
+        return null;
+    }
     private class SaveServiceResultListener extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
