@@ -165,7 +165,7 @@
     <string name="delete_group_dialog_message" msgid="754082019928025404">"\"<xliff:g id="GROUP_LABEL">%1$s</xliff:g>\" ಲೇಬಲ್ ಅಳಿಸುವುದೇ? (ಸಂಪರ್ಕಗಳು ತಾವಾಗಿ ಅಳಿಸಿ ಹೋಗುವುದಿಲ್ಲ.)"</string>
     <string name="toast_join_with_empty_contact" msgid="3886468280665325350">"ಮತ್ತೊಬ್ಬರೊಂದಿಗೆ ಲಿಂಕ್ ಮಾಡುವ ಮೊದಲು ಸಂಪರ್ಕದ ಹೆಸರನ್ನು ಟೈಪ್‌ ಮಾಡಿ."</string>
     <string name="copy_text" msgid="6835250673373028909">"ಕ್ಲಿಪ್‌ಬೋರ್ಡ್‌ಗೆ ನಕಲಿಸಿ"</string>
-    <string name="set_default" msgid="3704074175618702225">"ಡೀಫಾಲ್ಟ್ ಹೊಂದಿಸಿ"</string>
+    <string name="set_default" msgid="3704074175618702225">"ಡೀಫಾಲ್ಟ್ ಸೆಟ್ ಮಾಡಿ"</string>
     <string name="clear_default" msgid="2055883863621491533">"ಡಿಫಾಲ್ಟ್‌ ತೆರವುಗೊಳಿಸಿ"</string>
     <string name="toast_text_copied" msgid="845906090076228771">"ಪಠ್ಯವನ್ನು ನಕಲಿಸಲಾಗಿದೆ"</string>
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"ಬದಲಾವಣೆಗಳನ್ನು ತ್ಯಜಿಸುವುದೇ?"</string>
@@ -426,7 +426,7 @@
     <string name="settings_accounts" msgid="119582613811929994">"ಖಾತೆಗಳು"</string>
     <string name="default_editor_account" msgid="4810392921888877149">"ಹೊಸ ಸಂಪರ್ಕಗಳಿಗೆ ಡಿಫಾಲ್ಟ್‌ ಖಾತೆ"</string>
     <string name="settings_my_info_title" msgid="6236848378653551341">"ನನ್ನ ಮಾಹಿತಿ"</string>
-    <string name="set_up_profile" msgid="3554999219868611431">"ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಹೊಂದಿಸಿ"</string>
+    <string name="set_up_profile" msgid="3554999219868611431">"ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಸೆಟಪ್ ಮಾಡಿ"</string>
     <string name="setting_about" msgid="2941859292287597555">"ಸಂಪರ್ಕಗಳ ಕುರಿತು"</string>
     <string name="share_favorite_contacts" msgid="8208444020721686178">"ಮೆಚ್ಚಿನ ಸಂಪರ್ಕಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ"</string>
     <string name="share_contacts" msgid="2377773269568609796">"ಎಲ್ಲ ಸಂಪರ್ಕಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ"</string>
