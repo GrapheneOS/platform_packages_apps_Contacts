@@ -478,7 +478,7 @@
     <string name="sim_import_title" msgid="8202961146093040684">"Увоз од SIM"</string>
     <string name="sim_import_cancel_content_description" msgid="4746065462808862682">"Откажи"</string>
     <string name="auto_sync_off" msgid="7039314601316227882">"Автоматското синхронизирање е исклучено. Допрете за да го вклучите."</string>
-    <string name="dismiss_sync_alert" msgid="4057176963960104786">"Отфрлете"</string>
+    <string name="dismiss_sync_alert" msgid="4057176963960104786">"Отфрли"</string>
     <string name="account_sync_off" msgid="6187683798342006021">"Автоматското синхронизирање е исклучено. Допрете за да го вклучите."</string>
     <string name="turn_auto_sync_on_dialog_title" msgid="3812155064863594938">"Да се вклучи автоматско синхронизирање?"</string>
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Промените што ги правите на сите апликации и сметки, не само на „Контакти на Google“, ќе се ажурираат и на интернет и на вашите уреди."</string>
