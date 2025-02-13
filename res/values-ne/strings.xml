@@ -17,7 +17,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"कन्ट्याक्टहरू"</string>
-    <string name="contactsList" msgid="4456188358262700898">"सम्पर्क"</string>
+    <string name="contactsList" msgid="4456188358262700898">"कन्ट्याक्टहरू"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"सम्पर्क थप्नुहोस्"</string>
     <string name="shortcutContact" msgid="8009736387364461511">"ठेगाना"</string>
     <string name="shortcutDialContact" msgid="155367248069127153">"सीधा डायल गर्नुहोस्"</string>
@@ -291,7 +291,7 @@
     <string name="list_filter_phones" msgid="6839133198968393843">"फोन नम्बर भएका सबै कन्ट्याक्टहरू"</string>
     <string name="list_filter_phones_work" msgid="5583425697781385616">"कार्य प्रोफाइलका कन्ट्याक्टहरू"</string>
     <string name="view_updates_from_group" msgid="6233444629074835594">"अपडेटहरू हेर्नुहोस्"</string>
-    <string name="account_phone" msgid="8044426231251817556">"यन्त्र"</string>
+    <string name="account_phone" msgid="8044426231251817556">"डिभाइस"</string>
     <string name="account_sim" msgid="3200457113308694663">"SIM"</string>
     <string name="nameLabelsGroup" msgid="513809148312046843">"नाम"</string>
     <string name="nicknameLabelsGroup" msgid="794390116782033956">"उपनाम"</string>
