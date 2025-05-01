@@ -31,21 +31,21 @@ import com.android.contacts.model.account.AccountType;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
-/**
- * Shared static contact utility methods.
- */
+/** Shared static contact utility methods. */
 public class MoreContactUtils {
 
     private static final String WAIT_SYMBOL_AS_STRING = String.valueOf(PhoneNumberUtils.WAIT);
 
     /**
      * Returns true if two data with mimetypes which represent values in contact entries are
-     * considered equal for collapsing in the GUI. For caller-id, use
-     * {@link android.telephony.PhoneNumberUtils#compare(android.content.Context, String, String)}
-     * instead
+     * considered equal for collapsing in the GUI. For caller-id, use {@link
+     * android.telephony.PhoneNumberUtils#compare(android.content.Context, String, String)} instead
      */
-    public static boolean shouldCollapse(CharSequence mimetype1, CharSequence data1,
-              CharSequence mimetype2, CharSequence data2) {
+    public static boolean shouldCollapse(
+            CharSequence mimetype1,
+            CharSequence data1,
+            CharSequence mimetype2,
+            CharSequence data2) {
         // different mimetypes? don't collapse
         if (!TextUtils.equals(mimetype1, mimetype2)) return false;
 
@@ -57,8 +57,8 @@ public class MoreContactUtils {
 
         // if this is not about phone numbers, we know this is not a match (of course, some
         // mimetypes could have more sophisticated matching is the future, e.g. addresses)
-        if (!TextUtils.equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                mimetype1)) {
+        if (!TextUtils.equals(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE, mimetype1)) {
             return false;
         }
 
@@ -165,18 +165,18 @@ public class MoreContactUtils {
                 case SHORT_NSN_MATCH:
                     return false;
                 default:
-                    throw new IllegalStateException("Unknown result value from phone number " +
-                            "library");
+                    throw new IllegalStateException(
+                            "Unknown result value from phone number " + "library");
             }
         }
         return true;
     }
 
     /**
-     * Returns the {@link android.graphics.Rect} with left, top, right, and bottom coordinates
-     * that are equivalent to the given {@link android.view.View}'s bounds. This is equivalent to
-     * how the target {@link android.graphics.Rect} is calculated in
-     * {@link android.provider.ContactsContract.QuickContact#showQuickContact}.
+     * Returns the {@link android.graphics.Rect} with left, top, right, and bottom coordinates that
+     * are equivalent to the given {@link android.view.View}'s bounds. This is equivalent to how the
+     * target {@link android.graphics.Rect} is calculated in {@link
+     * android.provider.ContactsContract.QuickContact#showQuickContact}.
      */
     public static Rect getTargetRectFromView(View view) {
         final int[] pos = new int[2];
@@ -191,8 +191,8 @@ public class MoreContactUtils {
     }
 
     /**
-     * Returns a header view based on the R.layout.list_separator, where the
-     * containing {@link android.widget.TextView} is set using the given textResourceId.
+     * Returns a header view based on the R.layout.list_separator, where the containing {@link
+     * android.widget.TextView} is set using the given textResourceId.
      */
     public static TextView createHeaderView(Context context, int textResourceId) {
         final TextView textView = (TextView) View.inflate(context, R.layout.list_separator, null);
@@ -201,29 +201,37 @@ public class MoreContactUtils {
     }
 
     /**
-     * Set the top padding on the header view dynamically, based on whether the header is in
-     * the first row or not.
+     * Set the top padding on the header view dynamically, based on whether the header is in the
+     * first row or not.
      */
-    public static void setHeaderViewBottomPadding(Context context, TextView textView,
-            boolean isFirstRow) {
+    public static void setHeaderViewBottomPadding(
+            Context context, TextView textView, boolean isFirstRow) {
         final int topPadding;
         if (isFirstRow) {
-            topPadding = (int) context.getResources().getDimension(
-                    R.dimen.frequently_contacted_title_top_margin_when_first_row);
+            topPadding =
+                    (int)
+                            context.getResources()
+                                    .getDimension(
+                                            R.dimen
+                                                    .frequently_contacted_title_top_margin_when_first_row);
         } else {
-            topPadding = (int) context.getResources().getDimension(
-                    R.dimen.frequently_contacted_title_top_margin);
+            topPadding =
+                    (int)
+                            context.getResources()
+                                    .getDimension(R.dimen.frequently_contacted_title_top_margin);
         }
-        textView.setPaddingRelative(textView.getPaddingStart(), topPadding,
-                textView.getPaddingEnd(), textView.getPaddingBottom());
+        textView.setPaddingRelative(
+                textView.getPaddingStart(),
+                topPadding,
+                textView.getPaddingEnd(),
+                textView.getPaddingBottom());
     }
-
 
     /**
      * Returns the intent to launch for the given invitable account type and contact lookup URI.
-     * This will return null if the account type is not invitable (i.e. there is no
-     * {@link AccountType#getInviteContactActivityClassName()} or
-     * {@link AccountType#syncAdapterPackageName}).
+     * This will return null if the account type is not invitable (i.e. there is no {@link
+     * AccountType#getInviteContactActivityClassName()} or {@link
+     * AccountType#syncAdapterPackageName}).
      */
     public static Intent getInvitableIntent(AccountType accountType, Uri lookupUri) {
         String syncAdapterPackageName = accountType.syncAdapterPackageName;

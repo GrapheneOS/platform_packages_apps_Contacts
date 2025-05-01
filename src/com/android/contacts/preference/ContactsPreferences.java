@@ -36,33 +36,23 @@ import com.android.contacts.model.account.AccountWithDataSet;
 
 import java.util.List;
 
-/**
- * Manages user preferences for contacts.
- */
+/** Manages user preferences for contacts. */
 public class ContactsPreferences implements OnSharedPreferenceChangeListener {
 
-    /**
-     * The value for the DISPLAY_ORDER key to show the given name first.
-     */
+    /** The value for the DISPLAY_ORDER key to show the given name first. */
     public static final int DISPLAY_ORDER_PRIMARY = 1;
 
-    /**
-     * The value for the DISPLAY_ORDER key to show the family name first.
-     */
+    /** The value for the DISPLAY_ORDER key to show the family name first. */
     public static final int DISPLAY_ORDER_ALTERNATIVE = 2;
 
     public static final String DISPLAY_ORDER_KEY = "android.contacts.DISPLAY_ORDER";
 
-    /**
-     * The value for the SORT_ORDER key corresponding to sort by given name first.
-     */
+    /** The value for the SORT_ORDER key corresponding to sort by given name first. */
     public static final int SORT_ORDER_PRIMARY = 1;
 
     public static final String SORT_ORDER_KEY = "android.contacts.SORT_ORDER";
 
-    /**
-     * The value for the SORT_ORDER key corresponding to sort by family name first.
-     */
+    /** The value for the SORT_ORDER key corresponding to sort by family name first. */
     public static final int SORT_ORDER_ALTERNATIVE = 2;
 
     public static final String PREF_DISPLAY_ONLY_PHONES = "only_phones";
@@ -90,7 +80,8 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
     private String mDefaultAccountKey;
 
     public ContactsPreferences(Context context) {
-        this(context,
+        this(
+                context,
                 context.getResources().getBoolean(R.bool.config_default_account_user_changeable));
     }
 
@@ -102,10 +93,10 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
         mBackupManager = new BackupManager(mContext);
 
         mHandler = new Handler(Looper.getMainLooper());
-        mPreferences = mContext.getSharedPreferences(context.getPackageName(),
-                Context.MODE_PRIVATE);
-        mDefaultAccountKey = mContext.getResources().getString(
-                R.string.contact_editor_default_account_key);
+        mPreferences =
+                mContext.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        mDefaultAccountKey =
+                mContext.getResources().getString(R.string.contact_editor_default_account_key);
         maybeMigrateSystemSettings();
     }
 
@@ -178,8 +169,8 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
     }
 
     public boolean isPhoneticNameDisplayPreferenceChangeable() {
-        return mContext.getResources().getBoolean(
-                R.bool.config_phonetic_name_display_user_changeable);
+        return mContext.getResources()
+                .getBoolean(R.bool.config_phonetic_name_display_user_changeable);
     }
 
     public void setPhoneticNameDisplayPreference(int phoneticNameDisplayPreference) {
@@ -195,8 +186,9 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
             return getDefaultPhoneticNameDisplayPreference();
         }
         if (mPhoneticNameDisplayPreference == PREFERENCE_UNASSIGNED) {
-            mPhoneticNameDisplayPreference = mPreferences.getInt(PHONETIC_NAME_DISPLAY_KEY,
-                    getDefaultPhoneticNameDisplayPreference());
+            mPhoneticNameDisplayPreference =
+                    mPreferences.getInt(
+                            PHONETIC_NAME_DISPLAY_KEY, getDefaultPhoneticNameDisplayPreference());
         }
         return mPhoneticNameDisplayPreference;
     }
@@ -214,8 +206,7 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
             return mDefaultAccount;
         }
         if (mDefaultAccount == null) {
-            final String accountString = mPreferences
-                    .getString(mDefaultAccountKey, null);
+            final String accountString = mPreferences.getString(mDefaultAccountKey, null);
             if (!TextUtils.isEmpty(accountString)) {
                 mDefaultAccount = AccountWithDataSet.unstringify(accountString);
             }
@@ -230,8 +221,7 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
 
     public void setDefaultAccount(@NonNull AccountWithDataSet accountWithDataSet) {
         if (accountWithDataSet == null) {
-            throw new IllegalArgumentException(
-                    "argument should not be null");
+            throw new IllegalArgumentException("argument should not be null");
         }
         mDefaultAccount = accountWithDataSet;
         mPreferences.edit().putString(mDefaultAccountKey, accountWithDataSet.stringify()).commit();
@@ -243,17 +233,15 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
 
     /**
      * @return false if there is only one writable account or no requirement to return true is met.
-     *         true if the contact editor should show the "accounts changed" notification, that is:
-     *              - If it's the first launch.
-     *              - Or, if the default account has been removed.
-     *              (And some extra soundness check)
-     *
-     * Note if this method returns {@code false}, the caller can safely assume that
-     * {@link #getDefaultAccount} will return a valid account.  (Either an account which still
-     * exists, or {@code null} which should be interpreted as "local only".)
+     *     true if the contact editor should show the "accounts changed" notification, that is: - If
+     *     it's the first launch. - Or, if the default account has been removed. (And some extra
+     *     soundness check)
+     *     <p>Note if this method returns {@code false}, the caller can safely assume that {@link
+     *     #getDefaultAccount} will return a valid account. (Either an account which still exists,
+     *     or {@code null} which should be interpreted as "local only".)
      */
-    public boolean shouldShowAccountChangedNotification(List<AccountWithDataSet>
-            currentWritableAccounts) {
+    public boolean shouldShowAccountChangedNotification(
+            List<AccountWithDataSet> currentWritableAccounts) {
         final AccountWithDataSet defaultAccount = getDefaultAccount();
 
         AccountWithDataSet localAccount = AccountWithDataSet.getLocalAccount(mContext);
@@ -308,17 +296,18 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, final String key) {
         // This notification is not sent on the Ui thread. Use the previously created Handler
         // to switch to the Ui thread
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshValue(key);
-            }
-        });
+        mHandler.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshValue(key);
+                    }
+                });
     }
 
     /**
-     * Forces the value for the given key to be looked up from shared preferences and notifies
-     * the registered {@link ChangeListener}
+     * Forces the value for the given key to be looked up from shared preferences and notifies the
+     * registered {@link ChangeListener}
      *
      * @param key the {@link SharedPreferences} key to look up
      */
@@ -344,18 +333,17 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
     }
 
     /**
-     * If there are currently no preferences (which means this is the first time we are run),
-     * For sort order and display order, check to see if there are any preferences stored in
-     * system settings (pre-L) which can be copied into our own SharedPreferences.
-     * For default account setting, check to see if there are any preferences stored in the previous
-     * SharedPreferences which can be copied into current SharedPreferences.
+     * If there are currently no preferences (which means this is the first time we are run), For
+     * sort order and display order, check to see if there are any preferences stored in system
+     * settings (pre-L) which can be copied into our own SharedPreferences. For default account
+     * setting, check to see if there are any preferences stored in the previous SharedPreferences
+     * which can be copied into current SharedPreferences.
      */
     private void maybeMigrateSystemSettings() {
         if (!mPreferences.contains(SORT_ORDER_KEY)) {
             int sortOrder = getDefaultSortOrder();
             try {
-                 sortOrder = Settings.System.getInt(mContext.getContentResolver(),
-                        SORT_ORDER_KEY);
+                sortOrder = Settings.System.getInt(mContext.getContentResolver(), SORT_ORDER_KEY);
             } catch (SettingNotFoundException e) {
             }
             setSortOrder(sortOrder);
@@ -364,8 +352,8 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
         if (!mPreferences.contains(DISPLAY_ORDER_KEY)) {
             int displayOrder = getDefaultDisplayOrder();
             try {
-                displayOrder = Settings.System.getInt(mContext.getContentResolver(),
-                        DISPLAY_ORDER_KEY);
+                displayOrder =
+                        Settings.System.getInt(mContext.getContentResolver(), DISPLAY_ORDER_KEY);
             } catch (SettingNotFoundException e) {
             }
             setDisplayOrder(displayOrder);
@@ -374,8 +362,9 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
         if (!mPreferences.contains(PHONETIC_NAME_DISPLAY_KEY)) {
             int phoneticNameFieldsDisplay = getDefaultPhoneticNameDisplayPreference();
             try {
-                phoneticNameFieldsDisplay = Settings.System.getInt(mContext.getContentResolver(),
-                        PHONETIC_NAME_DISPLAY_KEY);
+                phoneticNameFieldsDisplay =
+                        Settings.System.getInt(
+                                mContext.getContentResolver(), PHONETIC_NAME_DISPLAY_KEY);
             } catch (SettingNotFoundException e) {
             }
             setPhoneticNameDisplayPreference(phoneticNameFieldsDisplay);
@@ -386,11 +375,10 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
                     PreferenceManager.getDefaultSharedPreferences(mContext);
             final String defaultAccount = previousPrefs.getString(mDefaultAccountKey, null);
             if (!TextUtils.isEmpty(defaultAccount)) {
-                final AccountWithDataSet accountWithDataSet = AccountWithDataSet.unstringify(
-                        defaultAccount);
+                final AccountWithDataSet accountWithDataSet =
+                        AccountWithDataSet.unstringify(defaultAccount);
                 setDefaultAccount(accountWithDataSet);
             }
         }
     }
-
 }

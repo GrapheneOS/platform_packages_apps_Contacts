@@ -32,9 +32,8 @@ import com.android.contacts.util.SharedPreferenceUtil;
 /**
  * Contains utility methods that can be invoked directly from adb using RunMethodInstrumentation.
  *
- * Example usage:
- * adb shell am instrument -e method addTestAccount -e accountName fooAccount\
- *   -w com.android.contacts.tests/com.android.contacts.RunMethodInstrumentation
+ * <p>Example usage: adb shell am instrument -e method addTestAccount -e accountName fooAccount\ -w
+ * com.android.contacts.tests/com.android.contacts.RunMethodInstrumentation
  */
 public class AdbHelpers {
     private static final String TAG = "AdbHelpers";
@@ -57,8 +56,8 @@ public class AdbHelpers {
             return;
         }
 
-        final AccountWithDataSet account = new AccountWithDataSet(accountName,
-                AccountsTestHelper.TEST_ACCOUNT_TYPE, null);
+        final AccountWithDataSet account =
+                new AccountWithDataSet(accountName, AccountsTestHelper.TEST_ACCOUNT_TYPE, null);
         new AccountsTestHelper(context).removeTestAccount(account);
     }
 
@@ -71,8 +70,8 @@ public class AdbHelpers {
             return;
         }
 
-        new ContactsPreferences(context).setDefaultAccount(
-                new AccountWithDataSet(name, type, null));
+        new ContactsPreferences(context)
+                .setDefaultAccount(new AccountWithDataSet(name, type, null));
     }
 
     public static void clearDefaultAccount(Context context) {
@@ -85,8 +84,13 @@ public class AdbHelpers {
 
     public static void dumpPreferences(Context context) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "preferences=" + getAppContext().getSharedPreferences(
-                    getAppContext().getPackageName(), Context.MODE_PRIVATE).getAll());
+            Log.d(
+                    TAG,
+                    "preferences="
+                            + getAppContext()
+                                    .getSharedPreferences(
+                                            getAppContext().getPackageName(), Context.MODE_PRIVATE)
+                                    .getAll());
         }
     }
 
