@@ -39,6 +39,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.android.contacts.AppCompatContactsActivity;
+import com.android.contacts.MoreContactUtils;
+import com.android.contacts.MoreContactUtils.EdgeToEdgeInsetHandler;
 import com.android.contacts.R;
 import com.android.contacts.editor.EditorIntents;
 import com.android.contacts.list.ContactEntryListFragment;
@@ -149,6 +151,8 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
 
     private void prepareSearchViewAndActionBar(Bundle savedState) {
         mToolbar = getView(R.id.toolbar);
+        MoreContactUtils.setupEdgeToEdge(
+                this, new EdgeToEdgeInsetHandler(findViewById(R.id.toolbar_frame)));
         setSupportActionBar(mToolbar);
 
         // Add a shadow under the toolbar.

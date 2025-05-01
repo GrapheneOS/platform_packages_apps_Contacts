@@ -39,7 +39,6 @@ import android.provider.ContactsContract.Contacts;
 import android.test.AndroidTestCase;
 import android.test.mock.MockContentResolver;
 
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 
 import com.android.contacts.test.mocks.MockContentProvider;
@@ -56,7 +55,6 @@ import java.util.Collections;
 import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.N_MR1)
-@SdkSuppress(minSdkVersion = Build.VERSION_CODES.N_MR1)
 @SmallTest
 public class DynamicShortcutsTests extends AndroidTestCase {
 

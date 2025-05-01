@@ -16,6 +16,7 @@
 
 package com.android.contacts;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -24,7 +25,13 @@ import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.android.contacts.model.account.AccountType;
 
@@ -247,5 +254,67 @@ public class MoreContactUtils {
         // Data is the lookup URI.
         intent.setData(lookupUri);
         return intent;
+    }
+
+    /**
+     * Enable new edge to edge feature.
+     *
+     * @param activity the Activity need to setup the edge to edge feature.
+     */
+    public static void setupEdgeToEdge(@NonNull Activity activity, EdgeToEdgeInsetHandler handler) {
+        ViewCompat.setOnApplyWindowInsetsListener(
+                activity.findViewById(android.R.id.content),
+                (v, windowInsets) -> {
+                    final Insets insets =
+                            windowInsets.getInsets(
+                                    WindowInsetsCompat.Type.systemBars()
+                                            | WindowInsetsCompat.Type.ime()
+                                            | WindowInsetsCompat.Type.displayCutout());
+
+                    // Apply the insets paddings to the view.
+                    v.setPadding(
+                            insets.left,
+                            handler == null ? insets.top : v.getPaddingTop(),
+                            insets.right,
+                            insets.bottom);
+
+                    if (handler != null) {
+                        handler.applyTopInset(insets.top);
+                    }
+
+                    // Return CONSUMED if you don't want the window insets to keep being
+                    // passed down to descendant views.
+                    return WindowInsetsCompat.CONSUMED;
+                });
+    }
+
+    /** Handles setting the insets on a {@link View}. */
+    public static class EdgeToEdgeInsetHandler {
+
+        private final View mView;
+
+        private int mOriginalHeight = -1;
+        private int mOriginalPaddingTop = -1;
+
+        public EdgeToEdgeInsetHandler(View view) {
+            mView = view;
+        }
+
+        public void applyTopInset(int top) {
+            ViewGroup.LayoutParams layoutParams = mView.getLayoutParams();
+            if (mOriginalHeight == -1) {
+                mOriginalHeight = layoutParams.height;
+            }
+            if (mOriginalPaddingTop == -1) {
+                mOriginalPaddingTop = mView.getPaddingTop();
+            }
+            layoutParams.height = mOriginalHeight + top;
+            mView.setLayoutParams(layoutParams);
+            mView.setPadding(
+                    mView.getPaddingLeft(),
+                    mOriginalPaddingTop + top,
+                    mView.getPaddingRight(),
+                    mView.getPaddingBottom());
+        }
     }
 }

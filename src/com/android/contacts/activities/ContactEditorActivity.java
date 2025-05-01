@@ -29,6 +29,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.DynamicShortcuts;
+import com.android.contacts.MoreContactUtils;
+import com.android.contacts.MoreContactUtils.EdgeToEdgeInsetHandler;
 import com.android.contacts.R;
 import com.android.contacts.detail.PhotoSelectionHandler;
 import com.android.contacts.editor.ContactEditorFragment;
@@ -310,6 +312,7 @@ public class ContactEditorActivity extends AppCompatContactsActivity
 
         setContentView(R.layout.contact_editor_activity);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        MoreContactUtils.setupEdgeToEdge(this, new EdgeToEdgeInsetHandler(mToolbar));
         setSupportActionBar(mToolbar);
         if (Intent.ACTION_EDIT.equals(action)) {
             mActionBarTitleResId = R.string.contact_editor_title_existing_contact;

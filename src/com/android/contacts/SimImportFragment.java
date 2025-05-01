@@ -39,6 +39,8 @@ import androidx.collection.ArrayMap;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 
+import com.android.contacts.MoreContactUtils;
+import com.android.contacts.MoreContactUtils.EdgeToEdgeInsetHandler;
 import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.database.SimContactDao;
 import com.android.contacts.editor.AccountHeaderPresenter;
@@ -163,6 +165,7 @@ public class SimImportFragment extends Fragment
                 });
 
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        MoreContactUtils.setupEdgeToEdge(getActivity(), new EdgeToEdgeInsetHandler(mToolbar));
         mToolbar.setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override

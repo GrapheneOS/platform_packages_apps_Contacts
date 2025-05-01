@@ -35,6 +35,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 
+import com.android.contacts.MoreContactUtils;
 import com.android.contacts.R;
 import com.android.contacts.editor.SelectAccountDialogFragment;
 import com.android.contacts.interactions.ImportDialogFragment;
@@ -66,6 +67,8 @@ public final class ContactsPreferenceActivity extends PreferenceActivity
 
         super.onCreate(savedInstanceState);
         mCompatDelegate.onCreate(savedInstanceState);
+
+        MoreContactUtils.setupEdgeToEdge(this, null);
 
         final ActionBar actionBar = mCompatDelegate.getSupportActionBar();
         if (actionBar != null) {

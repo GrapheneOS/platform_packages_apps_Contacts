@@ -50,7 +50,6 @@ import android.provider.SimPhonebookContract.SimRecords;
 import android.test.mock.MockContentResolver;
 import android.test.mock.MockContext;
 
-import androidx.annotation.RequiresApi;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
@@ -99,13 +98,6 @@ public class SimContactDaoTests {
     // boundary cases
     public static final int MAX_SIM_CONTACTS = 600;
 
-    // On pre-M addAccountExplicitly (which we call via AccountsTestHelper) causes a
-    // SecurityException to be thrown unless we add AUTHENTICATE_ACCOUNTS permission to the app
-    // manifest. Instead of adding the extra permission just for tests we'll just only run them
-    // on M or newer
-    @SdkSuppress(minSdkVersion = VERSION_CODES.M)
-    // Lollipop MR1 is required for removeAccountExplicitly
-    @RequiresApi(api = VERSION_CODES.LOLLIPOP_MR1)
     @LargeTest
     @RunWith(AndroidJUnit4.class)
     public static class ImportIntegrationTest {
@@ -293,9 +285,6 @@ public class SimContactDaoTests {
      * <p>These are integration tests that query CP2 so that the SQL will be validated in addition
      * to the detection algorithm
      */
-    @SdkSuppress(minSdkVersion = VERSION_CODES.M)
-    // Lollipop MR1 is required for removeAccountExplicitly
-    @RequiresApi(api = VERSION_CODES.LOLLIPOP_MR1)
     @LargeTest
     @RunWith(AndroidJUnit4.class)
     public static class FindAccountsIntegrationTests {
