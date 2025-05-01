@@ -69,14 +69,15 @@ public class DefaultAccountPreference extends DialogPreference {
 
     @Override
     protected boolean shouldPersist() {
-        return false;   // This preference takes care of its own storage
+        return false; // This preference takes care of its own storage
     }
 
     @Override
     public CharSequence getSummary() {
         final AccountWithDataSet defaultAccount = mPreferences.getDefaultAccount();
-        if (defaultAccount == null || mAccounts == null ||
-                !AccountInfo.contains(mAccounts, defaultAccount)) {
+        if (defaultAccount == null
+                || mAccounts == null
+                || !AccountInfo.contains(mAccounts, defaultAccount)) {
             return null;
         } else {
             return AccountInfo.getAccount(mAccounts, defaultAccount).getNameLabel();
@@ -89,12 +90,14 @@ public class DefaultAccountPreference extends DialogPreference {
         // UX recommendation is not to show buttons on such lists.
         builder.setNegativeButton(null, null);
         builder.setPositiveButton(null, null);
-        builder.setAdapter(mListAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mChosenIndex = which;
-            }
-        });
+        builder.setAdapter(
+                mListAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mChosenIndex = which;
+                    }
+                });
     }
 
     @Override

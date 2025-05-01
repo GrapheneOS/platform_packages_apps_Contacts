@@ -42,12 +42,11 @@ import com.android.contacts.util.ImplicitIntentsUtil;
 import java.util.List;
 
 /**
- * This activity can be shown to the user when creating a new contact to inform the user about
- * which account the contact will be saved in. There is also an option to add an account at
- * this time. The {@link Intent} in the activity result will contain an extra
- * {@link #Intents.Insert.ACCOUNT} that contains the {@link AccountWithDataSet} to create
- * the new contact in. If the activity result doesn't contain intent data, then there is no
- * account for this contact.
+ * This activity can be shown to the user when creating a new contact to inform the user about which
+ * account the contact will be saved in. There is also an option to add an account at this time. The
+ * {@link Intent} in the activity result will contain an extra {@link #Intents.Insert.ACCOUNT} that
+ * contains the {@link AccountWithDataSet} to create the new contact in. If the activity result
+ * doesn't contain intent data, then there is no account for this contact.
  */
 public class ContactEditorAccountsChangedActivity extends Activity
         implements AccountsLoader.AccountsListener {
@@ -57,23 +56,25 @@ public class ContactEditorAccountsChangedActivity extends Activity
     private ContactEditorUtils mEditorUtils;
     private AlertDialog mDialog;
 
-    private final OnItemClickListener mAccountListItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (mAccountListAdapter == null) {
-                return;
-            }
-            saveAccountAndReturnResult(mAccountListAdapter.getItem(position));
-        }
-    };
+    private final OnItemClickListener mAccountListItemClickListener =
+            new OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (mAccountListAdapter == null) {
+                        return;
+                    }
+                    saveAccountAndReturnResult(mAccountListAdapter.getItem(position));
+                }
+            };
 
-    private final OnClickListener mAddAccountClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            final Intent intent = ImplicitIntentsUtil.getIntentForAddingGoogleAccount();
-            startActivityForResult(intent, SUBACTIVITY_ADD_NEW_ACCOUNT);
-        }
-    };
+    private final OnClickListener mAddAccountClickListener =
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Intent intent = ImplicitIntentsUtil.getIntentForAddingGoogleAccount();
+                    startActivityForResult(intent, SUBACTIVITY_ADD_NEW_ACCOUNT);
+                }
+            };
 
     @Override
     protected void onResume() {
@@ -127,8 +128,11 @@ public class ContactEditorAccountsChangedActivity extends Activity
         if (numAccounts >= 2) {
             // When the user has 2+ writable accounts, show a list of accounts so the user can pick
             // which account to create a contact in.
-            view = View.inflate(this,
-                    R.layout.contact_editor_accounts_changed_activity_with_picker, null);
+            view =
+                    View.inflate(
+                            this,
+                            R.layout.contact_editor_accounts_changed_activity_with_picker,
+                            null);
 
             final TextView textView = (TextView) view.findViewById(R.id.text);
             textView.setText(getString(R.string.contact_editor_prompt_multiple_accounts));
@@ -145,16 +149,21 @@ public class ContactEditorAccountsChangedActivity extends Activity
                 && !accounts.get(0).getAccount().equals(AccountWithDataSet.getLocalAccount(this))) {
             // If the user has 1 writable account we will just show the user a message with 2
             // possible action buttons.
-            view = View.inflate(this,
-                    R.layout.contact_editor_accounts_changed_activity_with_text, null);
+            view =
+                    View.inflate(
+                            this,
+                            R.layout.contact_editor_accounts_changed_activity_with_text,
+                            null);
 
             final TextView textView = (TextView) view.findViewById(R.id.text);
             final Button leftButton = (Button) view.findViewById(R.id.left_button);
             final Button rightButton = (Button) view.findViewById(R.id.right_button);
 
             final AccountInfo accountInfo = accounts.get(0);
-            textView.setText(getString(R.string.contact_editor_prompt_one_account,
-                    accountInfo.getNameLabel()));
+            textView.setText(
+                    getString(
+                            R.string.contact_editor_prompt_one_account,
+                            accountInfo.getNameLabel()));
 
             // This button allows the user to add a new account to the device and return to
             // this app afterwards.
@@ -164,17 +173,21 @@ public class ContactEditorAccountsChangedActivity extends Activity
             // This button allows the user to continue creating the contact in the specified
             // account.
             rightButton.setText(getString(android.R.string.ok));
-            rightButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    saveAccountAndReturnResult(accountInfo.getAccount());
-                }
-            });
+            rightButton.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            saveAccountAndReturnResult(accountInfo.getAccount());
+                        }
+                    });
         } else {
             // If the user has 0 writable accounts, we will just show the user a message with 2
             // possible action buttons.
-            view = View.inflate(this,
-                    R.layout.contact_editor_accounts_changed_activity_with_text, null);
+            view =
+                    View.inflate(
+                            this,
+                            R.layout.contact_editor_accounts_changed_activity_with_text,
+                            null);
 
             final TextView textView = (TextView) view.findViewById(R.id.text);
             final Button leftButton = (Button) view.findViewById(R.id.left_button);
@@ -185,15 +198,17 @@ public class ContactEditorAccountsChangedActivity extends Activity
             // This button allows the user to continue editing the contact as a phone-only
             // local contact.
             leftButton.setText(getString(android.R.string.cancel));
-            leftButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Remember that the user wants to create local contacts, so the user is not
-                    // prompted again with this activity.
-                    saveAccountAndReturnResult(AccountWithDataSet.getNullAccount());
-                    finish();
-                }
-            });
+            leftButton.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Remember that the user wants to create local contacts, so the user is
+                            // not
+                            // prompted again with this activity.
+                            saveAccountAndReturnResult(AccountWithDataSet.getNullAccount());
+                            finish();
+                        }
+                    });
 
             // This button allows the user to add a new account to the device and return to
             // this app afterwards.
@@ -204,15 +219,17 @@ public class ContactEditorAccountsChangedActivity extends Activity
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
-        mDialog = new AlertDialog.Builder(this)
-                .setView(view)
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        finish();
-                    }
-                })
-                .create();
+        mDialog =
+                new AlertDialog.Builder(this)
+                        .setView(view)
+                        .setOnCancelListener(
+                                new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        finish();
+                                    }
+                                })
+                        .create();
         mDialog.show();
     }
 
