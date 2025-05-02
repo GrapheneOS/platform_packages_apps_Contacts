@@ -135,6 +135,15 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
                 || filterType == ContactListFilter.FILTER_TYPE_CUSTOM;
     }
 
+    /**
+     * Whether the given {@link ContactListFilter} has a filter type for contacts that are stored
+     * only locally, such as on the SIM card or device only account.
+     */
+    public boolean isLocalAccountTypeFilter() {
+        return filterType == ContactListFilter.FILTER_TYPE_DEVICE_CONTACTS
+                || filterType == ContactListFilter.FILTER_TYPE_SIM_CONTACTS;
+    }
+
     /** Returns the {@link ListEvent.ListType} for the type of this filter. */
     public int toListType() {
         switch (filterType) {

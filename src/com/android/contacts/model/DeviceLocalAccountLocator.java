@@ -21,6 +21,7 @@ import android.content.Context;
 
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.GoogleAccountType;
+import com.android.contacts.preference.ContactsPreferences;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,10 +45,16 @@ public final class DeviceLocalAccountLocator {
         final Account[] accounts =
                 mAccountManager.getAccountsByType(GoogleAccountType.ACCOUNT_TYPE);
 
-        if (accounts.length > 0 && !mLocalAccount.get(0).hasData(mContext)) {
+        if (accounts.length > 0
+                && !mLocalAccount.get(0).hasData(mContext)
+                && !isDeviceLocalDefaultAccount()) {
             return Collections.emptyList();
         } else {
             return mLocalAccount;
         }
+    }
+
+    private boolean isDeviceLocalDefaultAccount() {
+        return new ContactsPreferences(mContext).isDeviceLocalDefault();
     }
 }

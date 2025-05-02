@@ -36,6 +36,7 @@ import android.provider.BlockedNumberContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.DisplayNameSources;
 import android.provider.ContactsContract.Profile;
+import android.provider.ContactsContract.Settings;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.text.BidiFormatter;
@@ -59,6 +60,7 @@ import com.android.contacts.list.ContactListFilterController;
 import com.android.contacts.logging.ScreenEvent.ScreenType;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
+import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.AccountsLoader;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
@@ -66,6 +68,7 @@ import com.android.contactsbind.HelpUtils;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -76,6 +79,7 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
         implements Preference.OnPreferenceClickListener, AccountsLoader.AccountsListener {
 
     private static final int REQUEST_CODE_CUSTOM_CONTACTS_FILTER = 0;
+    private static final int REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2 = 1;
 
     private static final String ARG_CONTACTS_AVAILABLE = "are_contacts_available";
     private static final String ARG_NEW_LOCAL_PROFILE = "new_local_profile";
@@ -140,6 +144,8 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
 
     private ViewGroup mRootView;
     private SaveServiceResultListener mSaveServiceListener;
+
+    private List<AccountInfo> accounts = Collections.emptyList();
 
     private final LoaderManager.LoaderCallbacks<Cursor> mProfileLoaderListener =
             new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -244,6 +250,12 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             customFilterPreference.setOnPreferenceClickListener(this);
             setCustomContactsFilterSummary();
         }
+
+        final Preference defaultAccountPreference = findPreference(KEY_DEFAULT_ACCOUNT);
+        if (defaultAccountPreference != null) {
+            defaultAccountPreference.setOnPreferenceClickListener(this);
+            defaultAccountPreference.setSummary(getDefaultAccountSummary());
+        }
     }
 
     @Override
@@ -315,9 +327,9 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
     @Override
     public void onAccountsLoaded(List<AccountInfo> accounts) {
         // Hide accounts preferences if no writable accounts exist
-        final DefaultAccountPreference preference =
-                (DefaultAccountPreference) findPreference(KEY_DEFAULT_ACCOUNT);
-        preference.setAccounts(accounts);
+        this.accounts = accounts;
+        final Preference defaultAccountPreference = findPreference(KEY_DEFAULT_ACCOUNT);
+        defaultAccountPreference.setSummary(getDefaultAccountSummary());
     }
 
     @Override
@@ -389,6 +401,9 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
                     ContactListFilterController.getInstance(getContext()).getFilter();
             AccountFilterUtil.startAccountFilterActivityForResult(
                     this, REQUEST_CODE_CUSTOM_CONTACTS_FILTER, filter);
+        } else if (KEY_DEFAULT_ACCOUNT.equals(prefKey)) {
+            Intent intent = new Intent(Settings.ACTION_SET_DEFAULT_ACCOUNT);
+            startActivityForResult(intent, REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2);
         }
         return false;
     }
@@ -400,6 +415,11 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             AccountFilterUtil.handleAccountFilterResult(
                     ContactListFilterController.getInstance(getContext()), resultCode, data);
             setCustomContactsFilterSummary();
+        } else if (requestCode == REQUEST_CODE_SET_DEFAULT_ACCOUNT_CP2) {
+            final Preference defaultAccountPreference = findPreference(KEY_DEFAULT_ACCOUNT);
+            if (defaultAccountPreference != null) {
+                defaultAccountPreference.setSummary(getDefaultAccountSummary());
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -420,6 +440,18 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
                     customFilterPreference.setSummary(null);
                 }
             }
+        }
+    }
+
+    private CharSequence getDefaultAccountSummary() {
+        ContactsPreferences preferences = new ContactsPreferences(getContext());
+        AccountWithDataSet defaultAccountWithDataSet = preferences.getDefaultAccount();
+        AccountInfo defaultAccountInfo =
+                AccountInfo.getAccount(accounts, defaultAccountWithDataSet);
+        if (defaultAccountInfo != null) {
+            return defaultAccountInfo.getNameLabel();
+        } else {
+            return null;
         }
     }
 

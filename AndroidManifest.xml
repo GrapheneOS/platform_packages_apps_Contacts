@@ -392,13 +392,6 @@
 
         </activity-alias>
 
-        <!-- Accounts changed prompt that can appear when creating a new contact. -->
-        <activity
-            android:name=".activities.ContactEditorAccountsChangedActivity"
-            android:exported="false"
-            android:theme="@style/ContactEditorAccountsChangedActivityTheme"
-            android:windowSoftInputMode="adjustResize"/>
-
         <!-- Edit or create a contact with only the most important fields displayed initially. -->
         <activity
             android:name=".activities.ContactEditorActivity"
