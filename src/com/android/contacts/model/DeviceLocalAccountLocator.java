@@ -18,17 +18,15 @@ package com.android.contacts.model;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.provider.ContactsContract;
 
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.GoogleAccountType;
+import com.android.contacts.preference.ContactsPreferences;
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Attempts to detect accounts for device contacts
- */
+/** Attempts to detect accounts for device contacts */
 public final class DeviceLocalAccountLocator {
 
     private final Context mContext;
@@ -41,17 +39,22 @@ public final class DeviceLocalAccountLocator {
         mLocalAccount = Collections.singletonList(AccountWithDataSet.getLocalAccount(context));
     }
 
-    /**
-     * Returns a list of device local accounts
-     */
+    /** Returns a list of device local accounts */
     public List<AccountWithDataSet> getDeviceLocalAccounts() {
-        @SuppressWarnings("MissingPermission") final Account[] accounts = mAccountManager
-                .getAccountsByType(GoogleAccountType.ACCOUNT_TYPE);
+        @SuppressWarnings("MissingPermission")
+        final Account[] accounts =
+                mAccountManager.getAccountsByType(GoogleAccountType.ACCOUNT_TYPE);
 
-        if (accounts.length > 0 && !mLocalAccount.get(0).hasData(mContext)) {
+        if (accounts.length > 0
+                && !mLocalAccount.get(0).hasData(mContext)
+                && !isDeviceLocalDefaultAccount()) {
             return Collections.emptyList();
         } else {
             return mLocalAccount;
         }
+    }
+
+    private boolean isDeviceLocalDefaultAccount() {
+        return new ContactsPreferences(mContext).isDeviceLocalDefault();
     }
 }
