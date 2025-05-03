@@ -471,7 +471,7 @@ public class SimImportFragment extends Fragment
             final ListenableFuture<List<Object>> future =
                     Futures.<Object>allAsList(
                             mAccountTypeManager.filterAccountsAsync(
-                                    AccountTypeManager.writableFilter()),
+                                    AccountTypeManager.insertableFilter(getContext())),
                             ContactsExecutors.getSimReadExecutor()
                                     .<Object>submit(
                                             new Callable<Object>() {

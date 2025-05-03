@@ -43,10 +43,12 @@ import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountTypeProvider;
 import com.android.contacts.model.account.AccountTypeWithDataSet;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.model.account.DeviceLocalAccountType;
 import com.android.contacts.model.account.FallbackAccountType;
 import com.android.contacts.model.account.GoogleAccountType;
 import com.android.contacts.model.account.SimAccountType;
 import com.android.contacts.model.dataitem.DataKind;
+import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.util.concurrent.ContactsExecutors;
 
 import com.google.common.base.Function;
@@ -92,6 +94,16 @@ public abstract class AccountTypeManager {
             @Override
             public boolean apply(@Nullable AccountInfo input) {
                 return input != null && input.getType().areContactsWritable();
+            }
+        },
+        // This should never be used directly because the insertable filter is not
+        // implementable by this enum. Rather it is just a dummy to pass around.
+        // Anything that is passed this should grab the actual implementation from the
+        // insertableFilter function.
+        CONTACTS_INSERTABLE {
+            @Override
+            public boolean apply(@Nullable AccountInfo input) {
+                return false;
             }
         },
         DRAWER_DISPLAYABLE {
@@ -329,6 +341,28 @@ public abstract class AccountTypeManager {
 
     public static Predicate<AccountInfo> writableFilter() {
         return AccountFilter.CONTACTS_WRITABLE;
+    }
+
+    public static Predicate<AccountInfo> insertableFilter(Context context) {
+        boolean canInsertIntoLocalAccounts =
+                new ContactsPreferences(context).canInsertIntoLocalAccounts();
+        return new Predicate<AccountInfo>() {
+            @Override
+            public boolean apply(@Nullable AccountInfo input) {
+                return input != null
+                        && input.getType().areContactsWritable()
+                        && isContactInsertable(input);
+            }
+
+            private boolean isContactInsertable(AccountInfo input) {
+                return !isLocalAccountType(input) || canInsertIntoLocalAccounts;
+            }
+
+            private boolean isLocalAccountType(AccountInfo input) {
+                return input.getType() instanceof DeviceLocalAccountType
+                        || input.getType() instanceof SimAccountType;
+            }
+        };
     }
 
     public static Predicate<AccountInfo> drawerDisplayableFilter() {

@@ -16,7 +16,6 @@
 
 package com.android.contacts.activities;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -32,8 +31,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.DisplayPhoto;
-import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.RawContacts;
+import android.provider.ContactsContract.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -52,6 +51,7 @@ import com.android.contacts.model.ValuesDelta;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.util.ContactPhotoUtils;
 
 import com.google.common.base.Preconditions;
@@ -140,7 +140,7 @@ public class AttachPhotoActivity extends ContactsActivity {
         // Start loading accounts in case they are needed.
         mAccountsFuture =
                 AccountTypeManager.getInstance(this)
-                        .filterAccountsAsync(AccountTypeManager.writableFilter());
+                        .filterAccountsAsync(AccountTypeManager.insertableFilter(this));
     }
 
     @Override
@@ -160,23 +160,14 @@ public class AttachPhotoActivity extends ContactsActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == REQUEST_PICK_DEFAULT_ACCOUNT_FOR_NEW_CONTACT) {
+            AccountWithDataSet defaultAccount = new ContactsPreferences(this).getDefaultAccount();
             // Bail if the account selector was not successful.
-            if (resultCode != Activity.RESULT_OK) {
+            if (defaultAccount == null) {
                 Log.w(TAG, "account selector was not successful");
                 finish();
                 return;
             }
-            // If there's an account specified, use it.
-            if (result != null) {
-                AccountWithDataSet account =
-                        result.getParcelableExtra(Intents.Insert.EXTRA_ACCOUNT);
-                if (account != null) {
-                    createNewRawContact(account);
-                    return;
-                }
-            }
-            // If there isn't an account specified, then the user opted to keep the contact local.
-            createNewRawContact(null);
+            createNewRawContact(defaultAccount);
         } else if (requestCode == REQUEST_PICK_CONTACT) {
             if (resultCode != RESULT_OK) {
                 finish();
@@ -377,14 +368,13 @@ public class AttachPhotoActivity extends ContactsActivity {
         // Technically this could block but in reality this method won't be called until the user
         // presses the save button which should allow plenty of time for the accounts to
         // finish loading. Note also that this could be stale if the accounts have changed since
-        // we requested them but that's OK since ContactEditorAccountsChangedActivity will reload
-        // the accounts
+        // we requested them but that's OK since account picker will reload the accounts
         final List<AccountInfo> accountInfos = Futures.getUnchecked(mAccountsFuture);
 
         final List<AccountWithDataSet> accounts = AccountInfo.extractAccounts(accountInfos);
         if (editorUtils.shouldShowAccountChangedNotification(accounts)) {
             Intent intent =
-                    new Intent(this, ContactEditorAccountsChangedActivity.class)
+                    new Intent(Settings.ACTION_SET_DEFAULT_ACCOUNT)
                             .addFlags(
                                     Intent.FLAG_ACTIVITY_CLEAR_TOP
                                             | Intent.FLAG_ACTIVITY_SINGLE_TOP);

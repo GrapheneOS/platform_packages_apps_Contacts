@@ -67,12 +67,14 @@ import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.interactions.ContactDeletionInteraction;
 import com.android.contacts.interactions.ContactMultiDeletionInteraction;
 import com.android.contacts.interactions.ContactMultiDeletionInteraction.MultiContactDeleteListener;
+import com.android.contacts.list.ContactListFilterController.ContactListFilterListener;
 import com.android.contacts.logging.ListEvent;
 import com.android.contacts.logging.Logger;
 import com.android.contacts.logging.ScreenEvent;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.quickcontact.QuickContactActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
@@ -94,7 +96,7 @@ import java.util.concurrent.Future;
  * of the PICK intents).
  */
 public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
-        implements EnableGlobalSyncDialogFragment.Listener {
+        implements EnableGlobalSyncDialogFragment.Listener, ContactListFilterListener {
 
     private static final String TAG = "DefaultListFragment";
     private static final String ENABLE_DEBUG_OPTIONS_HIDDEN_CODE = "debug debug!";
@@ -164,6 +166,8 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
 
     private Future<List<AccountInfo>> mWritableAccountsFuture;
 
+    private boolean mCanInsertIntoLocalAccounts;
+
     private final ActionBarAdapter.Listener mActionBarListener =
             new ActionBarAdapter.Listener() {
                 @Override
@@ -181,7 +185,8 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
                             break;
                         case ActionBarAdapter.Listener.Action
                                 .BEGIN_STOPPING_SEARCH_AND_SELECTION_MODE:
-                            mActivity.showFabWithAnimation(/* showFab */ true);
+                            mActivity.showFabWithAnimation(
+                                    /* showFab */ canInsertIntoCurrentFilter());
                             break;
                         case ActionBarAdapter.Listener.Action.STOP_SEARCH_AND_SELECTION_MODE:
                             // If queryString is empty, fragment data will not be reloaded,
@@ -194,7 +199,8 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
                             setQueryTextToFragment("");
                             maybeHideCheckBoxes();
                             mActivity.invalidateOptionsMenu();
-                            mActivity.showFabWithAnimation(/* showFab */ true);
+                            mActivity.showFabWithAnimation(
+                                    /* showFab */ canInsertIntoCurrentFilter());
 
                             // Alert user if sync is off and not dismissed before
                             setSyncOffAlert();
@@ -492,6 +498,7 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
         super.onCreate(savedState);
         mIsRecreatedInstance = (savedState != null);
         mContactListFilterController = ContactListFilterController.getInstance(getContext());
+        mContactListFilterController.addListener(this);
         mContactListFilterController.checkFilterValidity(false);
         // Use FILTER_TYPE_ALL_ACCOUNTS filter if the instance is not a re-created one.
         // This is useful when user upgrades app while an account filter was
@@ -802,6 +809,28 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
         mWritableAccountsFuture =
                 AccountTypeManager.getInstance(getContext())
                         .filterAccountsAsync(AccountTypeManager.writableFilter());
+
+        mCanInsertIntoLocalAccounts =
+                new ContactsPreferences(getActivity()).canInsertIntoLocalAccounts();
+        onFabDependencyChanged();
+    }
+
+    @Override
+    public void onContactListFilterChanged() {
+        onFabDependencyChanged();
+    }
+
+    private void onFabDependencyChanged() {
+        if (mActivity != null
+                && mActionBarAdapter != null
+                && !mActionBarAdapter.isSelectionMode()
+                && !isSearchMode()) {
+            mActivity.showFabWithAnimation(canInsertIntoCurrentFilter());
+        }
+    }
+
+    private boolean canInsertIntoCurrentFilter() {
+        return mCanInsertIntoLocalAccounts || !getFilter().isLocalAccountTypeFilter();
     }
 
     private void maybeHideCheckBoxes() {
@@ -1282,6 +1311,8 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
         if (mActionBarAdapter != null) {
             mActionBarAdapter.setListener(null);
         }
+
+        mContactListFilterController.removeListener(this);
         super.onDestroy();
     }
 
