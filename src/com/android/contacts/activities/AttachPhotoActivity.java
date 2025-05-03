@@ -53,6 +53,7 @@ import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.util.ContactPhotoUtils;
+
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -61,10 +62,9 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
- * Provides an external interface for other applications to attach images
- * to contacts. It will first present a contact picker and then run the
- * image that is handed to it through the cropper to make the image the proper
- * size and give the user a chance to use the face detector.
+ * Provides an external interface for other applications to attach images to contacts. It will first
+ * present a contact picker and then run the image that is handed to it through the cropper to make
+ * the image the proper size and give the user a chance to use the face detector.
  */
 public class AttachPhotoActivity extends ContactsActivity {
     private static final String TAG = AttachPhotoActivity.class.getSimpleName();
@@ -119,8 +119,13 @@ public class AttachPhotoActivity extends ContactsActivity {
         // member varible so only need to load this if this is the first time
         // through.
         if (mPhotoDim == 0) {
-            Cursor c = mContentResolver.query(DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,
-                    new String[]{DisplayPhoto.DISPLAY_MAX_DIM}, null, null, null);
+            Cursor c =
+                    mContentResolver.query(
+                            DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,
+                            new String[] {DisplayPhoto.DISPLAY_MAX_DIM},
+                            null,
+                            null,
+                            null);
             if (c != null) {
                 try {
                     if (c.moveToFirst()) {
@@ -133,8 +138,9 @@ public class AttachPhotoActivity extends ContactsActivity {
         }
 
         // Start loading accounts in case they are needed.
-        mAccountsFuture = AccountTypeManager.getInstance(this).filterAccountsAsync(
-                AccountTypeManager.writableFilter());
+        mAccountsFuture =
+                AccountTypeManager.getInstance(this)
+                        .filterAccountsAsync(AccountTypeManager.writableFilter());
     }
 
     @Override
@@ -162,8 +168,8 @@ public class AttachPhotoActivity extends ContactsActivity {
             }
             // If there's an account specified, use it.
             if (result != null) {
-                AccountWithDataSet account = result.getParcelableExtra(
-                        Intents.Insert.EXTRA_ACCOUNT);
+                AccountWithDataSet account =
+                        result.getParcelableExtra(Intents.Insert.EXTRA_ACCOUNT);
                 if (account != null) {
                     createNewRawContact(account);
                     return;
@@ -180,7 +186,6 @@ public class AttachPhotoActivity extends ContactsActivity {
             // TODO: get these values from constants somewhere
             final Intent myIntent = getIntent();
             final Uri inputUri = myIntent.getData();
-
 
             // Save the URI into a temporary file provider URI so that
             // we can add the FLAG_GRANT_WRITE_URI_PERMISSION flag to the eventual
@@ -203,12 +208,14 @@ public class AttachPhotoActivity extends ContactsActivity {
                 // without performing any cropping.
                 mCroppedPhotoUri = mTempPhotoUri;
                 mContactUri = result.getData();
-                loadContact(mContactUri, new Listener() {
-                    @Override
-                    public void onContactLoaded(Contact contact) {
-                        saveContact(contact);
-                    }
-                });
+                loadContact(
+                        mContactUri,
+                        new Listener() {
+                            @Override
+                            public void onContactLoaded(Contact contact) {
+                                saveContact(contact);
+                            }
+                        });
                 return;
             }
 
@@ -230,19 +237,24 @@ public class AttachPhotoActivity extends ContactsActivity {
                 finish();
                 return;
             }
-            loadContact(mContactUri, new Listener() {
-                @Override
-                public void onContactLoaded(Contact contact) {
-                    saveContact(contact);
-                }
-            });
+            loadContact(
+                    mContactUri,
+                    new Listener() {
+                        @Override
+                        public void onContactLoaded(Contact contact) {
+                            saveContact(contact);
+                        }
+                    });
         }
     }
 
     private ResolveInfo getIntentHandler(Intent intent) {
-        final List<ResolveInfo> resolveInfos = getPackageManager()
-                .queryIntentActivities(intent,
-                        PackageManager.MATCH_DEFAULT_ONLY | PackageManager.MATCH_SYSTEM_ONLY);
+        final List<ResolveInfo> resolveInfos =
+                getPackageManager()
+                        .queryIntentActivities(
+                                intent,
+                                PackageManager.MATCH_DEFAULT_ONLY
+                                        | PackageManager.MATCH_SYSTEM_ONLY);
         return (resolveInfos != null && resolveInfos.size() > 0) ? resolveInfos.get(0) : null;
     }
 
@@ -252,19 +264,19 @@ public class AttachPhotoActivity extends ContactsActivity {
     // instance, the loader doesn't persist across Activity restarts.
     private void loadContact(Uri contactUri, final Listener listener) {
         final ContactLoader loader = new ContactLoader(this, contactUri, true);
-        loader.registerListener(0, new OnLoadCompleteListener<Contact>() {
-            @Override
-            public void onLoadComplete(
-                    Loader<Contact> loader, Contact contact) {
-                try {
-                    loader.reset();
-                }
-                catch (RuntimeException e) {
-                    Log.e(TAG, "Error resetting loader", e);
-                }
-                listener.onContactLoaded(contact);
-            }
-        });
+        loader.registerListener(
+                0,
+                new OnLoadCompleteListener<Contact>() {
+                    @Override
+                    public void onLoadComplete(Loader<Contact> loader, Contact contact) {
+                        try {
+                            loader.reset();
+                        } catch (RuntimeException e) {
+                            Log.e(TAG, "Error resetting loader", e);
+                        }
+                        listener.onContactLoaded(contact);
+                    }
+                });
         loader.startLoading();
     }
 
@@ -273,10 +285,8 @@ public class AttachPhotoActivity extends ContactsActivity {
     }
 
     /**
-     * If prerequisites have been met, attach the photo to a raw-contact and save.
-     * The prerequisites are:
-     * - photo has been cropped
-     * - contact has been loaded
+     * If prerequisites have been met, attach the photo to a raw-contact and save. The prerequisites
+     * are: - photo has been cropped - contact has been loaded
      */
     private void saveContact(Contact contact) {
 
@@ -298,8 +308,8 @@ public class AttachPhotoActivity extends ContactsActivity {
         saveToContact(contact, deltaList, raw);
     }
 
-    private void saveToContact(Contact contact, RawContactDeltaList deltaList,
-            RawContactDelta raw) {
+    private void saveToContact(
+            Contact contact, RawContactDeltaList deltaList, RawContactDelta raw) {
 
         // Create a scaled, compressed bitmap to add to the entity-delta list.
         final int size = ContactsUtils.getThumbnailSize(this);
@@ -343,15 +353,17 @@ public class AttachPhotoActivity extends ContactsActivity {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "all prerequisites met, about to save photo to contact");
         }
-        Intent intent = ContactSaveService.createSaveContactIntent(
-                this,
-                deltaList,
-                "", 0,
-                contact.isUserProfile(),
-                null, null,
-                raw.getRawContactId() != null ? raw.getRawContactId() : -1,
-                mCroppedPhotoUri
-        );
+        Intent intent =
+                ContactSaveService.createSaveContactIntent(
+                        this,
+                        deltaList,
+                        "",
+                        0,
+                        contact.isUserProfile(),
+                        null,
+                        null,
+                        raw.getRawContactId() != null ? raw.getRawContactId() : -1,
+                        mCroppedPhotoUri);
         ContactSaveService.startService(this, intent);
         finish();
     }
@@ -371,8 +383,11 @@ public class AttachPhotoActivity extends ContactsActivity {
 
         final List<AccountWithDataSet> accounts = AccountInfo.extractAccounts(accountInfos);
         if (editorUtils.shouldShowAccountChangedNotification(accounts)) {
-            Intent intent = new Intent(this, ContactEditorAccountsChangedActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            Intent intent =
+                    new Intent(this, ContactEditorAccountsChangedActivity.class)
+                            .addFlags(
+                                    Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivityForResult(intent, REQUEST_PICK_DEFAULT_ACCOUNT_FOR_NEW_CONTACT);
         } else {
             // Otherwise, there should be a default account. Then either create a null contact
@@ -382,26 +397,27 @@ public class AttachPhotoActivity extends ContactsActivity {
         }
     }
 
-    /**
-     * Create a new writeable raw contact to store mCroppedPhotoUri.
-     */
+    /** Create a new writeable raw contact to store mCroppedPhotoUri. */
     private void createNewRawContact(final AccountWithDataSet account) {
         // Reload the contact from URI instead of trying to pull the contact from a member variable,
         // since this function can be called after the activity stops and resumes.
-        loadContact(mContactUri, new Listener() {
-            @Override
-            public void onContactLoaded(Contact contactToSave) {
-                final RawContactDeltaList deltaList = contactToSave.createRawContactDeltaList();
-                final ContentValues after = new ContentValues();
-                after.put(RawContacts.ACCOUNT_TYPE, account != null ? account.type : null);
-                after.put(RawContacts.ACCOUNT_NAME, account != null ? account.name : null);
-                after.put(RawContacts.DATA_SET, account != null ? account.dataSet : null);
+        loadContact(
+                mContactUri,
+                new Listener() {
+                    @Override
+                    public void onContactLoaded(Contact contactToSave) {
+                        final RawContactDeltaList deltaList =
+                                contactToSave.createRawContactDeltaList();
+                        final ContentValues after = new ContentValues();
+                        after.put(RawContacts.ACCOUNT_TYPE, account != null ? account.type : null);
+                        after.put(RawContacts.ACCOUNT_NAME, account != null ? account.name : null);
+                        after.put(RawContacts.DATA_SET, account != null ? account.dataSet : null);
 
-                final RawContactDelta newRawContactDelta
-                        = new RawContactDelta(ValuesDelta.fromAfter(after));
-                deltaList.add(newRawContactDelta);
-                saveToContact(contactToSave, deltaList, newRawContactDelta);
-            }
-        });
+                        final RawContactDelta newRawContactDelta =
+                                new RawContactDelta(ValuesDelta.fromAfter(after));
+                        deltaList.add(newRawContactDelta);
+                        saveToContact(contactToSave, deltaList, newRawContactDelta);
+                    }
+                });
     }
 }

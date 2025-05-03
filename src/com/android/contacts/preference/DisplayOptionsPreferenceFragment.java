@@ -36,8 +36,6 @@ import android.provider.BlockedNumberContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.DisplayNameSources;
 import android.provider.ContactsContract.Profile;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.text.BidiFormatter;
@@ -46,6 +44,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.contacts.ContactsUtils;
 import com.android.contacts.R;
@@ -64,14 +64,14 @@ import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contactsbind.HelpUtils;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * This fragment shows the preferences for "display options"
- */
+/** This fragment shows the preferences for "display options" */
 public class DisplayOptionsPreferenceFragment extends PreferenceFragment
         implements Preference.OnPreferenceClickListener, AccountsLoader.AccountsListener {
 
@@ -95,43 +95,37 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
     private static final int LOADER_PROFILE = 0;
     private static final int LOADER_ACCOUNTS = 1;
 
-    /**
-     * Callbacks for hosts of the {@link DisplayOptionsPreferenceFragment}.
-     */
-    public interface ProfileListener  {
-        /**
-         * Invoked after profile has been loaded.
-         */
+    /** Callbacks for hosts of the {@link DisplayOptionsPreferenceFragment}. */
+    public interface ProfileListener {
+        /** Invoked after profile has been loaded. */
         void onProfileLoaded(Cursor data);
     }
 
-    /**
-     * The projections that are used to obtain user profile
-     */
+    /** The projections that are used to obtain user profile */
     public static class ProfileQuery {
-        /**
-         * Not instantiable.
-         */
+        /** Not instantiable. */
         private ProfileQuery() {}
 
-        private static final String[] PROFILE_PROJECTION_PRIMARY = new String[] {
-                Contacts._ID,                           // 0
-                Contacts.DISPLAY_NAME_PRIMARY,          // 1
-                Contacts.IS_USER_PROFILE,               // 2
-                Contacts.DISPLAY_NAME_SOURCE,           // 3
-        };
+        private static final String[] PROFILE_PROJECTION_PRIMARY =
+                new String[] {
+                    Contacts._ID, // 0
+                    Contacts.DISPLAY_NAME_PRIMARY, // 1
+                    Contacts.IS_USER_PROFILE, // 2
+                    Contacts.DISPLAY_NAME_SOURCE, // 3
+                };
 
-        private static final String[] PROFILE_PROJECTION_ALTERNATIVE = new String[] {
-                Contacts._ID,                           // 0
-                Contacts.DISPLAY_NAME_ALTERNATIVE,      // 1
-                Contacts.IS_USER_PROFILE,               // 2
-                Contacts.DISPLAY_NAME_SOURCE,           // 3
-        };
+        private static final String[] PROFILE_PROJECTION_ALTERNATIVE =
+                new String[] {
+                    Contacts._ID, // 0
+                    Contacts.DISPLAY_NAME_ALTERNATIVE, // 1
+                    Contacts.IS_USER_PROFILE, // 2
+                    Contacts.DISPLAY_NAME_SOURCE, // 3
+                };
 
-        public static final int CONTACT_ID               = 0;
-        public static final int CONTACT_DISPLAY_NAME     = 1;
-        public static final int CONTACT_IS_USER_PROFILE  = 2;
-        public static final int DISPLAY_NAME_SOURCE      = 3;
+        public static final int CONTACT_ID = 0;
+        public static final int CONTACT_DISPLAY_NAME = 1;
+        public static final int CONTACT_IS_USER_PROFILE = 2;
+        public static final int DISPLAY_NAME_SOURCE = 3;
     }
 
     private String mNewLocalProfileExtra;
@@ -150,27 +144,26 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
     private final LoaderManager.LoaderCallbacks<Cursor> mProfileLoaderListener =
             new LoaderManager.LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            final CursorLoader loader = createCursorLoader(getContext());
-            loader.setUri(Profile.CONTENT_URI);
-            loader.setProjection(getProjection(getContext()));
-            return loader;
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    final CursorLoader loader = createCursorLoader(getContext());
+                    loader.setUri(Profile.CONTENT_URI);
+                    loader.setProjection(getProjection(getContext()));
+                    return loader;
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (mListener != null) {
-                mListener.onProfileLoaded(data);
-            }
-        }
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    if (mListener != null) {
+                        mListener.onProfileLoaded(data);
+                    }
+                }
 
-        public void onLoaderReset(Loader<Cursor> loader) {
-        }
-    };
+                public void onLoaderReset(Loader<Cursor> loader) {}
+            };
 
-    public static DisplayOptionsPreferenceFragment newInstance(String newLocalProfileExtra,
-            boolean areContactsAvailable) {
+    public static DisplayOptionsPreferenceFragment newInstance(
+            String newLocalProfileExtra, boolean areContactsAvailable) {
         final DisplayOptionsPreferenceFragment fragment = new DisplayOptionsPreferenceFragment();
         final Bundle args = new Bundle();
         args.putString(ARG_NEW_LOCAL_PROFILE, newLocalProfileExtra);
@@ -190,7 +183,8 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Wrap the preference view in a FrameLayout so we can show a snackbar
         mRootView = new FrameLayout(getActivity());
         final View list = super.onCreateView(inflater, mRootView, savedInstanceState);
@@ -203,9 +197,10 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
         super.onViewCreated(view, savedInstanceState);
 
         mSaveServiceListener = new SaveServiceResultListener();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
-                mSaveServiceListener,
-                new IntentFilter(SimImportService.BROADCAST_SIM_IMPORT_COMPLETE));
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(
+                        mSaveServiceListener,
+                        new IntentFilter(SimImportService.BROADCAST_SIM_IMPORT_COMPLETE));
     }
 
     @Override
@@ -265,13 +260,15 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
         mRootView = null;
     }
 
-    public void updateMyInfoPreference(boolean hasProfile, String displayName, long contactId,
-            int displayNameSource) {
-        final CharSequence summary = !hasProfile ?
-                getString(R.string.set_up_profile) :
-                displayNameSource == DisplayNameSources.PHONE ?
-                BidiFormatter.getInstance().unicodeWrap(displayName, TextDirectionHeuristics.LTR) :
-                displayName;
+    public void updateMyInfoPreference(
+            boolean hasProfile, String displayName, long contactId, int displayNameSource) {
+        final CharSequence summary =
+                !hasProfile
+                        ? getString(R.string.set_up_profile)
+                        : displayNameSource == DisplayNameSources.PHONE
+                                ? BidiFormatter.getInstance()
+                                        .unicodeWrap(displayName, TextDirectionHeuristics.LTR)
+                                : displayName;
         mMyInfoPreference.setSummary(summary);
         mHasProfile = hasProfile;
         mProfileContactId = contactId;
@@ -298,10 +295,14 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             getPreferenceScreen().removePreference(findPreference(KEY_DISPLAY_ORDER));
         }
 
-        final boolean isPhone = TelephonyManagerCompat.isVoiceCapable(
-                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE));
-        final boolean showBlockedNumbers = isPhone && ContactsUtils.FLAG_N_FEATURE
-                && BlockedNumberContract.canCurrentUserBlockNumbers(getContext());
+        final boolean isPhone =
+                TelephonyManagerCompat.isVoiceCapable(
+                        (TelephonyManager)
+                                getContext().getSystemService(Context.TELEPHONY_SERVICE));
+        final boolean showBlockedNumbers =
+                isPhone
+                        && ContactsUtils.FLAG_N_FEATURE
+                        && BlockedNumberContract.canCurrentUserBlockNumbers(getContext());
         if (!showBlockedNumbers) {
             getPreferenceScreen().removePreference(findPreference(KEY_BLOCKED_NUMBERS));
         }
@@ -357,7 +358,9 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             ImportDialogFragment.show(getFragmentManager());
             return true;
         } else if (KEY_EXPORT.equals(prefKey)) {
-            ExportDialogFragment.show(getFragmentManager(), ContactsPreferenceActivity.class,
+            ExportDialogFragment.show(
+                    getFragmentManager(),
+                    ContactsPreferenceActivity.class,
                     ExportDialogFragment.EXPORT_MODE_ALL_CONTACTS);
             return true;
         } else if (KEY_MY_INFO.equals(prefKey)) {
@@ -371,12 +374,14 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             }
             return true;
         } else if (KEY_ACCOUNTS.equals(prefKey)) {
-            ImplicitIntentsUtil.startActivityOutsideApp(getContext(),
-                    ImplicitIntentsUtil.getIntentForAddingAccount());
+            ImplicitIntentsUtil.startActivityOutsideApp(
+                    getContext(), ImplicitIntentsUtil.getIntentForAddingAccount());
             return true;
         } else if (KEY_BLOCKED_NUMBERS.equals(prefKey)) {
-            final Intent intent = TelecomManagerUtil.createManageBlockedNumbersIntent(
-                    (TelecomManager) getContext().getSystemService(Context.TELECOM_SERVICE));
+            final Intent intent =
+                    TelecomManagerUtil.createManageBlockedNumbersIntent(
+                            (TelecomManager)
+                                    getContext().getSystemService(Context.TELECOM_SERVICE));
             startActivity(intent);
             return true;
         } else if (KEY_CUSTOM_CONTACTS_FILTER.equals(prefKey)) {
@@ -406,8 +411,8 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             final ContactListFilter filter =
                     ContactListFilterController.getInstance(getContext()).getPersistedFilter();
             if (filter != null) {
-                if (filter.filterType == ContactListFilter.FILTER_TYPE_DEFAULT ||
-                        filter.filterType == ContactListFilter.FILTER_TYPE_ALL_ACCOUNTS) {
+                if (filter.filterType == ContactListFilter.FILTER_TYPE_DEFAULT
+                        || filter.filterType == ContactListFilter.FILTER_TYPE_ALL_ACCOUNTS) {
                     customFilterPreference.setSummary(R.string.list_filter_all_accounts);
                 } else if (filter.filterType == ContactListFilter.FILTER_TYPE_CUSTOM) {
                     customFilterPreference.setSummary(R.string.listCustomView);
@@ -422,29 +427,29 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
         @Override
         public void onReceive(Context context, Intent intent) {
             final long now = System.currentTimeMillis();
-            final long opStart = intent.getLongExtra(
-                    SimImportService.EXTRA_OPERATION_REQUESTED_AT_TIME, now);
+            final long opStart =
+                    intent.getLongExtra(SimImportService.EXTRA_OPERATION_REQUESTED_AT_TIME, now);
 
             // If it's been over 30 seconds the user is likely in a different context so suppress
             // the toast message.
-            if (now - opStart > 30*1000) return;
+            if (now - opStart > 30 * 1000) return;
 
-            final int code = intent.getIntExtra(SimImportService.EXTRA_RESULT_CODE,
-                    SimImportService.RESULT_UNKNOWN);
+            final int code =
+                    intent.getIntExtra(
+                            SimImportService.EXTRA_RESULT_CODE, SimImportService.RESULT_UNKNOWN);
             final int count = intent.getIntExtra(SimImportService.EXTRA_RESULT_COUNT, -1);
             if (code == SimImportService.RESULT_SUCCESS && count > 0) {
-                MessageFormat msgFormat = new MessageFormat(
-                    getResources().getString(R.string.sim_import_success_toast_fmt),
-                    Locale.getDefault());
+                MessageFormat msgFormat =
+                        new MessageFormat(
+                                getResources().getString(R.string.sim_import_success_toast_fmt),
+                                Locale.getDefault());
                 Map<String, Object> arguments = new HashMap<>();
                 arguments.put("count", count);
-                Snackbar.make(mRootView, msgFormat.format(arguments),
-                        Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, msgFormat.format(arguments), Snackbar.LENGTH_LONG).show();
             } else if (code == SimImportService.RESULT_FAILURE) {
-                Snackbar.make(mRootView, R.string.sim_import_failed_toast,
-                        Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, R.string.sim_import_failed_toast, Snackbar.LENGTH_LONG)
+                        .show();
             }
         }
     }
 }
-
