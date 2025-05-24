@@ -291,7 +291,7 @@
     <string name="list_filter_phones" msgid="6839133198968393843">"ఫోన్ నంబర్‌లు గల అన్ని కాంటాక్ట్‌లు"</string>
     <string name="list_filter_phones_work" msgid="5583425697781385616">"వర్క్ ప్రొఫైల్ కాంటాక్ట్‌లు"</string>
     <string name="view_updates_from_group" msgid="6233444629074835594">"తాజా విషయాలను చూడండి"</string>
-    <string name="account_phone" msgid="8044426231251817556">"పరికరం"</string>
+    <string name="account_phone" msgid="8044426231251817556">"డివైజ్"</string>
     <string name="account_sim" msgid="3200457113308694663">"SIM"</string>
     <string name="nameLabelsGroup" msgid="513809148312046843">"పేరు"</string>
     <string name="nicknameLabelsGroup" msgid="794390116782033956">"మారుపేరు"</string>
