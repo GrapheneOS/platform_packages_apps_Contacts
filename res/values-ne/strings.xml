@@ -467,7 +467,7 @@
     <string name="description_search_video_call" msgid="1768558141309418755">"भिडियो कल गर्नुहोस्"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"मेट्नुहोस्"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"पदलोपचिन्ह"</string>
-    <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"यो सर्टकटलाई असक्षम पारिएको छ"</string>
+    <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"यो सर्टकटलाई अफ गरिएको छ"</string>
     <string name="dynamic_shortcut_contact_removed_message" msgid="8331735243566193974">"सम्पर्क हटाइएको थियो"</string>
     <string name="sim_import_button_text" msgid="2845608246304396009">"इम्पोर्ट गर्नुहोस्"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"कन्ट्याक्टहरू चयन गर्नुहोस्"</string>
