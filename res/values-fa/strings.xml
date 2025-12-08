@@ -55,7 +55,7 @@
     <string name="contacts_unlinking_progress_bar" msgid="5696679068872394167">"درحال لغو پیوند"</string>
     <string name="menu_joinAggregate" msgid="3116395302755287038">"پیوند"</string>
     <string name="menu_linkedContacts" msgid="6363718333551613063">"مشاهده مخاطبین پیوندداده‌شده"</string>
-    <string name="menu_save" msgid="7204524700499687371">"ذخیره‌"</string>
+    <string name="menu_save" msgid="7204524700499687371">"ذخیر"</string>
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"پیوند دادن مخاطبین"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"مخاطبی را که می‌خواهید با <xliff:g id="NAME">%s</xliff:g> پیوند دهید، انتخاب کنید:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"مخاطبین پیشنهادی"</string>
