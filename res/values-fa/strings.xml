@@ -146,7 +146,7 @@
     <string name="group_edit_field_hint_text" msgid="1159504474053684478">"برچسب"</string>
     <string name="editor_uneditable_section_title" msgid="4022820593578859556">"این اطلاعات به‌روز نمی‌شود"</string>
     <string name="cancel_button_content_description" msgid="7407595608883650004">"لغو"</string>
-    <string name="back_arrow_content_description" msgid="6727142616775523605">"برگشت"</string>
+    <string name="back_arrow_content_description" msgid="6727142616775523605">"برگشتن"</string>
     <string name="action_menu_back_from_edit_select" msgid="7911226757462657242">"بستن"</string>
     <string name="aggregation_suggestion_edit_dialog_message" msgid="4339333746086996062">"به ویرایش مخاطب انتخابی می‌روید؟ اطلاعاتی که تا حال وارد کرده‌اید کپی خواهد شد."</string>
     <string name="contact_directory_description" msgid="1773630547110881835">"دایرکتوری <xliff:g id="TYPE">%1$s</xliff:g>"</string>
