@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -197,6 +198,9 @@ public class ExportDialogFragment extends DialogFragment {
                     final Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType(Contacts.CONTENT_VCARD_TYPE);
                     intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    intent.setClipData(ClipData.newUri(
+                            getActivity().getContentResolver(), "contacts", uri));
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     ImplicitIntentsUtil.startActivityOutsideApp(getActivity(), intent);
                 } finally {
                     cursor.close();

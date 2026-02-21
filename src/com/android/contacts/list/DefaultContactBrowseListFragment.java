@@ -18,6 +18,7 @@ package com.android.contacts.list;
 import android.accounts.Account;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -1196,6 +1197,9 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType(ContactsContract.Contacts.CONTENT_VCARD_TYPE);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setClipData(
+                ClipData.newUri(getContext().getContentResolver(), "contacts", uri));
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             MessageFormat msgFormat =
                     new MessageFormat(

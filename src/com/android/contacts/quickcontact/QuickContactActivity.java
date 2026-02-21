@@ -26,6 +26,7 @@ import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -2500,6 +2501,8 @@ public class QuickContactActivity extends ContactsActivity {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType(Contacts.CONTENT_VCARD_TYPE);
         intent.putExtra(Intent.EXTRA_STREAM, shareUri);
+        intent.setClipData(ClipData.newUri(getContentResolver(), "contact", shareUri));
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         // Launch chooser to share contact via
         MessageFormat msgFormat =
