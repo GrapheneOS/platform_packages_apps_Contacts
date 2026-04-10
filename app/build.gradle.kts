@@ -10,15 +10,14 @@ java {
 }
 
 android {
-    compileSdk = 35
-    buildToolsVersion = "35.0.0"
+    compileSdk = 36
+    buildToolsVersion = "36.1.0"
 
     namespace = "com.android.contacts"
 
     defaultConfig {
-        minSdk = 34
-        //noinspection OldTargetApi
-        targetSdk = 34
+        minSdk = 36
+        targetSdk = 36
     }
 
     buildTypes {
