@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
 }
 
 java {
@@ -14,6 +13,10 @@ android {
     buildToolsVersion = "36.1.0"
 
     namespace = "com.android.contacts"
+
+    buildFeatures {
+        resValues = true
+    }
 
     defaultConfig {
         minSdk = 36
@@ -31,10 +34,12 @@ android {
     }
 
     sourceSets.getByName("main") {
-        assets.srcDir("../assets")
+        assets.directories.add("../assets")
         manifest.srcFile("../AndroidManifest.xml")
-        java.srcDirs("../src", "../src-bind")
-        res.srcDir("../res")
+        java.directories.add("../src")
+        java.directories.add("../src-bind")
+        kotlin.directories.add("../src/com/android/contacts/sdn")
+        res.directories.add("../res")
     }
 }
 
