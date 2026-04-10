@@ -15,20 +15,17 @@
  */
 package com.android.contacts.tests;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.provider.ContactsContract.RawContacts.DefaultAccount.DefaultAccountAndState;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.test.InstrumentationRegistry;
 
 import com.android.contacts.model.account.AccountWithDataSet;
-import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.util.SharedPreferenceUtil;
 
 /**
@@ -61,28 +58,6 @@ public class AdbHelpers {
         final AccountWithDataSet account =
                 new AccountWithDataSet(accountName, AccountsTestHelper.TEST_ACCOUNT_TYPE, null);
         new AccountsTestHelper(context).removeTestAccount(account);
-    }
-
-    public static void setDefaultAccount(Context context, Bundle args) {
-        final String name = args.getString("name");
-        final String type = args.getString("type");
-
-        if (name == null || type == null) {
-            Log.e(TAG, "args must contain extras \"name\" and \"type\"");
-            return;
-        }
-
-        AccountWithDataSet localDeviceAccount = AccountWithDataSet.getLocalAccount(context);
-        DefaultAccountAndState defaultAccountAndState =
-                name.equals(localDeviceAccount.name) && type.equals(localDeviceAccount.type)
-                        ? DefaultAccountAndState.ofLocal()
-                        : DefaultAccountAndState.ofCloud(new Account(name, type));
-
-        new ContactsPreferences(context).setDefaultAccountAndState(defaultAccountAndState);
-    }
-
-    public static void clearDefaultAccount(Context context) {
-        new ContactsPreferences(context).clearDefaultAccount();
     }
 
     public static void clearPreferences(Context context) {
