@@ -49,9 +49,12 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.material)
     implementation(libs.guava)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(project(":lib:platform_external_libphonenumber"))
     implementation(project(":lib:platform_frameworks_ex:common"))
     implementation(project(":lib:platform_frameworks_opt_vcard"))
     implementation(project(":lib:platform_packages_apps_PhoneCommon"))
+
+    testImplementation(libs.kotlinx.coroutines.test)
 }
