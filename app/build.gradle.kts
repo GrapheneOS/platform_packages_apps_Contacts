@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
 
@@ -17,6 +18,7 @@ android {
     namespace = "com.android.contacts"
 
     buildFeatures {
+        compose = true
         resValues = true
     }
 
@@ -46,7 +48,15 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.guava)
@@ -59,6 +69,12 @@ dependencies {
     implementation(project(":lib:platform_frameworks_ex:common"))
     implementation(project(":lib:platform_frameworks_opt_vcard"))
     implementation(project(":lib:platform_packages_apps_PhoneCommon"))
+
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
     testImplementation(libs.kotlinx.coroutines.test)
 }
