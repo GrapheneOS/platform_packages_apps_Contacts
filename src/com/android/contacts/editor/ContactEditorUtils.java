@@ -77,16 +77,6 @@ public class ContactEditorUtils {
     }
 
     @VisibleForTesting
-    void cleanupForTest() {
-        mContactsPrefs.clearDefaultAccount();
-    }
-
-    @VisibleForTesting
-    void removeDefaultAccountForTest() {
-        mContactsPrefs.clearDefaultAccount();
-    }
-
-    @VisibleForTesting
     void setDefaultAccountForTest(AccountWithDataSet account) {
         mContactsPrefs.setDefaultAccountForTest(account);
     }

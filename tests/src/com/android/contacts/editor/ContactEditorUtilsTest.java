@@ -66,7 +66,7 @@ public class ContactEditorUtilsTest {
         mTarget = ContactEditorUtils.create(InstrumentationRegistry.getTargetContext());
 
         // Clear the preferences.
-        mTarget.cleanupForTest();
+        setDefaultAccountForTest(null);
     }
 
     /**
@@ -193,7 +193,7 @@ public class ContactEditorUtilsTest {
                         Collections.singletonList(ACCOUNT_1_A)));
 
         // Remove the default account to emulate broken preferences.
-        mTarget.removeDefaultAccountForTest();
+        setDefaultAccountForTest(null);
 
         // The dialog shouldn't show up.
         // The logic is, if there's a writable account, we'll pick it as default
