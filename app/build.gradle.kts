@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 java {
@@ -39,11 +39,11 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.palette:palette:1.0.0")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("com.google.guava:guava:33.4.0-android")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.palette)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.material)
+    implementation(libs.guava)
 
     implementation(project(":lib:platform_external_libphonenumber"))
     implementation(project(":lib:platform_frameworks_ex:common"))
