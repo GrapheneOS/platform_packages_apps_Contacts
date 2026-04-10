@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
+import com.android.contacts.MoreContactUtils;
 import com.android.contacts.R;
 
 /**
@@ -33,6 +34,7 @@ public class LicenseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MoreContactUtils.setupEdgeToEdge(this, null);
         setContentView(R.layout.licenses);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.loadUrl(LICENSE_FILE);
