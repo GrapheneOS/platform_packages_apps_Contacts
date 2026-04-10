@@ -24,8 +24,10 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -262,6 +264,20 @@ public class MoreContactUtils {
      * @param activity the Activity need to setup the edge to edge feature.
      */
     public static void setupEdgeToEdge(@NonNull Activity activity, EdgeToEdgeInsetHandler handler) {
+        final int statusBarHeight = getStatusBarHeight(activity);
+        final int actionBarHeight = getActionBarHeight(activity);
+        final View statusBarBackground = handler == null ? new View(activity) : null;
+
+        if (statusBarBackground != null) {
+            statusBarBackground.setBackgroundResource(R.color.primary_color_dark);
+            statusBarBackground.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            final ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            decorView.addView(
+                    statusBarBackground,
+                    new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
+            );
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(
                 activity.findViewById(android.R.id.content),
                 (v, windowInsets) -> {
@@ -270,6 +286,25 @@ public class MoreContactUtils {
                                     WindowInsetsCompat.Type.systemBars()
                                             | WindowInsetsCompat.Type.ime()
                                             | WindowInsetsCompat.Type.displayCutout());
+
+                    if (statusBarBackground != null) {
+                        final Insets statusInsets = windowInsets.getInsets(
+                                        WindowInsetsCompat.Type.statusBars()
+                                                | WindowInsetsCompat.Type.displayCutout()
+                        );
+                        final FrameLayout.LayoutParams layoutParams =
+                                (FrameLayout.LayoutParams) statusBarBackground.getLayoutParams();
+
+                        final int actionBarTop = insets.top - actionBarHeight;
+                        final int height = Math.max(
+                                statusBarHeight > 0 ? statusBarHeight : statusInsets.top,
+                                actionBarHeight > 0 ? actionBarTop : 0
+                        );
+                        if (layoutParams.height != height) {
+                            layoutParams.height = height;
+                            statusBarBackground.setLayoutParams(layoutParams);
+                        }
+                    }
 
                     // Apply the insets paddings to the view.
                     v.setPadding(
@@ -286,6 +321,35 @@ public class MoreContactUtils {
                     // passed down to descendant views.
                     return WindowInsetsCompat.CONSUMED;
                 });
+    }
+
+    private static int getStatusBarHeight(@NonNull Activity activity) {
+        final int statusBarHeightId = activity
+                .getResources()
+                .getIdentifier("status_bar_height", "dimen", "android");
+
+        if (statusBarHeightId == 0) {
+            return 0;
+        }
+
+        return activity.getResources().getDimensionPixelSize(statusBarHeightId);
+    }
+
+    private static int getActionBarHeight(@NonNull Activity activity) {
+        final TypedValue outValue = new TypedValue();
+
+        if (!activity.getTheme().resolveAttribute(android.R.attr.actionBarSize, outValue, true)) {
+            return 0;
+        }
+
+        if (outValue.resourceId != 0) {
+            return activity.getResources().getDimensionPixelSize(outValue.resourceId);
+        }
+
+        return TypedValue.complexToDimensionPixelSize(
+                outValue.data,
+                activity.getResources().getDisplayMetrics()
+        );
     }
 
     /** Handles setting the insets on a {@link View}. */
