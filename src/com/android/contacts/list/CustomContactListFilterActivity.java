@@ -17,6 +17,8 @@
 package com.android.contacts.list;
 
 import android.app.Activity;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -79,8 +81,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 /**
  * Shows a list of all available {@link Groups} available, letting the user
