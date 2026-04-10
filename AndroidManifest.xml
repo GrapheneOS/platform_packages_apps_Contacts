@@ -18,10 +18,6 @@
           android:versionCode="10734"
           android:versionName="1.7.34">
 
-    <uses-sdk
-        android:minSdkVersion="36"
-        android:targetSdkVersion="36"/>
-
     <original-package android:name="com.android.contacts"/>
 
     <!-- Contacts permission listed first because order determines
