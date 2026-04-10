@@ -34,8 +34,6 @@ import android.test.InstrumentationTestCase;
 import androidx.test.filters.MediumTest;
 
 import com.android.contacts.model.account.AccountWithDataSet;
-import com.android.contacts.preference.ContactsPreferences;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +50,6 @@ public class GroupsDaoIntegrationTests extends InstrumentationTestCase {
 
         mTestRecords = new ArrayList<>();
         mResolver = getContext().getContentResolver();
-        new ContactsPreferences(getContext()).clearDefaultAccount();
     }
 
     @Override
