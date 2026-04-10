@@ -58,6 +58,7 @@ import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
 import com.android.contacts.ContactSaveService;
@@ -107,7 +108,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.annotation.Nullable;
 
 /** Contact editor with only the most important fields displayed initially. */
 public class ContactEditorFragment extends Fragment
