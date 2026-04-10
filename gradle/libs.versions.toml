@@ -2,7 +2,9 @@
 agp = "9.1.0"
 appcompat = "1.7.1"
 guava = "33.5.0-android"
+hilt = "2.59.2"
 coroutines = "1.10.2"
+ksp = "2.3.6"
 material = "1.13.0"
 palette = "1.0.0"
 swiperefreshlayout = "1.2.0"
@@ -12,6 +14,9 @@ androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "a
 androidx-palette = { module = "androidx.palette:palette", version.ref = "palette" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
@@ -19,3 +24,5 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
