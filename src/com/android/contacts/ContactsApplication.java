@@ -35,6 +35,9 @@ import com.android.contactsbind.analytics.AnalyticsUtil;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class ContactsApplication extends Application {
     private static final boolean ENABLE_LOADER_LOG = false; // Don't submit with true
     private static final boolean ENABLE_FRAGMENT_LOG = false; // Don't submit with true
