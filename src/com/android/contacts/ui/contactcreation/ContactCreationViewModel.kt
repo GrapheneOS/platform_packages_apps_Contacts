@@ -23,13 +23,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -48,15 +44,13 @@ internal class ContactCreationViewModel @Inject constructor(
     )
     val uiState: StateFlow<ContactCreationUiState> = _uiState.asStateFlow()
 
-    val nameState: StateFlow<NameState> = _uiState
-        .map { it.nameState }
-        .distinctUntilChanged()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT), NameState())
-
     private val _effects = Channel<ContactCreationEffect>(Channel.BUFFERED)
     val effects: Flow<ContactCreationEffect> = _effects.receiveAsFlow()
 
     init {
+        // Clean up any orphaned photo temp files from previous sessions
+        cleanupTempPhotos()
+
         val restored = savedStateHandle.get<ContactCreationUiState>(STATE_KEY)
         if (restored != null) {
             fieldsDelegate.restorePhones(restored.phoneNumbers)
@@ -267,6 +261,7 @@ internal class ContactCreationViewModel @Inject constructor(
 
     private fun save() {
         val state = _uiState.value
+        if (state.isSaving) return
         if (!state.hasPendingChanges()) return
 
         viewModelScope.launch(defaultDispatcher) {
@@ -308,14 +303,12 @@ internal class ContactCreationViewModel @Inject constructor(
         }
     }
 
-    /** URI of the file passed to ACTION_IMAGE_CAPTURE, awaiting result. */
-    private var pendingCameraUri: Uri? = null
-
-    fun getPendingCameraUri(): Uri? = pendingCameraUri
-
-    fun clearPendingCameraUri() {
-        pendingCameraUri = null
-    }
+    /** URI of the file passed to ACTION_IMAGE_CAPTURE, persisted across process death. */
+    internal var pendingCameraUri: Uri?
+        get() = savedStateHandle.get<Uri>(PENDING_CAMERA_URI_KEY)
+        set(value) {
+            savedStateHandle[PENDING_CAMERA_URI_KEY] = value
+        }
 
     override fun onCleared() {
         super.onCleared()
@@ -342,7 +335,8 @@ internal class ContactCreationViewModel @Inject constructor(
     internal companion object {
         const val STATE_KEY = "state"
         const val SAVE_COMPLETED_ACTION = "com.android.contacts.SAVE_COMPLETED"
-        private const val STOP_TIMEOUT = 5_000L
+        const val SAVE_MODE_EXTRA_KEY = "saveMode"
+        private const val PENDING_CAMERA_URI_KEY = "pendingCameraUri"
         private const val PHOTO_CACHE_DIR = "contact_photos"
     }
 }

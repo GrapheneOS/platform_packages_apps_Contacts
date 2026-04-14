@@ -34,13 +34,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.EventFieldState
 import com.android.contacts.ui.contactcreation.model.ImFieldState
 import com.android.contacts.ui.contactcreation.model.RelationFieldState
 import com.android.contacts.ui.contactcreation.model.WebsiteFieldState
+import com.android.contacts.ui.core.gentleBounce
+import com.android.contacts.ui.core.isReduceMotionEnabled
+import com.android.contacts.ui.core.smoothExit
 
 @Suppress("LongParameterList")
 internal fun LazyListScope.moreFieldsSection(
@@ -80,7 +85,15 @@ private fun LazyListScope.moreFieldsToggle(
                 if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                 contentDescription = null,
             )
-            Text(if (isExpanded) "Less fields" else "More fields")
+            Text(
+                stringResource(
+                    if (isExpanded) {
+                        R.string.contact_creation_less_fields
+                    } else {
+                        R.string.contact_creation_more_fields
+                    },
+                ),
+            )
         }
     }
 }
@@ -95,14 +108,23 @@ private fun LazyListScope.moreFieldsContent(
     onAction: (ContactCreationAction) -> Unit,
 ) {
     item(key = "more_fields_content", contentType = "more_fields_content") {
+        val reduceMotion = isReduceMotionEnabled()
         AnimatedVisibility(
             visible = isExpanded,
-            enter = expandVertically(
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-            ) + fadeIn(),
-            exit = shrinkVertically(
-                animationSpec = spring(stiffness = Spring.StiffnessMedium),
-            ) + fadeOut(),
+            enter = if (reduceMotion) {
+                expandVertically() + fadeIn()
+            } else {
+                expandVertically(
+                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+                ) + fadeIn()
+            },
+            exit = if (reduceMotion) {
+                shrinkVertically() + fadeOut()
+            } else {
+                shrinkVertically(
+                    animationSpec = spring(stiffness = Spring.StiffnessMedium),
+                ) + fadeOut()
+            },
             modifier = Modifier.testTag(TestTags.MORE_FIELDS_CONTENT),
         ) {
             MoreFieldsSingleFields(nickname, note, sipAddress, showSipField, onAction)
@@ -122,7 +144,7 @@ private fun MoreFieldsSingleFields(
         OutlinedTextField(
             value = nickname,
             onValueChange = { onAction(ContactCreationAction.UpdateNickname(it)) },
-            label = { Text("Nickname") },
+            label = { Text(stringResource(R.string.nicknameLabelsGroup)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -132,7 +154,7 @@ private fun MoreFieldsSingleFields(
         OutlinedTextField(
             value = note,
             onValueChange = { onAction(ContactCreationAction.UpdateNote(it)) },
-            label = { Text("Note") },
+            label = { Text(stringResource(R.string.contact_creation_note)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -142,7 +164,7 @@ private fun MoreFieldsSingleFields(
             OutlinedTextField(
                 value = sipAddress,
                 onValueChange = { onAction(ContactCreationAction.UpdateSipAddress(it)) },
-                label = { Text("SIP") },
+                label = { Text(stringResource(R.string.contact_creation_sip)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -164,7 +186,20 @@ private fun LazyListScope.eventItems(
         key = { _, item -> "event_${item.id}" },
         contentType = { _, _ -> "event_field" },
     ) { index, event ->
-        EventFieldRow(event = event, index = index, onAction = onAction)
+        val reduceMotion = isReduceMotionEnabled()
+        EventFieldRow(
+            event = event,
+            index = index,
+            onAction = onAction,
+            modifier = if (reduceMotion) {
+                Modifier.animateItem()
+            } else {
+                Modifier.animateItem(
+                    fadeInSpec = gentleBounce(),
+                    fadeOutSpec = smoothExit(),
+                )
+            },
+        )
     }
     item(key = "event_add", contentType = "event_add") {
         TextButton(
@@ -174,7 +209,7 @@ private fun LazyListScope.eventItems(
                 .testTag(TestTags.EVENT_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add event")
+            Text(stringResource(R.string.contact_creation_add_event))
         }
     }
 }
@@ -199,7 +234,7 @@ private fun EventFieldRow(
         OutlinedTextField(
             value = event.startDate,
             onValueChange = { onAction(ContactCreationAction.UpdateEvent(event.id, it)) },
-            label = { Text("Date") },
+            label = { Text(stringResource(R.string.contact_creation_date)) },
             modifier = Modifier
                 .weight(1f)
                 .testTag(TestTags.eventField(index)),
@@ -209,7 +244,10 @@ private fun EventFieldRow(
             onClick = { onAction(ContactCreationAction.RemoveEvent(event.id)) },
             modifier = Modifier.testTag(TestTags.eventDelete(index)),
         ) {
-            Icon(Icons.Filled.Close, contentDescription = "Remove event")
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.contact_creation_remove_event)
+            )
         }
     }
 }
@@ -225,7 +263,20 @@ private fun LazyListScope.relationItems(
         key = { _, item -> "relation_${item.id}" },
         contentType = { _, _ -> "relation_field" },
     ) { index, relation ->
-        RelationFieldRow(relation = relation, index = index, onAction = onAction)
+        val reduceMotion = isReduceMotionEnabled()
+        RelationFieldRow(
+            relation = relation,
+            index = index,
+            onAction = onAction,
+            modifier = if (reduceMotion) {
+                Modifier.animateItem()
+            } else {
+                Modifier.animateItem(
+                    fadeInSpec = gentleBounce(),
+                    fadeOutSpec = smoothExit(),
+                )
+            },
+        )
     }
     item(key = "relation_add", contentType = "relation_add") {
         TextButton(
@@ -235,7 +286,7 @@ private fun LazyListScope.relationItems(
                 .testTag(TestTags.RELATION_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add relation")
+            Text(stringResource(R.string.contact_creation_add_relation))
         }
     }
 }
@@ -260,7 +311,7 @@ private fun RelationFieldRow(
         OutlinedTextField(
             value = relation.name,
             onValueChange = { onAction(ContactCreationAction.UpdateRelation(relation.id, it)) },
-            label = { Text("Relation") },
+            label = { Text(stringResource(R.string.relationLabelsGroup)) },
             modifier = Modifier
                 .weight(1f)
                 .testTag(TestTags.relationField(index)),
@@ -270,7 +321,10 @@ private fun RelationFieldRow(
             onClick = { onAction(ContactCreationAction.RemoveRelation(relation.id)) },
             modifier = Modifier.testTag(TestTags.relationDelete(index)),
         ) {
-            Icon(Icons.Filled.Close, contentDescription = "Remove relation")
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.contact_creation_remove_relation)
+            )
         }
     }
 }
@@ -286,7 +340,20 @@ private fun LazyListScope.imItems(
         key = { _, item -> "im_${item.id}" },
         contentType = { _, _ -> "im_field" },
     ) { index, im ->
-        ImFieldRow(im = im, index = index, onAction = onAction)
+        val reduceMotion = isReduceMotionEnabled()
+        ImFieldRow(
+            im = im,
+            index = index,
+            onAction = onAction,
+            modifier = if (reduceMotion) {
+                Modifier.animateItem()
+            } else {
+                Modifier.animateItem(
+                    fadeInSpec = gentleBounce(),
+                    fadeOutSpec = smoothExit(),
+                )
+            },
+        )
     }
     item(key = "im_add", contentType = "im_add") {
         TextButton(
@@ -296,7 +363,7 @@ private fun LazyListScope.imItems(
                 .testTag(TestTags.IM_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add IM")
+            Text(stringResource(R.string.contact_creation_add_im))
         }
     }
 }
@@ -321,7 +388,7 @@ private fun ImFieldRow(
         OutlinedTextField(
             value = im.data,
             onValueChange = { onAction(ContactCreationAction.UpdateIm(im.id, it)) },
-            label = { Text("IM") },
+            label = { Text(stringResource(R.string.imLabelsGroup)) },
             modifier = Modifier
                 .weight(1f)
                 .testTag(TestTags.imField(index)),
@@ -331,7 +398,10 @@ private fun ImFieldRow(
             onClick = { onAction(ContactCreationAction.RemoveIm(im.id)) },
             modifier = Modifier.testTag(TestTags.imDelete(index)),
         ) {
-            Icon(Icons.Filled.Close, contentDescription = "Remove IM")
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.contact_creation_remove_im)
+            )
         }
     }
 }
@@ -347,7 +417,20 @@ private fun LazyListScope.websiteItems(
         key = { _, item -> "website_${item.id}" },
         contentType = { _, _ -> "website_field" },
     ) { index, website ->
-        WebsiteFieldRow(website = website, index = index, onAction = onAction)
+        val reduceMotion = isReduceMotionEnabled()
+        WebsiteFieldRow(
+            website = website,
+            index = index,
+            onAction = onAction,
+            modifier = if (reduceMotion) {
+                Modifier.animateItem()
+            } else {
+                Modifier.animateItem(
+                    fadeInSpec = gentleBounce(),
+                    fadeOutSpec = smoothExit(),
+                )
+            },
+        )
     }
     item(key = "website_add", contentType = "website_add") {
         TextButton(
@@ -357,7 +440,7 @@ private fun LazyListScope.websiteItems(
                 .testTag(TestTags.WEBSITE_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add website")
+            Text(stringResource(R.string.contact_creation_add_website))
         }
     }
 }
@@ -382,7 +465,7 @@ private fun WebsiteFieldRow(
         OutlinedTextField(
             value = website.url,
             onValueChange = { onAction(ContactCreationAction.UpdateWebsite(website.id, it)) },
-            label = { Text("Website") },
+            label = { Text(stringResource(R.string.websiteLabelsGroup)) },
             modifier = Modifier
                 .weight(1f)
                 .testTag(TestTags.websiteField(index)),
@@ -392,7 +475,10 @@ private fun WebsiteFieldRow(
             onClick = { onAction(ContactCreationAction.RemoveWebsite(website.id)) },
             modifier = Modifier.testTag(TestTags.websiteDelete(index)),
         ) {
-            Icon(Icons.Filled.Close, contentDescription = "Remove website")
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.contact_creation_remove_website)
+            )
         }
     }
 }

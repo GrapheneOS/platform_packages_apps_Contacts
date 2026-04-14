@@ -8,8 +8,10 @@ import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
+import androidx.compose.runtime.Stable
 import kotlinx.parcelize.Parcelize
 
+@Stable
 @Parcelize
 internal sealed class PhoneType : Parcelable {
     data object Mobile : PhoneType()
@@ -38,6 +40,7 @@ internal sealed class PhoneType : Parcelable {
         }
 }
 
+@Stable
 @Parcelize
 internal sealed class EmailType : Parcelable {
     data object Home : EmailType()
@@ -56,6 +59,7 @@ internal sealed class EmailType : Parcelable {
         }
 }
 
+@Stable
 @Parcelize
 internal sealed class AddressType : Parcelable {
     data object Home : AddressType()
@@ -72,6 +76,7 @@ internal sealed class AddressType : Parcelable {
         }
 }
 
+@Stable
 @Parcelize
 internal sealed class EventType : Parcelable {
     data object Birthday : EventType()
@@ -88,6 +93,7 @@ internal sealed class EventType : Parcelable {
         }
 }
 
+@Stable
 @Parcelize
 internal sealed class RelationType : Parcelable {
     data object Assistant : RelationType()
@@ -126,6 +132,7 @@ internal sealed class RelationType : Parcelable {
         }
 }
 
+@Stable
 @Parcelize
 internal sealed class ImProtocol : Parcelable {
     data object Aim : ImProtocol()
@@ -152,6 +159,7 @@ internal sealed class ImProtocol : Parcelable {
         }
 }
 
+@Stable
 @Parcelize
 internal sealed class WebsiteType : Parcelable {
     data object Homepage : WebsiteType()

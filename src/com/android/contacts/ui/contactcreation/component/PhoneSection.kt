@@ -18,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.PhoneFieldState
@@ -59,7 +61,7 @@ internal fun LazyListScope.phoneSection(
                 .testTag(TestTags.PHONE_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add phone")
+            Text(stringResource(R.string.contact_creation_add_phone))
         }
     }
 }
@@ -85,7 +87,7 @@ internal fun PhoneFieldRow(
         OutlinedTextField(
             value = phone.number,
             onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
-            label = { Text("Phone") },
+            label = { Text(stringResource(R.string.phoneLabelsGroup)) },
             modifier = Modifier
                 .weight(1f)
                 .testTag(TestTags.phoneField(index)),
@@ -96,7 +98,10 @@ internal fun PhoneFieldRow(
                 onClick = { onAction(ContactCreationAction.RemovePhone(phone.id)) },
                 modifier = Modifier.testTag(TestTags.phoneDelete(index)),
             ) {
-                Icon(Icons.Filled.Close, contentDescription = "Remove phone")
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.contact_creation_remove_phone)
+                )
             }
         }
     }

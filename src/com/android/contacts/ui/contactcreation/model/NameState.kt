@@ -1,8 +1,10 @@
 package com.android.contacts.ui.contactcreation.model
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 
+@Immutable
 @Parcelize
 internal data class NameState(
     val prefix: String = "",

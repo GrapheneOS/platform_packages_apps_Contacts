@@ -18,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.EmailFieldState
@@ -59,7 +61,7 @@ internal fun LazyListScope.emailSection(
                 .testTag(TestTags.EMAIL_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add email")
+            Text(stringResource(R.string.contact_creation_add_email))
         }
     }
 }
@@ -85,7 +87,7 @@ internal fun EmailFieldRow(
         OutlinedTextField(
             value = email.address,
             onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.emailLabelsGroup)) },
             modifier = Modifier
                 .weight(1f)
                 .testTag(TestTags.emailField(index)),
@@ -96,7 +98,10 @@ internal fun EmailFieldRow(
                 onClick = { onAction(ContactCreationAction.RemoveEmail(email.id)) },
                 modifier = Modifier.testTag(TestTags.emailDelete(index)),
             ) {
-                Icon(Icons.Filled.Close, contentDescription = "Remove email")
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.contact_creation_remove_email)
+                )
             }
         }
     }

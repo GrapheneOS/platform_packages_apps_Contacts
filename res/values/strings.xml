@@ -572,6 +572,38 @@
          at a pre-determined text size. [CHAR LIMIT=20] -->
     <string name="contact_editor_title_read_only_contact">View only</string>
 
+    <!-- Contact creation compose screen strings -->
+    <string name="contact_creation_first_name">First name</string>
+    <string name="contact_creation_last_name">Last name</string>
+    <string name="contact_creation_company">Company</string>
+    <string name="contact_creation_job_title">Title</string>
+    <string name="contact_creation_note">Note</string>
+    <string name="contact_creation_sip">SIP</string>
+    <string name="contact_creation_date">Date</string>
+    <string name="contact_creation_choose_photo">Choose photo</string>
+    <string name="contact_creation_contact_photo">Contact photo</string>
+    <string name="contact_creation_add_photo">Add photo</string>
+    <string name="contact_creation_add_phone">Add phone</string>
+    <string name="contact_creation_add_email">Add email</string>
+    <string name="contact_creation_add_address">Add address</string>
+    <string name="contact_creation_add_event">Add event</string>
+    <string name="contact_creation_add_relation">Add relation</string>
+    <string name="contact_creation_add_im">Add IM</string>
+    <string name="contact_creation_add_website">Add website</string>
+    <string name="contact_creation_more_fields">More fields</string>
+    <string name="contact_creation_less_fields">Less fields</string>
+    <string name="contact_creation_remove_phone">Remove phone</string>
+    <string name="contact_creation_remove_email">Remove email</string>
+    <string name="contact_creation_remove_address">Remove address</string>
+    <string name="contact_creation_remove_event">Remove event</string>
+    <string name="contact_creation_remove_relation">Remove relation</string>
+    <string name="contact_creation_remove_im">Remove IM</string>
+    <string name="contact_creation_remove_website">Remove website</string>
+    <string name="contact_creation_device_account">Device</string>
+    <string name="contact_creation_groups">Groups</string>
+    <string name="contact_creation_discard_body">You have unsaved changes that will be lost.</string>
+    <string name="contact_creation_keep_editing">Keep editing</string>
+
     <!-- Dialog title when the user is selecting a raw contact to edit.  [CHAR LIMIT=128] -->
     <string name="contact_editor_pick_raw_contact_to_edit_dialog_title">Choose contact to edit</string>
 

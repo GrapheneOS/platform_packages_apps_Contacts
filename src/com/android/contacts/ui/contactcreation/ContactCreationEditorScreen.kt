@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.component.accountChipItem
 import com.android.contacts.ui.contactcreation.component.addressSection
 import com.android.contacts.ui.contactcreation.component.emailSection
@@ -59,7 +61,7 @@ internal fun ContactCreationEditorScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        "Create contact",
+                        stringResource(R.string.contact_editor_title_new_contact),
                         style = MaterialTheme.typography.headlineMedium,
                     )
                 },
@@ -68,7 +70,12 @@ internal fun ContactCreationEditorScreen(
                         onClick = { onAction(ContactCreationAction.NavigateBack) },
                         modifier = Modifier.testTag(TestTags.BACK_BUTTON),
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(
+                                R.string.back_arrow_content_description,
+                            ),
+                        )
                     }
                 },
                 actions = {
@@ -77,7 +84,10 @@ internal fun ContactCreationEditorScreen(
                         modifier = Modifier.testTag(TestTags.SAVE_BUTTON),
                         enabled = !uiState.isSaving,
                     ) {
-                        Icon(Icons.Filled.Check, contentDescription = "Save")
+                        Icon(
+                            Icons.Filled.Check,
+                            contentDescription = stringResource(R.string.menu_save),
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -100,10 +110,10 @@ internal fun ContactCreationEditorScreen(
 private fun DiscardChangesDialog(onAction: (ContactCreationAction) -> Unit) {
     AlertDialog(
         onDismissRequest = { onAction(ContactCreationAction.DismissDiscardDialog) },
-        title = { Text("Discard changes?") },
+        title = { Text(stringResource(R.string.cancel_confirmation_dialog_message)) },
         text = {
             Text(
-                "You have unsaved changes that will be lost.",
+                stringResource(R.string.contact_creation_discard_body),
                 style = MaterialTheme.typography.bodyMedium,
             )
         },
@@ -112,7 +122,7 @@ private fun DiscardChangesDialog(onAction: (ContactCreationAction) -> Unit) {
                 onClick = { onAction(ContactCreationAction.ConfirmDiscard) },
                 modifier = Modifier.testTag(TestTags.DISCARD_DIALOG_CONFIRM),
             ) {
-                Text("Discard")
+                Text(stringResource(R.string.cancel_confirmation_dialog_cancel_editing_button))
             }
         },
         dismissButton = {
@@ -120,7 +130,7 @@ private fun DiscardChangesDialog(onAction: (ContactCreationAction) -> Unit) {
                 onClick = { onAction(ContactCreationAction.DismissDiscardDialog) },
                 modifier = Modifier.testTag(TestTags.DISCARD_DIALOG_DISMISS),
             ) {
-                Text("Keep editing")
+                Text(stringResource(R.string.contact_creation_keep_editing))
             }
         },
         modifier = Modifier.testTag(TestTags.DISCARD_DIALOG),

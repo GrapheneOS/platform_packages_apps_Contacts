@@ -15,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.NameState
@@ -49,7 +51,7 @@ internal fun NameFields(
             OutlinedTextField(
                 value = nameState.first,
                 onValueChange = { onAction(ContactCreationAction.UpdateFirstName(it)) },
-                label = { Text("First name") },
+                label = { Text(stringResource(R.string.contact_creation_first_name)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag(TestTags.NAME_FIRST),
@@ -58,7 +60,7 @@ internal fun NameFields(
             OutlinedTextField(
                 value = nameState.last,
                 onValueChange = { onAction(ContactCreationAction.UpdateLastName(it)) },
-                label = { Text("Last name") },
+                label = { Text(stringResource(R.string.contact_creation_last_name)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag(TestTags.NAME_LAST),

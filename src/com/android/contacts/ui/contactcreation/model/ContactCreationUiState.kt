@@ -3,6 +3,7 @@ package com.android.contacts.ui.contactcreation.model
 import android.net.Uri
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.contactcreation.component.AddressType
 import com.android.contacts.ui.contactcreation.component.EmailType
@@ -57,6 +58,7 @@ internal data class ContactCreationUiState(
             photoUri != null
 }
 
+@Immutable
 @Parcelize
 internal data class PhoneFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -64,6 +66,7 @@ internal data class PhoneFieldState(
     val type: PhoneType = PhoneType.Mobile,
 ) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class EmailFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -71,6 +74,7 @@ internal data class EmailFieldState(
     val type: EmailType = EmailType.Home,
 ) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class AddressFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -92,6 +96,7 @@ internal data class OrganizationFieldState(val company: String = "", val title: 
     fun hasData(): Boolean = company.isNotBlank() || title.isNotBlank()
 }
 
+@Immutable
 @Parcelize
 internal data class EventFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -99,6 +104,7 @@ internal data class EventFieldState(
     val type: EventType = EventType.Birthday,
 ) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class RelationFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -106,6 +112,7 @@ internal data class RelationFieldState(
     val type: RelationType = RelationType.Spouse,
 ) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class ImFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -113,6 +120,7 @@ internal data class ImFieldState(
     val protocol: ImProtocol = ImProtocol.Jabber,
 ) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class WebsiteFieldState(
     val id: String = UUID.randomUUID().toString(),
@@ -120,8 +128,10 @@ internal data class WebsiteFieldState(
     val type: WebsiteType = WebsiteType.Homepage,
 ) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class GroupFieldState(val groupId: Long, val title: String) : Parcelable
 
+@Immutable
 @Parcelize
 internal data class GroupInfo(val groupId: Long, val title: String) : Parcelable

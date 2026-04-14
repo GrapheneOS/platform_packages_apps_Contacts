@@ -36,11 +36,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Size
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 
@@ -124,7 +126,7 @@ private fun PhotoImage(photoUri: Uri) {
             .size(Size(PHOTO_DOWNSAMPLE_PX, PHOTO_DOWNSAMPLE_PX))
             .crossfade(true)
             .build(),
-        contentDescription = "Contact photo",
+        contentDescription = stringResource(R.string.contact_creation_contact_photo),
         contentScale = ContentScale.Crop,
         modifier = Modifier.size(AVATAR_SIZE_DP.dp),
     )
@@ -135,7 +137,7 @@ private fun PlaceholderIcon() {
     Box(contentAlignment = Alignment.Center, modifier = Modifier.size(AVATAR_SIZE_DP.dp)) {
         Icon(
             imageVector = Icons.Filled.Person,
-            contentDescription = "Add photo",
+            contentDescription = stringResource(R.string.contact_creation_add_photo),
             modifier = Modifier
                 .size(PLACEHOLDER_ICON_SIZE_DP.dp)
                 .testTag(TestTags.PHOTO_PLACEHOLDER_ICON),
@@ -157,7 +159,7 @@ private fun PhotoDropdownMenu(
         modifier = Modifier.testTag(TestTags.PHOTO_MENU),
     ) {
         DropdownMenuItem(
-            text = { Text("Choose photo") },
+            text = { Text(stringResource(R.string.contact_creation_choose_photo)) },
             onClick = {
                 onDismiss()
                 onAction(ContactCreationAction.RequestGallery)
@@ -166,7 +168,7 @@ private fun PhotoDropdownMenu(
             modifier = Modifier.testTag(TestTags.PHOTO_PICK_GALLERY),
         )
         DropdownMenuItem(
-            text = { Text("Take photo") },
+            text = { Text(stringResource(R.string.take_photo)) },
             onClick = {
                 onDismiss()
                 onAction(ContactCreationAction.RequestCamera)
@@ -176,7 +178,7 @@ private fun PhotoDropdownMenu(
         )
         if (hasPhoto) {
             DropdownMenuItem(
-                text = { Text("Remove photo") },
+                text = { Text(stringResource(R.string.removePhoto)) },
                 onClick = {
                     onDismiss()
                     onAction(ContactCreationAction.RemovePhoto)

@@ -3,15 +3,21 @@ package com.android.contacts.ui.contactcreation.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.GroupFieldState
@@ -25,12 +31,19 @@ internal fun LazyListScope.groupSection(
     if (availableGroups.isEmpty()) return
 
     item(key = "group_header", contentType = "group_header") {
-        Text(
-            text = "Groups",
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
                 .testTag(TestTags.GROUP_SECTION),
-        )
+        ) {
+            Icon(
+                Icons.Filled.Label,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp).padding(end = 8.dp),
+            )
+            Text(text = stringResource(R.string.contact_creation_groups))
+        }
     }
     itemsIndexed(
         items = availableGroups,

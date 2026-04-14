@@ -20,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
@@ -41,6 +43,7 @@ internal fun LazyListScope.addressSection(
         AddressFieldRow(
             address = address,
             index = index,
+            showDelete = addresses.size > 1,
             onAction = onAction,
             modifier = if (reduceMotion) {
                 Modifier.animateItem()
@@ -60,7 +63,7 @@ internal fun LazyListScope.addressSection(
                 .testTag(TestTags.ADDRESS_ADD),
         ) {
             Icon(Icons.Filled.Add, contentDescription = null)
-            Text("Add address")
+            Text(stringResource(R.string.contact_creation_add_address))
         }
     }
 }
@@ -69,6 +72,7 @@ internal fun LazyListScope.addressSection(
 internal fun AddressFieldRow(
     address: AddressFieldState,
     index: Int,
+    showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -88,11 +92,16 @@ internal fun AddressFieldRow(
             onAction = onAction,
             modifier = Modifier.weight(1f),
         )
-        IconButton(
-            onClick = { onAction(ContactCreationAction.RemoveAddress(address.id)) },
-            modifier = Modifier.testTag(TestTags.addressDelete(index)),
-        ) {
-            Icon(Icons.Filled.Close, contentDescription = "Remove address")
+        if (showDelete) {
+            IconButton(
+                onClick = { onAction(ContactCreationAction.RemoveAddress(address.id)) },
+                modifier = Modifier.testTag(TestTags.addressDelete(index)),
+            ) {
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = stringResource(R.string.contact_creation_remove_address),
+                )
+            }
         }
     }
 }
@@ -105,19 +114,39 @@ private fun AddressFieldColumns(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        AddressTextField(address.street, "Street", TestTags.addressStreet(index)) {
+        AddressTextField(
+            address.street,
+            stringResource(R.string.postal_street),
+            TestTags.addressStreet(index),
+        ) {
             onAction(ContactCreationAction.UpdateAddressStreet(address.id, it))
         }
-        AddressTextField(address.city, "City", TestTags.addressCity(index)) {
+        AddressTextField(
+            address.city,
+            stringResource(R.string.postal_city),
+            TestTags.addressCity(index),
+        ) {
             onAction(ContactCreationAction.UpdateAddressCity(address.id, it))
         }
-        AddressTextField(address.region, "State/Region", TestTags.addressRegion(index)) {
+        AddressTextField(
+            address.region,
+            stringResource(R.string.postal_region),
+            TestTags.addressRegion(index),
+        ) {
             onAction(ContactCreationAction.UpdateAddressRegion(address.id, it))
         }
-        AddressTextField(address.postcode, "Postal code", TestTags.addressPostcode(index)) {
+        AddressTextField(
+            address.postcode,
+            stringResource(R.string.postal_postcode),
+            TestTags.addressPostcode(index),
+        ) {
             onAction(ContactCreationAction.UpdateAddressPostcode(address.id, it))
         }
-        AddressTextField(address.country, "Country", TestTags.addressCountry(index)) {
+        AddressTextField(
+            address.country,
+            stringResource(R.string.postal_country),
+            TestTags.addressCountry(index),
+        ) {
             onAction(ContactCreationAction.UpdateAddressCountry(address.id, it))
         }
     }
