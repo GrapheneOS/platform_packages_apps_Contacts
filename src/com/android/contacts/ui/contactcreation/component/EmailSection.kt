@@ -1,5 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
@@ -15,6 +16,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -67,6 +72,8 @@ internal fun EmailFieldRow(
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showCustomDialog by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -77,15 +84,28 @@ internal fun EmailFieldRow(
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(end = 8.dp),
         )
-        OutlinedTextField(
-            value = email.address,
-            onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },
-            label = { Text(stringResource(R.string.emailLabelsGroup)) },
-            modifier = Modifier
-                .weight(1f)
-                .testTag(TestTags.emailField(index)),
-            singleLine = true,
-        )
+        Column(modifier = Modifier.weight(1f)) {
+            FieldTypeSelector(
+                currentType = email.type,
+                types = EmailType.selectorTypes,
+                typeLabel = { it.label() },
+                onTypeSelected = { selected ->
+                    if (selected is EmailType.Custom && selected.label.isEmpty()) {
+                        showCustomDialog = true
+                    } else {
+                        onAction(ContactCreationAction.UpdateEmailType(email.id, selected))
+                    }
+                },
+                modifier = Modifier.testTag(TestTags.emailType(index)),
+            )
+            OutlinedTextField(
+                value = email.address,
+                onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },
+                label = { Text(stringResource(R.string.emailLabelsGroup)) },
+                modifier = Modifier.testTag(TestTags.emailField(index)),
+                singleLine = true,
+            )
+        }
         if (showDelete) {
             IconButton(
                 onClick = { onAction(ContactCreationAction.RemoveEmail(email.id)) },
@@ -97,5 +117,15 @@ internal fun EmailFieldRow(
                 )
             }
         }
+    }
+
+    if (showCustomDialog) {
+        CustomLabelDialog(
+            onConfirm = { label ->
+                showCustomDialog = false
+                onAction(ContactCreationAction.UpdateEmailType(email.id, EmailType.Custom(label)))
+            },
+            onDismiss = { showCustomDialog = false },
+        )
     }
 }

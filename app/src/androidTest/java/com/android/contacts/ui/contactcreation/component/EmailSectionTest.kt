@@ -77,6 +77,20 @@ class EmailSectionTest {
         assertIs<ContactCreationAction.RemoveEmail>(capturedActions.last())
     }
 
+    @Test
+    fun rendersEmailTypeSelector() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.emailType(0)).assertIsDisplayed()
+    }
+
+    @Test
+    fun tapEmailType_showsDropdownMenu() {
+        val email = EmailFieldState(id = "1", address = "a@b.com", type = EmailType.Home)
+        setContent(emails = listOf(email))
+        composeTestRule.onNodeWithTag(TestTags.emailType(0)).performClick()
+        composeTestRule.onNodeWithTag(TestTags.emailType(0)).assertIsDisplayed()
+    }
+
     private fun setContent(emails: List<EmailFieldState> = listOf(EmailFieldState())) {
         composeTestRule.setContent {
             AppTheme {

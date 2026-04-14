@@ -17,6 +17,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -69,6 +73,8 @@ internal fun AddressFieldRow(
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var showCustomDialog by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.Top,
@@ -83,6 +89,7 @@ internal fun AddressFieldRow(
             address = address,
             index = index,
             onAction = onAction,
+            onRequestCustomLabel = { showCustomDialog = true },
             modifier = Modifier.weight(1f),
         )
         if (showDelete) {
@@ -97,6 +104,21 @@ internal fun AddressFieldRow(
             }
         }
     }
+
+    if (showCustomDialog) {
+        CustomLabelDialog(
+            onConfirm = { label ->
+                showCustomDialog = false
+                onAction(
+                    ContactCreationAction.UpdateAddressType(
+                        address.id,
+                        AddressType.Custom(label),
+                    ),
+                )
+            },
+            onDismiss = { showCustomDialog = false },
+        )
+    }
 }
 
 @Composable
@@ -104,9 +126,23 @@ private fun AddressFieldColumns(
     address: AddressFieldState,
     index: Int,
     onAction: (ContactCreationAction) -> Unit,
+    onRequestCustomLabel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
+        FieldTypeSelector(
+            currentType = address.type,
+            types = AddressType.selectorTypes,
+            typeLabel = { it.label() },
+            onTypeSelected = { selected ->
+                if (selected is AddressType.Custom && selected.label.isEmpty()) {
+                    onRequestCustomLabel()
+                } else {
+                    onAction(ContactCreationAction.UpdateAddressType(address.id, selected))
+                }
+            },
+            modifier = Modifier.testTag(TestTags.addressType(index)),
+        )
         AddressTextField(
             address.street,
             stringResource(R.string.postal_street),

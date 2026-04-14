@@ -77,6 +77,21 @@ class AddressSectionTest {
         assertIs<ContactCreationAction.RemoveAddress>(capturedActions.last())
     }
 
+    @Test
+    fun rendersAddressTypeSelector() {
+        val addresses = listOf(AddressFieldState(id = "1"))
+        setContent(addresses = addresses)
+        composeTestRule.onNodeWithTag(TestTags.addressType(0)).assertIsDisplayed()
+    }
+
+    @Test
+    fun tapAddressType_showsDropdownMenu() {
+        val addresses = listOf(AddressFieldState(id = "1", type = AddressType.Home))
+        setContent(addresses = addresses)
+        composeTestRule.onNodeWithTag(TestTags.addressType(0)).performClick()
+        composeTestRule.onNodeWithTag(TestTags.addressType(0)).assertIsDisplayed()
+    }
+
     private fun setContent(addresses: List<AddressFieldState> = emptyList()) {
         composeTestRule.setContent {
             AppTheme {

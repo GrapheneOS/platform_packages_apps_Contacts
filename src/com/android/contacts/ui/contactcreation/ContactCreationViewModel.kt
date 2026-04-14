@@ -8,12 +8,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.contacts.R
 import com.android.contacts.di.core.DefaultDispatcher
-import com.android.contacts.ui.contactcreation.delegate.ContactFieldsDelegate
 import com.android.contacts.ui.contactcreation.mapper.RawContactDeltaMapper
+import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationEffect
 import com.android.contacts.ui.contactcreation.model.ContactCreationUiState
+import com.android.contacts.ui.contactcreation.model.EmailFieldState
+import com.android.contacts.ui.contactcreation.model.EventFieldState
+import com.android.contacts.ui.contactcreation.model.GroupFieldState
+import com.android.contacts.ui.contactcreation.model.ImFieldState
 import com.android.contacts.ui.contactcreation.model.NameState
+import com.android.contacts.ui.contactcreation.model.PhoneFieldState
+import com.android.contacts.ui.contactcreation.model.RelationFieldState
+import com.android.contacts.ui.contactcreation.model.WebsiteFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -37,7 +44,6 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 internal class ContactCreationViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val fieldsDelegate: ContactFieldsDelegate,
     private val deltaMapper: RawContactDeltaMapper,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @ApplicationContext private val appContext: Context,
@@ -55,17 +61,6 @@ internal class ContactCreationViewModel @Inject constructor(
         // Clean up any orphaned photo temp files from previous sessions
         cleanupTempPhotos()
 
-        val restored = savedStateHandle.get<ContactCreationUiState>(STATE_KEY)
-        if (restored != null) {
-            fieldsDelegate.restorePhones(restored.phoneNumbers)
-            fieldsDelegate.restoreEmails(restored.emails)
-            fieldsDelegate.restoreAddresses(restored.addresses)
-            fieldsDelegate.restoreEvents(restored.events)
-            fieldsDelegate.restoreRelations(restored.relations)
-            fieldsDelegate.restoreImAccounts(restored.imAccounts)
-            fieldsDelegate.restoreWebsites(restored.websites)
-            fieldsDelegate.restoreGroups(restored.groups)
-        }
         viewModelScope.launch {
             _uiState.collect { savedStateHandle[STATE_KEY] = it }
         }
@@ -91,7 +86,7 @@ internal class ContactCreationViewModel @Inject constructor(
                     copy(
                         selectedAccount = action.account,
                         accountName = action.account.name,
-                        groups = fieldsDelegate.clearGroups(),
+                        groups = emptyList(),
                     )
                 }
             else -> handleFieldUpdateAction(action)
@@ -119,7 +114,15 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState { copy(sipAddress = action.value) }
             is ContactCreationAction.ToggleGroup ->
                 updateState {
-                    copy(groups = fieldsDelegate.toggleGroup(action.groupId, action.title))
+                    val existing = groups.find { it.groupId == action.groupId }
+                    if (existing != null) {
+                        copy(groups = groups.filterNot { it.groupId == action.groupId })
+                    } else {
+                        copy(
+                            groups = groups +
+                                GroupFieldState(groupId = action.groupId, title = action.title),
+                        )
+                    }
                 }
             else -> handleContactInfoCrud(action)
         }
@@ -128,26 +131,44 @@ internal class ContactCreationViewModel @Inject constructor(
     private fun handleContactInfoCrud(action: ContactCreationAction) {
         when (action) {
             is ContactCreationAction.AddPhone ->
-                updateState { copy(phoneNumbers = fieldsDelegate.addPhone()) }
+                updateState { copy(phoneNumbers = phoneNumbers + PhoneFieldState()) }
             is ContactCreationAction.RemovePhone ->
-                updateState { copy(phoneNumbers = fieldsDelegate.removePhone(action.id)) }
+                updateState { copy(phoneNumbers = phoneNumbers.filterNot { it.id == action.id }) }
             is ContactCreationAction.UpdatePhone ->
                 updateState {
-                    copy(phoneNumbers = fieldsDelegate.updatePhone(action.id, action.value))
+                    copy(
+                        phoneNumbers = phoneNumbers.map {
+                            if (it.id == action.id) it.copy(number = action.value) else it
+                        },
+                    )
                 }
             is ContactCreationAction.UpdatePhoneType ->
                 updateState {
-                    copy(phoneNumbers = fieldsDelegate.updatePhoneType(action.id, action.type))
+                    copy(
+                        phoneNumbers = phoneNumbers.map {
+                            if (it.id == action.id) it.copy(type = action.type) else it
+                        },
+                    )
                 }
             is ContactCreationAction.AddEmail ->
-                updateState { copy(emails = fieldsDelegate.addEmail()) }
+                updateState { copy(emails = emails + EmailFieldState()) }
             is ContactCreationAction.RemoveEmail ->
-                updateState { copy(emails = fieldsDelegate.removeEmail(action.id)) }
+                updateState { copy(emails = emails.filterNot { it.id == action.id }) }
             is ContactCreationAction.UpdateEmail ->
-                updateState { copy(emails = fieldsDelegate.updateEmail(action.id, action.value)) }
+                updateState {
+                    copy(
+                        emails = emails.map {
+                            if (it.id == action.id) it.copy(address = action.value) else it
+                        },
+                    )
+                }
             is ContactCreationAction.UpdateEmailType ->
                 updateState {
-                    copy(emails = fieldsDelegate.updateEmailType(action.id, action.type))
+                    copy(
+                        emails = emails.map {
+                            if (it.id == action.id) it.copy(type = action.type) else it
+                        },
+                    )
                 }
             else -> handleAddressCrud(action)
         }
@@ -156,62 +177,90 @@ internal class ContactCreationViewModel @Inject constructor(
     private fun handleAddressCrud(action: ContactCreationAction) {
         when (action) {
             is ContactCreationAction.AddAddress ->
-                updateState { copy(addresses = fieldsDelegate.addAddress()) }
+                updateState { copy(addresses = addresses + AddressFieldState()) }
             is ContactCreationAction.RemoveAddress ->
-                updateState { copy(addresses = fieldsDelegate.removeAddress(action.id)) }
-            is ContactCreationAction.UpdateAddressStreet ->
                 updateState {
-                    copy(addresses = fieldsDelegate.updateAddressStreet(action.id, action.value))
+                    copy(addresses = addresses.filterNot { it.id == action.id })
                 }
-            is ContactCreationAction.UpdateAddressCity ->
-                updateState {
-                    copy(addresses = fieldsDelegate.updateAddressCity(action.id, action.value))
-                }
-            is ContactCreationAction.UpdateAddressRegion ->
-                updateState {
-                    copy(addresses = fieldsDelegate.updateAddressRegion(action.id, action.value))
-                }
-            is ContactCreationAction.UpdateAddressPostcode ->
-                updateState {
-                    copy(addresses = fieldsDelegate.updateAddressPostcode(action.id, action.value))
-                }
-            is ContactCreationAction.UpdateAddressCountry ->
-                updateState {
-                    copy(addresses = fieldsDelegate.updateAddressCountry(action.id, action.value))
-                }
-            is ContactCreationAction.UpdateAddressType ->
-                updateState {
-                    copy(addresses = fieldsDelegate.updateAddressType(action.id, action.type))
-                }
+            is ContactCreationAction.UpdateAddressStreet,
+            is ContactCreationAction.UpdateAddressCity,
+            is ContactCreationAction.UpdateAddressRegion,
+            is ContactCreationAction.UpdateAddressPostcode,
+            is ContactCreationAction.UpdateAddressCountry,
+            is ContactCreationAction.UpdateAddressType,
+            -> handleAddressFieldUpdate(action)
             else -> handleMoreFieldsCrud(action)
+        }
+    }
+
+    private fun handleAddressFieldUpdate(action: ContactCreationAction) {
+        when (action) {
+            is ContactCreationAction.UpdateAddressStreet ->
+                updateAddress(action.id) { copy(street = action.value) }
+            is ContactCreationAction.UpdateAddressCity ->
+                updateAddress(action.id) { copy(city = action.value) }
+            is ContactCreationAction.UpdateAddressRegion ->
+                updateAddress(action.id) { copy(region = action.value) }
+            is ContactCreationAction.UpdateAddressPostcode ->
+                updateAddress(action.id) { copy(postcode = action.value) }
+            is ContactCreationAction.UpdateAddressCountry ->
+                updateAddress(action.id) { copy(country = action.value) }
+            is ContactCreationAction.UpdateAddressType ->
+                updateAddress(action.id) { copy(type = action.type) }
+            else -> Unit
+        }
+    }
+
+    private inline fun updateAddress(
+        id: String,
+        crossinline transform: AddressFieldState.() -> AddressFieldState,
+    ) {
+        updateState {
+            copy(addresses = addresses.map { if (it.id == id) it.transform() else it })
         }
     }
 
     private fun handleMoreFieldsCrud(action: ContactCreationAction) {
         when (action) {
             is ContactCreationAction.AddEvent ->
-                updateState { copy(events = fieldsDelegate.addEvent()) }
+                updateState { copy(events = events + EventFieldState()) }
             is ContactCreationAction.RemoveEvent ->
-                updateState { copy(events = fieldsDelegate.removeEvent(action.id)) }
+                updateState { copy(events = events.filterNot { it.id == action.id }) }
             is ContactCreationAction.UpdateEvent ->
                 updateState {
-                    copy(events = fieldsDelegate.updateEvent(action.id, action.value))
+                    copy(
+                        events = events.map {
+                            if (it.id == action.id) it.copy(startDate = action.value) else it
+                        },
+                    )
                 }
             is ContactCreationAction.UpdateEventType ->
                 updateState {
-                    copy(events = fieldsDelegate.updateEventType(action.id, action.type))
+                    copy(
+                        events = events.map {
+                            if (it.id == action.id) it.copy(type = action.type) else it
+                        },
+                    )
                 }
             is ContactCreationAction.AddRelation ->
-                updateState { copy(relations = fieldsDelegate.addRelation()) }
+                updateState { copy(relations = relations + RelationFieldState()) }
             is ContactCreationAction.RemoveRelation ->
-                updateState { copy(relations = fieldsDelegate.removeRelation(action.id)) }
+                updateState { copy(relations = relations.filterNot { it.id == action.id }) }
             is ContactCreationAction.UpdateRelation ->
                 updateState {
-                    copy(relations = fieldsDelegate.updateRelation(action.id, action.value))
+                    copy(
+                        relations = relations.map {
+                            if (it.id == action.id) it.copy(name = action.value) else it
+                        },
+                    )
                 }
             is ContactCreationAction.UpdateRelationType ->
                 updateState {
-                    copy(relations = fieldsDelegate.updateRelationType(action.id, action.type))
+                    copy(
+                        relations = relations.map {
+                            if (it.id == action.id) it.copy(type = action.type) else it
+                        },
+                    )
                 }
             else -> handleImWebsiteCrud(action)
         }
@@ -220,33 +269,44 @@ internal class ContactCreationViewModel @Inject constructor(
     private fun handleImWebsiteCrud(action: ContactCreationAction) {
         when (action) {
             is ContactCreationAction.AddIm ->
-                updateState { copy(imAccounts = fieldsDelegate.addIm()) }
+                updateState { copy(imAccounts = imAccounts + ImFieldState()) }
             is ContactCreationAction.RemoveIm ->
-                updateState { copy(imAccounts = fieldsDelegate.removeIm(action.id)) }
+                updateState { copy(imAccounts = imAccounts.filterNot { it.id == action.id }) }
             is ContactCreationAction.UpdateIm ->
                 updateState {
-                    copy(imAccounts = fieldsDelegate.updateIm(action.id, action.value))
+                    copy(
+                        imAccounts = imAccounts.map {
+                            if (it.id == action.id) it.copy(data = action.value) else it
+                        },
+                    )
                 }
             is ContactCreationAction.UpdateImProtocol ->
                 updateState {
                     copy(
-                        imAccounts = fieldsDelegate.updateImProtocol(
-                            action.id,
-                            action.protocol,
-                        ),
+                        imAccounts = imAccounts.map {
+                            if (it.id == action.id) it.copy(protocol = action.protocol) else it
+                        },
                     )
                 }
             is ContactCreationAction.AddWebsite ->
-                updateState { copy(websites = fieldsDelegate.addWebsite()) }
+                updateState { copy(websites = websites + WebsiteFieldState()) }
             is ContactCreationAction.RemoveWebsite ->
-                updateState { copy(websites = fieldsDelegate.removeWebsite(action.id)) }
+                updateState { copy(websites = websites.filterNot { it.id == action.id }) }
             is ContactCreationAction.UpdateWebsite ->
                 updateState {
-                    copy(websites = fieldsDelegate.updateWebsite(action.id, action.value))
+                    copy(
+                        websites = websites.map {
+                            if (it.id == action.id) it.copy(url = action.value) else it
+                        },
+                    )
                 }
             is ContactCreationAction.UpdateWebsiteType ->
                 updateState {
-                    copy(websites = fieldsDelegate.updateWebsiteType(action.id, action.type))
+                    copy(
+                        websites = websites.map {
+                            if (it.id == action.id) it.copy(type = action.type) else it
+                        },
+                    )
                 }
             else -> Unit
         }

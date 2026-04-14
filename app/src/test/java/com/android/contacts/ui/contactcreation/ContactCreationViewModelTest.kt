@@ -5,7 +5,6 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.android.contacts.model.RawContactDelta
 import com.android.contacts.test.MainDispatcherRule
-import com.android.contacts.ui.contactcreation.delegate.ContactFieldsDelegate
 import com.android.contacts.ui.contactcreation.mapper.RawContactDeltaMapper
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationEffect
@@ -449,7 +448,6 @@ class ContactCreationViewModelTest {
         )
         return ContactCreationViewModel(
             savedStateHandle = savedStateHandle,
-            fieldsDelegate = ContactFieldsDelegate(),
             deltaMapper = RawContactDeltaMapper(),
             defaultDispatcher = mainDispatcherRule.testDispatcher,
             appContext = RuntimeEnvironment.getApplication(),

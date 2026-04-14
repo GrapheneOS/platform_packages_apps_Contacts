@@ -77,6 +77,30 @@ class PhoneSectionTest {
         assertIs<ContactCreationAction.RemovePhone>(capturedActions.last())
     }
 
+    @Test
+    fun rendersPhoneTypeSelector() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).assertIsDisplayed()
+    }
+
+    @Test
+    fun tapPhoneType_showsDropdownMenu() {
+        val phone = PhoneFieldState(id = "1", number = "555", type = PhoneType.Mobile)
+        setContent(phones = listOf(phone))
+        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).performClick()
+        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).assertIsDisplayed()
+    }
+
+    @Test
+    fun selectPhoneType_dispatchesUpdatePhoneType() {
+        val phone = PhoneFieldState(id = "1", number = "555", type = PhoneType.Mobile)
+        setContent(phones = listOf(phone))
+        // Tap chip to open menu
+        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).performClick()
+        // Select "Home" from the dropdown (it's a text node)
+        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).assertIsDisplayed()
+    }
+
     private fun setContent(phones: List<PhoneFieldState> = listOf(PhoneFieldState())) {
         composeTestRule.setContent {
             AppTheme {

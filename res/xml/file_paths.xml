@@ -15,6 +15,11 @@
 -->
 
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Scoped to contact_photos/ subdirectory for photo capture temp files -->
+    <!--
+        Security: previously this used path="" which exposed the entire getCacheDir() —
+        any file under the app's cache directory was servable via FileProvider URI.
+        Now scoped to contact_photos/ only, reducing the attack surface so that only
+        photo temp files used during contact creation are exposed, not other cached data.
+    -->
     <cache-path name="contact_photos" path="contact_photos/" />
 </paths>
