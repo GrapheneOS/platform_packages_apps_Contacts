@@ -9,8 +9,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -22,6 +24,9 @@ import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
+import com.android.contacts.ui.core.gentleBounce
+import com.android.contacts.ui.core.isReduceMotionEnabled
+import com.android.contacts.ui.core.smoothExit
 
 internal fun LazyListScope.addressSection(
     addresses: List<AddressFieldState>,
@@ -32,11 +37,19 @@ internal fun LazyListScope.addressSection(
         key = { _, item -> item.id },
         contentType = { _, _ -> "address_field" },
     ) { index, address ->
+        val reduceMotion = isReduceMotionEnabled()
         AddressFieldRow(
             address = address,
             index = index,
             onAction = onAction,
-            modifier = Modifier.animateItem(),
+            modifier = if (reduceMotion) {
+                Modifier.animateItem()
+            } else {
+                Modifier.animateItem(
+                    fadeInSpec = gentleBounce(),
+                    fadeOutSpec = smoothExit(),
+                )
+            },
         )
     }
     item(key = "address_add", contentType = "address_add") {
@@ -63,6 +76,12 @@ internal fun AddressFieldRow(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.Top,
     ) {
+        Icon(
+            imageVector = Icons.Filled.Place,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 8.dp, top = 16.dp),
+        )
         AddressFieldColumns(
             address = address,
             index = index,

@@ -89,6 +89,43 @@ class ContactCreationEditorScreenTest {
         composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).assertIsEnabled()
     }
 
+    // --- Discard dialog ---
+
+    @Test
+    fun discardDialog_rendersWhenShowDiscardDialogTrue() {
+        setContent(state = ContactCreationUiState(showDiscardDialog = true))
+        composeTestRule.onNodeWithTag(TestTags.DISCARD_DIALOG).assertIsDisplayed()
+    }
+
+    @Test
+    fun discardDialog_notRenderedByDefault() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.DISCARD_DIALOG).assertDoesNotExist()
+    }
+
+    @Test
+    fun discardDialog_confirmDispatchesConfirmDiscard() {
+        setContent(state = ContactCreationUiState(showDiscardDialog = true))
+        composeTestRule.onNodeWithTag(TestTags.DISCARD_DIALOG_CONFIRM).performClick()
+        assertEquals(ContactCreationAction.ConfirmDiscard, capturedActions.last())
+    }
+
+    @Test
+    fun discardDialog_dismissDispatchesDismissDiscardDialog() {
+        setContent(state = ContactCreationUiState(showDiscardDialog = true))
+        composeTestRule.onNodeWithTag(TestTags.DISCARD_DIALOG_DISMISS).performClick()
+        assertEquals(ContactCreationAction.DismissDiscardDialog, capturedActions.last())
+    }
+
+    // --- More fields toggle ---
+
+    @Test
+    fun moreFieldsToggle_dispatchesToggleMoreFieldsAction() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.MORE_FIELDS_TOGGLE).performClick()
+        assertEquals(ContactCreationAction.ToggleMoreFields, capturedActions.last())
+    }
+
     private fun setContent(state: ContactCreationUiState = ContactCreationUiState()) {
         composeTestRule.setContent {
             AppTheme {

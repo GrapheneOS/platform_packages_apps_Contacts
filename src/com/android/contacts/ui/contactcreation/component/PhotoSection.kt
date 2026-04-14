@@ -1,13 +1,19 @@
 package com.android.contacts.ui.contactcreation.component
 
 import android.net.Uri
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
@@ -41,6 +47,7 @@ import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 private const val AVATAR_SIZE_DP = 96
 private const val PHOTO_DOWNSAMPLE_PX = 288 // 96dp * 3 (xxxhdpi)
 private const val PLACEHOLDER_ICON_SIZE_DP = 48
+private const val MORPHED_CORNER_DP = 16
 
 internal fun LazyListScope.photoSection(
     photoUri: Uri?,
@@ -64,35 +71,47 @@ internal fun PhotoAvatar(
     modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val cornerRadius by animateDpAsState(
+        targetValue = if (isPressed) MORPHED_CORNER_DP.dp else (AVATAR_SIZE_DP / 2).dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+        label = "avatar_shape_morph",
+    )
+    val morphedShape = RoundedCornerShape(cornerRadius)
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Box {
-            AvatarSurface(photoUri = photoUri, onClick = { menuExpanded = true })
+            Surface(
+                modifier = Modifier
+                    .size(AVATAR_SIZE_DP.dp)
+                    .clip(morphedShape)
+                    .testTag(TestTags.PHOTO_AVATAR)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                    ) {
+                        menuExpanded = true
+                    },
+                shape = morphedShape,
+                color = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                if (photoUri != null) {
+                    PhotoImage(photoUri)
+                } else {
+                    PlaceholderIcon()
+                }
+            }
             PhotoDropdownMenu(
                 expanded = menuExpanded,
                 hasPhoto = photoUri != null,
                 onDismiss = { menuExpanded = false },
                 onAction = onAction,
             )
-        }
-    }
-}
-
-@Composable
-private fun AvatarSurface(photoUri: Uri?, onClick: () -> Unit) {
-    Surface(
-        modifier = Modifier
-            .size(AVATAR_SIZE_DP.dp)
-            .clip(CircleShape)
-            .testTag(TestTags.PHOTO_AVATAR)
-            .clickable(onClick = onClick),
-        shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
-    ) {
-        if (photoUri != null) {
-            PhotoImage(photoUri)
-        } else {
-            PlaceholderIcon()
         }
     }
 }

@@ -79,6 +79,7 @@ internal class ContactCreationViewModel @Inject constructor(
             is ContactCreationAction.NavigateBack -> handleBack()
             is ContactCreationAction.Save -> save()
             is ContactCreationAction.ConfirmDiscard -> confirmDiscard()
+            is ContactCreationAction.DismissDiscardDialog -> dismissDiscardDialog()
 
             // Name
             is ContactCreationAction.UpdatePrefix -> updateName { copy(prefix = action.value) }
@@ -278,7 +279,7 @@ internal class ContactCreationViewModel @Inject constructor(
     private fun handleBack() {
         viewModelScope.launch {
             if (_uiState.value.hasPendingChanges()) {
-                _effects.send(ContactCreationEffect.ShowDiscardDialog)
+                updateState { copy(showDiscardDialog = true) }
             } else {
                 _effects.send(ContactCreationEffect.NavigateBack)
             }
@@ -287,8 +288,13 @@ internal class ContactCreationViewModel @Inject constructor(
 
     private fun confirmDiscard() {
         viewModelScope.launch {
+            updateState { copy(showDiscardDialog = false) }
             _effects.send(ContactCreationEffect.NavigateBack)
         }
+    }
+
+    private fun dismissDiscardDialog() {
+        updateState { copy(showDiscardDialog = false) }
     }
 
     private fun requestCamera() {

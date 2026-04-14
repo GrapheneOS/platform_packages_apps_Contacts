@@ -1,15 +1,16 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -21,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.EmailFieldState
+import com.android.contacts.ui.core.gentleBounce
+import com.android.contacts.ui.core.isReduceMotionEnabled
+import com.android.contacts.ui.core.smoothExit
 
 internal fun LazyListScope.emailSection(
     emails: List<EmailFieldState>,
@@ -31,12 +35,20 @@ internal fun LazyListScope.emailSection(
         key = { _, item -> item.id },
         contentType = { _, _ -> "email_field" },
     ) { index, email ->
+        val reduceMotion = isReduceMotionEnabled()
         EmailFieldRow(
             email = email,
             index = index,
             showDelete = emails.size > 1,
             onAction = onAction,
-            modifier = Modifier.animateItem(),
+            modifier = if (reduceMotion) {
+                Modifier.animateItem()
+            } else {
+                Modifier.animateItem(
+                    fadeInSpec = gentleBounce(),
+                    fadeOutSpec = smoothExit(),
+                )
+            },
         )
     }
     item(key = "email_add", contentType = "email_add") {
@@ -64,6 +76,12 @@ internal fun EmailFieldRow(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(
+            imageVector = Icons.Filled.Email,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 8.dp),
+        )
         OutlinedTextField(
             value = email.address,
             onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },

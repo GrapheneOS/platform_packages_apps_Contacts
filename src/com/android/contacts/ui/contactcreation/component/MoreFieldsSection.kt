@@ -3,7 +3,11 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,10 +18,15 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -88,8 +97,12 @@ private fun LazyListScope.moreFieldsContent(
     item(key = "more_fields_content", contentType = "more_fields_content") {
         AnimatedVisibility(
             visible = isExpanded,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
+            enter = expandVertically(
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+            ) + fadeIn(),
+            exit = shrinkVertically(
+                animationSpec = spring(stiffness = Spring.StiffnessMedium),
+            ) + fadeOut(),
             modifier = Modifier.testTag(TestTags.MORE_FIELDS_CONTENT),
         ) {
             MoreFieldsSingleFields(nickname, note, sipAddress, showSipField, onAction)
@@ -177,6 +190,12 @@ private fun EventFieldRow(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(
+            imageVector = Icons.Filled.Event,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 8.dp),
+        )
         OutlinedTextField(
             value = event.startDate,
             onValueChange = { onAction(ContactCreationAction.UpdateEvent(event.id, it)) },
@@ -232,6 +251,12 @@ private fun RelationFieldRow(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(
+            imageVector = Icons.Filled.People,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 8.dp),
+        )
         OutlinedTextField(
             value = relation.name,
             onValueChange = { onAction(ContactCreationAction.UpdateRelation(relation.id, it)) },
@@ -287,6 +312,12 @@ private fun ImFieldRow(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(
+            imageVector = Icons.Filled.Message,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 8.dp),
+        )
         OutlinedTextField(
             value = im.data,
             onValueChange = { onAction(ContactCreationAction.UpdateIm(im.id, it)) },
@@ -342,6 +373,12 @@ private fun WebsiteFieldRow(
         modifier = modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(
+            imageVector = Icons.Filled.Public,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 8.dp),
+        )
         OutlinedTextField(
             value = website.url,
             onValueChange = { onAction(ContactCreationAction.UpdateWebsite(website.id, it)) },

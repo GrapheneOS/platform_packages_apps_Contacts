@@ -37,6 +37,7 @@ internal data class ContactCreationUiState(
     val isSaving: Boolean = false,
     val isMoreFieldsExpanded: Boolean = false,
     val showSipField: Boolean = true,
+    val showDiscardDialog: Boolean = false,
 ) : Parcelable {
     @Suppress("CyclomaticComplexMethod")
     fun hasPendingChanges(): Boolean =

@@ -83,6 +83,11 @@ internal object TestTags {
     // Account
     const val ACCOUNT_CHIP = "contact_creation_account_chip"
 
+    // Discard dialog
+    const val DISCARD_DIALOG = "contact_creation_discard_dialog"
+    const val DISCARD_DIALOG_CONFIRM = "contact_creation_discard_dialog_confirm"
+    const val DISCARD_DIALOG_DISMISS = "contact_creation_discard_dialog_dismiss"
+
     // Photo
     const val PHOTO_AVATAR = "contact_creation_photo_avatar"
     const val PHOTO_MENU = "contact_creation_photo_menu"

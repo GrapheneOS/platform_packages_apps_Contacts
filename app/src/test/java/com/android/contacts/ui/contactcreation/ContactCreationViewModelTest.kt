@@ -3,6 +3,7 @@ package com.android.contacts.ui.contactcreation
 import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.android.contacts.model.RawContactDelta
 import com.android.contacts.test.MainDispatcherRule
 import com.android.contacts.ui.contactcreation.delegate.ContactFieldsDelegate
 import com.android.contacts.ui.contactcreation.mapper.RawContactDeltaMapper
@@ -122,25 +123,77 @@ class ContactCreationViewModelTest {
         }
 
     @Test
-    fun navigateBack_withChanges_emitsDiscardDialog() =
+    fun navigateBack_withChanges_setsShowDiscardDialog() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateFirstName("John"))
+        vm.onAction(ContactCreationAction.NavigateBack)
+        assertTrue(vm.uiState.value.showDiscardDialog)
+    }
+
+    @Test
+    fun navigateBack_withChanges_doesNotEmitNavigateBack() =
         runTest(mainDispatcherRule.testDispatcher) {
             val vm = createViewModel()
             vm.onAction(ContactCreationAction.UpdateFirstName("John"))
 
             vm.effects.test {
                 vm.onAction(ContactCreationAction.NavigateBack)
-                assertIs<ContactCreationEffect.ShowDiscardDialog>(awaitItem())
-                cancelAndIgnoreRemainingEvents()
+                expectNoEvents()
             }
         }
+
+    @Test
+    fun dismissDiscardDialog_clearsShowDiscardDialog() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateFirstName("John"))
+        vm.onAction(ContactCreationAction.NavigateBack)
+        assertTrue(vm.uiState.value.showDiscardDialog)
+
+        vm.onAction(ContactCreationAction.DismissDiscardDialog)
+        assertFalse(vm.uiState.value.showDiscardDialog)
+    }
 
     @Test
     fun confirmDiscard_emitsNavigateBack() =
         runTest(mainDispatcherRule.testDispatcher) {
             val vm = createViewModel()
+            vm.onAction(ContactCreationAction.UpdateFirstName("John"))
+            vm.onAction(ContactCreationAction.NavigateBack)
+
             vm.effects.test {
                 vm.onAction(ContactCreationAction.ConfirmDiscard)
                 assertIs<ContactCreationEffect.NavigateBack>(awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun confirmDiscard_clearsShowDiscardDialog() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateFirstName("John"))
+        vm.onAction(ContactCreationAction.NavigateBack)
+        assertTrue(vm.uiState.value.showDiscardDialog)
+
+        vm.onAction(ContactCreationAction.ConfirmDiscard)
+        assertFalse(vm.uiState.value.showDiscardDialog)
+    }
+
+    // --- Zero-account / local-only ---
+
+    @Test
+    fun save_withNoAccount_usesLocalAccount() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            val vm = createViewModel()
+            vm.onAction(ContactCreationAction.UpdateFirstName("Local"))
+
+            vm.effects.test {
+                vm.onAction(ContactCreationAction.Save)
+                val effect = awaitItem()
+                assertIs<ContactCreationEffect.Save>(effect)
+                val delta = effect.result.state[0]
+                assertIs<RawContactDelta>(delta)
+                // When no account selected, mapper calls setAccountToLocal()
+                assertNull(vm.uiState.value.selectedAccount)
                 cancelAndIgnoreRemainingEvents()
             }
         }

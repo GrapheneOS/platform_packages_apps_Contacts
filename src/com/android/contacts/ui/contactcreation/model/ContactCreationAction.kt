@@ -16,6 +16,7 @@ internal sealed interface ContactCreationAction {
     data object NavigateBack : ContactCreationAction
     data object Save : ContactCreationAction
     data object ConfirmDiscard : ContactCreationAction
+    data object DismissDiscardDialog : ContactCreationAction
 
     // Name
     data class UpdatePrefix(val value: String) : ContactCreationAction
