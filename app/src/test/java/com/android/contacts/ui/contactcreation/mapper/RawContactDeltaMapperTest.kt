@@ -1,5 +1,6 @@
 package com.android.contacts.ui.contactcreation.mapper
 
+import android.net.Uri
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Event
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership
@@ -613,6 +614,33 @@ class RawContactDeltaMapperTest {
 
         assertEquals(1, result.state[0].getMimeEntries(Phone.CONTENT_ITEM_TYPE)!!.size)
         assertEquals(1, result.state[0].getMimeEntries(Email.CONTENT_ITEM_TYPE)!!.size)
+    }
+
+    // --- Photo ---
+
+    @Test
+    fun photoUri_inUpdatedPhotosBundle() {
+        val photoUri = Uri.parse("content://media/external/images/1234")
+        val state = ContactCreationUiState(
+            nameState = NameState(first = "Photo"),
+            photoUri = photoUri,
+        )
+        val result = mapper.map(state, account = null)
+        val tempId = result.state[0].values.id.toString()
+        val bundledUri = result.updatedPhotos.getParcelable<Uri>(tempId)
+
+        assertEquals(photoUri, bundledUri)
+    }
+
+    @Test
+    fun nullPhotoUri_emptyUpdatedPhotosBundle() {
+        val state = ContactCreationUiState(
+            nameState = NameState(first = "NoPhoto"),
+            photoUri = null,
+        )
+        val result = mapper.map(state, account = null)
+
+        assertTrue(result.updatedPhotos.isEmpty)
     }
 
     @Test

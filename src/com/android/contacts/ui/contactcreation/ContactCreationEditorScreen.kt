@@ -27,6 +27,7 @@ import com.android.contacts.ui.contactcreation.component.moreFieldsSection
 import com.android.contacts.ui.contactcreation.component.nameSection
 import com.android.contacts.ui.contactcreation.component.organizationSection
 import com.android.contacts.ui.contactcreation.component.phoneSection
+import com.android.contacts.ui.contactcreation.component.photoSection
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationUiState
 
@@ -82,6 +83,7 @@ private fun ContactCreationFieldsList(
         modifier = Modifier.fillMaxSize(),
         contentPadding = contentPadding,
     ) {
+        photoSection(photoUri = uiState.photoUri, onAction = onAction)
         accountChipItem(accountName = uiState.accountName, onAction = onAction)
         nameSection(nameState = uiState.nameState, onAction = onAction)
         phoneSection(phones = uiState.phoneNumbers, onAction = onAction)

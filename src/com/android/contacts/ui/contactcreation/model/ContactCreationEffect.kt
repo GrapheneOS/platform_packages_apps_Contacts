@@ -9,4 +9,6 @@ internal sealed interface ContactCreationEffect {
     data class ShowError(val messageResId: Int) : ContactCreationEffect
     data object ShowDiscardDialog : ContactCreationEffect
     data object NavigateBack : ContactCreationEffect
+    data object LaunchGallery : ContactCreationEffect
+    data class LaunchCamera(val outputUri: Uri) : ContactCreationEffect
 }

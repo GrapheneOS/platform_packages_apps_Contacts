@@ -15,11 +15,13 @@ import kotlin.test.assertIs
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class ContactCreationViewModelTest {
@@ -181,6 +183,33 @@ class ContactCreationViewModelTest {
         assertEquals("555", vm.uiState.value.phoneNumbers[0].number)
     }
 
+    // --- Photo ---
+
+    @Test
+    fun setPhoto_updatesPhotoUri() {
+        val vm = createViewModel()
+        val uri = Uri.parse("content://media/external/images/1234")
+        vm.onAction(ContactCreationAction.SetPhoto(uri))
+        assertEquals(uri, vm.uiState.value.photoUri)
+    }
+
+    @Test
+    fun removePhoto_clearsPhotoUri() {
+        val vm = createViewModel()
+        val uri = Uri.parse("content://media/external/images/1234")
+        vm.onAction(ContactCreationAction.SetPhoto(uri))
+        vm.onAction(ContactCreationAction.RemovePhoto)
+        assertNull(vm.uiState.value.photoUri)
+    }
+
+    @Test
+    fun setPhoto_countsAsPendingChange() {
+        val vm = createViewModel()
+        val uri = Uri.parse("content://media/external/images/1234")
+        vm.onAction(ContactCreationAction.SetPhoto(uri))
+        assertTrue(vm.uiState.value.hasPendingChanges())
+    }
+
     @Test
     fun saveAction_setsIsSaving() =
         runTest(mainDispatcherRule.testDispatcher) {
@@ -205,6 +234,7 @@ class ContactCreationViewModelTest {
             fieldsDelegate = ContactFieldsDelegate(),
             deltaMapper = RawContactDeltaMapper(),
             defaultDispatcher = mainDispatcherRule.testDispatcher,
+            appContext = RuntimeEnvironment.getApplication(),
         )
     }
 }

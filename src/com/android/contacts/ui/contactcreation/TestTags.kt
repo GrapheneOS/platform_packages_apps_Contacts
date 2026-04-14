@@ -85,4 +85,9 @@ internal object TestTags {
 
     // Photo
     const val PHOTO_AVATAR = "contact_creation_photo_avatar"
+    const val PHOTO_MENU = "contact_creation_photo_menu"
+    const val PHOTO_PICK_GALLERY = "contact_creation_photo_pick_gallery"
+    const val PHOTO_TAKE_CAMERA = "contact_creation_photo_take_camera"
+    const val PHOTO_REMOVE = "contact_creation_photo_remove"
+    const val PHOTO_PLACEHOLDER_ICON = "contact_creation_photo_placeholder_icon"
 }

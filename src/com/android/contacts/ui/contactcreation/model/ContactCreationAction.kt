@@ -92,6 +92,8 @@ internal sealed interface ContactCreationAction {
     // Photo
     data class SetPhoto(val uri: Uri) : ContactCreationAction
     data object RemovePhoto : ContactCreationAction
+    data object RequestGallery : ContactCreationAction
+    data object RequestCamera : ContactCreationAction
 
     // Account
     data class SelectAccount(val account: AccountWithDataSet) : ContactCreationAction
