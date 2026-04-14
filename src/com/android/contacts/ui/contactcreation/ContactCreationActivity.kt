@@ -160,19 +160,15 @@ internal class ContactCreationActivity : ComponentActivity() {
     // Insert.PHONE_TYPE, Insert.SECONDARY_PHONE, Insert.COMPANY, Insert.NOTES,
     // Insert.DATA (arbitrary ContentValues), and all other extras are ignored
     // for minimum attack surface on GrapheneOS.
-    private fun sanitizeExtras(intent: Intent): SanitizedExtras {
-        return SanitizedExtras(
-            name = intent.getStringExtra(Insert.NAME)?.take(MAX_NAME_LEN),
-            phone = intent.getStringExtra(Insert.PHONE)?.take(MAX_PHONE_LEN),
-            email = intent.getStringExtra(Insert.EMAIL)?.take(MAX_EMAIL_LEN),
-        )
-    }
+    private fun sanitizeExtras(intent: Intent) = SanitizedExtras(
+        name = intent.getStringExtra(Insert.NAME)?.take(MAX_NAME_LEN),
+        phone = intent.getStringExtra(Insert.PHONE)?.take(MAX_PHONE_LEN),
+        email = intent.getStringExtra(Insert.EMAIL)?.take(MAX_EMAIL_LEN),
+    )
 
     private data class SanitizedExtras(val name: String?, val phone: String?, val email: String?)
-
-    private companion object {
-        const val MAX_NAME_LEN = 500
-        const val MAX_PHONE_LEN = 100
-        const val MAX_EMAIL_LEN = 320
-    }
 }
+
+private const val MAX_NAME_LEN = 500
+private const val MAX_PHONE_LEN = 100
+private const val MAX_EMAIL_LEN = 320

@@ -400,7 +400,8 @@ internal class ContactCreationViewModel @Inject constructor(
         const val STATE_KEY = "state"
         const val SAVE_COMPLETED_ACTION = "com.android.contacts.SAVE_COMPLETED"
         const val SAVE_MODE_EXTRA_KEY = "saveMode"
-        private const val PENDING_CAMERA_URI_KEY = "pendingCameraUri"
-        private const val PHOTO_CACHE_DIR = "contact_photos"
     }
 }
+
+private const val PENDING_CAMERA_URI_KEY = "pendingCameraUri"
+private const val PHOTO_CACHE_DIR = "contact_photos"

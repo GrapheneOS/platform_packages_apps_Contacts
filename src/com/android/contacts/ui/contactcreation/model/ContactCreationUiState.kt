@@ -3,7 +3,6 @@ package com.android.contacts.ui.contactcreation.model
 import android.net.Uri
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.contactcreation.component.AddressType
 import com.android.contacts.ui.contactcreation.component.EmailType
@@ -89,6 +88,7 @@ internal data class AddressFieldState(
             postcode.isNotBlank() || country.isNotBlank()
 }
 
+@Immutable
 @Parcelize
 internal data class OrganizationFieldState(val company: String = "", val title: String = "") :
     Parcelable {
