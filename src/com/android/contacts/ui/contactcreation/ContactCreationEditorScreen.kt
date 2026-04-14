@@ -2,6 +2,7 @@
 
 package com.android.contacts.ui.contactcreation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -19,8 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import com.android.contacts.ui.contactcreation.component.accountChipItem
+import com.android.contacts.ui.contactcreation.component.addressSection
 import com.android.contacts.ui.contactcreation.component.emailSection
+import com.android.contacts.ui.contactcreation.component.groupSection
+import com.android.contacts.ui.contactcreation.component.moreFieldsSection
 import com.android.contacts.ui.contactcreation.component.nameSection
+import com.android.contacts.ui.contactcreation.component.organizationSection
 import com.android.contacts.ui.contactcreation.component.phoneSection
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationUiState
@@ -59,26 +64,46 @@ internal fun ContactCreationEditorScreen(
             )
         },
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+        ContactCreationFieldsList(
+            uiState = uiState,
+            onAction = onAction,
             contentPadding = contentPadding,
-        ) {
-            accountChipItem(
-                accountName = uiState.accountName,
-                onAction = onAction,
-            )
-            nameSection(
-                nameState = uiState.nameState,
-                onAction = onAction,
-            )
-            phoneSection(
-                phones = uiState.phoneNumbers,
-                onAction = onAction,
-            )
-            emailSection(
-                emails = uiState.emails,
-                onAction = onAction,
-            )
-        }
+        )
+    }
+}
+
+@Composable
+private fun ContactCreationFieldsList(
+    uiState: ContactCreationUiState,
+    onAction: (ContactCreationAction) -> Unit,
+    contentPadding: PaddingValues,
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+    ) {
+        accountChipItem(accountName = uiState.accountName, onAction = onAction)
+        nameSection(nameState = uiState.nameState, onAction = onAction)
+        phoneSection(phones = uiState.phoneNumbers, onAction = onAction)
+        emailSection(emails = uiState.emails, onAction = onAction)
+        addressSection(addresses = uiState.addresses, onAction = onAction)
+        organizationSection(organization = uiState.organization, onAction = onAction)
+        moreFieldsSection(
+            isExpanded = uiState.isMoreFieldsExpanded,
+            events = uiState.events,
+            relations = uiState.relations,
+            imAccounts = uiState.imAccounts,
+            websites = uiState.websites,
+            note = uiState.note,
+            nickname = uiState.nickname,
+            sipAddress = uiState.sipAddress,
+            showSipField = uiState.showSipField,
+            onAction = onAction,
+        )
+        groupSection(
+            availableGroups = uiState.availableGroups,
+            selectedGroups = uiState.groups,
+            onAction = onAction,
+        )
     }
 }

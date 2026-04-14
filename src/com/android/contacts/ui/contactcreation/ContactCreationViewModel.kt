@@ -54,13 +54,19 @@ internal class ContactCreationViewModel @Inject constructor(
         if (restored != null) {
             fieldsDelegate.restorePhones(restored.phoneNumbers)
             fieldsDelegate.restoreEmails(restored.emails)
+            fieldsDelegate.restoreAddresses(restored.addresses)
+            fieldsDelegate.restoreEvents(restored.events)
+            fieldsDelegate.restoreRelations(restored.relations)
+            fieldsDelegate.restoreImAccounts(restored.imAccounts)
+            fieldsDelegate.restoreWebsites(restored.websites)
+            fieldsDelegate.restoreGroups(restored.groups)
         }
         viewModelScope.launch {
             _uiState.collect { savedStateHandle[STATE_KEY] = it }
         }
     }
 
-    @Suppress("CyclomaticComplexMethod")
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun onAction(action: ContactCreationAction) {
         when (action) {
             is ContactCreationAction.NavigateBack -> handleBack()
@@ -100,6 +106,125 @@ internal class ContactCreationViewModel @Inject constructor(
                     copy(emails = fieldsDelegate.updateEmailType(action.id, action.type))
                 }
 
+            // Address
+            is ContactCreationAction.AddAddress ->
+                updateState { copy(addresses = fieldsDelegate.addAddress()) }
+            is ContactCreationAction.RemoveAddress ->
+                updateState { copy(addresses = fieldsDelegate.removeAddress(action.id)) }
+            is ContactCreationAction.UpdateAddressStreet ->
+                updateState {
+                    copy(addresses = fieldsDelegate.updateAddressStreet(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateAddressCity ->
+                updateState {
+                    copy(addresses = fieldsDelegate.updateAddressCity(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateAddressRegion ->
+                updateState {
+                    copy(addresses = fieldsDelegate.updateAddressRegion(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateAddressPostcode ->
+                updateState {
+                    copy(addresses = fieldsDelegate.updateAddressPostcode(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateAddressCountry ->
+                updateState {
+                    copy(addresses = fieldsDelegate.updateAddressCountry(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateAddressType ->
+                updateState {
+                    copy(addresses = fieldsDelegate.updateAddressType(action.id, action.type))
+                }
+
+            // Organization
+            is ContactCreationAction.UpdateCompany ->
+                updateState { copy(organization = organization.copy(company = action.value)) }
+            is ContactCreationAction.UpdateJobTitle ->
+                updateState { copy(organization = organization.copy(title = action.value)) }
+
+            // Event
+            is ContactCreationAction.AddEvent ->
+                updateState { copy(events = fieldsDelegate.addEvent()) }
+            is ContactCreationAction.RemoveEvent ->
+                updateState { copy(events = fieldsDelegate.removeEvent(action.id)) }
+            is ContactCreationAction.UpdateEvent ->
+                updateState {
+                    copy(events = fieldsDelegate.updateEvent(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateEventType ->
+                updateState {
+                    copy(events = fieldsDelegate.updateEventType(action.id, action.type))
+                }
+
+            // Relation
+            is ContactCreationAction.AddRelation ->
+                updateState { copy(relations = fieldsDelegate.addRelation()) }
+            is ContactCreationAction.RemoveRelation ->
+                updateState { copy(relations = fieldsDelegate.removeRelation(action.id)) }
+            is ContactCreationAction.UpdateRelation ->
+                updateState {
+                    copy(relations = fieldsDelegate.updateRelation(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateRelationType ->
+                updateState {
+                    copy(relations = fieldsDelegate.updateRelationType(action.id, action.type))
+                }
+
+            // IM
+            is ContactCreationAction.AddIm ->
+                updateState { copy(imAccounts = fieldsDelegate.addIm()) }
+            is ContactCreationAction.RemoveIm ->
+                updateState { copy(imAccounts = fieldsDelegate.removeIm(action.id)) }
+            is ContactCreationAction.UpdateIm ->
+                updateState {
+                    copy(imAccounts = fieldsDelegate.updateIm(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateImProtocol ->
+                updateState {
+                    copy(
+                        imAccounts = fieldsDelegate.updateImProtocol(
+                            action.id,
+                            action.protocol,
+                        ),
+                    )
+                }
+
+            // Website
+            is ContactCreationAction.AddWebsite ->
+                updateState { copy(websites = fieldsDelegate.addWebsite()) }
+            is ContactCreationAction.RemoveWebsite ->
+                updateState { copy(websites = fieldsDelegate.removeWebsite(action.id)) }
+            is ContactCreationAction.UpdateWebsite ->
+                updateState {
+                    copy(websites = fieldsDelegate.updateWebsite(action.id, action.value))
+                }
+            is ContactCreationAction.UpdateWebsiteType ->
+                updateState {
+                    copy(websites = fieldsDelegate.updateWebsiteType(action.id, action.type))
+                }
+
+            // Note
+            is ContactCreationAction.UpdateNote ->
+                updateState { copy(note = action.value) }
+
+            // Nickname
+            is ContactCreationAction.UpdateNickname ->
+                updateState { copy(nickname = action.value) }
+
+            // SIP
+            is ContactCreationAction.UpdateSipAddress ->
+                updateState { copy(sipAddress = action.value) }
+
+            // Groups
+            is ContactCreationAction.ToggleGroup ->
+                updateState {
+                    copy(groups = fieldsDelegate.toggleGroup(action.groupId, action.title))
+                }
+
+            // More fields
+            is ContactCreationAction.ToggleMoreFields ->
+                updateState { copy(isMoreFieldsExpanded = !isMoreFieldsExpanded) }
+
             // Photo
             is ContactCreationAction.SetPhoto ->
                 updateState { copy(photoUri = action.uri) }
@@ -112,6 +237,7 @@ internal class ContactCreationViewModel @Inject constructor(
                     copy(
                         selectedAccount = action.account,
                         accountName = action.account.name,
+                        groups = fieldsDelegate.clearGroups(),
                     )
                 }
         }
