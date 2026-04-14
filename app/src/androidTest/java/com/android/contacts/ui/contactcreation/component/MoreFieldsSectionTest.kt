@@ -27,6 +27,18 @@ class MoreFieldsSectionTest {
 
     private val capturedActions = mutableListOf<ContactCreationAction>()
 
+    private val defaultState = MoreFieldsState(
+        isExpanded = false,
+        events = emptyList(),
+        relations = emptyList(),
+        imAccounts = emptyList(),
+        websites = emptyList(),
+        note = "",
+        nickname = "",
+        sipAddress = "",
+        showSipField = true,
+    )
+
     @Before
     fun setup() {
         capturedActions.clear()
@@ -47,85 +59,87 @@ class MoreFieldsSectionTest {
 
     @Test
     fun whenExpanded_showsNicknameField() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.NICKNAME_FIELD).assertIsDisplayed()
     }
 
     @Test
     fun whenExpanded_showsNoteField() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.NOTE_FIELD).assertIsDisplayed()
     }
 
     @Test
     fun whenExpanded_showsSipField() {
-        setContent(isExpanded = true, showSipField = true)
+        setContent(defaultState.copy(isExpanded = true, showSipField = true))
         composeTestRule.onNodeWithTag(TestTags.SIP_FIELD).assertIsDisplayed()
     }
 
     @Test
     fun whenExpanded_hiddenSipField_doesNotShow() {
-        setContent(isExpanded = true, showSipField = false)
+        setContent(defaultState.copy(isExpanded = true, showSipField = false))
         composeTestRule.onNodeWithTag(TestTags.SIP_FIELD).assertDoesNotExist()
     }
 
     @Test
     fun typeInNickname_dispatchesUpdateNicknameAction() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.NICKNAME_FIELD).performTextInput("Johnny")
         assertIs<ContactCreationAction.UpdateNickname>(capturedActions.last())
     }
 
     @Test
     fun typeInNote_dispatchesUpdateNoteAction() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.NOTE_FIELD).performTextInput("A note")
         assertIs<ContactCreationAction.UpdateNote>(capturedActions.last())
     }
 
     @Test
     fun typeInSip_dispatchesUpdateSipAddressAction() {
-        setContent(isExpanded = true, showSipField = true)
+        setContent(defaultState.copy(isExpanded = true, showSipField = true))
         composeTestRule.onNodeWithTag(TestTags.SIP_FIELD).performTextInput("sip:user@voip")
         assertIs<ContactCreationAction.UpdateSipAddress>(capturedActions.last())
     }
 
     @Test
     fun whenExpanded_showsEventAddButton() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.EVENT_ADD).assertIsDisplayed()
     }
 
     @Test
     fun tapAddEvent_dispatchesAddEventAction() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.EVENT_ADD).performClick()
         assertEquals(ContactCreationAction.AddEvent, capturedActions.last())
     }
 
     @Test
     fun whenExpanded_showsRelationAddButton() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.RELATION_ADD).assertIsDisplayed()
     }
 
     @Test
     fun whenExpanded_showsImAddButton() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.IM_ADD).assertIsDisplayed()
     }
 
     @Test
     fun whenExpanded_showsWebsiteAddButton() {
-        setContent(isExpanded = true)
+        setContent(defaultState.copy(isExpanded = true))
         composeTestRule.onNodeWithTag(TestTags.WEBSITE_ADD).assertIsDisplayed()
     }
 
     @Test
     fun eventFieldRendered_whenPresent() {
         setContent(
-            isExpanded = true,
-            events = listOf(EventFieldState(id = "e1", startDate = "2020-01-01")),
+            defaultState.copy(
+                isExpanded = true,
+                events = listOf(EventFieldState(id = "e1", startDate = "2020-01-01")),
+            ),
         )
         composeTestRule.onNodeWithTag(TestTags.eventField(0)).assertIsDisplayed()
     }
@@ -133,8 +147,10 @@ class MoreFieldsSectionTest {
     @Test
     fun typeInEvent_dispatchesUpdateEventAction() {
         setContent(
-            isExpanded = true,
-            events = listOf(EventFieldState(id = "e1")),
+            defaultState.copy(
+                isExpanded = true,
+                events = listOf(EventFieldState(id = "e1")),
+            ),
         )
         composeTestRule.onNodeWithTag(TestTags.eventField(0)).performTextInput("2020-01-01")
         assertIs<ContactCreationAction.UpdateEvent>(capturedActions.last())
@@ -143,8 +159,10 @@ class MoreFieldsSectionTest {
     @Test
     fun tapDeleteEvent_dispatchesRemoveEventAction() {
         setContent(
-            isExpanded = true,
-            events = listOf(EventFieldState(id = "e1")),
+            defaultState.copy(
+                isExpanded = true,
+                events = listOf(EventFieldState(id = "e1")),
+            ),
         )
         composeTestRule.onNodeWithTag(TestTags.eventDelete(0)).performClick()
         assertIs<ContactCreationAction.RemoveEvent>(capturedActions.last())
@@ -153,8 +171,10 @@ class MoreFieldsSectionTest {
     @Test
     fun relationFieldRendered_whenPresent() {
         setContent(
-            isExpanded = true,
-            relations = listOf(RelationFieldState(id = "r1")),
+            defaultState.copy(
+                isExpanded = true,
+                relations = listOf(RelationFieldState(id = "r1")),
+            ),
         )
         composeTestRule.onNodeWithTag(TestTags.relationField(0)).assertIsDisplayed()
     }
@@ -162,8 +182,10 @@ class MoreFieldsSectionTest {
     @Test
     fun imFieldRendered_whenPresent() {
         setContent(
-            isExpanded = true,
-            imAccounts = listOf(ImFieldState(id = "im1")),
+            defaultState.copy(
+                isExpanded = true,
+                imAccounts = listOf(ImFieldState(id = "im1")),
+            ),
         )
         composeTestRule.onNodeWithTag(TestTags.imField(0)).assertIsDisplayed()
     }
@@ -171,37 +193,20 @@ class MoreFieldsSectionTest {
     @Test
     fun websiteFieldRendered_whenPresent() {
         setContent(
-            isExpanded = true,
-            websites = listOf(WebsiteFieldState(id = "w1")),
+            defaultState.copy(
+                isExpanded = true,
+                websites = listOf(WebsiteFieldState(id = "w1")),
+            ),
         )
         composeTestRule.onNodeWithTag(TestTags.websiteField(0)).assertIsDisplayed()
     }
 
-    @Suppress("LongParameterList")
-    private fun setContent(
-        isExpanded: Boolean = false,
-        events: List<EventFieldState> = emptyList(),
-        relations: List<RelationFieldState> = emptyList(),
-        imAccounts: List<ImFieldState> = emptyList(),
-        websites: List<WebsiteFieldState> = emptyList(),
-        note: String = "",
-        nickname: String = "",
-        sipAddress: String = "",
-        showSipField: Boolean = true,
-    ) {
+    private fun setContent(state: MoreFieldsState = defaultState) {
         composeTestRule.setContent {
             AppTheme {
                 LazyColumn {
                     moreFieldsSection(
-                        isExpanded = isExpanded,
-                        events = events,
-                        relations = relations,
-                        imAccounts = imAccounts,
-                        websites = websites,
-                        note = note,
-                        nickname = nickname,
-                        sipAddress = sipAddress,
-                        showSipField = showSipField,
+                        state = state,
                         onAction = { capturedActions.add(it) },
                     )
                 }

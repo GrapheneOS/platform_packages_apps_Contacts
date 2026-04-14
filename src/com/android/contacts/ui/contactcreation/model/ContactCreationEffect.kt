@@ -10,4 +10,5 @@ internal sealed interface ContactCreationEffect {
     data object NavigateBack : ContactCreationEffect
     data object LaunchGallery : ContactCreationEffect
     data class LaunchCamera(val outputUri: Uri) : ContactCreationEffect
+    data object LaunchAccountPicker : ContactCreationEffect
 }

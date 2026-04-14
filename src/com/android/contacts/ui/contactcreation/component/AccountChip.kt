@@ -15,12 +15,12 @@ import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 
 internal fun LazyListScope.accountChipItem(
     accountName: String?,
-    @Suppress("UNUSED_PARAMETER") onAction: (ContactCreationAction) -> Unit,
+    onAction: (ContactCreationAction) -> Unit,
 ) {
     item(key = "account_chip", contentType = "account_chip") {
         AccountChip(
             accountName = accountName,
-            onClick = { /* Phase 2: account picker sheet */ },
+            onClick = { onAction(ContactCreationAction.RequestAccountPicker) },
         )
     }
 }
@@ -33,7 +33,11 @@ internal fun AccountChip(
 ) {
     AssistChip(
         onClick = onClick,
-        label = { Text(accountName ?: stringResource(R.string.contact_creation_device_account)) },
+        label = {
+            // null accountName means no synced account selected — contact will be stored
+            // on-device only (local/device account).
+            Text(accountName ?: stringResource(R.string.contact_creation_device_account))
+        },
         modifier = modifier
             .padding(horizontal = 16.dp)
             .testTag(TestTags.ACCOUNT_CHIP),

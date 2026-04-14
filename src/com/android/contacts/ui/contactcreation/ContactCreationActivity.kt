@@ -78,7 +78,6 @@ internal class ContactCreationActivity : ComponentActivity() {
         }
     }
 
-    @Suppress("CyclomaticComplexMethod")
     private fun handleEffect(
         effect: ContactCreationEffect,
         galleryLauncher: ActivityResultLauncher<PickVisualMediaRequest>,
@@ -115,6 +114,10 @@ internal class ContactCreationActivity : ComponentActivity() {
             }
 
             is ContactCreationEffect.LaunchCamera -> cameraLauncher.launch(effect.outputUri)
+
+            is ContactCreationEffect.LaunchAccountPicker -> {
+                // Phase 2: show account picker bottom sheet or dialog
+            }
         }
     }
 

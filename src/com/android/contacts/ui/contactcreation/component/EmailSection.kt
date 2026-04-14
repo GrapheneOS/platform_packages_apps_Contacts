@@ -24,9 +24,7 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.EmailFieldState
-import com.android.contacts.ui.core.gentleBounce
-import com.android.contacts.ui.core.isReduceMotionEnabled
-import com.android.contacts.ui.core.smoothExit
+import com.android.contacts.ui.core.animateItemIfMotionAllowed
 
 internal fun LazyListScope.emailSection(
     emails: List<EmailFieldState>,
@@ -37,20 +35,12 @@ internal fun LazyListScope.emailSection(
         key = { _, item -> item.id },
         contentType = { _, _ -> "email_field" },
     ) { index, email ->
-        val reduceMotion = isReduceMotionEnabled()
         EmailFieldRow(
             email = email,
             index = index,
             showDelete = emails.size > 1,
             onAction = onAction,
-            modifier = if (reduceMotion) {
-                Modifier.animateItem()
-            } else {
-                Modifier.animateItem(
-                    fadeInSpec = gentleBounce(),
-                    fadeOutSpec = smoothExit(),
-                )
-            },
+            modifier = animateItemIfMotionAllowed(),
         )
     }
     item(key = "email_add", contentType = "email_add") {
@@ -60,7 +50,10 @@ internal fun LazyListScope.emailSection(
                 .padding(start = 16.dp)
                 .testTag(TestTags.EMAIL_ADD),
         ) {
-            Icon(Icons.Filled.Add, contentDescription = null)
+            Icon(
+                Icons.Filled.Add,
+                contentDescription = stringResource(R.string.contact_creation_add_email),
+            )
             Text(stringResource(R.string.contact_creation_add_email))
         }
     }

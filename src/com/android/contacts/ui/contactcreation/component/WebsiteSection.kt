@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,47 +23,45 @@ import androidx.compose.ui.unit.dp
 import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
-import com.android.contacts.ui.contactcreation.model.PhoneFieldState
+import com.android.contacts.ui.contactcreation.model.WebsiteFieldState
 import com.android.contacts.ui.core.animateItemIfMotionAllowed
 
-internal fun LazyListScope.phoneSection(
-    phones: List<PhoneFieldState>,
+internal fun LazyListScope.websiteItems(
+    websites: List<WebsiteFieldState>,
     onAction: (ContactCreationAction) -> Unit,
 ) {
     itemsIndexed(
-        items = phones,
-        key = { _, item -> item.id },
-        contentType = { _, _ -> "phone_field" },
-    ) { index, phone ->
-        PhoneFieldRow(
-            phone = phone,
+        items = websites,
+        key = { _, item -> "website_${item.id}" },
+        contentType = { _, _ -> "website_field" },
+    ) { index, website ->
+        WebsiteFieldRow(
+            website = website,
             index = index,
-            showDelete = phones.size > 1,
             onAction = onAction,
             modifier = animateItemIfMotionAllowed(),
         )
     }
-    item(key = "phone_add", contentType = "phone_add") {
+    item(key = "website_add", contentType = "website_add") {
         TextButton(
-            onClick = { onAction(ContactCreationAction.AddPhone) },
+            onClick = { onAction(ContactCreationAction.AddWebsite) },
             modifier = Modifier
                 .padding(start = 16.dp)
-                .testTag(TestTags.PHONE_ADD),
+                .testTag(TestTags.WEBSITE_ADD),
         ) {
             Icon(
                 Icons.Filled.Add,
-                contentDescription = stringResource(R.string.contact_creation_add_phone),
+                contentDescription = stringResource(R.string.contact_creation_add_website),
             )
-            Text(stringResource(R.string.contact_creation_add_phone))
+            Text(stringResource(R.string.contact_creation_add_website))
         }
     }
 }
 
 @Composable
-internal fun PhoneFieldRow(
-    phone: PhoneFieldState,
+private fun WebsiteFieldRow(
+    website: WebsiteFieldState,
     index: Int,
-    showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -72,30 +70,28 @@ internal fun PhoneFieldRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector = Icons.Filled.Phone,
+            imageVector = Icons.Filled.Public,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(end = 8.dp),
         )
         OutlinedTextField(
-            value = phone.number,
-            onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
-            label = { Text(stringResource(R.string.phoneLabelsGroup)) },
+            value = website.url,
+            onValueChange = { onAction(ContactCreationAction.UpdateWebsite(website.id, it)) },
+            label = { Text(stringResource(R.string.websiteLabelsGroup)) },
             modifier = Modifier
                 .weight(1f)
-                .testTag(TestTags.phoneField(index)),
+                .testTag(TestTags.websiteField(index)),
             singleLine = true,
         )
-        if (showDelete) {
-            IconButton(
-                onClick = { onAction(ContactCreationAction.RemovePhone(phone.id)) },
-                modifier = Modifier.testTag(TestTags.phoneDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_phone)
-                )
-            }
+        IconButton(
+            onClick = { onAction(ContactCreationAction.RemoveWebsite(website.id)) },
+            modifier = Modifier.testTag(TestTags.websiteDelete(index)),
+        ) {
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.contact_creation_remove_website),
+            )
         }
     }
 }

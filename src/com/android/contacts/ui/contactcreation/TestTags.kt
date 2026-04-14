@@ -1,5 +1,8 @@
 package com.android.contacts.ui.contactcreation
 
+// TooManyFunctions: TestTags is a constants registry with index-based tag factory functions
+// (e.g., phoneField(index)). The function count is 1:1 with the number of indexed UI elements
+// in the form -- splitting would scatter related tags across files for no readability gain.
 @Suppress("TooManyFunctions")
 internal object TestTags {
     // Top-level

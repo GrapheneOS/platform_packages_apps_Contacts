@@ -10,6 +10,10 @@ import com.android.contacts.ui.contactcreation.component.PhoneType
 import com.android.contacts.ui.contactcreation.component.RelationType
 import com.android.contacts.ui.contactcreation.component.WebsiteType
 
+// TooManyFunctions: Detekt counts each nested data class/object as a "function" in a sealed
+// interface. This sealed type is the exhaustive action catalogue for the MVI pattern -- one
+// subtype per user interaction. Splitting into sub-sealed types would break exhaustive `when`
+// dispatch in the ViewModel without meaningful complexity reduction.
 @Suppress("TooManyFunctions")
 internal sealed interface ContactCreationAction {
     // Navigation
@@ -97,5 +101,6 @@ internal sealed interface ContactCreationAction {
     data object RequestCamera : ContactCreationAction
 
     // Account
+    data object RequestAccountPicker : ContactCreationAction
     data class SelectAccount(val account: AccountWithDataSet) : ContactCreationAction
 }

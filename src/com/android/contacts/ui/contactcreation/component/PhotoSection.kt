@@ -164,7 +164,12 @@ private fun PhotoDropdownMenu(
                 onDismiss()
                 onAction(ContactCreationAction.RequestGallery)
             },
-            leadingIcon = { Icon(Icons.Filled.PhotoLibrary, contentDescription = null) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.PhotoLibrary,
+                    contentDescription = stringResource(R.string.contact_creation_choose_photo),
+                )
+            },
             modifier = Modifier.testTag(TestTags.PHOTO_PICK_GALLERY),
         )
         DropdownMenuItem(
@@ -173,7 +178,12 @@ private fun PhotoDropdownMenu(
                 onDismiss()
                 onAction(ContactCreationAction.RequestCamera)
             },
-            leadingIcon = { Icon(Icons.Filled.CameraAlt, contentDescription = null) },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.CameraAlt,
+                    contentDescription = stringResource(R.string.take_photo),
+                )
+            },
             modifier = Modifier.testTag(TestTags.PHOTO_TAKE_CAMERA),
         )
         if (hasPhoto) {
@@ -183,7 +193,12 @@ private fun PhotoDropdownMenu(
                     onDismiss()
                     onAction(ContactCreationAction.RemovePhoto)
                 },
-                leadingIcon = { Icon(Icons.Filled.Close, contentDescription = null) },
+                leadingIcon = {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.removePhoto),
+                    )
+                },
                 modifier = Modifier.testTag(TestTags.PHOTO_REMOVE),
             )
         }

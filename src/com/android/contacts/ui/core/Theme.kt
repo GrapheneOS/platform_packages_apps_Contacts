@@ -4,6 +4,7 @@ import android.provider.Settings
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -11,6 +12,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
@@ -64,3 +66,15 @@ internal fun <T> smoothExit() = spring<T>(
     dampingRatio = Spring.DampingRatioNoBouncy,
     stiffness = Spring.StiffnessMedium,
 )
+
+/** [Modifier.animateItem] that respects the reduce-motion accessibility setting. */
+@Composable
+internal fun LazyItemScope.animateItemIfMotionAllowed(): Modifier =
+    if (isReduceMotionEnabled()) {
+        Modifier.animateItem()
+    } else {
+        Modifier.animateItem(
+            fadeInSpec = gentleBounce(),
+            fadeOutSpec = smoothExit(),
+        )
+    }

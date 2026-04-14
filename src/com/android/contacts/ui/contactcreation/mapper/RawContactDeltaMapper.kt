@@ -33,6 +33,10 @@ import javax.inject.Inject
 
 internal data class DeltaMapperResult(val state: RawContactDeltaList, val updatedPhotos: Bundle)
 
+// TooManyFunctions: One private mapXxx method per ContactsContract MIME type (name, phone,
+// email, address, organization, event, relation, IM, website, note, nickname, SIP, group,
+// photo). Merging them would create a single unreadable method; splitting into separate
+// mapper classes would break the single-responsibility of "UiState -> RawContactDelta".
 @Suppress("TooManyFunctions")
 internal class RawContactDeltaMapper @Inject constructor() {
 

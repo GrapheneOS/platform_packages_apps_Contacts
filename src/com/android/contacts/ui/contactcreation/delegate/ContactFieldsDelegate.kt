@@ -20,9 +20,17 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
+// TooManyFunctions: This delegate manages CRUD for 8 contact field types (phone, email,
+// address, event, relation, IM, website, group). Each type needs add/remove/update/restore
+// operations, making a high function count inherent to the domain. Splitting into per-type
+// delegates would add DI complexity without meaningful cohesion gains.
 @Suppress("TooManyFunctions")
 internal class ContactFieldsDelegate @Inject constructor() {
 
+    // These fields are `var` because PersistentList is an immutable data structure --
+    // operations like add(), removeAll(), and map() return a NEW list instance.
+    // The variable must be reassigned to hold the new snapshot.
+    // Using `val` is not possible here; PersistentList has no in-place mutation.
     private var phones: PersistentList<PhoneFieldState> = persistentListOf(PhoneFieldState())
     private var emails: PersistentList<EmailFieldState> = persistentListOf(EmailFieldState())
     private var addresses: PersistentList<AddressFieldState> = persistentListOf()

@@ -25,6 +25,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.android.contacts.R
+import com.android.contacts.ui.contactcreation.component.MoreFieldsState
 import com.android.contacts.ui.contactcreation.component.accountChipItem
 import com.android.contacts.ui.contactcreation.component.addressSection
 import com.android.contacts.ui.contactcreation.component.emailSection
@@ -155,15 +156,17 @@ private fun ContactCreationFieldsList(
         addressSection(addresses = uiState.addresses, onAction = onAction)
         organizationSection(organization = uiState.organization, onAction = onAction)
         moreFieldsSection(
-            isExpanded = uiState.isMoreFieldsExpanded,
-            events = uiState.events,
-            relations = uiState.relations,
-            imAccounts = uiState.imAccounts,
-            websites = uiState.websites,
-            note = uiState.note,
-            nickname = uiState.nickname,
-            sipAddress = uiState.sipAddress,
-            showSipField = uiState.showSipField,
+            state = MoreFieldsState(
+                isExpanded = uiState.isMoreFieldsExpanded,
+                events = uiState.events,
+                relations = uiState.relations,
+                imAccounts = uiState.imAccounts,
+                websites = uiState.websites,
+                note = uiState.note,
+                nickname = uiState.nickname,
+                sipAddress = uiState.sipAddress,
+                showSipField = uiState.showSipField,
+            ),
             onAction = onAction,
         )
         groupSection(

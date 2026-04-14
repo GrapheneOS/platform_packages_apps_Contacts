@@ -40,7 +40,6 @@ internal data class ContactCreationUiState(
     val showSipField: Boolean = true,
     val showDiscardDialog: Boolean = false,
 ) : Parcelable {
-    @Suppress("CyclomaticComplexMethod")
     fun hasPendingChanges(): Boolean =
         nameState.hasData() ||
             phoneNumbers.any { it.number.isNotBlank() } ||

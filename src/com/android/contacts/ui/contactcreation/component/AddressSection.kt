@@ -26,9 +26,7 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
-import com.android.contacts.ui.core.gentleBounce
-import com.android.contacts.ui.core.isReduceMotionEnabled
-import com.android.contacts.ui.core.smoothExit
+import com.android.contacts.ui.core.animateItemIfMotionAllowed
 
 internal fun LazyListScope.addressSection(
     addresses: List<AddressFieldState>,
@@ -39,20 +37,12 @@ internal fun LazyListScope.addressSection(
         key = { _, item -> item.id },
         contentType = { _, _ -> "address_field" },
     ) { index, address ->
-        val reduceMotion = isReduceMotionEnabled()
         AddressFieldRow(
             address = address,
             index = index,
             showDelete = addresses.size > 1,
             onAction = onAction,
-            modifier = if (reduceMotion) {
-                Modifier.animateItem()
-            } else {
-                Modifier.animateItem(
-                    fadeInSpec = gentleBounce(),
-                    fadeOutSpec = smoothExit(),
-                )
-            },
+            modifier = animateItemIfMotionAllowed(),
         )
     }
     item(key = "address_add", contentType = "address_add") {
@@ -62,7 +52,10 @@ internal fun LazyListScope.addressSection(
                 .padding(start = 16.dp)
                 .testTag(TestTags.ADDRESS_ADD),
         ) {
-            Icon(Icons.Filled.Add, contentDescription = null)
+            Icon(
+                Icons.Filled.Add,
+                contentDescription = stringResource(R.string.contact_creation_add_address),
+            )
             Text(stringResource(R.string.contact_creation_add_address))
         }
     }

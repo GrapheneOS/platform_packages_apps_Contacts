@@ -29,6 +29,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+// TooManyFunctions: MVI ViewModels inherently have many functions -- one dispatcher (onAction),
+// plus private handlers for each action group, plus lifecycle/save/state helpers. This count
+// is proportional to the number of contact field types and cannot be reduced without degrading
+// readability or moving to a less explicit dispatch mechanism.
 @Suppress("TooManyFunctions")
 @HiltViewModel
 internal class ContactCreationViewModel @Inject constructor(
@@ -67,22 +71,62 @@ internal class ContactCreationViewModel @Inject constructor(
         }
     }
 
-    @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun onAction(action: ContactCreationAction) {
         when (action) {
             is ContactCreationAction.NavigateBack -> handleBack()
             is ContactCreationAction.Save -> save()
             is ContactCreationAction.ConfirmDiscard -> confirmDiscard()
             is ContactCreationAction.DismissDiscardDialog -> dismissDiscardDialog()
+            is ContactCreationAction.ToggleMoreFields ->
+                updateState { copy(isMoreFieldsExpanded = !isMoreFieldsExpanded) }
+            is ContactCreationAction.SetPhoto -> updateState { copy(photoUri = action.uri) }
+            is ContactCreationAction.RemovePhoto -> updateState { copy(photoUri = null) }
+            is ContactCreationAction.RequestGallery ->
+                viewModelScope.launch { _effects.send(ContactCreationEffect.LaunchGallery) }
+            is ContactCreationAction.RequestCamera -> requestCamera()
+            is ContactCreationAction.RequestAccountPicker ->
+                viewModelScope.launch { _effects.send(ContactCreationEffect.LaunchAccountPicker) }
+            is ContactCreationAction.SelectAccount ->
+                updateState {
+                    copy(
+                        selectedAccount = action.account,
+                        accountName = action.account.name,
+                        groups = fieldsDelegate.clearGroups(),
+                    )
+                }
+            else -> handleFieldUpdateAction(action)
+        }
+    }
 
-            // Name
+    /**
+     * Handles all field-value update actions: name parts, organization, note, nickname, SIP,
+     * groups, and repeatable-field CRUD (phone, email, address, event, relation, IM, website).
+     */
+    private fun handleFieldUpdateAction(action: ContactCreationAction) {
+        when (action) {
             is ContactCreationAction.UpdatePrefix -> updateName { copy(prefix = action.value) }
             is ContactCreationAction.UpdateFirstName -> updateName { copy(first = action.value) }
             is ContactCreationAction.UpdateMiddleName -> updateName { copy(middle = action.value) }
             is ContactCreationAction.UpdateLastName -> updateName { copy(last = action.value) }
             is ContactCreationAction.UpdateSuffix -> updateName { copy(suffix = action.value) }
+            is ContactCreationAction.UpdateCompany ->
+                updateState { copy(organization = organization.copy(company = action.value)) }
+            is ContactCreationAction.UpdateJobTitle ->
+                updateState { copy(organization = organization.copy(title = action.value)) }
+            is ContactCreationAction.UpdateNote -> updateState { copy(note = action.value) }
+            is ContactCreationAction.UpdateNickname -> updateState { copy(nickname = action.value) }
+            is ContactCreationAction.UpdateSipAddress ->
+                updateState { copy(sipAddress = action.value) }
+            is ContactCreationAction.ToggleGroup ->
+                updateState {
+                    copy(groups = fieldsDelegate.toggleGroup(action.groupId, action.title))
+                }
+            else -> handleContactInfoCrud(action)
+        }
+    }
 
-            // Phone
+    private fun handleContactInfoCrud(action: ContactCreationAction) {
+        when (action) {
             is ContactCreationAction.AddPhone ->
                 updateState { copy(phoneNumbers = fieldsDelegate.addPhone()) }
             is ContactCreationAction.RemovePhone ->
@@ -95,8 +139,6 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState {
                     copy(phoneNumbers = fieldsDelegate.updatePhoneType(action.id, action.type))
                 }
-
-            // Email
             is ContactCreationAction.AddEmail ->
                 updateState { copy(emails = fieldsDelegate.addEmail()) }
             is ContactCreationAction.RemoveEmail ->
@@ -107,8 +149,12 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState {
                     copy(emails = fieldsDelegate.updateEmailType(action.id, action.type))
                 }
+            else -> handleAddressCrud(action)
+        }
+    }
 
-            // Address
+    private fun handleAddressCrud(action: ContactCreationAction) {
+        when (action) {
             is ContactCreationAction.AddAddress ->
                 updateState { copy(addresses = fieldsDelegate.addAddress()) }
             is ContactCreationAction.RemoveAddress ->
@@ -137,14 +183,12 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState {
                     copy(addresses = fieldsDelegate.updateAddressType(action.id, action.type))
                 }
+            else -> handleMoreFieldsCrud(action)
+        }
+    }
 
-            // Organization
-            is ContactCreationAction.UpdateCompany ->
-                updateState { copy(organization = organization.copy(company = action.value)) }
-            is ContactCreationAction.UpdateJobTitle ->
-                updateState { copy(organization = organization.copy(title = action.value)) }
-
-            // Event
+    private fun handleMoreFieldsCrud(action: ContactCreationAction) {
+        when (action) {
             is ContactCreationAction.AddEvent ->
                 updateState { copy(events = fieldsDelegate.addEvent()) }
             is ContactCreationAction.RemoveEvent ->
@@ -157,8 +201,6 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState {
                     copy(events = fieldsDelegate.updateEventType(action.id, action.type))
                 }
-
-            // Relation
             is ContactCreationAction.AddRelation ->
                 updateState { copy(relations = fieldsDelegate.addRelation()) }
             is ContactCreationAction.RemoveRelation ->
@@ -171,8 +213,12 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState {
                     copy(relations = fieldsDelegate.updateRelationType(action.id, action.type))
                 }
+            else -> handleImWebsiteCrud(action)
+        }
+    }
 
-            // IM
+    private fun handleImWebsiteCrud(action: ContactCreationAction) {
+        when (action) {
             is ContactCreationAction.AddIm ->
                 updateState { copy(imAccounts = fieldsDelegate.addIm()) }
             is ContactCreationAction.RemoveIm ->
@@ -190,8 +236,6 @@ internal class ContactCreationViewModel @Inject constructor(
                         ),
                     )
                 }
-
-            // Website
             is ContactCreationAction.AddWebsite ->
                 updateState { copy(websites = fieldsDelegate.addWebsite()) }
             is ContactCreationAction.RemoveWebsite ->
@@ -204,47 +248,7 @@ internal class ContactCreationViewModel @Inject constructor(
                 updateState {
                     copy(websites = fieldsDelegate.updateWebsiteType(action.id, action.type))
                 }
-
-            // Note
-            is ContactCreationAction.UpdateNote ->
-                updateState { copy(note = action.value) }
-
-            // Nickname
-            is ContactCreationAction.UpdateNickname ->
-                updateState { copy(nickname = action.value) }
-
-            // SIP
-            is ContactCreationAction.UpdateSipAddress ->
-                updateState { copy(sipAddress = action.value) }
-
-            // Groups
-            is ContactCreationAction.ToggleGroup ->
-                updateState {
-                    copy(groups = fieldsDelegate.toggleGroup(action.groupId, action.title))
-                }
-
-            // More fields
-            is ContactCreationAction.ToggleMoreFields ->
-                updateState { copy(isMoreFieldsExpanded = !isMoreFieldsExpanded) }
-
-            // Photo
-            is ContactCreationAction.SetPhoto ->
-                updateState { copy(photoUri = action.uri) }
-            is ContactCreationAction.RemovePhoto ->
-                updateState { copy(photoUri = null) }
-            is ContactCreationAction.RequestGallery ->
-                viewModelScope.launch { _effects.send(ContactCreationEffect.LaunchGallery) }
-            is ContactCreationAction.RequestCamera -> requestCamera()
-
-            // Account
-            is ContactCreationAction.SelectAccount ->
-                updateState {
-                    copy(
-                        selectedAccount = action.account,
-                        accountName = action.account.name,
-                        groups = fieldsDelegate.clearGroups(),
-                    )
-                }
+            else -> Unit
         }
     }
 

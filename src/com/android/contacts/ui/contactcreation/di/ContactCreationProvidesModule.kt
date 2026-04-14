@@ -13,6 +13,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object ContactCreationProvidesModule {
 
+    // AccountTypeManager.getInstance() returns an app-global singleton.
+    // @Singleton matches the actual lifecycle of the underlying Java object.
+    // ViewModelScoped or ActivityScoped would create new instances that
+    // just delegate to the same singleton, adding indirection for no benefit.
     @Provides
     @Singleton
     fun provideAccountTypeManager(

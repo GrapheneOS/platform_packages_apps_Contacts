@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,47 +23,45 @@ import androidx.compose.ui.unit.dp
 import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
-import com.android.contacts.ui.contactcreation.model.PhoneFieldState
+import com.android.contacts.ui.contactcreation.model.EventFieldState
 import com.android.contacts.ui.core.animateItemIfMotionAllowed
 
-internal fun LazyListScope.phoneSection(
-    phones: List<PhoneFieldState>,
+internal fun LazyListScope.eventItems(
+    events: List<EventFieldState>,
     onAction: (ContactCreationAction) -> Unit,
 ) {
     itemsIndexed(
-        items = phones,
-        key = { _, item -> item.id },
-        contentType = { _, _ -> "phone_field" },
-    ) { index, phone ->
-        PhoneFieldRow(
-            phone = phone,
+        items = events,
+        key = { _, item -> "event_${item.id}" },
+        contentType = { _, _ -> "event_field" },
+    ) { index, event ->
+        EventFieldRow(
+            event = event,
             index = index,
-            showDelete = phones.size > 1,
             onAction = onAction,
             modifier = animateItemIfMotionAllowed(),
         )
     }
-    item(key = "phone_add", contentType = "phone_add") {
+    item(key = "event_add", contentType = "event_add") {
         TextButton(
-            onClick = { onAction(ContactCreationAction.AddPhone) },
+            onClick = { onAction(ContactCreationAction.AddEvent) },
             modifier = Modifier
                 .padding(start = 16.dp)
-                .testTag(TestTags.PHONE_ADD),
+                .testTag(TestTags.EVENT_ADD),
         ) {
             Icon(
                 Icons.Filled.Add,
-                contentDescription = stringResource(R.string.contact_creation_add_phone),
+                contentDescription = stringResource(R.string.contact_creation_add_event),
             )
-            Text(stringResource(R.string.contact_creation_add_phone))
+            Text(stringResource(R.string.contact_creation_add_event))
         }
     }
 }
 
 @Composable
-internal fun PhoneFieldRow(
-    phone: PhoneFieldState,
+private fun EventFieldRow(
+    event: EventFieldState,
     index: Int,
-    showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -72,30 +70,28 @@ internal fun PhoneFieldRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
-            imageVector = Icons.Filled.Phone,
+            imageVector = Icons.Filled.Event,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(end = 8.dp),
         )
         OutlinedTextField(
-            value = phone.number,
-            onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
-            label = { Text(stringResource(R.string.phoneLabelsGroup)) },
+            value = event.startDate,
+            onValueChange = { onAction(ContactCreationAction.UpdateEvent(event.id, it)) },
+            label = { Text(stringResource(R.string.contact_creation_date)) },
             modifier = Modifier
                 .weight(1f)
-                .testTag(TestTags.phoneField(index)),
+                .testTag(TestTags.eventField(index)),
             singleLine = true,
         )
-        if (showDelete) {
-            IconButton(
-                onClick = { onAction(ContactCreationAction.RemovePhone(phone.id)) },
-                modifier = Modifier.testTag(TestTags.phoneDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_phone)
-                )
-            }
+        IconButton(
+            onClick = { onAction(ContactCreationAction.RemoveEvent(event.id)) },
+            modifier = Modifier.testTag(TestTags.eventDelete(index)),
+        ) {
+            Icon(
+                Icons.Filled.Close,
+                contentDescription = stringResource(R.string.contact_creation_remove_event),
+            )
         }
     }
 }
