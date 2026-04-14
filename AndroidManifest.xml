@@ -388,11 +388,12 @@
 
         </activity-alias>
 
-        <!-- Edit or create a contact with only the most important fields displayed initially. -->
+        <!-- Compose-based contact creation screen (replaces ACTION_INSERT from ContactEditorActivity) -->
         <activity
-            android:name=".activities.ContactEditorActivity"
+            android:name=".ui.contactcreation.ContactCreationActivity"
             android:exported="true"
-            android:theme="@style/EditorActivityTheme">
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.INSERT"/>
@@ -402,6 +403,13 @@
                 <data android:mimeType="vnd.android.cursor.dir/contact"/>
                 <data android:mimeType="vnd.android.cursor.dir/raw_contact"/>
             </intent-filter>
+        </activity>
+
+        <!-- Edit a contact with only the most important fields displayed initially. -->
+        <activity
+            android:name=".activities.ContactEditorActivity"
+            android:exported="true"
+            android:theme="@style/EditorActivityTheme">
         </activity>
 
         <!-- Keep support for apps that expect the Compact editor -->

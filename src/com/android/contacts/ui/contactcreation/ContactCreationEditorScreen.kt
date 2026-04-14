@@ -1,0 +1,84 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package com.android.contacts.ui.contactcreation
+
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
+import com.android.contacts.ui.contactcreation.component.accountChipItem
+import com.android.contacts.ui.contactcreation.component.emailSection
+import com.android.contacts.ui.contactcreation.component.nameSection
+import com.android.contacts.ui.contactcreation.component.phoneSection
+import com.android.contacts.ui.contactcreation.model.ContactCreationAction
+import com.android.contacts.ui.contactcreation.model.ContactCreationUiState
+
+@Composable
+internal fun ContactCreationEditorScreen(
+    uiState: ContactCreationUiState,
+    onAction: (ContactCreationAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            LargeTopAppBar(
+                title = { Text("Create contact") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onAction(ContactCreationAction.NavigateBack) },
+                        modifier = Modifier.testTag(TestTags.BACK_BUTTON),
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { onAction(ContactCreationAction.Save) },
+                        modifier = Modifier.testTag(TestTags.SAVE_BUTTON),
+                        enabled = !uiState.isSaving,
+                    ) {
+                        Icon(Icons.Filled.Check, contentDescription = "Save")
+                    }
+                },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+    ) { contentPadding ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding,
+        ) {
+            accountChipItem(
+                accountName = uiState.accountName,
+                onAction = onAction,
+            )
+            nameSection(
+                nameState = uiState.nameState,
+                onAction = onAction,
+            )
+            phoneSection(
+                phones = uiState.phoneNumbers,
+                onAction = onAction,
+            )
+            emailSection(
+                emails = uiState.emails,
+                onAction = onAction,
+            )
+        }
+    }
+}
