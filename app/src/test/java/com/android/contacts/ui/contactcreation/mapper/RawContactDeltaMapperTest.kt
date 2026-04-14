@@ -656,4 +656,335 @@ class RawContactDeltaMapperTest {
 
         assertEquals(2, entries!!.size)
     }
+
+    // --- Multiple entries for repeatable fields ---
+
+    @Test
+    fun multipleEmails_producesMultipleEntries() {
+        val state = ContactCreationUiState(
+            emails = listOf(
+                EmailFieldState(address = "a@b.com"),
+                EmailFieldState(address = "c@d.com"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Email.CONTENT_ITEM_TYPE)
+
+        assertEquals(2, entries!!.size)
+    }
+
+    @Test
+    fun multipleEvents_producesMultipleEntries() {
+        val state = ContactCreationUiState(
+            events = listOf(
+                EventFieldState(startDate = "2020-01-01"),
+                EventFieldState(startDate = "2021-06-15"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Event.CONTENT_ITEM_TYPE)
+
+        assertEquals(2, entries!!.size)
+    }
+
+    @Test
+    fun multipleRelations_producesMultipleEntries() {
+        val state = ContactCreationUiState(
+            relations = listOf(
+                RelationFieldState(name = "Jane"),
+                RelationFieldState(name = "Bob"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Relation.CONTENT_ITEM_TYPE)
+
+        assertEquals(2, entries!!.size)
+    }
+
+    @Test
+    fun multipleImAccounts_producesMultipleEntries() {
+        val state = ContactCreationUiState(
+            imAccounts = listOf(
+                ImFieldState(data = "user1@jabber.org"),
+                ImFieldState(data = "user2@jabber.org"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Im.CONTENT_ITEM_TYPE)
+
+        assertEquals(2, entries!!.size)
+    }
+
+    @Test
+    fun multipleWebsites_producesMultipleEntries() {
+        val state = ContactCreationUiState(
+            websites = listOf(
+                WebsiteFieldState(url = "https://one.com"),
+                WebsiteFieldState(url = "https://two.com"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Website.CONTENT_ITEM_TYPE)
+
+        assertEquals(2, entries!!.size)
+    }
+
+    // --- Non-custom types do NOT set LABEL column ---
+
+    @Test
+    fun nonCustomPhoneType_doesNotSetLabel() {
+        val state = ContactCreationUiState(
+            phoneNumbers = listOf(PhoneFieldState(number = "555", type = PhoneType.Home)),
+        )
+        val result = mapper.map(state, account = null)
+        val entry = result.state[0].getMimeEntries(Phone.CONTENT_ITEM_TYPE)!![0]
+
+        assertEquals(Phone.TYPE_HOME, entry.getAsInteger(Phone.TYPE))
+        assertNull(entry.getAsString(Phone.LABEL))
+    }
+
+    @Test
+    fun nonCustomEmailType_doesNotSetLabel() {
+        val state = ContactCreationUiState(
+            emails = listOf(EmailFieldState(address = "a@b.com", type = EmailType.Work)),
+        )
+        val result = mapper.map(state, account = null)
+        val entry = result.state[0].getMimeEntries(Email.CONTENT_ITEM_TYPE)!![0]
+
+        assertEquals(Email.TYPE_WORK, entry.getAsInteger(Email.TYPE))
+        assertNull(entry.getAsString(Email.LABEL))
+    }
+
+    @Test
+    fun nonCustomImProtocol_doesNotSetCustomProtocol() {
+        val state = ContactCreationUiState(
+            imAccounts = listOf(ImFieldState(data = "user", protocol = ImProtocol.Skype)),
+        )
+        val result = mapper.map(state, account = null)
+        val entry = result.state[0].getMimeEntries(Im.CONTENT_ITEM_TYPE)!![0]
+
+        assertEquals(Im.PROTOCOL_SKYPE, entry.getAsInteger(Im.PROTOCOL))
+        assertNull(entry.getAsString(Im.CUSTOM_PROTOCOL))
+    }
+
+    // --- Temp ID is negative ---
+
+    @Test
+    fun tempId_isNegative() {
+        val state = ContactCreationUiState(
+            nameState = NameState(first = "Test"),
+        )
+        val result = mapper.map(state, account = null)
+        val tempId = result.state[0].values.id
+
+        assertTrue("Temp ID should be negative, was $tempId", tempId < 0)
+    }
+
+    // --- Whitespace-only fields treated as blank ---
+
+    @Test
+    fun whitespaceOnlyPhone_notIncluded() {
+        val state = ContactCreationUiState(
+            phoneNumbers = listOf(PhoneFieldState(number = "   \t ")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Phone.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyEmail_notIncluded() {
+        val state = ContactCreationUiState(
+            emails = listOf(EmailFieldState(address = "   ")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Email.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyNote_notIncluded() {
+        val state = ContactCreationUiState(note = "   \n  ")
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Note.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyNickname_notIncluded() {
+        val state = ContactCreationUiState(nickname = "   ")
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Nickname.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlySipAddress_notIncluded() {
+        val state = ContactCreationUiState(sipAddress = " \t ")
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(SipAddress.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyName_notIncluded() {
+        val state = ContactCreationUiState(
+            nameState = NameState(first = "  ", last = " \t"),
+            phoneNumbers = listOf(PhoneFieldState(number = "555")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(StructuredName.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyWebsite_notIncluded() {
+        val state = ContactCreationUiState(
+            websites = listOf(WebsiteFieldState(url = "   ")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Website.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyEvent_notIncluded() {
+        val state = ContactCreationUiState(
+            events = listOf(EventFieldState(startDate = "  ")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Event.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyRelation_notIncluded() {
+        val state = ContactCreationUiState(
+            relations = listOf(RelationFieldState(name = "  ")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Relation.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyIm_notIncluded() {
+        val state = ContactCreationUiState(
+            imAccounts = listOf(ImFieldState(data = "  ")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Im.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyAddress_notIncluded() {
+        val state = ContactCreationUiState(
+            addresses = listOf(AddressFieldState(street = "  ", city = " \t")),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(StructuredPostal.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    @Test
+    fun whitespaceOnlyOrganization_notIncluded() {
+        val state = ContactCreationUiState(
+            organization = OrganizationFieldState(company = "  ", title = " \t"),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Organization.CONTENT_ITEM_TYPE)
+
+        assertTrue(entries.isNullOrEmpty())
+    }
+
+    // --- Mixed blank/populated repeatable fields (only populated saved) ---
+
+    @Test
+    fun mixedBlankAndPopulatedEvents_onlyMapsPopulated() {
+        val state = ContactCreationUiState(
+            events = listOf(
+                EventFieldState(startDate = ""),
+                EventFieldState(startDate = "2020-01-01"),
+                EventFieldState(startDate = "   "),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Event.CONTENT_ITEM_TYPE)
+
+        assertEquals(1, entries!!.size)
+        assertEquals("2020-01-01", entries[0].getAsString(Event.START_DATE))
+    }
+
+    @Test
+    fun mixedBlankAndPopulatedRelations_onlyMapsPopulated() {
+        val state = ContactCreationUiState(
+            relations = listOf(
+                RelationFieldState(name = ""),
+                RelationFieldState(name = "Jane"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Relation.CONTENT_ITEM_TYPE)
+
+        assertEquals(1, entries!!.size)
+        assertEquals("Jane", entries[0].getAsString(Relation.NAME))
+    }
+
+    @Test
+    fun mixedBlankAndPopulatedWebsites_onlyMapsPopulated() {
+        val state = ContactCreationUiState(
+            websites = listOf(
+                WebsiteFieldState(url = ""),
+                WebsiteFieldState(url = "https://site.com"),
+                WebsiteFieldState(url = "  "),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Website.CONTENT_ITEM_TYPE)
+
+        assertEquals(1, entries!!.size)
+        assertEquals("https://site.com", entries[0].getAsString(Website.URL))
+    }
+
+    @Test
+    fun mixedBlankAndPopulatedIms_onlyMapsPopulated() {
+        val state = ContactCreationUiState(
+            imAccounts = listOf(
+                ImFieldState(data = ""),
+                ImFieldState(data = "user@jabber"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(Im.CONTENT_ITEM_TYPE)
+
+        assertEquals(1, entries!!.size)
+        assertEquals("user@jabber", entries[0].getAsString(Im.DATA))
+    }
+
+    @Test
+    fun mixedBlankAndPopulatedAddresses_onlyMapsPopulated() {
+        val state = ContactCreationUiState(
+            addresses = listOf(
+                AddressFieldState(),
+                AddressFieldState(street = "123 Main"),
+            ),
+        )
+        val result = mapper.map(state, account = null)
+        val entries = result.state[0].getMimeEntries(StructuredPostal.CONTENT_ITEM_TYPE)
+
+        assertEquals(1, entries!!.size)
+        assertEquals("123 Main", entries[0].getAsString(StructuredPostal.STREET))
+    }
 }

@@ -276,6 +276,171 @@ class ContactCreationViewModelTest {
             }
         }
 
+    // --- Process death round-trip ---
+
+    @Test
+    fun processDeathRestore_preservesAllFieldTypes() {
+        val savedState = ContactCreationUiState(
+            nameState = NameState(
+                prefix = "Dr",
+                first = "John",
+                middle = "M",
+                last = "Doe",
+                suffix = "Jr",
+            ),
+            phoneNumbers = listOf(PhoneFieldState(number = "555")),
+            emails = listOf(
+                com.android.contacts.ui.contactcreation.model.EmailFieldState(address = "a@b.com"),
+            ),
+            addresses = listOf(
+                com.android.contacts.ui.contactcreation.model.AddressFieldState(
+                    street = "123 Main",
+                ),
+            ),
+            organization = com.android.contacts.ui.contactcreation.model.OrganizationFieldState(
+                company = "Acme",
+                title = "Eng",
+            ),
+            events = listOf(
+                com.android.contacts.ui.contactcreation.model.EventFieldState(
+                    startDate = "1990-01-01",
+                ),
+            ),
+            relations = listOf(
+                com.android.contacts.ui.contactcreation.model.RelationFieldState(name = "Jane"),
+            ),
+            imAccounts = listOf(
+                com.android.contacts.ui.contactcreation.model.ImFieldState(data = "user@jabber"),
+            ),
+            websites = listOf(
+                com.android.contacts.ui.contactcreation.model.WebsiteFieldState(
+                    url = "https://site.com",
+                ),
+            ),
+            note = "Important",
+            nickname = "Johnny",
+            sipAddress = "sip:user@voip.example.com",
+            photoUri = Uri.parse("content://media/external/images/99"),
+            isMoreFieldsExpanded = true,
+        )
+        val vm = createViewModel(initialState = savedState)
+        val restored = vm.uiState.value
+
+        assertEquals("Dr", restored.nameState.prefix)
+        assertEquals("John", restored.nameState.first)
+        assertEquals("M", restored.nameState.middle)
+        assertEquals("Doe", restored.nameState.last)
+        assertEquals("Jr", restored.nameState.suffix)
+        assertEquals("555", restored.phoneNumbers[0].number)
+        assertEquals("a@b.com", restored.emails[0].address)
+        assertEquals("123 Main", restored.addresses[0].street)
+        assertEquals("Acme", restored.organization.company)
+        assertEquals("Eng", restored.organization.title)
+        assertEquals("1990-01-01", restored.events[0].startDate)
+        assertEquals("Jane", restored.relations[0].name)
+        assertEquals("user@jabber", restored.imAccounts[0].data)
+        assertEquals("https://site.com", restored.websites[0].url)
+        assertEquals("Important", restored.note)
+        assertEquals("Johnny", restored.nickname)
+        assertEquals("sip:user@voip.example.com", restored.sipAddress)
+        assertEquals(Uri.parse("content://media/external/images/99"), restored.photoUri)
+        assertTrue(restored.isMoreFieldsExpanded)
+    }
+
+    // --- ToggleMoreFields ---
+
+    @Test
+    fun toggleMoreFields_togglesIsMoreFieldsExpanded() {
+        val vm = createViewModel()
+        assertFalse(vm.uiState.value.isMoreFieldsExpanded)
+        vm.onAction(ContactCreationAction.ToggleMoreFields)
+        assertTrue(vm.uiState.value.isMoreFieldsExpanded)
+        vm.onAction(ContactCreationAction.ToggleMoreFields)
+        assertFalse(vm.uiState.value.isMoreFieldsExpanded)
+    }
+
+    // --- Extended field actions ---
+
+    @Test
+    fun addAddress_addsRow() {
+        val vm = createViewModel()
+        assertTrue(vm.uiState.value.addresses.isEmpty())
+        vm.onAction(ContactCreationAction.AddAddress)
+        assertEquals(1, vm.uiState.value.addresses.size)
+    }
+
+    @Test
+    fun addEvent_addsRow() {
+        val vm = createViewModel()
+        assertTrue(vm.uiState.value.events.isEmpty())
+        vm.onAction(ContactCreationAction.AddEvent)
+        assertEquals(1, vm.uiState.value.events.size)
+    }
+
+    @Test
+    fun updateNote_updatesState() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateNote("A note"))
+        assertEquals("A note", vm.uiState.value.note)
+    }
+
+    @Test
+    fun updateNickname_updatesState() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateNickname("Johnny"))
+        assertEquals("Johnny", vm.uiState.value.nickname)
+    }
+
+    @Test
+    fun updateSipAddress_updatesState() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateSipAddress("sip:user@voip"))
+        assertEquals("sip:user@voip", vm.uiState.value.sipAddress)
+    }
+
+    @Test
+    fun updateCompany_updatesState() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateCompany("Acme"))
+        assertEquals("Acme", vm.uiState.value.organization.company)
+    }
+
+    @Test
+    fun updateJobTitle_updatesState() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateJobTitle("Engineer"))
+        assertEquals("Engineer", vm.uiState.value.organization.title)
+    }
+
+    @Test
+    fun selectAccount_clearsGroups() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.ToggleGroup(1L, "Friends"))
+        assertEquals(1, vm.uiState.value.groups.size)
+
+        val account = com.android.contacts.model.account.AccountWithDataSet(
+            "test",
+            "com.test",
+            null,
+        )
+        vm.onAction(ContactCreationAction.SelectAccount(account))
+        assertTrue(vm.uiState.value.groups.isEmpty())
+        assertEquals(account, vm.uiState.value.selectedAccount)
+    }
+
+    @Test
+    fun hasPendingChanges_trueForNote() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.UpdateNote("text"))
+        assertTrue(vm.uiState.value.hasPendingChanges())
+    }
+
+    @Test
+    fun hasPendingChanges_falseForDefaultState() {
+        val vm = createViewModel()
+        assertFalse(vm.uiState.value.hasPendingChanges())
+    }
+
     private fun createViewModel(
         initialState: ContactCreationUiState = ContactCreationUiState(),
     ): ContactCreationViewModel {
