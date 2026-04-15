@@ -212,7 +212,9 @@ internal sealed class WebsiteType : Parcelable {
         }
 }
 
-internal fun PhoneType.label(context: android.content.Context): String = when (this) {
+// Receiver is nullable because Scaffold's SubcomposeLayout can null-out captured
+// sealed-class instances at the JVM level despite Kotlin's non-null types.
+internal fun PhoneType?.label(context: android.content.Context): String = when (this) {
     is PhoneType.Mobile -> context.getString(R.string.field_type_mobile)
     is PhoneType.Home -> context.getString(R.string.field_type_home)
     is PhoneType.Work -> context.getString(R.string.field_type_work)
@@ -223,19 +225,22 @@ internal fun PhoneType.label(context: android.content.Context): String = when (t
     is PhoneType.Pager -> context.getString(R.string.field_type_pager)
     is PhoneType.Other -> context.getString(R.string.field_type_other)
     is PhoneType.Custom -> label.ifEmpty { context.getString(R.string.field_type_custom) }
+    null -> context.getString(R.string.field_type_mobile)
 }
 
-internal fun EmailType.label(context: android.content.Context): String = when (this) {
+internal fun EmailType?.label(context: android.content.Context): String = when (this) {
     is EmailType.Home -> context.getString(R.string.field_type_home)
     is EmailType.Work -> context.getString(R.string.field_type_work)
     is EmailType.Other -> context.getString(R.string.field_type_other)
     is EmailType.Mobile -> context.getString(R.string.field_type_mobile)
     is EmailType.Custom -> label.ifEmpty { context.getString(R.string.field_type_custom) }
+    null -> context.getString(R.string.field_type_home)
 }
 
-internal fun AddressType.label(context: android.content.Context): String = when (this) {
+internal fun AddressType?.label(context: android.content.Context): String = when (this) {
     is AddressType.Home -> context.getString(R.string.field_type_home)
     is AddressType.Work -> context.getString(R.string.field_type_work)
     is AddressType.Other -> context.getString(R.string.field_type_other)
     is AddressType.Custom -> label.ifEmpty { context.getString(R.string.field_type_custom) }
+    null -> context.getString(R.string.field_type_home)
 }
