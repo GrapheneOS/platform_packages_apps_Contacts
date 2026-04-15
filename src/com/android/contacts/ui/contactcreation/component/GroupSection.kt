@@ -3,8 +3,6 @@ package com.android.contacts.ui.contactcreation.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +16,7 @@ import com.android.contacts.ui.contactcreation.model.GroupInfo
 
 /**
  * Group section as a @Composable for Column-based layout.
- * Uses FieldRow with Label icon on first row only.
+ * Uses FieldRow for each group row.
  */
 @Composable
 internal fun GroupSectionContent(
@@ -31,8 +29,7 @@ internal fun GroupSectionContent(
 
     Column(modifier = modifier.testTag(TestTags.GROUP_SECTION)) {
         availableGroups.forEachIndexed { index, group ->
-            val isFirst = index == 0
-            FieldRow(icon = if (isFirst) Icons.AutoMirrored.Filled.Label else null) {
+            FieldRow {
                 GroupCheckboxRow(
                     group = group,
                     isSelected = selectedGroups.any { it.groupId == group.groupId },

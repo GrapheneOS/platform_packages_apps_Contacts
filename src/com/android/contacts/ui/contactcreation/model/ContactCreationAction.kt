@@ -108,6 +108,5 @@ internal sealed interface ContactCreationAction {
     data object RequestCamera : ContactCreationAction
 
     // Account
-    data object RequestAccountPicker : ContactCreationAction
     data class SelectAccount(val account: AccountWithDataSet) : ContactCreationAction
 }

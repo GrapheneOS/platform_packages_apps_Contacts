@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +18,7 @@ import com.android.contacts.ui.contactcreation.model.NameState
 
 /**
  * Name section as a @Composable for Column-based layout.
- * Uses FieldRow with Person icon on first field only.
+ * Uses FieldRow for each name field.
  */
 @Composable
 internal fun NameSectionContent(
@@ -29,7 +27,7 @@ internal fun NameSectionContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        FieldRow(icon = Icons.Filled.Person) {
+        FieldRow {
             OutlinedTextField(
                 value = nameState.first,
                 onValueChange = { onAction(ContactCreationAction.UpdateFirstName(it)) },
@@ -41,7 +39,7 @@ internal fun NameSectionContent(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        FieldRow(icon = null) {
+        FieldRow {
             OutlinedTextField(
                 value = nameState.last,
                 onValueChange = { onAction(ContactCreationAction.UpdateLastName(it)) },

@@ -18,13 +18,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.android.contacts.ContactSaveService
 import com.android.contacts.activities.ContactEditorActivity.ContactEditor.SaveMode
+import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationEffect
 import com.android.contacts.ui.core.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-internal class ContactCreationActivity : ComponentActivity() {
+internal class ContactCreationActivity :
+    ComponentActivity(),
+    ContactSaveService.Listener {
 
     private val viewModel: ContactCreationViewModel by viewModels()
 
@@ -58,11 +61,32 @@ internal class ContactCreationActivity : ComponentActivity() {
 
             AppTheme {
                 val uiState by viewModel.uiState.collectAsState()
+                val accounts by viewModel.accounts.collectAsState()
                 ContactCreationEditorScreen(
                     uiState = uiState,
+                    accounts = accounts,
                     onAction = viewModel::onAction,
                 )
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ContactSaveService.registerListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        ContactSaveService.unregisterListener(this)
+    }
+
+    override fun onServiceCompleted(callbackIntent: Intent) {
+        val contactUri = callbackIntent.data
+        val isValidUri = contactUri == null ||
+            contactUri.authority == android.provider.ContactsContract.AUTHORITY
+        if (isValidUri) {
+            viewModel.onSaveResult(contactUri != null, contactUri)
         }
     }
 
@@ -114,23 +138,6 @@ internal class ContactCreationActivity : ComponentActivity() {
             }
 
             is ContactCreationEffect.LaunchCamera -> cameraLauncher.launch(effect.outputUri)
-
-            is ContactCreationEffect.LaunchAccountPicker -> {
-                // Phase 2: show account picker bottom sheet or dialog
-            }
-        }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        if (intent.action == ContactCreationViewModel.SAVE_COMPLETED_ACTION) {
-            val contactUri = intent.data
-            // Validate the callback URI has the expected contacts authority
-            val isValidUri = contactUri == null ||
-                contactUri.authority == android.provider.ContactsContract.AUTHORITY
-            if (isValidUri) {
-                viewModel.onSaveResult(contactUri != null, contactUri)
-            }
         }
     }
 

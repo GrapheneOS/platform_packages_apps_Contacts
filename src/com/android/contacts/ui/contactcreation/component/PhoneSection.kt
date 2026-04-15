@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -51,15 +50,23 @@ internal fun PhoneSectionContent(
             PhoneFieldRow(
                 phone = phone,
                 index = index,
-                isFirst = index == 0,
-                showDelete = phones.size > 1,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_phone),
-            onClick = { onAction(ContactCreationAction.AddPhone) },
-            modifier = Modifier.testTag(TestTags.PHONE_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_phone),
+            onAdd = { onAction(ContactCreationAction.AddPhone) },
+            addTestTag = TestTags.PHONE_ADD,
+            removeLabel = if (phones.size > 1) {
+                stringResource(R.string.contact_creation_remove_phone)
+            } else {
+                null
+            },
+            onRemove = if (phones.size > 1) {
+                { onAction(ContactCreationAction.RemovePhone(phones.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -68,8 +75,6 @@ internal fun PhoneSectionContent(
 internal fun PhoneFieldRow(
     phone: PhoneFieldState,
     index: Int,
-    isFirst: Boolean,
-    showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,21 +85,7 @@ internal fun PhoneFieldRow(
     val selectorLabels = remember { PhoneType.selectorTypes.map { it.label(context) } }
     val currentTypeLabel = phone.type.label(context)
 
-    FieldRow(
-        icon = if (isFirst) Icons.Filled.Phone else null,
-        modifier = modifier,
-        trailing = if (showDelete) {
-            {
-                RemoveFieldButton(
-                    onClick = { onAction(ContactCreationAction.RemovePhone(phone.id)) },
-                    contentDescription = stringResource(R.string.contact_creation_remove_phone),
-                    modifier = Modifier.testTag(TestTags.phoneDelete(index)),
-                )
-            }
-        } else {
-            null
-        },
-    ) {
+    FieldRow(modifier = modifier) {
         OutlinedTextField(
             value = phone.number,
             onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },

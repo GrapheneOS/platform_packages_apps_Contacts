@@ -8,7 +8,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -51,15 +50,23 @@ internal fun EmailSectionContent(
             EmailFieldRow(
                 email = email,
                 index = index,
-                isFirst = index == 0,
-                showDelete = emails.size > 1,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_email),
-            onClick = { onAction(ContactCreationAction.AddEmail) },
-            modifier = Modifier.testTag(TestTags.EMAIL_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_email),
+            onAdd = { onAction(ContactCreationAction.AddEmail) },
+            addTestTag = TestTags.EMAIL_ADD,
+            removeLabel = if (emails.size > 1) {
+                stringResource(R.string.contact_creation_remove_email)
+            } else {
+                null
+            },
+            onRemove = if (emails.size > 1) {
+                { onAction(ContactCreationAction.RemoveEmail(emails.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -68,8 +75,6 @@ internal fun EmailSectionContent(
 internal fun EmailFieldRow(
     email: EmailFieldState,
     index: Int,
-    isFirst: Boolean,
-    showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -80,21 +85,7 @@ internal fun EmailFieldRow(
     val selectorLabels = remember { EmailType.selectorTypes.map { it.label(context) } }
     val currentTypeLabel = email.type.label(context)
 
-    FieldRow(
-        icon = if (isFirst) Icons.Filled.Email else null,
-        modifier = modifier,
-        trailing = if (showDelete) {
-            {
-                RemoveFieldButton(
-                    onClick = { onAction(ContactCreationAction.RemoveEmail(email.id)) },
-                    contentDescription = stringResource(R.string.contact_creation_remove_email),
-                    modifier = Modifier.testTag(TestTags.emailDelete(index)),
-                )
-            }
-        } else {
-            null
-        },
-    ) {
+    FieldRow(modifier = modifier) {
         OutlinedTextField(
             value = email.address,
             onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },

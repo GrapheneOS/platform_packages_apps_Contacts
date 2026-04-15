@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,14 +33,23 @@ internal fun WebsiteSectionContent(
             WebsiteFieldRow(
                 website = website,
                 index = index,
-                isFirst = index == 0,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_website),
-            onClick = { onAction(ContactCreationAction.AddWebsite) },
-            modifier = Modifier.testTag(TestTags.WEBSITE_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_website),
+            onAdd = { onAction(ContactCreationAction.AddWebsite) },
+            addTestTag = TestTags.WEBSITE_ADD,
+            removeLabel = if (websites.size > 1) {
+                stringResource(R.string.contact_creation_remove_website)
+            } else {
+                null
+            },
+            onRemove = if (websites.size > 1) {
+                { onAction(ContactCreationAction.RemoveWebsite(websites.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -51,20 +58,11 @@ internal fun WebsiteSectionContent(
 private fun WebsiteFieldRow(
     website: WebsiteFieldState,
     index: Int,
-    isFirst: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FieldRow(
-        icon = if (isFirst) Icons.Filled.Public else null,
         modifier = modifier,
-        trailing = {
-            RemoveFieldButton(
-                onClick = { onAction(ContactCreationAction.RemoveWebsite(website.id)) },
-                contentDescription = stringResource(R.string.contact_creation_remove_website),
-                modifier = Modifier.testTag(TestTags.websiteDelete(index)),
-            )
-        },
     ) {
         OutlinedTextField(
             value = website.url,

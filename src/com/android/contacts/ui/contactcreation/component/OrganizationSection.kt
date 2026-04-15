@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Business
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +18,7 @@ import com.android.contacts.ui.contactcreation.model.OrganizationFieldState
 
 /**
  * Organization section as a @Composable for Column-based layout.
- * Uses FieldRow with Business icon on first field only.
+ * Uses FieldRow for each organization field.
  */
 @Composable
 internal fun OrganizationSectionContent(
@@ -29,7 +27,7 @@ internal fun OrganizationSectionContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        FieldRow(icon = Icons.Filled.Business) {
+        FieldRow {
             OutlinedTextField(
                 value = organization.company,
                 onValueChange = { onAction(ContactCreationAction.UpdateCompany(it)) },
@@ -41,7 +39,7 @@ internal fun OrganizationSectionContent(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        FieldRow(icon = null) {
+        FieldRow {
             OutlinedTextField(
                 value = organization.title,
                 onValueChange = { onAction(ContactCreationAction.UpdateJobTitle(it)) },

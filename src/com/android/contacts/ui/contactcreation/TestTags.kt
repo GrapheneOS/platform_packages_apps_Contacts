@@ -128,8 +128,10 @@ internal object TestTags {
     const val SIP_REMOVE = "contact_creation_sip_remove"
     const val ORG_REMOVE = "contact_creation_org_remove"
 
-    // Account footer
+    // Account
     const val ACCOUNT_FOOTER = "contact_creation_account_footer"
+    const val ACCOUNT_SHEET = "contact_creation_account_sheet"
+    fun accountSheetItem(index: Int): String = "contact_creation_account_sheet_item_$index"
 
     // Custom label dialog
     const val CUSTOM_LABEL_DIALOG = "custom_label_dialog"

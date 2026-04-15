@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,14 +33,23 @@ internal fun ImSectionContent(
             ImFieldRow(
                 im = im,
                 index = index,
-                isFirst = index == 0,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_im),
-            onClick = { onAction(ContactCreationAction.AddIm) },
-            modifier = Modifier.testTag(TestTags.IM_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_im),
+            onAdd = { onAction(ContactCreationAction.AddIm) },
+            addTestTag = TestTags.IM_ADD,
+            removeLabel = if (imAccounts.size > 1) {
+                stringResource(R.string.contact_creation_remove_im)
+            } else {
+                null
+            },
+            onRemove = if (imAccounts.size > 1) {
+                { onAction(ContactCreationAction.RemoveIm(imAccounts.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -51,20 +58,11 @@ internal fun ImSectionContent(
 private fun ImFieldRow(
     im: ImFieldState,
     index: Int,
-    isFirst: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FieldRow(
-        icon = if (isFirst) Icons.AutoMirrored.Filled.Message else null,
         modifier = modifier,
-        trailing = {
-            RemoveFieldButton(
-                onClick = { onAction(ContactCreationAction.RemoveIm(im.id)) },
-                contentDescription = stringResource(R.string.contact_creation_remove_im),
-                modifier = Modifier.testTag(TestTags.imDelete(index)),
-            )
-        },
     ) {
         OutlinedTextField(
             value = im.data,

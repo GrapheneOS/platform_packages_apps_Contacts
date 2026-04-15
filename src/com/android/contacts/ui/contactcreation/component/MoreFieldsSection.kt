@@ -1,9 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Notes
-import androidx.compose.material.icons.filled.DialerSip
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +21,7 @@ internal fun NicknameField(
     nickname: String,
     onAction: (ContactCreationAction) -> Unit,
 ) {
-    FieldRow(icon = null) {
+    FieldRow {
         OutlinedTextField(
             value = nickname,
             onValueChange = { onAction(ContactCreationAction.UpdateNickname(it)) },
@@ -42,7 +39,7 @@ internal fun NoteField(
     note: String,
     onAction: (ContactCreationAction) -> Unit,
 ) {
-    FieldRow(icon = Icons.AutoMirrored.Filled.Notes) {
+    FieldRow {
         OutlinedTextField(
             value = note,
             onValueChange = { onAction(ContactCreationAction.UpdateNote(it)) },
@@ -61,7 +58,7 @@ internal fun SipField(
     sipAddress: String,
     onAction: (ContactCreationAction) -> Unit,
 ) {
-    FieldRow(icon = Icons.Filled.DialerSip) {
+    FieldRow {
         OutlinedTextField(
             value = sipAddress,
             onValueChange = { onAction(ContactCreationAction.UpdateSipAddress(it)) },

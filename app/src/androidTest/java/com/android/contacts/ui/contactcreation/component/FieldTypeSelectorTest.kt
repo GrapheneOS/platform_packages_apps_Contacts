@@ -68,9 +68,8 @@ class FieldTypeSelectorTest {
             AppTheme {
                 FieldTypeSelector(
                     currentLabel = currentType,
-                    types = types,
                     labels = types,
-                    onTypeSelected = { selectedType = it },
+                    onIndexSelected = { selectedType = types[it] },
                     modifier = Modifier.testTag(SELECTOR_TAG),
                 )
             }

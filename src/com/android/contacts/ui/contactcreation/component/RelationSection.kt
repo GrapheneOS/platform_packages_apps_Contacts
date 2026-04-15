@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,14 +33,23 @@ internal fun RelationSectionContent(
             RelationFieldRow(
                 relation = relation,
                 index = index,
-                isFirst = index == 0,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_relation),
-            onClick = { onAction(ContactCreationAction.AddRelation) },
-            modifier = Modifier.testTag(TestTags.RELATION_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_relation),
+            onAdd = { onAction(ContactCreationAction.AddRelation) },
+            addTestTag = TestTags.RELATION_ADD,
+            removeLabel = if (relations.size > 1) {
+                stringResource(R.string.contact_creation_remove_relation)
+            } else {
+                null
+            },
+            onRemove = if (relations.size > 1) {
+                { onAction(ContactCreationAction.RemoveRelation(relations.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -51,20 +58,11 @@ internal fun RelationSectionContent(
 private fun RelationFieldRow(
     relation: RelationFieldState,
     index: Int,
-    isFirst: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FieldRow(
-        icon = if (isFirst) Icons.Filled.People else null,
         modifier = modifier,
-        trailing = {
-            RemoveFieldButton(
-                onClick = { onAction(ContactCreationAction.RemoveRelation(relation.id)) },
-                contentDescription = stringResource(R.string.contact_creation_remove_relation),
-                modifier = Modifier.testTag(TestTags.relationDelete(index)),
-            )
-        },
     ) {
         OutlinedTextField(
             value = relation.name,

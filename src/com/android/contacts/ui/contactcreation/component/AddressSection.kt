@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,15 +38,23 @@ internal fun AddressSectionContent(
             AddressFieldRow(
                 address = address,
                 index = index,
-                isFirst = index == 0,
-                showDelete = addresses.size > 1,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_address),
-            onClick = { onAction(ContactCreationAction.AddAddress) },
-            modifier = Modifier.testTag(TestTags.ADDRESS_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_address),
+            onAdd = { onAction(ContactCreationAction.AddAddress) },
+            addTestTag = TestTags.ADDRESS_ADD,
+            removeLabel = if (addresses.isNotEmpty()) {
+                stringResource(R.string.contact_creation_remove_address)
+            } else {
+                null
+            },
+            onRemove = if (addresses.isNotEmpty()) {
+                { onAction(ContactCreationAction.RemoveAddress(addresses.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -57,28 +63,12 @@ internal fun AddressSectionContent(
 internal fun AddressFieldRow(
     address: AddressFieldState,
     index: Int,
-    isFirst: Boolean,
-    showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
 
-    FieldRow(
-        icon = if (isFirst) Icons.Filled.Place else null,
-        modifier = modifier,
-        trailing = if (showDelete) {
-            {
-                RemoveFieldButton(
-                    onClick = { onAction(ContactCreationAction.RemoveAddress(address.id)) },
-                    contentDescription = stringResource(R.string.contact_creation_remove_address),
-                    modifier = Modifier.testTag(TestTags.addressDelete(index)),
-                )
-            }
-        } else {
-            null
-        },
-    ) {
+    FieldRow(modifier = modifier) {
         AddressFieldColumns(
             address = address,
             index = index,
@@ -115,9 +105,9 @@ private fun AddressFieldColumns(
         val selectorLabels = AddressType.selectorTypes.map { it.label(context) }
         FieldTypeSelector(
             currentLabel = address.type.label(context),
-            types = AddressType.selectorTypes,
             labels = selectorLabels,
-            onTypeSelected = { selected ->
+            onIndexSelected = { idx ->
+                val selected = AddressType.selectorTypes[idx]
                 if (selected is AddressType.Custom && selected.label.isEmpty()) {
                     onRequestCustomLabel()
                 } else {

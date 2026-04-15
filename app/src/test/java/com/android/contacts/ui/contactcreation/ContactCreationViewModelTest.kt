@@ -519,6 +519,9 @@ class ContactCreationViewModelTest {
         return ContactCreationViewModel(
             savedStateHandle = savedStateHandle,
             deltaMapper = RawContactDeltaMapper(),
+            accountTypeManager = com.android.contacts.model.AccountTypeManager.getInstance(
+                RuntimeEnvironment.getApplication(),
+            ),
             defaultDispatcher = mainDispatcherRule.testDispatcher,
             appContext = RuntimeEnvironment.getApplication(),
         )

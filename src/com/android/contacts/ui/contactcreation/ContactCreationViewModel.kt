@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.contacts.R
 import com.android.contacts.di.core.DefaultDispatcher
+import com.android.contacts.model.AccountTypeManager
+import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.contactcreation.mapper.RawContactDeltaMapper
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
@@ -26,6 +28,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -46,6 +49,7 @@ import kotlinx.coroutines.launch
 internal class ContactCreationViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val deltaMapper: RawContactDeltaMapper,
+    private val accountTypeManager: AccountTypeManager,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @ApplicationContext private val appContext: Context,
 ) : ViewModel() {
@@ -55,15 +59,40 @@ internal class ContactCreationViewModel @Inject constructor(
     )
     val uiState: StateFlow<ContactCreationUiState> = _uiState.asStateFlow()
 
+    private val _accounts = MutableStateFlow<List<AccountWithDataSet>>(emptyList())
+    val accounts: StateFlow<List<AccountWithDataSet>> = _accounts.asStateFlow()
+
     private val _effects = Channel<ContactCreationEffect>(Channel.BUFFERED)
     val effects: Flow<ContactCreationEffect> = _effects.receiveAsFlow()
 
     init {
-        // Clean up any orphaned photo temp files from previous sessions
         cleanupTempPhotos()
+        loadWritableAccounts()
 
         viewModelScope.launch {
             _uiState.collect { savedStateHandle[STATE_KEY] = it }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private fun loadWritableAccounts() {
+        viewModelScope.launch(defaultDispatcher) {
+            try {
+                val filter = AccountTypeManager.insertableFilter(appContext)
+                val loaded = accountTypeManager.filterAccountsAsync(filter)
+                    .get(ACCOUNT_LOAD_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                    .map { it.account }
+                _accounts.value = loaded
+                if (_uiState.value.selectedAccount == null) {
+                    loaded.firstOrNull()?.let { first ->
+                        updateState {
+                            copy(selectedAccount = first, accountName = first.name)
+                        }
+                    }
+                }
+            } catch (_: Exception) {
+                // Fallback: device-only, empty account list
+            }
         }
     }
 
@@ -93,16 +122,18 @@ internal class ContactCreationViewModel @Inject constructor(
             is ContactCreationAction.RequestGallery ->
                 viewModelScope.launch { _effects.send(ContactCreationEffect.LaunchGallery) }
             is ContactCreationAction.RequestCamera -> requestCamera()
-            is ContactCreationAction.RequestAccountPicker ->
-                viewModelScope.launch { _effects.send(ContactCreationEffect.LaunchAccountPicker) }
-            is ContactCreationAction.SelectAccount ->
-                updateState {
-                    copy(
-                        selectedAccount = action.account,
-                        accountName = action.account.name,
-                        groups = emptyList(),
-                    )
+            is ContactCreationAction.SelectAccount -> {
+                val writable = _accounts.value
+                if (writable.isEmpty() || action.account in writable) {
+                    updateState {
+                        copy(
+                            selectedAccount = action.account,
+                            accountName = action.account.name,
+                            groups = emptyList(),
+                        )
+                    }
                 }
+            }
             else -> handleFieldUpdateAction(action)
         }
     }
@@ -419,3 +450,4 @@ internal class ContactCreationViewModel @Inject constructor(
 
 private const val PENDING_CAMERA_URI_KEY = "pendingCameraUri"
 private const val PHOTO_CACHE_DIR = "contact_photos"
+private const val ACCOUNT_LOAD_TIMEOUT_SECONDS = 5L

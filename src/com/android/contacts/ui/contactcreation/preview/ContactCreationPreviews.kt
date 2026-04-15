@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.contactcreation.ContactCreationEditorScreen
-import com.android.contacts.ui.contactcreation.component.AccountChip
 import com.android.contacts.ui.contactcreation.component.AddMoreInfoSection
 import com.android.contacts.ui.contactcreation.component.AddressSectionContent
 import com.android.contacts.ui.contactcreation.component.EmailSectionContent
@@ -30,6 +29,7 @@ private fun ContactCreationEditorScreenPreview() {
     AppTheme {
         ContactCreationEditorScreen(
             uiState = PreviewData.fullUiState,
+            accounts = emptyList(),
             onAction = {},
         )
     }
@@ -41,6 +41,7 @@ private fun ContactCreationEditorScreenEmptyPreview() {
     AppTheme {
         ContactCreationEditorScreen(
             uiState = PreviewData.emptyUiState,
+            accounts = emptyList(),
             onAction = {},
         )
     }
@@ -56,6 +57,7 @@ private fun ContactCreationEditorScreenDarkPreview() {
     AppTheme {
         ContactCreationEditorScreen(
             uiState = PreviewData.fullUiState,
+            accounts = emptyList(),
             onAction = {},
         )
     }
@@ -124,8 +126,6 @@ private fun PhoneFieldRowPreview() {
         PhoneFieldRow(
             phone = PreviewData.phones[0],
             index = 0,
-            isFirst = true,
-            showDelete = true,
             onAction = {},
         )
     }
@@ -260,23 +260,5 @@ private fun GroupCheckboxRowUnselectedPreview() {
 }
 
 // endregion
-
-// region AccountChip
-
-@Preview(showBackground = true)
-@Composable
-private fun AccountChipWithNamePreview() {
-    AppTheme {
-        AccountChip(accountName = "jane@gmail.com", onClick = {})
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AccountChipDevicePreview() {
-    AppTheme {
-        AccountChip(accountName = null, onClick = {})
-    }
-}
 
 // endregion

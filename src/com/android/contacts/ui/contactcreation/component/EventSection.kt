@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Event
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,14 +33,23 @@ internal fun EventSectionContent(
             EventFieldRow(
                 event = event,
                 index = index,
-                isFirst = index == 0,
                 onAction = onAction,
             )
         }
-        AddFieldButton(
-            label = stringResource(R.string.contact_creation_add_event),
-            onClick = { onAction(ContactCreationAction.AddEvent) },
-            modifier = Modifier.testTag(TestTags.EVENT_ADD),
+        AddRemoveFieldRow(
+            addLabel = stringResource(R.string.contact_creation_add_event),
+            onAdd = { onAction(ContactCreationAction.AddEvent) },
+            addTestTag = TestTags.EVENT_ADD,
+            removeLabel = if (events.size > 1) {
+                stringResource(R.string.contact_creation_remove_event)
+            } else {
+                null
+            },
+            onRemove = if (events.size > 1) {
+                { onAction(ContactCreationAction.RemoveEvent(events.last().id)) }
+            } else {
+                null
+            },
         )
     }
 }
@@ -51,20 +58,11 @@ internal fun EventSectionContent(
 private fun EventFieldRow(
     event: EventFieldState,
     index: Int,
-    isFirst: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FieldRow(
-        icon = if (isFirst) Icons.Filled.Event else null,
         modifier = modifier,
-        trailing = {
-            RemoveFieldButton(
-                onClick = { onAction(ContactCreationAction.RemoveEvent(event.id)) },
-                contentDescription = stringResource(R.string.contact_creation_remove_event),
-                modifier = Modifier.testTag(TestTags.eventDelete(index)),
-            )
-        },
     ) {
         OutlinedTextField(
             value = event.startDate,
