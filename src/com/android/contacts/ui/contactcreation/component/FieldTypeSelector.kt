@@ -19,20 +19,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.core.AppTheme
 
+/**
+ * Generic type selector with FilterChip + DropdownMenu.
+ *
+ * [labels] is a pre-computed list of display strings matching [types] by index.
+ * Pre-computing avoids passing @Composable lambdas into DropdownMenu's separate
+ * Popup composition, which can null-out captured generic parameters at runtime.
+ */
 @Composable
-internal fun <T> FieldTypeSelector(
-    currentType: T,
+internal fun <T : Any> FieldTypeSelector(
+    currentLabel: String,
     types: List<T>,
-    typeLabel: @Composable (T) -> String,
+    labels: List<String>,
     onTypeSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
+
     Box(modifier = modifier) {
         FilterChip(
             selected = true,
             onClick = { expanded = true },
-            label = { Text(typeLabel(currentType)) },
+            label = { Text(currentLabel) },
             trailingIcon = {
                 Icon(
                     Icons.Filled.ArrowDropDown,
@@ -44,14 +52,13 @@ internal fun <T> FieldTypeSelector(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            for (i in types.indices) {
-                val itemType = types[i]
-                val label = typeLabel(itemType)
+            types.forEachIndexed { index, type ->
+                val label = labels[index]
                 DropdownMenuItem(
                     text = { Text(label) },
                     onClick = {
                         expanded = false
-                        onTypeSelected(itemType)
+                        onTypeSelected(type)
                     },
                     modifier = Modifier.testTag(TestTags.fieldTypeOption(label)),
                 )
@@ -64,10 +71,11 @@ internal fun <T> FieldTypeSelector(
 @Composable
 private fun FieldTypeSelectorPreview() {
     AppTheme {
+        val types = listOf("Mobile", "Home", "Work", "Other")
         FieldTypeSelector(
-            currentType = "Mobile",
-            types = listOf("Mobile", "Home", "Work", "Other"),
-            typeLabel = { it },
+            currentLabel = "Mobile",
+            types = types,
+            labels = types,
             onTypeSelected = {},
         )
     }

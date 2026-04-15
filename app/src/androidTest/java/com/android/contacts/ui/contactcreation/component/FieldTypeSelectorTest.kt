@@ -67,9 +67,9 @@ class FieldTypeSelectorTest {
         composeTestRule.setContent {
             AppTheme {
                 FieldTypeSelector(
-                    currentType = currentType,
+                    currentLabel = currentType,
                     types = types,
-                    typeLabel = { it },
+                    labels = types,
                     onTypeSelected = { selectedType = it },
                     modifier = Modifier.testTag(SELECTOR_TAG),
                 )

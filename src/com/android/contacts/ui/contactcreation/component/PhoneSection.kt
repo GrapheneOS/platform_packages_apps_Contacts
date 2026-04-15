@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -86,10 +87,12 @@ internal fun PhoneFieldRow(
         },
     ) {
         Column {
+            val context = LocalContext.current
+            val selectorLabels = PhoneType.selectorTypes.map { it.label(context) }
             FieldTypeSelector(
-                currentType = phone.type,
+                currentLabel = phone.type.label(context),
                 types = PhoneType.selectorTypes,
-                typeLabel = { it.label() },
+                labels = selectorLabels,
                 onTypeSelected = { selected ->
                     if (selected is PhoneType.Custom && selected.label.isEmpty()) {
                         showCustomDialog = true

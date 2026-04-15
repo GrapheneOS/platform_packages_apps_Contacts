@@ -10,7 +10,6 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.res.stringResource
 import com.android.contacts.R
 import kotlinx.parcelize.Parcelize
 
@@ -213,33 +212,30 @@ internal sealed class WebsiteType : Parcelable {
         }
 }
 
-@Composable
-internal fun PhoneType.label(): String = when (this) {
-    is PhoneType.Mobile -> stringResource(R.string.field_type_mobile)
-    is PhoneType.Home -> stringResource(R.string.field_type_home)
-    is PhoneType.Work -> stringResource(R.string.field_type_work)
-    is PhoneType.WorkMobile -> stringResource(R.string.field_type_work_mobile)
-    is PhoneType.Main -> stringResource(R.string.field_type_main)
-    is PhoneType.FaxWork -> stringResource(R.string.field_type_fax_work)
-    is PhoneType.FaxHome -> stringResource(R.string.field_type_fax_home)
-    is PhoneType.Pager -> stringResource(R.string.field_type_pager)
-    is PhoneType.Other -> stringResource(R.string.field_type_other)
-    is PhoneType.Custom -> label.ifEmpty { stringResource(R.string.field_type_custom) }
+internal fun PhoneType.label(context: android.content.Context): String = when (this) {
+    is PhoneType.Mobile -> context.getString(R.string.field_type_mobile)
+    is PhoneType.Home -> context.getString(R.string.field_type_home)
+    is PhoneType.Work -> context.getString(R.string.field_type_work)
+    is PhoneType.WorkMobile -> context.getString(R.string.field_type_work_mobile)
+    is PhoneType.Main -> context.getString(R.string.field_type_main)
+    is PhoneType.FaxWork -> context.getString(R.string.field_type_fax_work)
+    is PhoneType.FaxHome -> context.getString(R.string.field_type_fax_home)
+    is PhoneType.Pager -> context.getString(R.string.field_type_pager)
+    is PhoneType.Other -> context.getString(R.string.field_type_other)
+    is PhoneType.Custom -> label.ifEmpty { context.getString(R.string.field_type_custom) }
 }
 
-@Composable
-internal fun EmailType.label(): String = when (this) {
-    is EmailType.Home -> stringResource(R.string.field_type_home)
-    is EmailType.Work -> stringResource(R.string.field_type_work)
-    is EmailType.Other -> stringResource(R.string.field_type_other)
-    is EmailType.Mobile -> stringResource(R.string.field_type_mobile)
-    is EmailType.Custom -> label.ifEmpty { stringResource(R.string.field_type_custom) }
+internal fun EmailType.label(context: android.content.Context): String = when (this) {
+    is EmailType.Home -> context.getString(R.string.field_type_home)
+    is EmailType.Work -> context.getString(R.string.field_type_work)
+    is EmailType.Other -> context.getString(R.string.field_type_other)
+    is EmailType.Mobile -> context.getString(R.string.field_type_mobile)
+    is EmailType.Custom -> label.ifEmpty { context.getString(R.string.field_type_custom) }
 }
 
-@Composable
-internal fun AddressType.label(): String = when (this) {
-    is AddressType.Home -> stringResource(R.string.field_type_home)
-    is AddressType.Work -> stringResource(R.string.field_type_work)
-    is AddressType.Other -> stringResource(R.string.field_type_other)
-    is AddressType.Custom -> label.ifEmpty { stringResource(R.string.field_type_custom) }
+internal fun AddressType.label(context: android.content.Context): String = when (this) {
+    is AddressType.Home -> context.getString(R.string.field_type_home)
+    is AddressType.Work -> context.getString(R.string.field_type_work)
+    is AddressType.Other -> context.getString(R.string.field_type_other)
+    is AddressType.Custom -> label.ifEmpty { context.getString(R.string.field_type_custom) }
 }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -119,10 +120,12 @@ private fun AddressFieldColumns(
     onRequestCustomLabel: () -> Unit,
 ) {
     Column {
+        val context = LocalContext.current
+        val selectorLabels = AddressType.selectorTypes.map { it.label(context) }
         FieldTypeSelector(
-            currentType = address.type,
+            currentLabel = address.type.label(context),
             types = AddressType.selectorTypes,
-            typeLabel = { it.label() },
+            labels = selectorLabels,
             onTypeSelected = { selected ->
                 if (selected is AddressType.Custom && selected.label.isEmpty()) {
                     onRequestCustomLabel()

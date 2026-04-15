@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -86,10 +87,12 @@ internal fun EmailFieldRow(
         },
     ) {
         Column {
+            val context = LocalContext.current
+            val selectorLabels = EmailType.selectorTypes.map { it.label(context) }
             FieldTypeSelector(
-                currentType = email.type,
+                currentLabel = email.type.label(context),
                 types = EmailType.selectorTypes,
-                typeLabel = { it.label() },
+                labels = selectorLabels,
                 onTypeSelected = { selected ->
                     if (selected is EmailType.Custom && selected.label.isEmpty()) {
                         showCustomDialog = true
