@@ -5,7 +5,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,6 +68,9 @@ internal fun PhoneFieldRow(
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
+    var typeExpanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val selectorLabels = remember { PhoneType.selectorTypes.map { it.label(context) } }
 
     FieldRow(
         icon = if (isFirst) Icons.Filled.Phone else null,
@@ -79,32 +87,53 @@ internal fun PhoneFieldRow(
             null
         },
     ) {
-        Column {
-            val context = LocalContext.current
-            val selectorLabels = PhoneType.selectorTypes.map { it.label(context) }
-            FieldTypeSelector(
-                currentLabel = phone.type.label(context),
-                types = PhoneType.selectorTypes,
-                labels = selectorLabels,
-                onTypeSelected = { selected ->
-                    if (selected is PhoneType.Custom && selected.label.isEmpty()) {
-                        showCustomDialog = true
-                    } else {
-                        onAction(ContactCreationAction.UpdatePhoneType(phone.id, selected))
+        OutlinedTextField(
+            value = phone.number,
+            onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
+            label = {
+                Text(
+                    "${stringResource(R.string.phoneLabelsGroup)} (${phone.type.label(context)})",
+                )
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = { typeExpanded = true },
+                    modifier = Modifier.testTag(TestTags.phoneType(index)),
+                ) {
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = stringResource(R.string.contact_creation_change_type),
+                    )
+                }
+                DropdownMenu(
+                    expanded = typeExpanded,
+                    onDismissRequest = { typeExpanded = false },
+                ) {
+                    PhoneType.selectorTypes.forEachIndexed { i, type ->
+                        DropdownMenuItem(
+                            text = { Text(selectorLabels[i]) },
+                            onClick = {
+                                typeExpanded = false
+                                if (type is PhoneType.Custom && type.label.isEmpty()) {
+                                    showCustomDialog = true
+                                } else {
+                                    onAction(
+                                        ContactCreationAction.UpdatePhoneType(phone.id, type),
+                                    )
+                                }
+                            },
+                            modifier = Modifier.testTag(
+                                TestTags.fieldTypeOption(selectorLabels[i])
+                            ),
+                        )
                     }
-                },
-                modifier = Modifier.testTag(TestTags.phoneType(index)),
-            )
-            OutlinedTextField(
-                value = phone.number,
-                onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
-                label = { Text(stringResource(R.string.phoneLabelsGroup)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(TestTags.phoneField(index)),
-                singleLine = true,
-            )
-        }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(TestTags.phoneField(index)),
+            singleLine = true,
+        )
     }
 
     if (showCustomDialog) {

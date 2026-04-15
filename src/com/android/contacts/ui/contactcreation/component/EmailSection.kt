@@ -5,7 +5,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -63,6 +68,9 @@ internal fun EmailFieldRow(
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
+    var typeExpanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val selectorLabels = remember { EmailType.selectorTypes.map { it.label(context) } }
 
     FieldRow(
         icon = if (isFirst) Icons.Filled.Email else null,
@@ -79,32 +87,53 @@ internal fun EmailFieldRow(
             null
         },
     ) {
-        Column {
-            val context = LocalContext.current
-            val selectorLabels = EmailType.selectorTypes.map { it.label(context) }
-            FieldTypeSelector(
-                currentLabel = email.type.label(context),
-                types = EmailType.selectorTypes,
-                labels = selectorLabels,
-                onTypeSelected = { selected ->
-                    if (selected is EmailType.Custom && selected.label.isEmpty()) {
-                        showCustomDialog = true
-                    } else {
-                        onAction(ContactCreationAction.UpdateEmailType(email.id, selected))
+        OutlinedTextField(
+            value = email.address,
+            onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },
+            label = {
+                Text(
+                    "${stringResource(R.string.emailLabelsGroup)} (${email.type.label(context)})",
+                )
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = { typeExpanded = true },
+                    modifier = Modifier.testTag(TestTags.emailType(index)),
+                ) {
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = stringResource(R.string.contact_creation_change_type),
+                    )
+                }
+                DropdownMenu(
+                    expanded = typeExpanded,
+                    onDismissRequest = { typeExpanded = false },
+                ) {
+                    EmailType.selectorTypes.forEachIndexed { i, type ->
+                        DropdownMenuItem(
+                            text = { Text(selectorLabels[i]) },
+                            onClick = {
+                                typeExpanded = false
+                                if (type is EmailType.Custom && type.label.isEmpty()) {
+                                    showCustomDialog = true
+                                } else {
+                                    onAction(
+                                        ContactCreationAction.UpdateEmailType(email.id, type),
+                                    )
+                                }
+                            },
+                            modifier = Modifier.testTag(
+                                TestTags.fieldTypeOption(selectorLabels[i])
+                            ),
+                        )
                     }
-                },
-                modifier = Modifier.testTag(TestTags.emailType(index)),
-            )
-            OutlinedTextField(
-                value = email.address,
-                onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },
-                label = { Text(stringResource(R.string.emailLabelsGroup)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(TestTags.emailField(index)),
-                singleLine = true,
-            )
-        }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(TestTags.emailField(index)),
+            singleLine = true,
+        )
     }
 
     if (showCustomDialog) {

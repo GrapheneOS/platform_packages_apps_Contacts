@@ -592,6 +592,7 @@
     <string name="contact_creation_add_website">Add website</string>
     <string name="contact_creation_more_fields">More fields</string>
     <string name="contact_creation_less_fields">Less fields</string>
+    <string name="contact_creation_change_type">Change type</string>
     <string name="contact_creation_remove_phone">Remove phone</string>
     <string name="contact_creation_remove_email">Remove email</string>
     <string name="contact_creation_remove_address">Remove address</string>
