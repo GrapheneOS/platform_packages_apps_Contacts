@@ -3,6 +3,12 @@
    <configuration>
       <verify-metadata>true</verify-metadata>
       <verify-signatures>false</verify-signatures>
+      <!-- IDE fetches javadoc/sources JARs that CLI never resolves.
+           Trust these artifacts globally since they are not shipped in APK. -->
+      <trusted-artifacts>
+         <trust file=".*-javadoc[.]jar" regex="true"/>
+         <trust file=".*-sources[.]jar" regex="true"/>
+      </trusted-artifacts>
    </configuration>
    <components>
       <component group="androidx.activity" name="activity" version="1.13.0">
