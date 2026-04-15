@@ -1,18 +1,15 @@
 package com.android.contacts.ui.contactcreation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,28 +83,24 @@ internal fun FieldRow(
 }
 
 /**
- * Add-field button: 56dp start padding, primary color, Add icon + labelLarge text.
+ * Add-field text link: 56dp start padding, primary color, plain text.
+ * Matches Google Contacts "Add phone" / "Add email" style.
  */
 @Composable
 internal fun AddFieldButton(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    testTag: String = "",
 ) {
-    TextButton(
-        onClick = onClick,
-        modifier = modifier.padding(start = AddFieldButtonStartPadding),
-    ) {
-        Icon(
-            Icons.Filled.Add,
-            contentDescription = label,
-            modifier = Modifier.size(18.dp),
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-        )
-    }
+    Text(
+        text = label,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+            .padding(start = AddFieldButtonStartPadding)
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp)
+            .then(if (testTag.isNotEmpty()) Modifier.testTag(testTag) else Modifier),
+    )
 }

@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package com.android.contacts.ui.contactcreation
 
@@ -14,10 +14,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -70,6 +73,7 @@ internal fun ContactCreationEditorScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = { onAction(ContactCreationAction.NavigateBack) },
+                        shapes = IconButtonDefaults.shapes(),
                         modifier = Modifier.testTag(TestTags.CLOSE_BUTTON),
                     ) {
                         Icon(
@@ -81,8 +85,9 @@ internal fun ContactCreationEditorScreen(
                     }
                 },
                 actions = {
-                    TextButton(
+                    FilledTonalButton(
                         onClick = { onAction(ContactCreationAction.Save) },
+                        shapes = ButtonDefaults.shapes(),
                         modifier = Modifier.testTag(TestTags.SAVE_TEXT_BUTTON),
                         enabled = !uiState.isSaving,
                     ) {
@@ -159,18 +164,11 @@ private fun PhotoAndAccountHeader(
     onAction: (ContactCreationAction) -> Unit,
 ) {
     PhotoSectionContent(photoUri = uiState.photoUri, onAction = onAction)
-    HorizontalDivider(
-        color = MaterialTheme.colorScheme.outlineVariant,
-        modifier = Modifier.testTag(TestTags.DIVIDER_AFTER_PHOTO),
-    )
+    Spacer(modifier = Modifier.height(16.dp))
     AccountChip(
         accountName = uiState.accountName,
         onClick = { onAction(ContactCreationAction.RequestAccountPicker) },
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-    )
-    HorizontalDivider(
-        color = MaterialTheme.colorScheme.outlineVariant,
-        modifier = Modifier.testTag(TestTags.DIVIDER_AFTER_ACCOUNT),
     )
 }
 
