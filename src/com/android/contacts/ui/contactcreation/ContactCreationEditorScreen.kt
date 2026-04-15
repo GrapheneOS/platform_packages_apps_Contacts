@@ -178,6 +178,7 @@ private fun ContactCreationFieldsColumn(
     ) {
         PhotoAndAccountHeader(uiState = uiState, onAction = onAction)
         FieldSections(uiState = uiState, onAction = onAction)
+        AccountFooterBar(accountName = uiState.accountName)
         Spacer(modifier = Modifier.height(48.dp))
     }
 }
@@ -444,4 +445,21 @@ private fun FieldSections(
             onDismiss = { showOtherSheet = false },
         )
     }
+}
+
+@Composable
+private fun AccountFooterBar(
+    accountName: String?,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = "Saving to ${accountName ?: "Device only"}",
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .testTag(TestTags.ACCOUNT_FOOTER),
+    )
 }
