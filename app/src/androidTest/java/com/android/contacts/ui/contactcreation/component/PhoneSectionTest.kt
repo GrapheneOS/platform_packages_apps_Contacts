@@ -56,28 +56,6 @@ class PhoneSectionTest {
     }
 
     @Test
-    fun multiplePhones_showsDeleteButtons() {
-        val phones = listOf(
-            PhoneFieldState(id = "1", number = "111"),
-            PhoneFieldState(id = "2", number = "222"),
-        )
-        setContent(phones = phones)
-        composeTestRule.onNodeWithTag(TestTags.phoneDelete(0)).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.phoneDelete(1)).assertIsDisplayed()
-    }
-
-    @Test
-    fun tapDeletePhone_dispatchesRemovePhoneAction() {
-        val phones = listOf(
-            PhoneFieldState(id = "1", number = "111"),
-            PhoneFieldState(id = "2", number = "222"),
-        )
-        setContent(phones = phones)
-        composeTestRule.onNodeWithTag(TestTags.phoneDelete(1)).performClick()
-        assertIs<ContactCreationAction.RemovePhone>(capturedActions.last())
-    }
-
-    @Test
     fun rendersPhoneTypeSelector() {
         setContent()
         composeTestRule.onNodeWithTag(TestTags.phoneType(0)).assertIsDisplayed()

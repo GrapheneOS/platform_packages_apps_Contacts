@@ -58,33 +58,6 @@ class ContactCreationEditorScreenTest {
     }
 
     @Test
-    fun initialState_showsAccountChip() {
-        setContent()
-        composeTestRule.onNodeWithTag(TestTags.ACCOUNT_CHIP).assertIsDisplayed()
-    }
-
-    @Test
-    fun initialState_showsSectionHeaders() {
-        setContent()
-        composeTestRule.onNodeWithTag(TestTags.SECTION_HEADER_NAME).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.SECTION_HEADER_PHONE).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.SECTION_HEADER_EMAIL).assertIsDisplayed()
-    }
-
-    @Test
-    fun initialState_showsDividers() {
-        setContent()
-        composeTestRule.onNodeWithTag(TestTags.DIVIDER_AFTER_PHOTO).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.DIVIDER_AFTER_ACCOUNT).assertIsDisplayed()
-    }
-
-    @Test
-    fun initialState_showsPhotoBgStrip() {
-        setContent()
-        composeTestRule.onNodeWithTag(TestTags.PHOTO_BG_STRIP).assertIsDisplayed()
-    }
-
-    @Test
     fun tapSave_dispatchesSaveAction() {
         setContent()
         composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()

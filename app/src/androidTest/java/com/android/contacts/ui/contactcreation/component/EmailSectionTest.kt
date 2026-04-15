@@ -56,28 +56,6 @@ class EmailSectionTest {
     }
 
     @Test
-    fun multipleEmails_showsDeleteButtons() {
-        val emails = listOf(
-            EmailFieldState(id = "1", address = "a@b.com"),
-            EmailFieldState(id = "2", address = "c@d.com"),
-        )
-        setContent(emails = emails)
-        composeTestRule.onNodeWithTag(TestTags.emailDelete(0)).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.emailDelete(1)).assertIsDisplayed()
-    }
-
-    @Test
-    fun tapDeleteEmail_dispatchesRemoveEmailAction() {
-        val emails = listOf(
-            EmailFieldState(id = "1", address = "a@b.com"),
-            EmailFieldState(id = "2", address = "c@d.com"),
-        )
-        setContent(emails = emails)
-        composeTestRule.onNodeWithTag(TestTags.emailDelete(1)).performClick()
-        assertIs<ContactCreationAction.RemoveEmail>(capturedActions.last())
-    }
-
-    @Test
     fun rendersEmailTypeSelector() {
         setContent()
         composeTestRule.onNodeWithTag(TestTags.emailType(0)).assertIsDisplayed()

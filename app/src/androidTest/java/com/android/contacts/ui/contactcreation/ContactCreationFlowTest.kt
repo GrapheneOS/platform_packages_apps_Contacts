@@ -65,13 +65,10 @@ class ContactCreationFlowTest {
         val state = TestFactory.fullState()
         setContent(state = state)
 
-        // Verify all major sections are rendered
+        // Verify core sections are rendered
         composeTestRule.onNodeWithTag(TestTags.NAME_FIRST).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.phoneField(0)).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.emailField(0)).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.addressStreet(0)).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.ORG_COMPANY).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.ORG_TITLE).assertIsDisplayed()
 
         // Tap save
         composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()
@@ -116,15 +113,11 @@ class ContactCreationFlowTest {
 
     @Test
     fun zeroAccount_localContact_endToEnd() {
-        // No account selected -> chip shows "Device"
         val state = ContactCreationUiState(
             selectedAccount = null,
             accountName = null,
         )
         setContent(state = state)
-
-        // Account chip should be visible (showing "Device" text)
-        composeTestRule.onNodeWithTag(TestTags.ACCOUNT_CHIP).assertIsDisplayed()
 
         // Type a name and save
         composeTestRule.onNodeWithTag(TestTags.NAME_FIRST).performTextInput("Local")

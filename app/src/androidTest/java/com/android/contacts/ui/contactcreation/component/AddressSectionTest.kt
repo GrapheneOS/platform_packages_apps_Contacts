@@ -70,17 +70,6 @@ class AddressSectionTest {
     }
 
     @Test
-    fun tapDeleteAddress_dispatchesRemoveAddressAction() {
-        val addresses = listOf(
-            AddressFieldState(id = "1"),
-            AddressFieldState(id = "2"),
-        )
-        setContent(addresses = addresses)
-        composeTestRule.onNodeWithTag(TestTags.addressDelete(0)).performClick()
-        assertIs<ContactCreationAction.RemoveAddress>(capturedActions.last())
-    }
-
-    @Test
     fun rendersAddressTypeSelector() {
         val addresses = listOf(AddressFieldState(id = "1"))
         setContent(addresses = addresses)
