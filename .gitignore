@@ -12,3 +12,6 @@ keystore.properties
 *.keystore
 local.properties
 /lib/build
+/.claude/
+/docs/brainstorms/
+/docs/plans/

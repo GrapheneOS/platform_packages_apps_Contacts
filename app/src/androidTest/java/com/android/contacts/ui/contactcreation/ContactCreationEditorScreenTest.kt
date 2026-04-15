@@ -172,6 +172,7 @@ class ContactCreationEditorScreenTest {
             AppTheme {
                 ContactCreationEditorScreen(
                     uiState = state,
+                    accounts = emptyList(),
                     onAction = { capturedActions.add(it) },
                 )
             }
