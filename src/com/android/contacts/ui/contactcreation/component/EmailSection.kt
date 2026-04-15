@@ -78,6 +78,7 @@ internal fun EmailFieldRow(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val selectorLabels = remember { EmailType.selectorTypes.map { it.label(context) } }
+    val currentTypeLabel = email.type.label(context)
 
     FieldRow(
         icon = if (isFirst) Icons.Filled.Email else null,
@@ -98,9 +99,7 @@ internal fun EmailFieldRow(
             value = email.address,
             onValueChange = { onAction(ContactCreationAction.UpdateEmail(email.id, it)) },
             label = {
-                Text(
-                    "${stringResource(R.string.emailLabelsGroup)} (${email.type.label(context)})",
-                )
+                Text("${stringResource(R.string.emailLabelsGroup)} ($currentTypeLabel)")
             },
             trailingIcon = {
                 IconButton(

@@ -78,6 +78,7 @@ internal fun PhoneFieldRow(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val selectorLabels = remember { PhoneType.selectorTypes.map { it.label(context) } }
+    val currentTypeLabel = phone.type.label(context)
 
     FieldRow(
         icon = if (isFirst) Icons.Filled.Phone else null,
@@ -98,9 +99,7 @@ internal fun PhoneFieldRow(
             value = phone.number,
             onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
             label = {
-                Text(
-                    "${stringResource(R.string.phoneLabelsGroup)} (${phone.type.label(context)})",
-                )
+                Text("${stringResource(R.string.phoneLabelsGroup)} ($currentTypeLabel)")
             },
             trailingIcon = {
                 IconButton(
