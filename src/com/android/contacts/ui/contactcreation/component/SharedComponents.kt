@@ -1,63 +1,24 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
-
 package com.android.contacts.ui.contactcreation.component
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Remove
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
-private val IconColumnWidth = 40.dp
-private val IconSize = 24.dp
-private val SectionHeaderStartPadding = 56.dp
-private val AddFieldButtonStartPadding = 56.dp
-
 /**
- * Section header: titleSmall, primary color, 56dp start padding.
- * Top=24dp, bottom=8dp per M3 form spec.
- */
-@Composable
-internal fun SectionHeader(
-    title: String,
-    modifier: Modifier = Modifier,
-    testTag: String = "",
-) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = SectionHeaderStartPadding, top = 24.dp, bottom = 8.dp)
-            .then(if (testTag.isNotEmpty()) Modifier.testTag(testTag) else Modifier),
-    )
-}
-
-/**
- * Consistent field row with 40dp icon column.
- * [icon] is shown only for the first field in a section; subsequent fields pass null.
+ * Field row with 4dp vertical padding.
  */
 @Composable
 internal fun FieldRow(
-    icon: ImageVector?,
     modifier: Modifier = Modifier,
     trailing: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit,
@@ -65,22 +26,9 @@ internal fun FieldRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
-            modifier = Modifier.width(IconColumnWidth),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(IconSize),
-                )
-            }
-        }
         Box(modifier = Modifier.weight(1f)) {
             content()
         }
@@ -91,8 +39,55 @@ internal fun FieldRow(
 }
 
 /**
- * Add-field text link: 56dp start padding, primary color, plain text.
- * Matches Google Contacts "Add phone" / "Add email" style.
+ * Row with "Add X" at start and optional "Remove X" at end.
+ * Used for repeatable field sections (phone, email, address, etc.).
+ */
+@Composable
+internal fun AddRemoveFieldRow(
+    addLabel: String,
+    onAdd: () -> Unit,
+    modifier: Modifier = Modifier,
+    addTestTag: String = "",
+    removeLabel: String? = null,
+    onRemove: (() -> Unit)? = null,
+    removeTestTag: String = "",
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = addLabel,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .clickable(onClick = onAdd)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .then(if (addTestTag.isNotEmpty()) Modifier.testTag(addTestTag) else Modifier),
+        )
+        if (removeLabel != null && onRemove != null) {
+            Text(
+                text = removeLabel,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .clickable(onClick = onRemove)
+                    .padding(horizontal = 8.dp, vertical = 8.dp)
+                    .then(
+                        if (removeTestTag.isNotEmpty()) {
+                            Modifier.testTag(removeTestTag)
+                        } else {
+                            Modifier
+                        },
+                    ),
+            )
+        }
+    }
+}
+
+/**
+ * Simple add-field text link. For sections without remove capability.
  */
 @Composable
 internal fun AddFieldButton(
@@ -106,16 +101,15 @@ internal fun AddFieldButton(
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier
-            .padding(start = AddFieldButtonStartPadding)
             .clickable(onClick = onClick)
-            .padding(vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
             .then(if (testTag.isNotEmpty()) Modifier.testTag(testTag) else Modifier),
     )
 }
 
 /**
- * Red outlined circle remove button with minus icon.
- * Matches Google Contacts style. 48dp minimum touch target.
+ * Text-based remove button in error color.
+ * Used for single-instance optional sections (org, nickname, sip, note).
  */
 @Composable
 internal fun RemoveFieldButton(
@@ -123,17 +117,12 @@ internal fun RemoveFieldButton(
     contentDescription: String,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedIconButton(
-        onClick = onClick,
-        shapes = IconButtonDefaults.shapes(),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
-        modifier = modifier,
-    ) {
-        Icon(
-            Icons.Outlined.Remove,
-            contentDescription = contentDescription,
-            tint = MaterialTheme.colorScheme.error,
-            modifier = Modifier.size(18.dp),
-        )
-    }
+    Text(
+        text = contentDescription,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.error,
+        modifier = modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 8.dp),
+    )
 }

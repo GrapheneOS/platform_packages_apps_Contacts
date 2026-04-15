@@ -1,6 +1,7 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
@@ -16,22 +17,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.core.AppTheme
 
 /**
  * Generic type selector with FilterChip + DropdownMenu.
  *
- * [labels] is a pre-computed list of display strings matching [types] by index.
- * Pre-computing avoids passing @Composable lambdas into DropdownMenu's separate
- * Popup composition, which can null-out captured generic parameters at runtime.
+ * Dispatches by index via [onIndexSelected] to avoid sealed-class instances
+ * becoming null inside DropdownMenu's separate Popup composition tree.
  */
 @Composable
-internal fun <T : Any> FieldTypeSelector(
+internal fun FieldTypeSelector(
     currentLabel: String,
-    types: List<T>,
     labels: List<String>,
-    onTypeSelected: (T) -> Unit,
+    onIndexSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -40,7 +40,12 @@ internal fun <T : Any> FieldTypeSelector(
         FilterChip(
             selected = true,
             onClick = { expanded = true },
-            label = { Text(currentLabel) },
+            label = {
+                Text(
+                    currentLabel,
+                    modifier = Modifier.padding(vertical = 8.dp),
+                )
+            },
             trailingIcon = {
                 Icon(
                     Icons.Filled.ArrowDropDown,
@@ -52,13 +57,12 @@ internal fun <T : Any> FieldTypeSelector(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            types.forEachIndexed { index, type ->
-                val label = labels[index]
+            labels.forEachIndexed { index, label ->
                 DropdownMenuItem(
                     text = { Text(label) },
                     onClick = {
                         expanded = false
-                        onTypeSelected(type)
+                        onIndexSelected(index)
                     },
                     modifier = Modifier.testTag(TestTags.fieldTypeOption(label)),
                 )
@@ -71,12 +75,11 @@ internal fun <T : Any> FieldTypeSelector(
 @Composable
 private fun FieldTypeSelectorPreview() {
     AppTheme {
-        val types = listOf("Mobile", "Home", "Work", "Other")
+        val labels = listOf("Mobile", "Home", "Work", "Other")
         FieldTypeSelector(
             currentLabel = "Mobile",
-            types = types,
-            labels = types,
-            onTypeSelected = {},
+            labels = labels,
+            onIndexSelected = {},
         )
     }
 }
