@@ -44,13 +44,14 @@ internal fun <T> FieldTypeSelector(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            types.forEach { type ->
-                val label = typeLabel(type)
+            for (i in types.indices) {
+                val itemType = types[i]
+                val label = typeLabel(itemType)
                 DropdownMenuItem(
                     text = { Text(label) },
                     onClick = {
                         expanded = false
-                        onTypeSelected(type)
+                        onTypeSelected(itemType)
                     },
                     modifier = Modifier.testTag(TestTags.fieldTypeOption(label)),
                 )
