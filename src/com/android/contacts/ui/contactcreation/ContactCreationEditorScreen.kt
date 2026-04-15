@@ -3,11 +3,14 @@
 package com.android.contacts.ui.contactcreation
 
 import androidx.activity.compose.PredictiveBackHandler
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -383,29 +386,23 @@ private fun FieldSections(
         }
     }
 
-    // --- Chip grid ---
-    AnimatedVisibility(
-        visible = uiState.hasAnyChip,
-        enter = expandVertically() + fadeIn(),
-        exit = shrinkVertically() + fadeOut(),
-    ) {
-        AddMoreInfoSection(
-            showAddressChip = uiState.showAddressChip,
-            showOrgChip = uiState.showOrgChip,
-            showNoteChip = uiState.showNoteChip,
-            showGroupsChip = uiState.showGroupsChip,
-            showOtherChip = uiState.showOtherChip,
-            onAddAddress = { onAction(ContactCreationAction.AddAddress) },
-            onShowOrganization = { onAction(ContactCreationAction.ShowOrganization) },
-            onShowNote = { onAction(ContactCreationAction.ShowNote) },
-            onShowGroups = {
-                // Add first group toggle to show section; actual selection in GroupSectionContent
-                // For now just scroll to groups. We show groups section when groups is non-empty
-                // or user taps this chip — handled via availableGroups presence check below.
-            },
-            onShowOtherSheet = { showOtherSheet = true },
-        )
-    }
+    // --- Chip grid (no outer AnimatedVisibility — inner per-chip animations + animateContentSize handle it) ---
+    AddMoreInfoSection(
+        showAddressChip = uiState.showAddressChip,
+        showOrgChip = uiState.showOrgChip,
+        showNoteChip = uiState.showNoteChip,
+        showGroupsChip = uiState.showGroupsChip,
+        showOtherChip = uiState.showOtherChip,
+        onAddAddress = { onAction(ContactCreationAction.AddAddress) },
+        onShowOrganization = { onAction(ContactCreationAction.ShowOrganization) },
+        onShowNote = { onAction(ContactCreationAction.ShowNote) },
+        onShowGroups = {
+            // Add first group toggle to show section; actual selection in GroupSectionContent
+            // For now just scroll to groups. We show groups section when groups is non-empty
+            // or user taps this chip — handled via availableGroups presence check below.
+        },
+        onShowOtherSheet = { showOtherSheet = true },
+    )
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -450,11 +447,19 @@ private fun AccountFooterBar(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = "Saving to ${accountName ?: "Device only"}",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        AnimatedContent(
+            targetState = accountName ?: "Device only",
+            transitionSpec = {
+                fadeIn(tween(200)) togetherWith fadeOut(tween(200))
+            },
+            label = "account_crossfade",
+        ) { name ->
+            Text(
+                text = "Saving to $name",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         if (showPicker) {
             Spacer(Modifier.width(4.dp))
             Icon(
