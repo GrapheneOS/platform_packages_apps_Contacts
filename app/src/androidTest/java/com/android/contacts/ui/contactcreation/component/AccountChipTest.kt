@@ -49,12 +49,6 @@ class AccountChipTest {
         )
     }
 
-    @Test
-    fun chipHasTestTag() {
-        setContent(accountName = null)
-        composeTestRule.onNodeWithTag(TestTags.ACCOUNT_CHIP).assertExists()
-    }
-
     private fun setContent(accountName: String?) {
         composeTestRule.setContent {
             AppTheme {

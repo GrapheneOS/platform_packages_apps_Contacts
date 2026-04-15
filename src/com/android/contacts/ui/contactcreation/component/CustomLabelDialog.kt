@@ -16,11 +16,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.android.contacts.R
-
-internal const val CUSTOM_LABEL_DIALOG_TAG = "custom_label_dialog"
-internal const val CUSTOM_LABEL_INPUT_TAG = "custom_label_input"
-internal const val CUSTOM_LABEL_OK_TAG = "custom_label_ok"
-internal const val CUSTOM_LABEL_CANCEL_TAG = "custom_label_cancel"
+import com.android.contacts.ui.contactcreation.TestTags
 
 @Composable
 internal fun CustomLabelDialog(
@@ -34,7 +30,7 @@ internal fun CustomLabelDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        modifier = Modifier.testTag(CUSTOM_LABEL_DIALOG_TAG),
+        modifier = Modifier.testTag(TestTags.CUSTOM_LABEL_DIALOG),
         title = { Text(stringResource(R.string.contact_creation_custom_label_title)) },
         text = {
             OutlinedTextField(
@@ -44,14 +40,14 @@ internal fun CustomLabelDialog(
                 singleLine = true,
                 modifier = Modifier
                     .focusRequester(focusRequester)
-                    .testTag(CUSTOM_LABEL_INPUT_TAG),
+                    .testTag(TestTags.CUSTOM_LABEL_INPUT),
             )
         },
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(label) },
                 enabled = label.isNotBlank(),
-                modifier = Modifier.testTag(CUSTOM_LABEL_OK_TAG),
+                modifier = Modifier.testTag(TestTags.CUSTOM_LABEL_OK),
             ) {
                 Text(stringResource(android.R.string.ok))
             }
@@ -59,7 +55,7 @@ internal fun CustomLabelDialog(
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
-                modifier = Modifier.testTag(CUSTOM_LABEL_CANCEL_TAG),
+                modifier = Modifier.testTag(TestTags.CUSTOM_LABEL_CANCEL),
             ) {
                 Text(stringResource(android.R.string.cancel))
             }

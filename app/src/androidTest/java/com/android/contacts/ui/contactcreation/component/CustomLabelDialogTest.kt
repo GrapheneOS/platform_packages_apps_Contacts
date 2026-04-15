@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.core.AppTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -32,21 +33,21 @@ class CustomLabelDialogTest {
     @Test
     fun showsInputField() {
         setContent()
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_INPUT_TAG).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_INPUT).assertIsDisplayed()
     }
 
     @Test
     fun confirmWithLabel_dispatchesLabel() {
         setContent()
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_INPUT_TAG).performTextInput("Work cell")
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_OK_TAG).performClick()
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_INPUT).performTextInput("Work cell")
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_OK).performClick()
         assertEquals("Work cell", confirmedLabel)
     }
 
     @Test
     fun cancelDismisses() {
         setContent()
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_CANCEL_TAG).performClick()
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_CANCEL).performClick()
         assertTrue(dismissed)
     }
 
@@ -54,14 +55,14 @@ class CustomLabelDialogTest {
     fun emptyLabel_disablesConfirm() {
         setContent()
         // Don't type anything — confirm should be disabled
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_OK_TAG).assertIsNotEnabled()
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_OK).assertIsNotEnabled()
     }
 
     @Test
     fun nonEmptyLabel_enablesConfirm() {
         setContent()
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_INPUT_TAG).performTextInput("Label")
-        composeTestRule.onNodeWithTag(CUSTOM_LABEL_OK_TAG).assertIsEnabled()
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_INPUT).performTextInput("Label")
+        composeTestRule.onNodeWithTag(TestTags.CUSTOM_LABEL_OK).assertIsEnabled()
     }
 
     private fun setContent() {

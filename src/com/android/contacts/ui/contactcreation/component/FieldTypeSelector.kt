@@ -14,7 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.core.AppTheme
 
 @Composable
@@ -43,12 +45,14 @@ internal fun <T> FieldTypeSelector(
             onDismissRequest = { expanded = false },
         ) {
             types.forEach { type ->
+                val label = typeLabel(type)
                 DropdownMenuItem(
-                    text = { Text(typeLabel(type)) },
+                    text = { Text(label) },
                     onClick = {
                         expanded = false
                         onTypeSelected(type)
                     },
+                    modifier = Modifier.testTag(TestTags.fieldTypeOption(label)),
                 )
             }
         }

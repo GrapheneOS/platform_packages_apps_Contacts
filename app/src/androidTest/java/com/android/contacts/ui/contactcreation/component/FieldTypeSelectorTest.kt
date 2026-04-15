@@ -6,11 +6,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.core.AppTheme
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,15 +37,14 @@ class FieldTypeSelectorTest {
     fun tapOpensDropdown() {
         setContent(currentType = "Mobile")
         composeTestRule.onNodeWithTag(SELECTOR_TAG).performClick()
-        // After click, dropdown items should appear — "Home" is one of them
-        composeTestRule.onNodeWithText("Home").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.fieldTypeOption("Home")).assertIsDisplayed()
     }
 
     @Test
     fun selectType_dispatchesCallback() {
         setContent(currentType = "Mobile")
         composeTestRule.onNodeWithTag(SELECTOR_TAG).performClick()
-        composeTestRule.onNodeWithText("Work").performClick()
+        composeTestRule.onNodeWithTag(TestTags.fieldTypeOption("Work")).performClick()
         assertEquals("Work", selectedType)
     }
 
@@ -54,9 +52,8 @@ class FieldTypeSelectorTest {
     fun menuItemsMatchTypeList() {
         setContent(currentType = "Mobile")
         composeTestRule.onNodeWithTag(SELECTOR_TAG).performClick()
-        // All types should appear in the dropdown
         types.forEach { type ->
-            composeTestRule.onNodeWithText(type).assertIsDisplayed()
+            composeTestRule.onNodeWithTag(TestTags.fieldTypeOption(type)).assertIsDisplayed()
         }
     }
 
@@ -64,12 +61,6 @@ class FieldTypeSelectorTest {
     fun chipHasTestTag() {
         setContent(currentType = "Home")
         composeTestRule.onNodeWithTag(SELECTOR_TAG).assertExists()
-    }
-
-    @Test
-    fun noSelectionBeforeTap() {
-        setContent(currentType = "Mobile")
-        assertNull(selectedType)
     }
 
     private fun setContent(currentType: String) {

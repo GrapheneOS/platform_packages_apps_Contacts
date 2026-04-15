@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.PhoneFieldState
@@ -87,18 +88,19 @@ class PhoneSectionTest {
     fun tapPhoneType_showsDropdownMenu() {
         val phone = PhoneFieldState(id = "1", number = "555", type = PhoneType.Mobile)
         setContent(phones = listOf(phone))
+        val homeLabel = composeTestRule.activity.getString(R.string.field_type_home)
         composeTestRule.onNodeWithTag(TestTags.phoneType(0)).performClick()
-        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.fieldTypeOption(homeLabel)).assertIsDisplayed()
     }
 
     @Test
     fun selectPhoneType_dispatchesUpdatePhoneType() {
         val phone = PhoneFieldState(id = "1", number = "555", type = PhoneType.Mobile)
         setContent(phones = listOf(phone))
-        // Tap chip to open menu
+        val homeLabel = composeTestRule.activity.getString(R.string.field_type_home)
         composeTestRule.onNodeWithTag(TestTags.phoneType(0)).performClick()
-        // Select "Home" from the dropdown (it's a text node)
-        composeTestRule.onNodeWithTag(TestTags.phoneType(0)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.fieldTypeOption(homeLabel)).performClick()
+        assertIs<ContactCreationAction.UpdatePhoneType>(capturedActions.last())
     }
 
     private fun setContent(phones: List<PhoneFieldState> = listOf(PhoneFieldState())) {

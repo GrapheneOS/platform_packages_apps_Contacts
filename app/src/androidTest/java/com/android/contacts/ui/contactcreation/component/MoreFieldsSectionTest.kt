@@ -134,7 +134,7 @@ class MoreFieldsSectionTest {
     }
 
     @Test
-    fun eventFieldRendered_whenPresent() {
+    fun rendersEventField_whenPresent() {
         setContent(
             defaultState.copy(
                 isExpanded = true,
@@ -169,7 +169,7 @@ class MoreFieldsSectionTest {
     }
 
     @Test
-    fun relationFieldRendered_whenPresent() {
+    fun rendersRelationField_whenPresent() {
         setContent(
             defaultState.copy(
                 isExpanded = true,
@@ -180,7 +180,7 @@ class MoreFieldsSectionTest {
     }
 
     @Test
-    fun imFieldRendered_whenPresent() {
+    fun rendersImField_whenPresent() {
         setContent(
             defaultState.copy(
                 isExpanded = true,
@@ -191,7 +191,7 @@ class MoreFieldsSectionTest {
     }
 
     @Test
-    fun websiteFieldRendered_whenPresent() {
+    fun rendersWebsiteField_whenPresent() {
         setContent(
             defaultState.copy(
                 isExpanded = true,

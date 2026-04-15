@@ -98,4 +98,13 @@ internal object TestTags {
     const val PHOTO_TAKE_CAMERA = "contact_creation_photo_take_camera"
     const val PHOTO_REMOVE = "contact_creation_photo_remove"
     const val PHOTO_PLACEHOLDER_ICON = "contact_creation_photo_placeholder_icon"
+
+    // Custom label dialog
+    const val CUSTOM_LABEL_DIALOG = "custom_label_dialog"
+    const val CUSTOM_LABEL_INPUT = "custom_label_input"
+    const val CUSTOM_LABEL_OK = "custom_label_ok"
+    const val CUSTOM_LABEL_CANCEL = "custom_label_cancel"
+
+    // Field type selector dropdown options
+    fun fieldTypeOption(typeLabel: String): String = "field_type_option_$typeLabel"
 }

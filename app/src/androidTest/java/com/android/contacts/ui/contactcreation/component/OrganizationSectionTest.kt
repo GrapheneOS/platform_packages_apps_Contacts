@@ -30,9 +30,8 @@ class OrganizationSectionTest {
 
     @Test
     fun rendersCompanyAndTitleFields() {
-        setContent(
-            OrganizationFieldState(company = "Acme", title = "Engineer"),
-        )
+        // Empty state still renders both fields
+        setContent(OrganizationFieldState())
         composeTestRule.onNodeWithTag(TestTags.ORG_COMPANY).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.ORG_TITLE).assertIsDisplayed()
     }
@@ -57,13 +56,6 @@ class OrganizationSectionTest {
             "CTO",
             (capturedActions.last() as ContactCreationAction.UpdateJobTitle).value,
         )
-    }
-
-    @Test
-    fun emptyState_rendersEmptyFields() {
-        setContent(OrganizationFieldState())
-        composeTestRule.onNodeWithTag(TestTags.ORG_COMPANY).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(TestTags.ORG_TITLE).assertIsDisplayed()
     }
 
     @Test

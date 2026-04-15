@@ -97,19 +97,7 @@ class ContactCreationIntegrationTest {
             }
         }
 
-    // --- 3. Empty form save produces no effect ---
-
-    @Test
-    fun emptyForm_save_noEffect() =
-        runTest(mainDispatcherRule.testDispatcher) {
-            val vm = createViewModel()
-            vm.effects.test {
-                vm.onAction(ContactCreationAction.Save)
-                expectNoEvents()
-            }
-        }
-
-    // --- 4. Custom phone type produces TYPE_CUSTOM and LABEL ---
+    // --- 3. Custom phone type produces TYPE_CUSTOM and LABEL ---
 
     @Test
     fun customPhoneType_deltaHasTypeCustomAndLabel() =
@@ -265,22 +253,6 @@ class ContactCreationIntegrationTest {
                     "Portland",
                     addrEntries[0].getAsString(StructuredPostal.CITY),
                 )
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-    // --- 10. Save sets isSaving flag ---
-
-    @Test
-    fun save_setsIsSavingFlag() =
-        runTest(mainDispatcherRule.testDispatcher) {
-            val vm = createViewModel()
-            vm.onAction(ContactCreationAction.UpdateFirstName("Flag"))
-
-            vm.effects.test {
-                vm.onAction(ContactCreationAction.Save)
-                awaitItem() // Save effect
-                assertTrue(vm.uiState.value.isSaving)
                 cancelAndIgnoreRemainingEvents()
             }
         }

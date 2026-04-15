@@ -4,13 +4,21 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.android.contacts.model.RawContactDelta
+import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.test.MainDispatcherRule
 import com.android.contacts.ui.contactcreation.mapper.RawContactDeltaMapper
+import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationEffect
 import com.android.contacts.ui.contactcreation.model.ContactCreationUiState
+import com.android.contacts.ui.contactcreation.model.EmailFieldState
+import com.android.contacts.ui.contactcreation.model.EventFieldState
+import com.android.contacts.ui.contactcreation.model.ImFieldState
 import com.android.contacts.ui.contactcreation.model.NameState
+import com.android.contacts.ui.contactcreation.model.OrganizationFieldState
 import com.android.contacts.ui.contactcreation.model.PhoneFieldState
+import com.android.contacts.ui.contactcreation.model.RelationFieldState
+import com.android.contacts.ui.contactcreation.model.WebsiteFieldState
 import kotlin.test.assertIs
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -289,30 +297,30 @@ class ContactCreationViewModelTest {
             ),
             phoneNumbers = listOf(PhoneFieldState(number = "555")),
             emails = listOf(
-                com.android.contacts.ui.contactcreation.model.EmailFieldState(address = "a@b.com"),
+                EmailFieldState(address = "a@b.com"),
             ),
             addresses = listOf(
-                com.android.contacts.ui.contactcreation.model.AddressFieldState(
+                AddressFieldState(
                     street = "123 Main",
                 ),
             ),
-            organization = com.android.contacts.ui.contactcreation.model.OrganizationFieldState(
+            organization = OrganizationFieldState(
                 company = "Acme",
                 title = "Eng",
             ),
             events = listOf(
-                com.android.contacts.ui.contactcreation.model.EventFieldState(
+                EventFieldState(
                     startDate = "1990-01-01",
                 ),
             ),
             relations = listOf(
-                com.android.contacts.ui.contactcreation.model.RelationFieldState(name = "Jane"),
+                RelationFieldState(name = "Jane"),
             ),
             imAccounts = listOf(
-                com.android.contacts.ui.contactcreation.model.ImFieldState(data = "user@jabber"),
+                ImFieldState(data = "user@jabber"),
             ),
             websites = listOf(
-                com.android.contacts.ui.contactcreation.model.WebsiteFieldState(
+                WebsiteFieldState(
                     url = "https://site.com",
                 ),
             ),
@@ -417,7 +425,7 @@ class ContactCreationViewModelTest {
         vm.onAction(ContactCreationAction.ToggleGroup(1L, "Friends"))
         assertEquals(1, vm.uiState.value.groups.size)
 
-        val account = com.android.contacts.model.account.AccountWithDataSet(
+        val account = AccountWithDataSet(
             "test",
             "com.test",
             null,

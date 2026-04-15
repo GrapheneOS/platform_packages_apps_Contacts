@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
@@ -85,11 +86,13 @@ class AddressSectionTest {
     }
 
     @Test
-    fun tapAddressType_showsDropdownMenu() {
+    fun selectAddressType_dispatchesUpdateAddressType() {
         val addresses = listOf(AddressFieldState(id = "1", type = AddressType.Home))
         setContent(addresses = addresses)
+        val workLabel = composeTestRule.activity.getString(R.string.field_type_work)
         composeTestRule.onNodeWithTag(TestTags.addressType(0)).performClick()
-        composeTestRule.onNodeWithTag(TestTags.addressType(0)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.fieldTypeOption(workLabel)).performClick()
+        assertIs<ContactCreationAction.UpdateAddressType>(capturedActions.last())
     }
 
     private fun setContent(addresses: List<AddressFieldState> = emptyList()) {

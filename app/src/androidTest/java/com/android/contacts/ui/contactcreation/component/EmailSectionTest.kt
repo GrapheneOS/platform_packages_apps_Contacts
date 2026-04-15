@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.EmailFieldState
@@ -84,11 +85,13 @@ class EmailSectionTest {
     }
 
     @Test
-    fun tapEmailType_showsDropdownMenu() {
+    fun selectEmailType_dispatchesUpdateEmailType() {
         val email = EmailFieldState(id = "1", address = "a@b.com", type = EmailType.Home)
         setContent(emails = listOf(email))
+        val workLabel = composeTestRule.activity.getString(R.string.field_type_work)
         composeTestRule.onNodeWithTag(TestTags.emailType(0)).performClick()
-        composeTestRule.onNodeWithTag(TestTags.emailType(0)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.fieldTypeOption(workLabel)).performClick()
+        assertIs<ContactCreationAction.UpdateEmailType>(capturedActions.last())
     }
 
     private fun setContent(emails: List<EmailFieldState> = listOf(EmailFieldState())) {
