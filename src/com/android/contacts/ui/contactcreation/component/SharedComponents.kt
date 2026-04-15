@@ -1,0 +1,113 @@
+package com.android.contacts.ui.contactcreation.component
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+
+private val IconColumnWidth = 40.dp
+private val IconSize = 24.dp
+private val SectionHeaderStartPadding = 56.dp
+private val AddFieldButtonStartPadding = 56.dp
+
+/**
+ * Section header: titleSmall, primary color, 56dp start padding.
+ * Top=24dp, bottom=8dp per M3 form spec.
+ */
+@Composable
+internal fun SectionHeader(
+    title: String,
+    modifier: Modifier = Modifier,
+    testTag: String = "",
+) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = SectionHeaderStartPadding, top = 24.dp, bottom = 8.dp)
+            .then(if (testTag.isNotEmpty()) Modifier.testTag(testTag) else Modifier),
+    )
+}
+
+/**
+ * Consistent field row with 40dp icon column.
+ * [icon] is shown only for the first field in a section; subsequent fields pass null.
+ */
+@Composable
+internal fun FieldRow(
+    icon: ImageVector?,
+    modifier: Modifier = Modifier,
+    trailing: @Composable (() -> Unit)? = null,
+    content: @Composable () -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier.width(IconColumnWidth),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(IconSize),
+                )
+            }
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            content()
+        }
+        if (trailing != null) {
+            trailing()
+        }
+    }
+}
+
+/**
+ * Add-field button: 56dp start padding, primary color, Add icon + labelLarge text.
+ */
+@Composable
+internal fun AddFieldButton(
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    TextButton(
+        onClick = onClick,
+        modifier = modifier.padding(start = AddFieldButtonStartPadding),
+    ) {
+        Icon(
+            Icons.Filled.Add,
+            contentDescription = label,
+            modifier = Modifier.size(18.dp),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}

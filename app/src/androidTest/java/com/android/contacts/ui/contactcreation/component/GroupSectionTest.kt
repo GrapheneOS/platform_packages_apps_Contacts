@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
@@ -93,13 +92,11 @@ class GroupSectionTest {
     ) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    groupSection(
-                        availableGroups = availableGroups,
-                        selectedGroups = selectedGroups,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                GroupSectionContent(
+                    availableGroups = availableGroups,
+                    selectedGroups = selectedGroups,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

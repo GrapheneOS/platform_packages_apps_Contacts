@@ -1,61 +1,46 @@
 package com.android.contacts.ui.contactcreation.component
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Label
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.GroupFieldState
 import com.android.contacts.ui.contactcreation.model.GroupInfo
 
-internal fun LazyListScope.groupSection(
+/**
+ * Group section as a @Composable for Column-based layout.
+ * Uses FieldRow with Label icon on first row only.
+ */
+@Composable
+internal fun GroupSectionContent(
     availableGroups: List<GroupInfo>,
     selectedGroups: List<GroupFieldState>,
     onAction: (ContactCreationAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (availableGroups.isEmpty()) return
 
-    item(key = "group_header", contentType = "group_header") {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(start = 16.dp, top = 16.dp, bottom = 8.dp)
-                .testTag(TestTags.GROUP_SECTION),
-        ) {
-            Icon(
-                Icons.Filled.Label,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp).padding(end = 8.dp),
-            )
-            Text(text = stringResource(R.string.contact_creation_groups))
+    Column(modifier = modifier.testTag(TestTags.GROUP_SECTION)) {
+        availableGroups.forEachIndexed { index, group ->
+            val isFirst = index == 0
+            FieldRow(icon = if (isFirst) Icons.AutoMirrored.Filled.Label else null) {
+                GroupCheckboxRow(
+                    group = group,
+                    isSelected = selectedGroups.any { it.groupId == group.groupId },
+                    index = index,
+                    onAction = onAction,
+                )
+            }
         }
-    }
-    itemsIndexed(
-        items = availableGroups,
-        key = { _, group -> "group_${group.groupId}" },
-        contentType = { _, _ -> "group_checkbox" },
-    ) { index, group ->
-        GroupCheckboxRow(
-            group = group,
-            isSelected = selectedGroups.any { it.groupId == group.groupId },
-            index = index,
-            onAction = onAction,
-        )
     }
 }
 
@@ -69,8 +54,7 @@ internal fun GroupCheckboxRow(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(

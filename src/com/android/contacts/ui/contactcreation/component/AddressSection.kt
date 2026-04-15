@@ -1,27 +1,21 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -30,38 +24,34 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
-import com.android.contacts.ui.core.animateItemIfMotionAllowed
 
-internal fun LazyListScope.addressSection(
+/**
+ * Address section as a @Composable for Column-based layout.
+ */
+@Composable
+internal fun AddressSectionContent(
     addresses: List<AddressFieldState>,
     onAction: (ContactCreationAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    itemsIndexed(
-        items = addresses,
-        key = { _, item -> item.id },
-        contentType = { _, _ -> "address_field" },
-    ) { index, address ->
-        AddressFieldRow(
-            address = address,
-            index = index,
-            showDelete = addresses.size > 1,
-            onAction = onAction,
-            modifier = animateItemIfMotionAllowed(),
-        )
-    }
-    item(key = "address_add", contentType = "address_add") {
-        TextButton(
-            onClick = { onAction(ContactCreationAction.AddAddress) },
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .testTag(TestTags.ADDRESS_ADD),
-        ) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = stringResource(R.string.contact_creation_add_address),
+    Column(modifier = modifier) {
+        addresses.forEachIndexed { index, address ->
+            if (index > 0) {
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            AddressFieldRow(
+                address = address,
+                index = index,
+                isFirst = index == 0,
+                showDelete = addresses.size > 1,
+                onAction = onAction,
             )
-            Text(stringResource(R.string.contact_creation_add_address))
         }
+        AddFieldButton(
+            label = stringResource(R.string.contact_creation_add_address),
+            onClick = { onAction(ContactCreationAction.AddAddress) },
+            modifier = Modifier.testTag(TestTags.ADDRESS_ADD),
+        )
     }
 }
 
@@ -69,40 +59,40 @@ internal fun LazyListScope.addressSection(
 internal fun AddressFieldRow(
     address: AddressFieldState,
     index: Int,
+    isFirst: Boolean,
     showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
 
-    Row(
-        modifier = modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.Top,
+    FieldRow(
+        icon = if (isFirst) Icons.Filled.Place else null,
+        modifier = modifier,
+        trailing = if (showDelete) {
+            {
+                IconButton(
+                    onClick = { onAction(ContactCreationAction.RemoveAddress(address.id)) },
+                    modifier = Modifier.testTag(TestTags.addressDelete(index)),
+                ) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = stringResource(
+                            R.string.contact_creation_remove_address
+                        ),
+                    )
+                }
+            }
+        } else {
+            null
+        },
     ) {
-        Icon(
-            imageVector = Icons.Filled.Place,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(end = 8.dp, top = 16.dp),
-        )
         AddressFieldColumns(
             address = address,
             index = index,
             onAction = onAction,
             onRequestCustomLabel = { showCustomDialog = true },
-            modifier = Modifier.weight(1f),
         )
-        if (showDelete) {
-            IconButton(
-                onClick = { onAction(ContactCreationAction.RemoveAddress(address.id)) },
-                modifier = Modifier.testTag(TestTags.addressDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_address),
-                )
-            }
-        }
     }
 
     if (showCustomDialog) {
@@ -127,9 +117,8 @@ private fun AddressFieldColumns(
     index: Int,
     onAction: (ContactCreationAction) -> Unit,
     onRequestCustomLabel: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column {
         FieldTypeSelector(
             currentType = address.type,
             types = AddressType.selectorTypes,

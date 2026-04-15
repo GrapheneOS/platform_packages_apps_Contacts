@@ -8,6 +8,23 @@ internal object TestTags {
     // Top-level
     const val SAVE_BUTTON = "contact_creation_save_button"
     const val BACK_BUTTON = "contact_creation_back_button"
+    const val CLOSE_BUTTON = "contact_creation_close_button"
+    const val SAVE_TEXT_BUTTON = "contact_creation_save_text_button"
+
+    // Section headers
+    const val SECTION_HEADER_NAME = "contact_creation_section_header_name"
+    const val SECTION_HEADER_PHONE = "contact_creation_section_header_phone"
+    const val SECTION_HEADER_EMAIL = "contact_creation_section_header_email"
+    const val SECTION_HEADER_ADDRESS = "contact_creation_section_header_address"
+    const val SECTION_HEADER_ORGANIZATION = "contact_creation_section_header_organization"
+    const val SECTION_HEADER_GROUPS = "contact_creation_section_header_groups"
+
+    // Photo background
+    const val PHOTO_BG_STRIP = "contact_creation_photo_bg_strip"
+
+    // Dividers
+    const val DIVIDER_AFTER_PHOTO = "contact_creation_divider_after_photo"
+    const val DIVIDER_AFTER_ACCOUNT = "contact_creation_divider_after_account"
 
     // Name section
     const val NAME_PREFIX = "contact_creation_name_prefix"

@@ -3,29 +3,24 @@ package com.android.contacts.ui.contactcreation.preview
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.contactcreation.ContactCreationEditorScreen
 import com.android.contacts.ui.contactcreation.component.AccountChip
-import com.android.contacts.ui.contactcreation.component.AddressFieldRow
-import com.android.contacts.ui.contactcreation.component.EmailFieldRow
+import com.android.contacts.ui.contactcreation.component.AddressSectionContent
+import com.android.contacts.ui.contactcreation.component.EmailSectionContent
 import com.android.contacts.ui.contactcreation.component.GroupCheckboxRow
+import com.android.contacts.ui.contactcreation.component.GroupSectionContent
+import com.android.contacts.ui.contactcreation.component.MoreFieldsSectionContent
 import com.android.contacts.ui.contactcreation.component.MoreFieldsState
-import com.android.contacts.ui.contactcreation.component.NameFields
-import com.android.contacts.ui.contactcreation.component.OrganizationFields
+import com.android.contacts.ui.contactcreation.component.NameSectionContent
+import com.android.contacts.ui.contactcreation.component.OrganizationSectionContent
 import com.android.contacts.ui.contactcreation.component.PhoneFieldRow
+import com.android.contacts.ui.contactcreation.component.PhoneSectionContent
 import com.android.contacts.ui.contactcreation.component.PhotoAvatar
-import com.android.contacts.ui.contactcreation.component.addressSection
-import com.android.contacts.ui.contactcreation.component.emailSection
-import com.android.contacts.ui.contactcreation.component.groupSection
-import com.android.contacts.ui.contactcreation.component.moreFieldsSection
-import com.android.contacts.ui.contactcreation.component.nameSection
-import com.android.contacts.ui.contactcreation.component.phoneSection
-import com.android.contacts.ui.contactcreation.component.photoSection
+import com.android.contacts.ui.contactcreation.component.PhotoSectionContent
 import com.android.contacts.ui.core.AppTheme
 
 // region Full Screen Previews
@@ -75,9 +70,7 @@ private fun ContactCreationEditorScreenDarkPreview() {
 @Composable
 private fun PhotoSectionNoPhotoPreview() {
     AppTheme {
-        LazyColumn {
-            photoSection(photoUri = null, onAction = {})
-        }
+        PhotoSectionContent(photoUri = null, onAction = {})
     }
 }
 
@@ -101,17 +94,7 @@ private fun PhotoAvatarNoPhotoPreview() {
 @Composable
 private fun NameSectionPreview() {
     AppTheme {
-        LazyColumn {
-            nameSection(nameState = PreviewData.nameState, onAction = {})
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun NameFieldsPreview() {
-    AppTheme {
-        NameFields(nameState = PreviewData.nameState, onAction = {})
+        NameSectionContent(nameState = PreviewData.nameState, onAction = {})
     }
 }
 
@@ -123,9 +106,7 @@ private fun NameFieldsPreview() {
 @Composable
 private fun PhoneSectionPreview() {
     AppTheme {
-        LazyColumn {
-            phoneSection(phones = PreviewData.phones, onAction = {})
-        }
+        PhoneSectionContent(phones = PreviewData.phones, onAction = {})
     }
 }
 
@@ -133,9 +114,7 @@ private fun PhoneSectionPreview() {
 @Composable
 private fun PhoneSectionSinglePreview() {
     AppTheme {
-        LazyColumn {
-            phoneSection(phones = PreviewData.singlePhone, onAction = {})
-        }
+        PhoneSectionContent(phones = PreviewData.singlePhone, onAction = {})
     }
 }
 
@@ -146,6 +125,7 @@ private fun PhoneFieldRowPreview() {
         PhoneFieldRow(
             phone = PreviewData.phones[0],
             index = 0,
+            isFirst = true,
             showDelete = true,
             onAction = {},
         )
@@ -160,9 +140,7 @@ private fun PhoneFieldRowPreview() {
 @Composable
 private fun EmailSectionPreview() {
     AppTheme {
-        LazyColumn {
-            emailSection(emails = PreviewData.emails, onAction = {})
-        }
+        EmailSectionContent(emails = PreviewData.emails, onAction = {})
     }
 }
 
@@ -170,22 +148,7 @@ private fun EmailSectionPreview() {
 @Composable
 private fun EmailSectionSinglePreview() {
     AppTheme {
-        LazyColumn {
-            emailSection(emails = PreviewData.singleEmail, onAction = {})
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun EmailFieldRowPreview() {
-    AppTheme {
-        EmailFieldRow(
-            email = PreviewData.emails[0],
-            index = 0,
-            showDelete = true,
-            onAction = {},
-        )
+        EmailSectionContent(emails = PreviewData.singleEmail, onAction = {})
     }
 }
 
@@ -197,22 +160,7 @@ private fun EmailFieldRowPreview() {
 @Composable
 private fun AddressSectionPreview() {
     AppTheme {
-        LazyColumn {
-            addressSection(addresses = PreviewData.addresses, onAction = {})
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AddressFieldRowPreview() {
-    AppTheme {
-        AddressFieldRow(
-            address = PreviewData.addresses[0],
-            index = 0,
-            showDelete = false,
-            onAction = {},
-        )
+        AddressSectionContent(addresses = PreviewData.addresses, onAction = {})
     }
 }
 
@@ -224,7 +172,7 @@ private fun AddressFieldRowPreview() {
 @Composable
 private fun OrganizationFieldsPreview() {
     AppTheme {
-        OrganizationFields(organization = PreviewData.organization, onAction = {})
+        OrganizationSectionContent(organization = PreviewData.organization, onAction = {})
     }
 }
 
@@ -236,22 +184,20 @@ private fun OrganizationFieldsPreview() {
 @Composable
 private fun MoreFieldsSectionExpandedPreview() {
     AppTheme {
-        LazyColumn {
-            moreFieldsSection(
-                state = MoreFieldsState(
-                    isExpanded = true,
-                    events = PreviewData.events,
-                    relations = PreviewData.relations,
-                    imAccounts = PreviewData.imAccounts,
-                    websites = PreviewData.websites,
-                    note = "Met at the conference",
-                    nickname = "JD",
-                    sipAddress = "jane@sip.example.com",
-                    showSipField = true,
-                ),
-                onAction = {},
-            )
-        }
+        MoreFieldsSectionContent(
+            state = MoreFieldsState(
+                isExpanded = true,
+                events = PreviewData.events,
+                relations = PreviewData.relations,
+                imAccounts = PreviewData.imAccounts,
+                websites = PreviewData.websites,
+                note = "Met at the conference",
+                nickname = "JD",
+                sipAddress = "jane@sip.example.com",
+                showSipField = true,
+            ),
+            onAction = {},
+        )
     }
 }
 
@@ -259,22 +205,20 @@ private fun MoreFieldsSectionExpandedPreview() {
 @Composable
 private fun MoreFieldsSectionCollapsedPreview() {
     AppTheme {
-        LazyColumn {
-            moreFieldsSection(
-                state = MoreFieldsState(
-                    isExpanded = false,
-                    events = emptyList(),
-                    relations = emptyList(),
-                    imAccounts = emptyList(),
-                    websites = emptyList(),
-                    note = "",
-                    nickname = "",
-                    sipAddress = "",
-                    showSipField = true,
-                ),
-                onAction = {},
-            )
-        }
+        MoreFieldsSectionContent(
+            state = MoreFieldsState(
+                isExpanded = false,
+                events = emptyList(),
+                relations = emptyList(),
+                imAccounts = emptyList(),
+                websites = emptyList(),
+                note = "",
+                nickname = "",
+                sipAddress = "",
+                showSipField = true,
+            ),
+            onAction = {},
+        )
     }
 }
 
@@ -286,13 +230,11 @@ private fun MoreFieldsSectionCollapsedPreview() {
 @Composable
 private fun GroupSectionPreview() {
     AppTheme {
-        LazyColumn {
-            groupSection(
-                availableGroups = PreviewData.availableGroups,
-                selectedGroups = PreviewData.selectedGroups,
-                onAction = {},
-            )
-        }
+        GroupSectionContent(
+            availableGroups = PreviewData.availableGroups,
+            selectedGroups = PreviewData.selectedGroups,
+            onAction = {},
+        )
     }
 }
 
@@ -338,9 +280,7 @@ private fun AccountChipWithNamePreview() {
 @Composable
 private fun AccountChipDevicePreview() {
     AppTheme {
-        Surface {
-            AccountChip(accountName = null, onClick = {})
-        }
+        AccountChip(accountName = null, onClick = {})
     }
 }
 

@@ -4,14 +4,14 @@ import android.net.Uri
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,24 +46,27 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 
-private const val AVATAR_SIZE_DP = 96
-private const val PHOTO_DOWNSAMPLE_PX = 288 // 96dp * 3 (xxxhdpi)
-private const val PLACEHOLDER_ICON_SIZE_DP = 48
-private const val MORPHED_CORNER_DP = 16
+private const val AVATAR_SIZE_DP = 120
+private const val PHOTO_DOWNSAMPLE_PX = 360 // 120dp * 3 (xxxhdpi)
+private const val PLACEHOLDER_ICON_SIZE_DP = 56
+private const val MORPHED_CORNER_DP = 20
+private const val BG_STRIP_HEIGHT_DP = 168
 
-internal fun LazyListScope.photoSection(
+/**
+ * Photo section as a @Composable (for Column-based layout).
+ * 120dp circle centered in a surfaceContainerLow background strip.
+ */
+@Composable
+internal fun PhotoSectionContent(
     photoUri: Uri?,
     onAction: (ContactCreationAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    item(key = "photo_avatar", contentType = "photo_avatar") {
-        PhotoAvatar(
-            photoUri = photoUri,
-            onAction = onAction,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-        )
-    }
+    PhotoAvatar(
+        photoUri = photoUri,
+        onAction = onAction,
+        modifier = modifier.fillMaxWidth(),
+    )
 }
 
 @Composable
@@ -86,7 +89,13 @@ internal fun PhotoAvatar(
     )
     val morphedShape = RoundedCornerShape(cornerRadius)
 
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier
+            .height(BG_STRIP_HEIGHT_DP.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .testTag(TestTags.PHOTO_BG_STRIP),
+        contentAlignment = Alignment.Center,
+    ) {
         Box {
             Surface(
                 modifier = Modifier

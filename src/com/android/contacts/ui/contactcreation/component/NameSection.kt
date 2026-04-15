@@ -1,18 +1,14 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -22,32 +18,18 @@ import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.NameState
 
-internal fun LazyListScope.nameSection(
-    nameState: NameState,
-    onAction: (ContactCreationAction) -> Unit,
-) {
-    item(key = "name_section", contentType = "name_section") {
-        NameFields(nameState = nameState, onAction = onAction)
-    }
-}
-
+/**
+ * Name section as a @Composable for Column-based layout.
+ * Uses FieldRow with Person icon on first field only.
+ */
 @Composable
-internal fun NameFields(
+internal fun NameSectionContent(
     nameState: NameState,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.Top,
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Person,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(end = 8.dp, top = 16.dp),
-        )
-        Column(modifier = Modifier.weight(1f)) {
+    Column(modifier = modifier) {
+        FieldRow(icon = Icons.Filled.Person) {
             OutlinedTextField(
                 value = nameState.first,
                 onValueChange = { onAction(ContactCreationAction.UpdateFirstName(it)) },
@@ -57,6 +39,9 @@ internal fun NameFields(
                     .testTag(TestTags.NAME_FIRST),
                 singleLine = true,
             )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        FieldRow(icon = null) {
             OutlinedTextField(
                 value = nameState.last,
                 onValueChange = { onAction(ContactCreationAction.UpdateLastName(it)) },

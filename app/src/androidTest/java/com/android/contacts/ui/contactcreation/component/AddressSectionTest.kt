@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -72,7 +71,10 @@ class AddressSectionTest {
 
     @Test
     fun tapDeleteAddress_dispatchesRemoveAddressAction() {
-        val addresses = listOf(AddressFieldState(id = "1"))
+        val addresses = listOf(
+            AddressFieldState(id = "1"),
+            AddressFieldState(id = "2"),
+        )
         setContent(addresses = addresses)
         composeTestRule.onNodeWithTag(TestTags.addressDelete(0)).performClick()
         assertIs<ContactCreationAction.RemoveAddress>(capturedActions.last())
@@ -98,12 +100,10 @@ class AddressSectionTest {
     private fun setContent(addresses: List<AddressFieldState> = emptyList()) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    addressSection(
-                        addresses = addresses,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                AddressSectionContent(
+                    addresses = addresses,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

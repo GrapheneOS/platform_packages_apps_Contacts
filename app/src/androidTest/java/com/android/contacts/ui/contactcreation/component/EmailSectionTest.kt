@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -97,12 +96,10 @@ class EmailSectionTest {
     private fun setContent(emails: List<EmailFieldState> = listOf(EmailFieldState())) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    emailSection(
-                        emails = emails,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                EmailSectionContent(
+                    emails = emails,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

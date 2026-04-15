@@ -1,18 +1,14 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Business
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -22,32 +18,18 @@ import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.OrganizationFieldState
 
-internal fun LazyListScope.organizationSection(
-    organization: OrganizationFieldState,
-    onAction: (ContactCreationAction) -> Unit,
-) {
-    item(key = "organization_section", contentType = "organization_section") {
-        OrganizationFields(organization = organization, onAction = onAction)
-    }
-}
-
+/**
+ * Organization section as a @Composable for Column-based layout.
+ * Uses FieldRow with Business icon on first field only.
+ */
 @Composable
-internal fun OrganizationFields(
+internal fun OrganizationSectionContent(
     organization: OrganizationFieldState,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.Top,
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Business,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(end = 8.dp, top = 16.dp),
-        )
-        Column(modifier = Modifier.weight(1f)) {
+    Column(modifier = modifier) {
+        FieldRow(icon = Icons.Filled.Business) {
             OutlinedTextField(
                 value = organization.company,
                 onValueChange = { onAction(ContactCreationAction.UpdateCompany(it)) },
@@ -57,6 +39,9 @@ internal fun OrganizationFields(
                     .testTag(TestTags.ORG_COMPANY),
                 singleLine = true,
             )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        FieldRow(icon = null) {
             OutlinedTextField(
                 value = organization.title,
                 onValueChange = { onAction(ContactCreationAction.UpdateJobTitle(it)) },

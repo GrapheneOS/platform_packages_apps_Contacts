@@ -2,7 +2,6 @@ package com.android.contacts.ui.contactcreation.component
 
 import android.net.Uri
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -91,12 +90,10 @@ class PhotoSectionTest {
     private fun setContent(photoUri: Uri? = null) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    photoSection(
-                        photoUri = photoUri,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                PhotoSectionContent(
+                    photoUri = photoUri,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

@@ -1,15 +1,13 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.android.contacts.ui.contactcreation.TestTags
-import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.core.AppTheme
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,11 +17,11 @@ class AccountChipTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private val capturedActions = mutableListOf<ContactCreationAction>()
+    private var clicked = false
 
     @Before
     fun setup() {
-        capturedActions.clear()
+        clicked = false
     }
 
     @Test
@@ -40,24 +38,19 @@ class AccountChipTest {
     }
 
     @Test
-    fun tapChip_dispatchesRequestAccountPicker() {
+    fun tapChip_dispatchesClick() {
         setContent(accountName = "user@gmail.com")
         composeTestRule.onNodeWithTag(TestTags.ACCOUNT_CHIP).performClick()
-        assertEquals(
-            ContactCreationAction.RequestAccountPicker,
-            capturedActions.last(),
-        )
+        assertTrue(clicked)
     }
 
     private fun setContent(accountName: String?) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    accountChipItem(
-                        accountName = accountName,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                AccountChip(
+                    accountName = accountName,
+                    onClick = { clicked = true },
+                )
             }
         }
     }

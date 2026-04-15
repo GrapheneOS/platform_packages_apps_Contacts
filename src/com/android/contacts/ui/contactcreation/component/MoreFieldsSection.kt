@@ -8,13 +8,17 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DialerSip
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Notes
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,73 +32,25 @@ import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.core.isReduceMotionEnabled
 
-internal fun LazyListScope.moreFieldsSection(
+/**
+ * More fields section as a @Composable for Column-based layout.
+ * TextButton toggle at 56dp start, binary expand/collapse.
+ */
+@Composable
+internal fun MoreFieldsSectionContent(
     state: MoreFieldsState,
     onAction: (ContactCreationAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    moreFieldsToggle(state.isExpanded, onAction)
-    moreFieldsContent(
-        state.isExpanded,
-        state.nickname,
-        state.note,
-        state.sipAddress,
-        state.showSipField,
-        onAction
-    )
-    if (state.isExpanded) {
-        eventItems(state.events, onAction)
-        relationItems(state.relations, onAction)
-        imItems(state.imAccounts, onAction)
-        websiteItems(state.websites, onAction)
-    }
-}
+    Column(modifier = modifier) {
+        MoreFieldsToggleButton(
+            isExpanded = state.isExpanded,
+            onAction = onAction,
+        )
 
-private fun LazyListScope.moreFieldsToggle(
-    isExpanded: Boolean,
-    onAction: (ContactCreationAction) -> Unit,
-) {
-    item(key = "more_fields_toggle", contentType = "more_fields_toggle") {
-        TextButton(
-            onClick = { onAction(ContactCreationAction.ToggleMoreFields) },
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .testTag(TestTags.MORE_FIELDS_TOGGLE),
-        ) {
-            Icon(
-                if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-                contentDescription = stringResource(
-                    if (isExpanded) {
-                        R.string.contact_creation_less_fields
-                    } else {
-                        R.string.contact_creation_more_fields
-                    },
-                ),
-            )
-            Text(
-                stringResource(
-                    if (isExpanded) {
-                        R.string.contact_creation_less_fields
-                    } else {
-                        R.string.contact_creation_more_fields
-                    },
-                ),
-            )
-        }
-    }
-}
-
-private fun LazyListScope.moreFieldsContent(
-    isExpanded: Boolean,
-    nickname: String,
-    note: String,
-    sipAddress: String,
-    showSipField: Boolean,
-    onAction: (ContactCreationAction) -> Unit,
-) {
-    item(key = "more_fields_content", contentType = "more_fields_content") {
         val reduceMotion = isReduceMotionEnabled()
         AnimatedVisibility(
-            visible = isExpanded,
+            visible = state.isExpanded,
             enter = if (reduceMotion) {
                 expandVertically() + fadeIn()
             } else {
@@ -111,50 +67,143 @@ private fun LazyListScope.moreFieldsContent(
             },
             modifier = Modifier.testTag(TestTags.MORE_FIELDS_CONTENT),
         ) {
-            MoreFieldsSingleFields(nickname, note, sipAddress, showSipField, onAction)
+            MoreFieldsExpandedContent(state = state, onAction = onAction)
         }
     }
 }
 
 @Composable
-private fun MoreFieldsSingleFields(
-    nickname: String,
-    note: String,
-    sipAddress: String,
-    showSipField: Boolean,
+private fun MoreFieldsToggleButton(
+    isExpanded: Boolean,
+    onAction: (ContactCreationAction) -> Unit,
+) {
+    TextButton(
+        onClick = { onAction(ContactCreationAction.ToggleMoreFields) },
+        modifier = Modifier
+            .padding(start = 56.dp)
+            .testTag(TestTags.MORE_FIELDS_TOGGLE),
+    ) {
+        Icon(
+            if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = stringResource(
+                if (isExpanded) {
+                    R.string.contact_creation_less_fields
+                } else {
+                    R.string.contact_creation_more_fields
+                },
+            ),
+        )
+        Text(
+            text = stringResource(
+                if (isExpanded) {
+                    R.string.contact_creation_less_fields
+                } else {
+                    R.string.contact_creation_more_fields
+                },
+            ),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
+
+@Composable
+private fun MoreFieldsExpandedContent(
+    state: MoreFieldsState,
     onAction: (ContactCreationAction) -> Unit,
 ) {
     Column {
+        // 1. Nickname (single field, no header needed)
+        NicknameField(nickname = state.nickname, onAction = onAction)
+
+        // 2. Organization
+        Spacer(modifier = Modifier.height(24.dp))
+        SectionHeader("Organization")
+        OrganizationSectionContent(organization = state.organization, onAction = onAction)
+
+        // 3. SIP (single field — icon identifies it, no header needed)
+        if (state.showSipField) {
+            Spacer(modifier = Modifier.height(24.dp))
+            SipField(sipAddress = state.sipAddress, onAction = onAction)
+        }
+
+        // 4. IM
+        Spacer(modifier = Modifier.height(24.dp))
+        SectionHeader("Instant messaging")
+        ImSectionContent(imAccounts = state.imAccounts, onAction = onAction)
+
+        // 5. Website
+        Spacer(modifier = Modifier.height(24.dp))
+        SectionHeader("Websites")
+        WebsiteSectionContent(websites = state.websites, onAction = onAction)
+
+        // 6. Event
+        Spacer(modifier = Modifier.height(24.dp))
+        SectionHeader("Events")
+        EventSectionContent(events = state.events, onAction = onAction)
+
+        // 7. Relation
+        Spacer(modifier = Modifier.height(24.dp))
+        SectionHeader("Relations")
+        RelationSectionContent(relations = state.relations, onAction = onAction)
+
+        // 8. Note (single field — icon identifies it, no header needed)
+        Spacer(modifier = Modifier.height(24.dp))
+        NoteField(note = state.note, onAction = onAction)
+    }
+}
+
+@Composable
+private fun NicknameField(
+    nickname: String,
+    onAction: (ContactCreationAction) -> Unit,
+) {
+    FieldRow(icon = null) {
         OutlinedTextField(
             value = nickname,
             onValueChange = { onAction(ContactCreationAction.UpdateNickname(it)) },
             label = { Text(stringResource(R.string.nicknameLabelsGroup)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
                 .testTag(TestTags.NICKNAME_FIELD),
             singleLine = true,
         )
+    }
+}
+
+@Composable
+private fun NoteField(
+    note: String,
+    onAction: (ContactCreationAction) -> Unit,
+) {
+    FieldRow(icon = Icons.Filled.Notes) {
         OutlinedTextField(
             value = note,
             onValueChange = { onAction(ContactCreationAction.UpdateNote(it)) },
             label = { Text(stringResource(R.string.contact_creation_note)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
                 .testTag(TestTags.NOTE_FIELD),
+            singleLine = false,
+            maxLines = 4,
         )
-        if (showSipField) {
-            OutlinedTextField(
-                value = sipAddress,
-                onValueChange = { onAction(ContactCreationAction.UpdateSipAddress(it)) },
-                label = { Text(stringResource(R.string.contact_creation_sip)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .testTag(TestTags.SIP_FIELD),
-                singleLine = true,
-            )
-        }
+    }
+}
+
+@Composable
+private fun SipField(
+    sipAddress: String,
+    onAction: (ContactCreationAction) -> Unit,
+) {
+    FieldRow(icon = Icons.Filled.DialerSip) {
+        OutlinedTextField(
+            value = sipAddress,
+            onValueChange = { onAction(ContactCreationAction.UpdateSipAddress(it)) },
+            label = { Text(stringResource(R.string.contact_creation_sip)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(TestTags.SIP_FIELD),
+            singleLine = true,
+        )
     }
 }

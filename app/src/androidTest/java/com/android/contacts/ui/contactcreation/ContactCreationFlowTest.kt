@@ -54,7 +54,7 @@ class ContactCreationFlowTest {
         )
 
         // Tap save
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()
         assertEquals(ContactCreationAction.Save, capturedActions.last())
     }
 
@@ -74,7 +74,7 @@ class ContactCreationFlowTest {
         composeTestRule.onNodeWithTag(TestTags.ORG_TITLE).assertIsDisplayed()
 
         // Tap save
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()
         assertEquals(ContactCreationAction.Save, capturedActions.last())
     }
 
@@ -108,7 +108,7 @@ class ContactCreationFlowTest {
         composeTestRule.onNodeWithTag(TestTags.phoneField(0)).assertIsDisplayed()
 
         // Save
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()
         assertEquals(ContactCreationAction.Save, capturedActions.last())
     }
 
@@ -128,7 +128,7 @@ class ContactCreationFlowTest {
 
         // Type a name and save
         composeTestRule.onNodeWithTag(TestTags.NAME_FIRST).performTextInput("Local")
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()
         assertEquals(ContactCreationAction.Save, capturedActions.last())
     }
 

@@ -28,15 +28,15 @@ class ContactCreationEditorScreenTest {
     }
 
     @Test
-    fun initialState_showsSaveButton() {
+    fun initialState_showsSaveTextButton() {
         setContent()
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).assertIsDisplayed()
     }
 
     @Test
-    fun initialState_showsBackButton() {
+    fun initialState_showsCloseButton() {
         setContent()
-        composeTestRule.onNodeWithTag(TestTags.BACK_BUTTON).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.CLOSE_BUTTON).assertIsDisplayed()
     }
 
     @Test
@@ -64,29 +64,50 @@ class ContactCreationEditorScreenTest {
     }
 
     @Test
+    fun initialState_showsSectionHeaders() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.SECTION_HEADER_NAME).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.SECTION_HEADER_PHONE).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.SECTION_HEADER_EMAIL).assertIsDisplayed()
+    }
+
+    @Test
+    fun initialState_showsDividers() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.DIVIDER_AFTER_PHOTO).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TestTags.DIVIDER_AFTER_ACCOUNT).assertIsDisplayed()
+    }
+
+    @Test
+    fun initialState_showsPhotoBgStrip() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.PHOTO_BG_STRIP).assertIsDisplayed()
+    }
+
+    @Test
     fun tapSave_dispatchesSaveAction() {
         setContent()
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).performClick()
         assertEquals(ContactCreationAction.Save, capturedActions.last())
     }
 
     @Test
-    fun tapBack_dispatchesNavigateBackAction() {
+    fun tapClose_dispatchesNavigateBackAction() {
         setContent()
-        composeTestRule.onNodeWithTag(TestTags.BACK_BUTTON).performClick()
+        composeTestRule.onNodeWithTag(TestTags.CLOSE_BUTTON).performClick()
         assertEquals(ContactCreationAction.NavigateBack, capturedActions.last())
     }
 
     @Test
     fun savingState_disablesSaveButton() {
         setContent(state = ContactCreationUiState(isSaving = true))
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).assertIsNotEnabled()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).assertIsNotEnabled()
     }
 
     @Test
     fun notSavingState_enablesSaveButton() {
         setContent(state = ContactCreationUiState(isSaving = false))
-        composeTestRule.onNodeWithTag(TestTags.SAVE_BUTTON).assertIsEnabled()
+        composeTestRule.onNodeWithTag(TestTags.SAVE_TEXT_BUTTON).assertIsEnabled()
     }
 
     // --- Discard dialog ---

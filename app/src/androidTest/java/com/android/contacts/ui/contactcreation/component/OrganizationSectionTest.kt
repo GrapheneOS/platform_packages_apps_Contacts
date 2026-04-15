@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -30,7 +29,6 @@ class OrganizationSectionTest {
 
     @Test
     fun rendersCompanyAndTitleFields() {
-        // Empty state still renders both fields
         setContent(OrganizationFieldState())
         composeTestRule.onNodeWithTag(TestTags.ORG_COMPANY).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TestTags.ORG_TITLE).assertIsDisplayed()
@@ -72,12 +70,10 @@ class OrganizationSectionTest {
     ) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    organizationSection(
-                        organization = organization,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                OrganizationSectionContent(
+                    organization = organization,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

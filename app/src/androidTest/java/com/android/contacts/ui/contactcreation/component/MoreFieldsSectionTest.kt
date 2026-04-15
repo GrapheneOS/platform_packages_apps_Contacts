@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -204,12 +203,10 @@ class MoreFieldsSectionTest {
     private fun setContent(state: MoreFieldsState = defaultState) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    moreFieldsSection(
-                        state = state,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                MoreFieldsSectionContent(
+                    state = state,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

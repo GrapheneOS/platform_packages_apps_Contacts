@@ -1,26 +1,21 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -29,38 +24,34 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.PhoneFieldState
-import com.android.contacts.ui.core.animateItemIfMotionAllowed
 
-internal fun LazyListScope.phoneSection(
+/**
+ * Phone section as a @Composable for Column-based layout.
+ */
+@Composable
+internal fun PhoneSectionContent(
     phones: List<PhoneFieldState>,
     onAction: (ContactCreationAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    itemsIndexed(
-        items = phones,
-        key = { _, item -> item.id },
-        contentType = { _, _ -> "phone_field" },
-    ) { index, phone ->
-        PhoneFieldRow(
-            phone = phone,
-            index = index,
-            showDelete = phones.size > 1,
-            onAction = onAction,
-            modifier = animateItemIfMotionAllowed(),
-        )
-    }
-    item(key = "phone_add", contentType = "phone_add") {
-        TextButton(
-            onClick = { onAction(ContactCreationAction.AddPhone) },
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .testTag(TestTags.PHONE_ADD),
-        ) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = stringResource(R.string.contact_creation_add_phone),
+    Column(modifier = modifier) {
+        phones.forEachIndexed { index, phone ->
+            if (index > 0) {
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            PhoneFieldRow(
+                phone = phone,
+                index = index,
+                isFirst = index == 0,
+                showDelete = phones.size > 1,
+                onAction = onAction,
             )
-            Text(stringResource(R.string.contact_creation_add_phone))
         }
+        AddFieldButton(
+            label = stringResource(R.string.contact_creation_add_phone),
+            onClick = { onAction(ContactCreationAction.AddPhone) },
+            modifier = Modifier.testTag(TestTags.PHONE_ADD),
+        )
     }
 }
 
@@ -68,23 +59,33 @@ internal fun LazyListScope.phoneSection(
 internal fun PhoneFieldRow(
     phone: PhoneFieldState,
     index: Int,
+    isFirst: Boolean,
     showDelete: Boolean,
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
 
-    Row(
-        modifier = modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
+    FieldRow(
+        icon = if (isFirst) Icons.Filled.Phone else null,
+        modifier = modifier,
+        trailing = if (showDelete) {
+            {
+                IconButton(
+                    onClick = { onAction(ContactCreationAction.RemovePhone(phone.id)) },
+                    modifier = Modifier.testTag(TestTags.phoneDelete(index)),
+                ) {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = stringResource(R.string.contact_creation_remove_phone),
+                    )
+                }
+            }
+        } else {
+            null
+        },
     ) {
-        Icon(
-            imageVector = Icons.Filled.Phone,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(end = 8.dp),
-        )
-        Column(modifier = Modifier.weight(1f)) {
+        Column {
             FieldTypeSelector(
                 currentType = phone.type,
                 types = PhoneType.selectorTypes,
@@ -102,20 +103,11 @@ internal fun PhoneFieldRow(
                 value = phone.number,
                 onValueChange = { onAction(ContactCreationAction.UpdatePhone(phone.id, it)) },
                 label = { Text(stringResource(R.string.phoneLabelsGroup)) },
-                modifier = Modifier.testTag(TestTags.phoneField(index)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(TestTags.phoneField(index)),
                 singleLine = true,
             )
-        }
-        if (showDelete) {
-            IconButton(
-                onClick = { onAction(ContactCreationAction.RemovePhone(phone.id)) },
-                modifier = Modifier.testTag(TestTags.phoneDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_phone)
-                )
-            }
         }
     }
 

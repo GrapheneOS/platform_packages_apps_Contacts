@@ -605,6 +605,14 @@
     <string name="contact_creation_keep_editing">Keep editing</string>
     <string name="contact_creation_custom_label_title">Custom label</string>
     <string name="contact_creation_custom_label_hint">Label</string>
+    <string name="contact_creation_section_name">Name</string>
+    <string name="contact_creation_section_phone">Phone</string>
+    <string name="contact_creation_section_email">Email</string>
+    <string name="contact_creation_section_address">Address</string>
+    <string name="contact_creation_section_organization">Organization</string>
+    <string name="contact_creation_section_groups">Groups</string>
+    <string name="contact_creation_save">Save</string>
+    <string name="contact_creation_close">Close</string>
 
     <!-- Field type labels [CHAR LIMIT=20] -->
     <string name="field_type_mobile">Mobile</string>

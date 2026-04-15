@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactcreation.component
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -56,12 +55,10 @@ class NameSectionTest {
     private fun setContent(nameState: NameState = NameState()) {
         composeTestRule.setContent {
             AppTheme {
-                LazyColumn {
-                    nameSection(
-                        nameState = nameState,
-                        onAction = { capturedActions.add(it) },
-                    )
-                }
+                NameSectionContent(
+                    nameState = nameState,
+                    onAction = { capturedActions.add(it) },
+                )
             }
         }
     }

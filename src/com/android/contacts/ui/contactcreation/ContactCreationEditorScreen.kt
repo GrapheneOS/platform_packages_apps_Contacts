@@ -3,38 +3,42 @@
 package com.android.contacts.ui.contactcreation
 
 import androidx.activity.compose.PredictiveBackHandler
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.android.contacts.R
+import com.android.contacts.ui.contactcreation.component.AccountChip
+import com.android.contacts.ui.contactcreation.component.AddressSectionContent
+import com.android.contacts.ui.contactcreation.component.EmailSectionContent
+import com.android.contacts.ui.contactcreation.component.GroupSectionContent
+import com.android.contacts.ui.contactcreation.component.MoreFieldsSectionContent
 import com.android.contacts.ui.contactcreation.component.MoreFieldsState
-import com.android.contacts.ui.contactcreation.component.accountChipItem
-import com.android.contacts.ui.contactcreation.component.addressSection
-import com.android.contacts.ui.contactcreation.component.emailSection
-import com.android.contacts.ui.contactcreation.component.groupSection
-import com.android.contacts.ui.contactcreation.component.moreFieldsSection
-import com.android.contacts.ui.contactcreation.component.nameSection
-import com.android.contacts.ui.contactcreation.component.organizationSection
-import com.android.contacts.ui.contactcreation.component.phoneSection
-import com.android.contacts.ui.contactcreation.component.photoSection
+import com.android.contacts.ui.contactcreation.component.NameSectionContent
+import com.android.contacts.ui.contactcreation.component.PhoneSectionContent
+import com.android.contacts.ui.contactcreation.component.PhotoSectionContent
+import com.android.contacts.ui.contactcreation.component.SectionHeader
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.ContactCreationUiState
 import kotlinx.coroutines.CancellationException
@@ -45,8 +49,6 @@ internal fun ContactCreationEditorScreen(
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
     PredictiveBackHandler(enabled = true) { flow ->
         try {
             flow.collect { /* consume progress events */ }
@@ -57,48 +59,43 @@ internal fun ContactCreationEditorScreen(
     }
 
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
-            LargeTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
                         stringResource(R.string.contact_editor_title_new_contact),
-                        style = MaterialTheme.typography.headlineMedium,
                     )
                 },
                 navigationIcon = {
                     IconButton(
                         onClick = { onAction(ContactCreationAction.NavigateBack) },
-                        modifier = Modifier.testTag(TestTags.BACK_BUTTON),
+                        modifier = Modifier.testTag(TestTags.CLOSE_BUTTON),
                     ) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
+                            Icons.Filled.Close,
                             contentDescription = stringResource(
-                                R.string.back_arrow_content_description,
+                                R.string.contact_creation_close,
                             ),
                         )
                     }
                 },
                 actions = {
-                    IconButton(
+                    TextButton(
                         onClick = { onAction(ContactCreationAction.Save) },
-                        modifier = Modifier.testTag(TestTags.SAVE_BUTTON),
+                        modifier = Modifier.testTag(TestTags.SAVE_TEXT_BUTTON),
                         enabled = !uiState.isSaving,
                     ) {
-                        Icon(
-                            Icons.Filled.Check,
-                            contentDescription = stringResource(R.string.menu_save),
-                        )
+                        Text(stringResource(R.string.contact_creation_save))
                     }
                 },
-                scrollBehavior = scrollBehavior,
             )
         },
     ) { contentPadding ->
-        ContactCreationFieldsList(
+        ContactCreationFieldsColumn(
             uiState = uiState,
             onAction = onAction,
-            contentPadding = contentPadding,
+            modifier = Modifier.padding(contentPadding),
         )
     }
 
@@ -139,37 +136,102 @@ private fun DiscardChangesDialog(onAction: (ContactCreationAction) -> Unit) {
 }
 
 @Composable
-private fun ContactCreationFieldsList(
+private fun ContactCreationFieldsColumn(
     uiState: ContactCreationUiState,
     onAction: (ContactCreationAction) -> Unit,
-    contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = contentPadding,
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .imePadding(),
     ) {
-        photoSection(photoUri = uiState.photoUri, onAction = onAction)
-        accountChipItem(accountName = uiState.accountName, onAction = onAction)
-        nameSection(nameState = uiState.nameState, onAction = onAction)
-        phoneSection(phones = uiState.phoneNumbers, onAction = onAction)
-        emailSection(emails = uiState.emails, onAction = onAction)
-        addressSection(addresses = uiState.addresses, onAction = onAction)
-        organizationSection(organization = uiState.organization, onAction = onAction)
-        moreFieldsSection(
-            state = MoreFieldsState(
-                isExpanded = uiState.isMoreFieldsExpanded,
-                events = uiState.events,
-                relations = uiState.relations,
-                imAccounts = uiState.imAccounts,
-                websites = uiState.websites,
-                note = uiState.note,
-                nickname = uiState.nickname,
-                sipAddress = uiState.sipAddress,
-                showSipField = uiState.showSipField,
-            ),
-            onAction = onAction,
+        PhotoAndAccountHeader(uiState = uiState, onAction = onAction)
+        FieldSections(uiState = uiState, onAction = onAction)
+        Spacer(modifier = Modifier.height(48.dp))
+    }
+}
+
+@Composable
+private fun PhotoAndAccountHeader(
+    uiState: ContactCreationUiState,
+    onAction: (ContactCreationAction) -> Unit,
+) {
+    PhotoSectionContent(photoUri = uiState.photoUri, onAction = onAction)
+    HorizontalDivider(
+        color = MaterialTheme.colorScheme.outlineVariant,
+        modifier = Modifier.testTag(TestTags.DIVIDER_AFTER_PHOTO),
+    )
+    AccountChip(
+        accountName = uiState.accountName,
+        onClick = { onAction(ContactCreationAction.RequestAccountPicker) },
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+    )
+    HorizontalDivider(
+        color = MaterialTheme.colorScheme.outlineVariant,
+        modifier = Modifier.testTag(TestTags.DIVIDER_AFTER_ACCOUNT),
+    )
+}
+
+@Composable
+private fun FieldSections(
+    uiState: ContactCreationUiState,
+    onAction: (ContactCreationAction) -> Unit,
+) {
+    SectionHeader(
+        title = stringResource(R.string.contact_creation_section_name),
+        testTag = TestTags.SECTION_HEADER_NAME,
+    )
+    NameSectionContent(nameState = uiState.nameState, onAction = onAction)
+    Spacer(modifier = Modifier.height(24.dp))
+
+    SectionHeader(
+        title = stringResource(R.string.contact_creation_section_phone),
+        testTag = TestTags.SECTION_HEADER_PHONE,
+    )
+    PhoneSectionContent(phones = uiState.phoneNumbers, onAction = onAction)
+    Spacer(modifier = Modifier.height(24.dp))
+
+    SectionHeader(
+        title = stringResource(R.string.contact_creation_section_email),
+        testTag = TestTags.SECTION_HEADER_EMAIL,
+    )
+    EmailSectionContent(emails = uiState.emails, onAction = onAction)
+    Spacer(modifier = Modifier.height(24.dp))
+
+    if (uiState.addresses.isNotEmpty()) {
+        SectionHeader(
+            title = stringResource(R.string.contact_creation_section_address),
+            testTag = TestTags.SECTION_HEADER_ADDRESS,
         )
-        groupSection(
+        AddressSectionContent(addresses = uiState.addresses, onAction = onAction)
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+
+    MoreFieldsSectionContent(
+        state = MoreFieldsState(
+            isExpanded = uiState.isMoreFieldsExpanded,
+            organization = uiState.organization,
+            events = uiState.events,
+            relations = uiState.relations,
+            imAccounts = uiState.imAccounts,
+            websites = uiState.websites,
+            note = uiState.note,
+            nickname = uiState.nickname,
+            sipAddress = uiState.sipAddress,
+            showSipField = uiState.showSipField,
+        ),
+        onAction = onAction,
+    )
+    Spacer(modifier = Modifier.height(24.dp))
+
+    if (uiState.availableGroups.isNotEmpty()) {
+        SectionHeader(
+            title = stringResource(R.string.contact_creation_section_groups),
+            testTag = TestTags.SECTION_HEADER_GROUPS,
+        )
+        GroupSectionContent(
             availableGroups = uiState.availableGroups,
             selectedGroups = uiState.groups,
             onAction = onAction,
