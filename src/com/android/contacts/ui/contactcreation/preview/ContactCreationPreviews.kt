@@ -9,12 +9,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.contactcreation.ContactCreationEditorScreen
 import com.android.contacts.ui.contactcreation.component.AccountChip
+import com.android.contacts.ui.contactcreation.component.AddMoreInfoSection
 import com.android.contacts.ui.contactcreation.component.AddressSectionContent
 import com.android.contacts.ui.contactcreation.component.EmailSectionContent
 import com.android.contacts.ui.contactcreation.component.GroupCheckboxRow
 import com.android.contacts.ui.contactcreation.component.GroupSectionContent
-import com.android.contacts.ui.contactcreation.component.MoreFieldsSectionContent
-import com.android.contacts.ui.contactcreation.component.MoreFieldsState
 import com.android.contacts.ui.contactcreation.component.NameSectionContent
 import com.android.contacts.ui.contactcreation.component.OrganizationSectionContent
 import com.android.contacts.ui.contactcreation.component.PhoneFieldRow
@@ -178,46 +177,42 @@ private fun OrganizationFieldsPreview() {
 
 // endregion
 
-// region MoreFieldsSection
+// region AddMoreInfoSection
 
 @Preview(showBackground = true)
 @Composable
-private fun MoreFieldsSectionExpandedPreview() {
+private fun AddMoreInfoSectionAllChipsPreview() {
     AppTheme {
-        MoreFieldsSectionContent(
-            state = MoreFieldsState(
-                isExpanded = true,
-                events = PreviewData.events,
-                relations = PreviewData.relations,
-                imAccounts = PreviewData.imAccounts,
-                websites = PreviewData.websites,
-                note = "Met at the conference",
-                nickname = "JD",
-                sipAddress = "jane@sip.example.com",
-                showSipField = true,
-            ),
-            onAction = {},
+        AddMoreInfoSection(
+            showAddressChip = true,
+            showOrgChip = true,
+            showNoteChip = true,
+            showGroupsChip = true,
+            showOtherChip = true,
+            onAddAddress = {},
+            onShowOrganization = {},
+            onShowNote = {},
+            onShowGroups = {},
+            onShowOtherSheet = {},
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MoreFieldsSectionCollapsedPreview() {
+private fun AddMoreInfoSectionPartialChipsPreview() {
     AppTheme {
-        MoreFieldsSectionContent(
-            state = MoreFieldsState(
-                isExpanded = false,
-                events = emptyList(),
-                relations = emptyList(),
-                imAccounts = emptyList(),
-                websites = emptyList(),
-                note = "",
-                nickname = "",
-                sipAddress = "",
-                showSipField = true,
-            ),
-            onAction = {},
+        AddMoreInfoSection(
+            showAddressChip = false,
+            showOrgChip = true,
+            showNoteChip = false,
+            showGroupsChip = true,
+            showOtherChip = true,
+            onAddAddress = {},
+            onShowOrganization = {},
+            onShowNote = {},
+            onShowGroups = {},
+            onShowOtherSheet = {},
         )
     }
 }

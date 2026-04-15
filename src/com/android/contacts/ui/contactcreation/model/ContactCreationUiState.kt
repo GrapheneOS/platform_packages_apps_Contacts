@@ -35,7 +35,10 @@ internal data class ContactCreationUiState(
     val selectedAccount: AccountWithDataSet? = null,
     val accountName: String? = null,
     val isSaving: Boolean = false,
-    val isMoreFieldsExpanded: Boolean = false,
+    val showOrganization: Boolean = false,
+    val showNote: Boolean = false,
+    val showNickname: Boolean = false,
+    val showSipAddress: Boolean = false,
     val showSipField: Boolean = true,
     val showDiscardDialog: Boolean = false,
 ) : Parcelable {
@@ -54,6 +57,24 @@ internal data class ContactCreationUiState(
             sipAddress.isNotBlank() ||
             groups.isNotEmpty() ||
             photoUri != null
+
+    val showAddressChip: Boolean get() = addresses.isEmpty()
+
+    val showOrgChip: Boolean
+        get() = !showOrganization && organization.company.isBlank() && organization.title.isBlank()
+
+    val showNoteChip: Boolean get() = !showNote && note.isBlank()
+
+    val showGroupsChip: Boolean get() = groups.isEmpty() && availableGroups.isNotEmpty()
+
+    @Suppress("ComplexCondition")
+    val showOtherChip: Boolean
+        get() = events.isEmpty() || relations.isEmpty() || imAccounts.isEmpty() ||
+            websites.isEmpty() || (!showNickname && nickname.isBlank()) ||
+            (!showSipAddress && sipAddress.isBlank() && showSipField)
+
+    val hasAnyChip: Boolean
+        get() = showAddressChip || showOrgChip || showNoteChip || showGroupsChip || showOtherChip
 }
 
 @Immutable

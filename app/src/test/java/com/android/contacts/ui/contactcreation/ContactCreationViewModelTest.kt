@@ -328,7 +328,7 @@ class ContactCreationViewModelTest {
             nickname = "Johnny",
             sipAddress = "sip:user@voip.example.com",
             photoUri = Uri.parse("content://media/external/images/99"),
-            isMoreFieldsExpanded = true,
+            showOrganization = true,
         )
         val vm = createViewModel(initialState = savedState)
         val restored = vm.uiState.value
@@ -351,19 +351,81 @@ class ContactCreationViewModelTest {
         assertEquals("Johnny", restored.nickname)
         assertEquals("sip:user@voip.example.com", restored.sipAddress)
         assertEquals(Uri.parse("content://media/external/images/99"), restored.photoUri)
-        assertTrue(restored.isMoreFieldsExpanded)
+        assertTrue(restored.showOrganization)
     }
 
-    // --- ToggleMoreFields ---
+    // --- Section visibility actions ---
 
     @Test
-    fun toggleMoreFields_togglesIsMoreFieldsExpanded() {
+    fun showOrganization_setsShowOrganizationTrue() {
         val vm = createViewModel()
-        assertFalse(vm.uiState.value.isMoreFieldsExpanded)
-        vm.onAction(ContactCreationAction.ToggleMoreFields)
-        assertTrue(vm.uiState.value.isMoreFieldsExpanded)
-        vm.onAction(ContactCreationAction.ToggleMoreFields)
-        assertFalse(vm.uiState.value.isMoreFieldsExpanded)
+        assertFalse(vm.uiState.value.showOrganization)
+        vm.onAction(ContactCreationAction.ShowOrganization)
+        assertTrue(vm.uiState.value.showOrganization)
+    }
+
+    @Test
+    fun hideOrganization_clearsOrgAndHides() {
+        val vm = createViewModel(
+            initialState = ContactCreationUiState(
+                showOrganization = true,
+                organization = OrganizationFieldState(company = "Acme"),
+            ),
+        )
+        vm.onAction(ContactCreationAction.HideOrganization)
+        assertFalse(vm.uiState.value.showOrganization)
+        assertEquals("", vm.uiState.value.organization.company)
+    }
+
+    @Test
+    fun showNote_setsShowNoteTrue() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.ShowNote)
+        assertTrue(vm.uiState.value.showNote)
+    }
+
+    @Test
+    fun hideNote_clearsNoteAndHides() {
+        val vm = createViewModel(
+            initialState = ContactCreationUiState(showNote = true, note = "hello"),
+        )
+        vm.onAction(ContactCreationAction.HideNote)
+        assertFalse(vm.uiState.value.showNote)
+        assertEquals("", vm.uiState.value.note)
+    }
+
+    @Test
+    fun showNickname_setsShowNicknameTrue() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.ShowNickname)
+        assertTrue(vm.uiState.value.showNickname)
+    }
+
+    @Test
+    fun hideNickname_clearsAndHides() {
+        val vm = createViewModel(
+            initialState = ContactCreationUiState(showNickname = true, nickname = "JD"),
+        )
+        vm.onAction(ContactCreationAction.HideNickname)
+        assertFalse(vm.uiState.value.showNickname)
+        assertEquals("", vm.uiState.value.nickname)
+    }
+
+    @Test
+    fun showSipAddress_setsShowSipAddressTrue() {
+        val vm = createViewModel()
+        vm.onAction(ContactCreationAction.ShowSipAddress)
+        assertTrue(vm.uiState.value.showSipAddress)
+    }
+
+    @Test
+    fun hideSipAddress_clearsAndHides() {
+        val vm = createViewModel(
+            initialState = ContactCreationUiState(showSipAddress = true, sipAddress = "sip:x"),
+        )
+        vm.onAction(ContactCreationAction.HideSipAddress)
+        assertFalse(vm.uiState.value.showSipAddress)
+        assertEquals("", vm.uiState.value.sipAddress)
     }
 
     // --- Extended field actions ---

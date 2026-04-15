@@ -105,7 +105,10 @@ internal object PreviewData {
         groups = selectedGroups,
         availableGroups = availableGroups,
         accountName = "jane@gmail.com",
-        isMoreFieldsExpanded = true,
+        showOrganization = true,
+        showNote = true,
+        showNickname = true,
+        showSipAddress = true,
         showSipField = true,
     )
 

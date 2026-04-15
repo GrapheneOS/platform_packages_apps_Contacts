@@ -116,6 +116,18 @@ internal object TestTags {
     const val PHOTO_REMOVE = "contact_creation_photo_remove"
     const val PHOTO_PLACEHOLDER_ICON = "contact_creation_photo_placeholder_icon"
 
+    // Add more info chip grid
+    const val ADD_MORE_INFO_SECTION = "contact_creation_add_more_info"
+    const val OTHER_FIELDS_SHEET = "contact_creation_other_fields_sheet"
+    fun addMoreInfoChip(section: String): String = "contact_creation_add_more_info_chip_$section"
+    fun otherSheetItem(section: String): String = "contact_creation_other_sheet_item_$section"
+
+    // Remove field buttons for single-field sections
+    const val NICKNAME_REMOVE = "contact_creation_nickname_remove"
+    const val NOTE_REMOVE = "contact_creation_note_remove"
+    const val SIP_REMOVE = "contact_creation_sip_remove"
+    const val ORG_REMOVE = "contact_creation_org_remove"
+
     // Custom label dialog
     const val CUSTOM_LABEL_DIALOG = "custom_label_dialog"
     const val CUSTOM_LABEL_INPUT = "custom_label_input"

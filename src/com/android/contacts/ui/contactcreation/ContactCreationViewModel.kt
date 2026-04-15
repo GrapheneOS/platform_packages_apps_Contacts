@@ -18,6 +18,7 @@ import com.android.contacts.ui.contactcreation.model.EventFieldState
 import com.android.contacts.ui.contactcreation.model.GroupFieldState
 import com.android.contacts.ui.contactcreation.model.ImFieldState
 import com.android.contacts.ui.contactcreation.model.NameState
+import com.android.contacts.ui.contactcreation.model.OrganizationFieldState
 import com.android.contacts.ui.contactcreation.model.PhoneFieldState
 import com.android.contacts.ui.contactcreation.model.RelationFieldState
 import com.android.contacts.ui.contactcreation.model.WebsiteFieldState
@@ -72,8 +73,21 @@ internal class ContactCreationViewModel @Inject constructor(
             is ContactCreationAction.Save -> save()
             is ContactCreationAction.ConfirmDiscard -> confirmDiscard()
             is ContactCreationAction.DismissDiscardDialog -> dismissDiscardDialog()
-            is ContactCreationAction.ToggleMoreFields ->
-                updateState { copy(isMoreFieldsExpanded = !isMoreFieldsExpanded) }
+            is ContactCreationAction.ShowOrganization ->
+                updateState { copy(showOrganization = true) }
+            is ContactCreationAction.HideOrganization ->
+                updateState {
+                    copy(showOrganization = false, organization = OrganizationFieldState())
+                }
+            is ContactCreationAction.ShowNote -> updateState { copy(showNote = true) }
+            is ContactCreationAction.HideNote -> updateState { copy(showNote = false, note = "") }
+            is ContactCreationAction.ShowNickname -> updateState { copy(showNickname = true) }
+            is ContactCreationAction.HideNickname ->
+                updateState { copy(showNickname = false, nickname = "") }
+            is ContactCreationAction.ShowSipAddress ->
+                updateState { copy(showSipAddress = true) }
+            is ContactCreationAction.HideSipAddress ->
+                updateState { copy(showSipAddress = false, sipAddress = "") }
             is ContactCreationAction.SetPhoto -> updateState { copy(photoUri = action.uri) }
             is ContactCreationAction.RemovePhoto -> updateState { copy(photoUri = null) }
             is ContactCreationAction.RequestGallery ->

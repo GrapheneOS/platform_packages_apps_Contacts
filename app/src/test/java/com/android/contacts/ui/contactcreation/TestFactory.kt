@@ -60,6 +60,9 @@ internal object TestFactory {
         sipAddress = "sip:jane@voip.example.com",
         groups = listOf(GroupFieldState(groupId = 1L, title = "Friends")),
         photoUri = Uri.parse("content://media/external/images/99"),
-        isMoreFieldsExpanded = true,
+        showOrganization = true,
+        showNote = true,
+        showNickname = true,
+        showSipAddress = true,
     )
 }

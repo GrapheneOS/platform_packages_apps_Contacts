@@ -138,13 +138,33 @@ class ContactCreationEditorScreenTest {
         assertEquals(ContactCreationAction.DismissDiscardDialog, capturedActions.last())
     }
 
-    // --- More fields toggle ---
+    // --- Add more info chip grid ---
 
     @Test
-    fun moreFieldsToggle_dispatchesToggleMoreFieldsAction() {
+    fun addMoreInfoSection_showsWhenChipsAvailable() {
         setContent()
-        composeTestRule.onNodeWithTag(TestTags.MORE_FIELDS_TOGGLE).performClick()
-        assertEquals(ContactCreationAction.ToggleMoreFields, capturedActions.last())
+        composeTestRule.onNodeWithTag(TestTags.ADD_MORE_INFO_SECTION).assertIsDisplayed()
+    }
+
+    @Test
+    fun addMoreInfoSection_addressChipAddsAddress() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.addMoreInfoChip("address")).performClick()
+        assertEquals(ContactCreationAction.AddAddress, capturedActions.last())
+    }
+
+    @Test
+    fun addMoreInfoSection_orgChipShowsOrganization() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.addMoreInfoChip("organization")).performClick()
+        assertEquals(ContactCreationAction.ShowOrganization, capturedActions.last())
+    }
+
+    @Test
+    fun addMoreInfoSection_noteChipShowsNote() {
+        setContent()
+        composeTestRule.onNodeWithTag(TestTags.addMoreInfoChip("note")).performClick()
+        assertEquals(ContactCreationAction.ShowNote, capturedActions.last())
     }
 
     private fun setContent(state: ContactCreationUiState = ContactCreationUiState()) {

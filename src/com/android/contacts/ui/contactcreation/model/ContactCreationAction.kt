@@ -91,8 +91,15 @@ internal sealed interface ContactCreationAction {
     // Groups
     data class ToggleGroup(val groupId: Long, val title: String) : ContactCreationAction
 
-    // More fields
-    data object ToggleMoreFields : ContactCreationAction
+    // Section visibility
+    data object ShowOrganization : ContactCreationAction
+    data object HideOrganization : ContactCreationAction
+    data object ShowNote : ContactCreationAction
+    data object HideNote : ContactCreationAction
+    data object ShowNickname : ContactCreationAction
+    data object HideNickname : ContactCreationAction
+    data object ShowSipAddress : ContactCreationAction
+    data object HideSipAddress : ContactCreationAction
 
     // Photo
     data class SetPhoto(val uri: Uri) : ContactCreationAction
