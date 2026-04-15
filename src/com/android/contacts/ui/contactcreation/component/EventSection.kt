@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,15 +59,11 @@ private fun EventFieldRow(
         icon = if (isFirst) Icons.Filled.Event else null,
         modifier = modifier,
         trailing = {
-            IconButton(
+            RemoveFieldButton(
                 onClick = { onAction(ContactCreationAction.RemoveEvent(event.id)) },
+                contentDescription = stringResource(R.string.contact_creation_remove_event),
                 modifier = Modifier.testTag(TestTags.eventDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_event),
-                )
-            }
+            )
         },
     ) {
         OutlinedTextField(

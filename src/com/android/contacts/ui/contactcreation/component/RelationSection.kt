@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.People
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,15 +59,11 @@ private fun RelationFieldRow(
         icon = if (isFirst) Icons.Filled.People else null,
         modifier = modifier,
         trailing = {
-            IconButton(
+            RemoveFieldButton(
                 onClick = { onAction(ContactCreationAction.RemoveRelation(relation.id)) },
+                contentDescription = stringResource(R.string.contact_creation_remove_relation),
                 modifier = Modifier.testTag(TestTags.relationDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_relation),
-                )
-            }
+            )
         },
     ) {
         OutlinedTextField(

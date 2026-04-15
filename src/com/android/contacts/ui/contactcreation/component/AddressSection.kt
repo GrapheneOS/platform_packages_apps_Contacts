@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,17 +69,11 @@ internal fun AddressFieldRow(
         modifier = modifier,
         trailing = if (showDelete) {
             {
-                IconButton(
+                RemoveFieldButton(
                     onClick = { onAction(ContactCreationAction.RemoveAddress(address.id)) },
+                    contentDescription = stringResource(R.string.contact_creation_remove_address),
                     modifier = Modifier.testTag(TestTags.addressDelete(index)),
-                ) {
-                    Icon(
-                        Icons.Filled.Close,
-                        contentDescription = stringResource(
-                            R.string.contact_creation_remove_address
-                        ),
-                    )
-                }
+                )
             }
         } else {
             null

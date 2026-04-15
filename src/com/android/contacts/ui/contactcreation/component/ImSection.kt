@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,15 +59,11 @@ private fun ImFieldRow(
         icon = if (isFirst) Icons.AutoMirrored.Filled.Message else null,
         modifier = modifier,
         trailing = {
-            IconButton(
+            RemoveFieldButton(
                 onClick = { onAction(ContactCreationAction.RemoveIm(im.id)) },
+                contentDescription = stringResource(R.string.contact_creation_remove_im),
                 modifier = Modifier.testTag(TestTags.imDelete(index)),
-            ) {
-                Icon(
-                    Icons.Filled.Close,
-                    contentDescription = stringResource(R.string.contact_creation_remove_im),
-                )
-            }
+            )
         },
     ) {
         OutlinedTextField(
