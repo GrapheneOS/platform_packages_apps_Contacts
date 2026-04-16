@@ -2,6 +2,12 @@
 /local.properties
 /.idea/*
 !/.idea/vcs.xml
+!/.idea/compiler.xml
+!/.idea/kotlinc.xml
+!/.idea/migrations.xml
+!/.idea/runConfigurations.xml
+!/.idea/inspectionProfiles
+!/.idea/inspectionProfiles/*
 /.kotlin
 .DS_Store
 /build
