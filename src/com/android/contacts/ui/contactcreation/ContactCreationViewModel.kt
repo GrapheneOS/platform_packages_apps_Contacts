@@ -102,6 +102,26 @@ internal class ContactCreationViewModel @Inject constructor(
             is ContactCreationAction.Save -> save()
             is ContactCreationAction.ConfirmDiscard -> confirmDiscard()
             is ContactCreationAction.DismissDiscardDialog -> dismissDiscardDialog()
+            is ContactCreationAction.SelectAccount -> handleSelectAccount(action)
+            else -> handleSectionToggleOrFieldUpdate(action)
+        }
+    }
+
+    private fun handleSelectAccount(action: ContactCreationAction.SelectAccount) {
+        val writable = _accounts.value
+        if (writable.isEmpty() || action.account in writable) {
+            updateState {
+                copy(
+                    selectedAccount = action.account,
+                    accountName = action.account.name,
+                    groups = emptyList(),
+                )
+            }
+        }
+    }
+
+    private fun handleSectionToggleOrFieldUpdate(action: ContactCreationAction) {
+        when (action) {
             is ContactCreationAction.ShowOrganization ->
                 updateState { copy(showOrganization = true) }
             is ContactCreationAction.HideOrganization ->
@@ -122,18 +142,6 @@ internal class ContactCreationViewModel @Inject constructor(
             is ContactCreationAction.RequestGallery ->
                 viewModelScope.launch { _effects.send(ContactCreationEffect.LaunchGallery) }
             is ContactCreationAction.RequestCamera -> requestCamera()
-            is ContactCreationAction.SelectAccount -> {
-                val writable = _accounts.value
-                if (writable.isEmpty() || action.account in writable) {
-                    updateState {
-                        copy(
-                            selectedAccount = action.account,
-                            accountName = action.account.name,
-                            groups = emptyList(),
-                        )
-                    }
-                }
-            }
             else -> handleFieldUpdateAction(action)
         }
     }

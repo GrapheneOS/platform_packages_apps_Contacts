@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,36 +60,21 @@ internal fun AddMoreInfoSection(
     modifier: Modifier = Modifier,
 ) {
     val reduceMotion = isReduceMotionEnabled()
-    val enterSpec: EnterTransition = if (reduceMotion) {
-        EnterTransition.None
-    } else {
-        expandHorizontally(
-            spring(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessMediumLow,
-            ),
-        ) + fadeIn(
-            spring(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessMediumLow,
-            ),
-        )
-    }
-    val exitSpec: ExitTransition = if (reduceMotion) {
-        ExitTransition.None
-    } else {
-        shrinkHorizontally(
-            spring(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessMediumLow,
-            ),
-        ) + fadeOut(
-            spring(
-                dampingRatio = Spring.DampingRatioLowBouncy,
-                stiffness = Spring.StiffnessMediumLow,
-            ),
-        )
-    }
+    val enterSpec = chipEnterTransition(reduceMotion)
+    val exitSpec = chipExitTransition(reduceMotion)
+
+    val chipItems = buildChipItems(
+        showAddressChip = showAddressChip,
+        showOrgChip = showOrgChip,
+        showNoteChip = showNoteChip,
+        showGroupsChip = showGroupsChip,
+        showOtherChip = showOtherChip,
+        onAddAddress = onAddAddress,
+        onShowOrganization = onShowOrganization,
+        onShowNote = onShowNote,
+        onShowGroups = onShowGroups,
+        onShowOtherSheet = onShowOtherSheet,
+    )
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,9 +85,7 @@ internal fun AddMoreInfoSection(
                 animationSpec = if (reduceMotion) {
                     snap()
                 } else {
-                    spring(
-                        stiffness = Spring.StiffnessMediumLow,
-                    )
+                    spring(stiffness = Spring.StiffnessMediumLow)
                 },
             ),
     ) {
@@ -117,74 +101,129 @@ internal fun AddMoreInfoSection(
             maxItemsInEachRow = 2,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            AnimatedVisibility(
-                visible = showAddressChip,
-                enter = enterSpec,
-                exit = exitSpec,
-                modifier = Modifier.weight(1f),
-            ) {
-                ChipButton(
-                    label = stringResource(R.string.contact_creation_section_address),
-                    icon = Icons.Filled.LocationOn,
-                    section = "address",
-                    onClick = onAddAddress,
-                )
-            }
-            AnimatedVisibility(
-                visible = showOrgChip,
-                enter = enterSpec,
-                exit = exitSpec,
-                modifier = Modifier.weight(1f),
-            ) {
-                ChipButton(
-                    label = stringResource(R.string.contact_creation_section_organization),
-                    icon = Icons.Filled.Business,
-                    section = "organization",
-                    onClick = onShowOrganization,
-                )
-            }
-            AnimatedVisibility(
-                visible = showNoteChip,
-                enter = enterSpec,
-                exit = exitSpec,
-                modifier = Modifier.weight(1f),
-            ) {
-                ChipButton(
-                    label = stringResource(R.string.contact_creation_note),
-                    icon = Icons.AutoMirrored.Filled.Notes,
-                    section = "note",
-                    onClick = onShowNote,
-                )
-            }
-            AnimatedVisibility(
-                visible = showGroupsChip,
-                enter = enterSpec,
-                exit = exitSpec,
-                modifier = Modifier.weight(1f),
-            ) {
-                ChipButton(
-                    label = stringResource(R.string.contact_creation_groups),
-                    icon = Icons.Filled.Group,
-                    section = "groups",
-                    onClick = onShowGroups,
-                )
-            }
-            AnimatedVisibility(
-                visible = showOtherChip,
-                enter = enterSpec,
-                exit = exitSpec,
-                modifier = Modifier.weight(1f),
-            ) {
-                ChipButton(
-                    label = stringResource(R.string.contact_creation_other),
-                    icon = Icons.Filled.MoreVert,
-                    section = "other",
-                    onClick = onShowOtherSheet,
+            chipItems.forEach { item ->
+                AnimatedChipSlot(
+                    visible = item.visible,
+                    enterSpec = enterSpec,
+                    exitSpec = exitSpec,
+                    label = item.label,
+                    icon = item.icon,
+                    section = item.section,
+                    onClick = item.onClick,
                 )
             }
         }
     }
 }
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun FlowRowScope.AnimatedChipSlot(
+    visible: Boolean,
+    enterSpec: EnterTransition,
+    exitSpec: ExitTransition,
+    label: String,
+    icon: ImageVector,
+    section: String,
+    onClick: () -> Unit,
+) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = enterSpec,
+        exit = exitSpec,
+        modifier = Modifier.weight(1f),
+    ) {
+        ChipButton(label = label, icon = icon, section = section, onClick = onClick)
+    }
+}
+
+private fun chipEnterTransition(reduceMotion: Boolean): EnterTransition {
+    if (reduceMotion) return EnterTransition.None
+    return expandHorizontally(
+        spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+    ) + fadeIn(
+        spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+    )
+}
+
+private fun chipExitTransition(reduceMotion: Boolean): ExitTransition {
+    if (reduceMotion) return ExitTransition.None
+    return shrinkHorizontally(
+        spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+    ) + fadeOut(
+        spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessMediumLow,
+        ),
+    )
+}
+
+private data class ChipItemData(
+    val visible: Boolean,
+    val label: String,
+    val icon: ImageVector,
+    val section: String,
+    val onClick: () -> Unit,
+)
+
+@Composable
+private fun buildChipItems(
+    showAddressChip: Boolean,
+    showOrgChip: Boolean,
+    showNoteChip: Boolean,
+    showGroupsChip: Boolean,
+    showOtherChip: Boolean,
+    onAddAddress: () -> Unit,
+    onShowOrganization: () -> Unit,
+    onShowNote: () -> Unit,
+    onShowGroups: () -> Unit,
+    onShowOtherSheet: () -> Unit,
+): List<ChipItemData> = listOf(
+    ChipItemData(
+        visible = showAddressChip,
+        label = stringResource(R.string.contact_creation_section_address),
+        icon = Icons.Filled.LocationOn,
+        section = "address",
+        onClick = onAddAddress,
+    ),
+    ChipItemData(
+        visible = showOrgChip,
+        label = stringResource(R.string.contact_creation_section_organization),
+        icon = Icons.Filled.Business,
+        section = "organization",
+        onClick = onShowOrganization,
+    ),
+    ChipItemData(
+        visible = showNoteChip,
+        label = stringResource(R.string.contact_creation_note),
+        icon = Icons.AutoMirrored.Filled.Notes,
+        section = "note",
+        onClick = onShowNote,
+    ),
+    ChipItemData(
+        visible = showGroupsChip,
+        label = stringResource(R.string.contact_creation_groups),
+        icon = Icons.Filled.Group,
+        section = "groups",
+        onClick = onShowGroups,
+    ),
+    ChipItemData(
+        visible = showOtherChip,
+        label = stringResource(R.string.contact_creation_other),
+        icon = Icons.Filled.MoreVert,
+        section = "other",
+        onClick = onShowOtherSheet,
+    ),
+)
 
 @Composable
 private fun ChipButton(

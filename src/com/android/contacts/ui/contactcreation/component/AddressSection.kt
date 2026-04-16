@@ -1,5 +1,13 @@
 package com.android.contacts.ui.contactcreation.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +28,7 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.AddressFieldState
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
+import com.android.contacts.ui.core.isReduceMotionEnabled
 
 /**
  * Address section as a @Composable for Column-based layout.
@@ -30,16 +39,29 @@ internal fun AddressSectionContent(
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    val reduceMotion = isReduceMotionEnabled()
+    Column(
+        modifier = modifier.animateContentSize(
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        ),
+    ) {
         addresses.forEachIndexed { index, address ->
             if (index > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            AddressFieldRow(
-                address = address,
-                index = index,
-                onAction = onAction,
-            )
+            val visibleState = remember {
+                MutableTransitionState(false).apply { targetState = true }
+            }
+            AnimatedVisibility(
+                visibleState = visibleState,
+                enter = if (reduceMotion) EnterTransition.None else expandVertically() + fadeIn(),
+            ) {
+                AddressFieldRow(
+                    address = address,
+                    index = index,
+                    onAction = onAction,
+                )
+            }
         }
         AddRemoveFieldRow(
             addLabel = stringResource(R.string.contact_creation_add_address),

@@ -5,6 +5,7 @@ package com.android.contacts.ui.contactcreation.component
 import android.net.Uri
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -53,6 +54,7 @@ import coil3.size.Size
 import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
+import com.android.contacts.ui.core.isReduceMotionEnabled
 import kotlinx.coroutines.launch
 
 private const val AVATAR_SIZE_DP = 120
@@ -90,12 +92,17 @@ internal fun PhotoAvatar(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
+    val reduceMotion = isReduceMotionEnabled()
     val cornerRadius by animateDpAsState(
         targetValue = if (isPressed) MORPHED_CORNER_DP.dp else (AVATAR_SIZE_DP / 2).dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMediumLow,
-        ),
+        animationSpec = if (reduceMotion) {
+            snap()
+        } else {
+            spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMediumLow,
+            )
+        },
         label = "avatar_shape_morph",
     )
     val morphedShape = RoundedCornerShape(cornerRadius)
@@ -127,24 +134,7 @@ internal fun PhotoAvatar(
                     PlaceholderIcon()
                 }
             }
-            // Camera badge at bottom-right
-            Surface(
-                modifier = Modifier
-                    .size(CAMERA_BADGE_SIZE_DP.dp)
-                    .align(Alignment.BottomEnd)
-                    .offset(x = (-4).dp, y = (-4).dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer,
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        Icons.Filled.CameraAlt,
-                        contentDescription = null,
-                        modifier = Modifier.size(CAMERA_BADGE_ICON_SIZE_DP.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
-                }
-            }
+            CameraBadge(modifier = Modifier.align(Alignment.BottomEnd))
         }
     }
 
@@ -154,6 +144,26 @@ internal fun PhotoAvatar(
             onAction = onAction,
             onDismiss = { showSheet = false },
         )
+    }
+}
+
+@Composable
+private fun CameraBadge(modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier
+            .size(CAMERA_BADGE_SIZE_DP.dp)
+            .offset(x = (-4).dp, y = (-4).dp),
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.primaryContainer,
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                Icons.Filled.CameraAlt,
+                contentDescription = null,
+                modifier = Modifier.size(CAMERA_BADGE_ICON_SIZE_DP.dp),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+        }
     }
 }
 

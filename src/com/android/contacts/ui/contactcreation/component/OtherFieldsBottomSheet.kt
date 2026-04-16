@@ -24,6 +24,14 @@ import androidx.compose.ui.platform.testTag
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 
+private data class OtherFieldEntry(
+    val visible: Boolean,
+    val label: String,
+    val icon: ImageVector,
+    val section: String,
+    val action: ContactCreationAction,
+)
+
 @Composable
 internal fun OtherFieldsBottomSheet(
     showEvents: Boolean,
@@ -37,80 +45,85 @@ internal fun OtherFieldsBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     val sheetState = rememberModalBottomSheetState()
+    val entries = buildOtherFieldEntries(
+        showEvents = showEvents,
+        showRelations = showRelations,
+        showIm = showIm,
+        showWebsites = showWebsites,
+        showSip = showSip,
+        showNickname = showNickname,
+    )
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         modifier = modifier.testTag(TestTags.OTHER_FIELDS_SHEET),
     ) {
-        if (showEvents) {
+        entries.filter { it.visible }.forEach { entry ->
             SheetItem(
-                label = "Event",
-                icon = Icons.Filled.DateRange,
-                section = "event",
+                label = entry.label,
+                icon = entry.icon,
+                section = entry.section,
                 onClick = {
-                    onAction(ContactCreationAction.AddEvent)
-                    onDismiss()
-                },
-            )
-        }
-        if (showRelations) {
-            SheetItem(
-                label = "Relation",
-                icon = Icons.Filled.People,
-                section = "relation",
-                onClick = {
-                    onAction(ContactCreationAction.AddRelation)
-                    onDismiss()
-                },
-            )
-        }
-        if (showIm) {
-            SheetItem(
-                label = "Instant messaging",
-                icon = Icons.AutoMirrored.Filled.Message,
-                section = "im",
-                onClick = {
-                    onAction(ContactCreationAction.AddIm)
-                    onDismiss()
-                },
-            )
-        }
-        if (showWebsites) {
-            SheetItem(
-                label = "Website",
-                icon = Icons.Filled.Public,
-                section = "website",
-                onClick = {
-                    onAction(ContactCreationAction.AddWebsite)
-                    onDismiss()
-                },
-            )
-        }
-        if (showSip) {
-            SheetItem(
-                label = "SIP address",
-                icon = Icons.Filled.Phone,
-                section = "sip",
-                onClick = {
-                    onAction(ContactCreationAction.ShowSipAddress)
-                    onDismiss()
-                },
-            )
-        }
-        if (showNickname) {
-            SheetItem(
-                label = "Nickname",
-                icon = Icons.Filled.Person,
-                section = "nickname",
-                onClick = {
-                    onAction(ContactCreationAction.ShowNickname)
+                    onAction(entry.action)
                     onDismiss()
                 },
             )
         }
     }
 }
+
+private fun buildOtherFieldEntries(
+    showEvents: Boolean,
+    showRelations: Boolean,
+    showIm: Boolean,
+    showWebsites: Boolean,
+    showSip: Boolean,
+    showNickname: Boolean,
+): List<OtherFieldEntry> = listOf(
+    OtherFieldEntry(
+        showEvents,
+        "Event",
+        Icons.Filled.DateRange,
+        "event",
+        ContactCreationAction.AddEvent,
+    ),
+    OtherFieldEntry(
+        showRelations,
+        "Relation",
+        Icons.Filled.People,
+        "relation",
+        ContactCreationAction.AddRelation,
+    ),
+    OtherFieldEntry(
+        showIm,
+        "Instant messaging",
+        Icons.AutoMirrored.Filled.Message,
+        "im",
+        ContactCreationAction.AddIm,
+    ),
+    OtherFieldEntry(
+        showWebsites,
+        "Website",
+        Icons.Filled.Public,
+        "website",
+        ContactCreationAction.AddWebsite,
+    ),
+    OtherFieldEntry(
+        showSip,
+        "SIP address",
+        Icons.Filled.Phone,
+        "sip",
+        ContactCreationAction.ShowSipAddress,
+    ),
+    OtherFieldEntry(
+        showNickname,
+        "Nickname",
+        Icons.Filled.Person,
+        "nickname",
+        ContactCreationAction.ShowNickname,
+    ),
+)
 
 @Composable
 private fun SheetItem(

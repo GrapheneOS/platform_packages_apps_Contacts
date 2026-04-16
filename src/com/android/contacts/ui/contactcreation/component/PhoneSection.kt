@@ -1,5 +1,13 @@
 package com.android.contacts.ui.contactcreation.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +40,7 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.PhoneFieldState
+import com.android.contacts.ui.core.isReduceMotionEnabled
 
 /**
  * Phone section as a @Composable for Column-based layout.
@@ -42,16 +51,29 @@ internal fun PhoneSectionContent(
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    val reduceMotion = isReduceMotionEnabled()
+    Column(
+        modifier = modifier.animateContentSize(
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        ),
+    ) {
         phones.forEachIndexed { index, phone ->
             if (index > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            PhoneFieldRow(
-                phone = phone,
-                index = index,
-                onAction = onAction,
-            )
+            val visibleState = remember {
+                MutableTransitionState(false).apply { targetState = true }
+            }
+            AnimatedVisibility(
+                visibleState = visibleState,
+                enter = if (reduceMotion) EnterTransition.None else expandVertically() + fadeIn(),
+            ) {
+                PhoneFieldRow(
+                    phone = phone,
+                    index = index,
+                    onAction = onAction,
+                )
+            }
         }
         AddRemoveFieldRow(
             addLabel = stringResource(R.string.contact_creation_add_phone),
@@ -93,38 +115,21 @@ internal fun PhoneFieldRow(
                 Text("${stringResource(R.string.phoneLabelsGroup)} ($currentTypeLabel)")
             },
             trailingIcon = {
-                IconButton(
-                    onClick = { typeExpanded = true },
-                    modifier = Modifier.testTag(TestTags.phoneType(index)),
-                ) {
-                    Icon(
-                        Icons.Filled.ArrowDropDown,
-                        contentDescription = stringResource(R.string.contact_creation_change_type),
-                    )
-                }
-                DropdownMenu(
+                PhoneTypeSelector(
+                    index = index,
+                    selectorLabels = selectorLabels,
                     expanded = typeExpanded,
-                    onDismissRequest = { typeExpanded = false },
-                ) {
-                    PhoneType.selectorTypes.forEachIndexed { i, type ->
-                        DropdownMenuItem(
-                            text = { Text(selectorLabels[i]) },
-                            onClick = {
-                                typeExpanded = false
-                                if (type is PhoneType.Custom && type.label.isEmpty()) {
-                                    showCustomDialog = true
-                                } else {
-                                    onAction(
-                                        ContactCreationAction.UpdatePhoneType(phone.id, type),
-                                    )
-                                }
-                            },
-                            modifier = Modifier.testTag(
-                                TestTags.fieldTypeOption(selectorLabels[i])
-                            ),
-                        )
-                    }
-                }
+                    onExpand = { typeExpanded = true },
+                    onDismiss = { typeExpanded = false },
+                    onTypeSelected = { type ->
+                        typeExpanded = false
+                        if (type is PhoneType.Custom && type.label.isEmpty()) {
+                            showCustomDialog = true
+                        } else {
+                            onAction(ContactCreationAction.UpdatePhoneType(phone.id, type))
+                        }
+                    },
+                )
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Phone,
@@ -148,5 +153,34 @@ internal fun PhoneFieldRow(
             },
             onDismiss = { showCustomDialog = false },
         )
+    }
+}
+
+@Composable
+private fun PhoneTypeSelector(
+    index: Int,
+    selectorLabels: List<String>,
+    expanded: Boolean,
+    onExpand: () -> Unit,
+    onDismiss: () -> Unit,
+    onTypeSelected: (PhoneType) -> Unit,
+) {
+    IconButton(
+        onClick = onExpand,
+        modifier = Modifier.testTag(TestTags.phoneType(index)),
+    ) {
+        Icon(
+            Icons.Filled.ArrowDropDown,
+            contentDescription = stringResource(R.string.contact_creation_change_type),
+        )
+    }
+    DropdownMenu(expanded = expanded, onDismissRequest = onDismiss) {
+        PhoneType.selectorTypes.forEachIndexed { i, type ->
+            DropdownMenuItem(
+                text = { Text(selectorLabels[i]) },
+                onClick = { onTypeSelected(type) },
+                modifier = Modifier.testTag(TestTags.fieldTypeOption(selectorLabels[i])),
+            )
+        }
     }
 }

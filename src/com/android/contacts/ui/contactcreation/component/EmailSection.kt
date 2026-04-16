@@ -1,5 +1,13 @@
 package com.android.contacts.ui.contactcreation.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +40,7 @@ import com.android.contacts.R
 import com.android.contacts.ui.contactcreation.TestTags
 import com.android.contacts.ui.contactcreation.model.ContactCreationAction
 import com.android.contacts.ui.contactcreation.model.EmailFieldState
+import com.android.contacts.ui.core.isReduceMotionEnabled
 
 /**
  * Email section as a @Composable for Column-based layout.
@@ -42,16 +51,29 @@ internal fun EmailSectionContent(
     onAction: (ContactCreationAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    val reduceMotion = isReduceMotionEnabled()
+    Column(
+        modifier = modifier.animateContentSize(
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        ),
+    ) {
         emails.forEachIndexed { index, email ->
             if (index > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            EmailFieldRow(
-                email = email,
-                index = index,
-                onAction = onAction,
-            )
+            val visibleState = remember {
+                MutableTransitionState(false).apply { targetState = true }
+            }
+            AnimatedVisibility(
+                visibleState = visibleState,
+                enter = if (reduceMotion) EnterTransition.None else expandVertically() + fadeIn(),
+            ) {
+                EmailFieldRow(
+                    email = email,
+                    index = index,
+                    onAction = onAction,
+                )
+            }
         }
         AddRemoveFieldRow(
             addLabel = stringResource(R.string.contact_creation_add_email),
@@ -79,10 +101,8 @@ internal fun EmailFieldRow(
     modifier: Modifier = Modifier,
 ) {
     var showCustomDialog by remember { mutableStateOf(false) }
-    var typeExpanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    val selectorLabels = remember { EmailType.selectorTypes.map { it.label(context) } }
     val currentTypeLabel = email.type.label(context)
 
     FieldRow(modifier = modifier) {
@@ -93,38 +113,16 @@ internal fun EmailFieldRow(
                 Text("${stringResource(R.string.emailLabelsGroup)} ($currentTypeLabel)")
             },
             trailingIcon = {
-                IconButton(
-                    onClick = { typeExpanded = true },
-                    modifier = Modifier.testTag(TestTags.emailType(index)),
-                ) {
-                    Icon(
-                        Icons.Filled.ArrowDropDown,
-                        contentDescription = stringResource(R.string.contact_creation_change_type),
-                    )
-                }
-                DropdownMenu(
-                    expanded = typeExpanded,
-                    onDismissRequest = { typeExpanded = false },
-                ) {
-                    EmailType.selectorTypes.forEachIndexed { i, type ->
-                        DropdownMenuItem(
-                            text = { Text(selectorLabels[i]) },
-                            onClick = {
-                                typeExpanded = false
-                                if (type is EmailType.Custom && type.label.isEmpty()) {
-                                    showCustomDialog = true
-                                } else {
-                                    onAction(
-                                        ContactCreationAction.UpdateEmailType(email.id, type),
-                                    )
-                                }
-                            },
-                            modifier = Modifier.testTag(
-                                TestTags.fieldTypeOption(selectorLabels[i])
-                            ),
-                        )
-                    }
-                }
+                EmailTypeDropdown(
+                    index = index,
+                    onTypeSelected = { type ->
+                        if (type is EmailType.Custom && type.label.isEmpty()) {
+                            showCustomDialog = true
+                        } else {
+                            onAction(ContactCreationAction.UpdateEmailType(email.id, type))
+                        }
+                    },
+                )
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -148,5 +146,42 @@ internal fun EmailFieldRow(
             },
             onDismiss = { showCustomDialog = false },
         )
+    }
+}
+
+@Composable
+private fun EmailTypeDropdown(
+    index: Int,
+    onTypeSelected: (EmailType) -> Unit,
+) {
+    var typeExpanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val selectorLabels = remember { EmailType.selectorTypes.map { it.label(context) } }
+
+    IconButton(
+        onClick = { typeExpanded = true },
+        modifier = Modifier.testTag(TestTags.emailType(index)),
+    ) {
+        Icon(
+            Icons.Filled.ArrowDropDown,
+            contentDescription = stringResource(R.string.contact_creation_change_type),
+        )
+    }
+    DropdownMenu(
+        expanded = typeExpanded,
+        onDismissRequest = { typeExpanded = false },
+    ) {
+        EmailType.selectorTypes.forEachIndexed { i, type ->
+            DropdownMenuItem(
+                text = { Text(selectorLabels[i]) },
+                onClick = {
+                    typeExpanded = false
+                    onTypeSelected(type)
+                },
+                modifier = Modifier.testTag(
+                    TestTags.fieldTypeOption(selectorLabels[i])
+                ),
+            )
+        }
     }
 }
