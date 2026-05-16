@@ -25,6 +25,7 @@ import android.text.TextUtils;
 
 import com.android.contacts.activities.ContactEditorActivity;
 import com.android.contacts.activities.ContactEditorSpringBoardActivity;
+import com.android.contacts.editornew.ContactEditorActivityNew;
 import com.android.contacts.model.RawContactDeltaList;
 import com.android.contacts.util.MaterialColorMapUtils.MaterialPalette;
 
@@ -74,14 +75,14 @@ public class EditorIntents {
     }
 
     /**
-     * Returns an Intent to start the {@link ContactEditorActivity} for a new contact with
+     * Returns an Intent to start the {@link ContactEditorActivityNew} for a new contact with
      * the field values specified by rawContactDeltaList pre-populate in the form.
      */
     public static Intent createInsertContactIntent(Context context,
             RawContactDeltaList rawContactDeltaList, String displayName, String phoneticName,
             /* Bundle updatedPhotos, */ boolean isNewLocalProfile) {
         final Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI,
-                context, ContactEditorActivity.class);
+                context, ContactEditorActivityNew.class);
         intent.putExtra(
                 ContactEditorFragment.INTENT_EXTRA_NEW_LOCAL_PROFILE, isNewLocalProfile);
         putRawContactDeltaValues(intent, rawContactDeltaList, displayName, phoneticName);

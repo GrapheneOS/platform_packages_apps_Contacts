@@ -22,6 +22,7 @@ import com.android.contacts.editor.PickRawContactDialogFragment;
 import com.android.contacts.editor.PickRawContactLoader;
 import com.android.contacts.editor.PickRawContactLoader.RawContactsMetadata;
 import com.android.contacts.editor.SplitContactConfirmationDialogFragment;
+import com.android.contacts.editornew.ContactEditorActivityNew;
 import com.android.contacts.logging.EditorEvent;
 import com.android.contacts.logging.Logger;
 import com.android.contacts.model.AccountTypeManager;
@@ -197,7 +198,7 @@ public class ContactEditorSpringBoardActivity extends AppCompatContactsActivity 
             // If the contact has only read-only raw contacts, we'll want to let the editor create
             // the writable raw contact for it.
             intent = EditorIntents.createEditContactIntent(this, mUri, mMaterialPalette, -1);
-            intent.setClass(this, ContactEditorActivity.class);
+            intent.setClass(this, ContactEditorActivityNew.class);
         }
         startEditorAndForwardExtras(intent);
     }

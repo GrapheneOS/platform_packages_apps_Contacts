@@ -1557,4 +1557,8 @@
 
     <string name="multi_picker_select_action">Select</string>
 
+    <string name="contact_editor_photo_remove">Remove</string>
+    <string name="contact_editor_photo_change">Change</string>
+    <string name="contact_editor_photo_add">Add picture</string>
+    <string name="contact_editor_create_contact">Create contact</string>
 </resources>
