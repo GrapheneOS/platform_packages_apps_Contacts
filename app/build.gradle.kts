@@ -52,8 +52,12 @@ android {
             applicationIdSuffix = ".debug"
             val selfPkgName = android.namespace + applicationIdSuffix
             resValue("string", "applicationLabel", "Contacts d")
-            resValue("string", "contacts_file_provider_authority", "$selfPkgName.files")
             resValue("string", "contacts_sdn_provider_authority", "$selfPkgName.sdn")
+
+            "$selfPkgName.files".also { value ->
+                resValue("string", "contacts_file_provider_authority", value)
+                resValue("string", "photo_file_provider_authority", value)
+            }
         }
     }
 
