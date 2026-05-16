@@ -64,6 +64,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.R;
+import com.android.contacts.editornew.ContactEditorActivityNew;
 import com.android.contacts.activities.ContactEditorActivity;
 import com.android.contacts.activities.ContactEditorActivity.ContactEditor;
 import com.android.contacts.activities.ContactSelectionActivity;
@@ -1756,7 +1757,7 @@ public class ContactEditorFragment extends Fragment
                         mContext,
                         mContactIdForJoin,
                         contactId,
-                        ContactEditorActivity.class,
+                        ContactEditorActivityNew.class,
                         ContactEditorActivity.ACTION_JOIN_COMPLETED);
         mContext.startService(intent);
     }

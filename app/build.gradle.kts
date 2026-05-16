@@ -1,4 +1,5 @@
 import dev.detekt.gradle.Detekt
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.android.application)
@@ -44,7 +45,7 @@ android {
     defaultConfig {
         minSdk = 36
         targetSdk = 36
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.android.contacts.di.HiltTestRunner"
     }
 
     buildTypes {
@@ -52,8 +53,12 @@ android {
             applicationIdSuffix = ".debug"
             val selfPkgName = android.namespace + applicationIdSuffix
             resValue("string", "applicationLabel", "Contacts d")
-            resValue("string", "contacts_file_provider_authority", "$selfPkgName.files")
             resValue("string", "contacts_sdn_provider_authority", "$selfPkgName.sdn")
+
+            "$selfPkgName.files".also { value ->
+                resValue("string", "contacts_file_provider_authority", value)
+                resValue("string", "photo_file_provider_authority", value)
+            }
         }
     }
 
@@ -85,13 +90,16 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
     implementation(libs.guava)
 
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.guava)
 
     implementation(libs.material)
 
@@ -103,6 +111,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    testImplementation(libs.androidx.test.core)
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
@@ -115,6 +124,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.rules)
     androidTestImplementation(libs.androidx.test.runner)
 
     androidTestImplementation(libs.hilt.android.testing)
@@ -124,4 +134,13 @@ dependencies {
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.turbine)
+}
+
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        )
+    }
 }
