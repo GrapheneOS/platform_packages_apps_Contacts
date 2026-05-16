@@ -17,11 +17,11 @@ import com.android.contacts.model.account.AccountInfo
 import com.android.contacts.model.account.AccountType
 import com.android.contacts.model.account.AccountWithDataSet
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.guava.await
-import javax.inject.Inject
 
 internal interface ContactDelegate {
     val state: StateFlow<ContactState>
@@ -47,7 +47,7 @@ internal class ContactDelegateImpl
             .await()
 
         val accountsWithDataSet = AccountInfo.extractAccounts(accounts)
-        // TODO: Correctly handle account selection; Prompt for account creation if none available
+        // TODO Correctly handle account selection; Prompt for account creation if none available
         val defaultAccount = accountsWithDataSet
             .let(editorUtils::getOnlyOrDefaultAccount)
             ?: accountsWithDataSet.first()

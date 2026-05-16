@@ -136,7 +136,6 @@ dependencies {
     androidTestImplementation(libs.turbine)
 }
 
-
 tasks.withType<KotlinCompile> {
     compilerOptions {
         freeCompilerArgs.addAll(

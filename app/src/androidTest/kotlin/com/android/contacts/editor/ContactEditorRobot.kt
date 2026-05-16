@@ -15,7 +15,8 @@ import com.android.contacts.editornew.ContactEditor
 import com.android.contacts.ui.core.AppTheme
 
 internal class ContactEditorRobot(
-    private val composeTestRule: AndroidComposeTestRule<ActivityScenarioRule<HiltTestActivity>, HiltTestActivity>,
+    private val composeTestRule:
+    AndroidComposeTestRule<ActivityScenarioRule<HiltTestActivity>, HiltTestActivity>,
 ) {
     init {
         composeTestRule.setContent {

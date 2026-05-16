@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import com.android.contacts.editornew.ContactEditorEvent
 import com.android.contacts.util.ContactPhotoUtils
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 internal interface PhotoDelegate {
     val photoEffects: Flow<PhotoEffect>
@@ -22,12 +22,11 @@ internal interface PhotoDelegate {
 }
 
 internal class PhotoDelegateImpl
-@Inject constructor(
-    private val helper: PhotoDelegateHelper,
-) : PhotoDelegate {
+@Inject constructor(private val helper: PhotoDelegateHelper) :
+    PhotoDelegate {
 
-    private val _effects = MutableSharedFlow<PhotoEffect>(extraBufferCapacity = 1)
-    override val photoEffects: Flow<PhotoEffect> = _effects.asSharedFlow()
+    private val _photoEffects = MutableSharedFlow<PhotoEffect>(extraBufferCapacity = 1)
+    override val photoEffects: Flow<PhotoEffect> = _photoEffects.asSharedFlow()
 
     private val _state = MutableStateFlow(PhotoPickerState.DEFAULT)
     override val state: StateFlow<PhotoPickerState> = _state.asStateFlow()
@@ -92,7 +91,7 @@ internal class PhotoDelegateImpl
 
     private fun emitEffect(scope: CoroutineScope, effect: PhotoEffect) {
         scope.launch {
-            _effects.emit(effect)
+            _photoEffects.emit(effect)
         }
     }
 

@@ -13,6 +13,7 @@ import com.android.contacts.editornew.photo.picker.PhotoDelegate
 import com.android.contacts.editornew.photo.picker.PhotoPickerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 internal class ContactEditorViewModel
@@ -31,10 +31,12 @@ internal class ContactEditorViewModel
     private val context: Context,
     private val photoDelegate: PhotoDelegate,
     private val contactDelegate: ContactDelegate,
-) : ViewModel(), PhotoDelegate by photoDelegate {
+) : ViewModel(),
+    PhotoDelegate by photoDelegate {
 
-    private val _effects = MutableSharedFlow<ContactEditorEffect>(extraBufferCapacity = 1)
-    val contactEditorEffects: Flow<ContactEditorEffect> = _effects.asSharedFlow()
+    private val _contactEditorEffects =
+        MutableSharedFlow<ContactEditorEffect>(extraBufferCapacity = 1)
+    val contactEditorEffects: Flow<ContactEditorEffect> = _contactEditorEffects.asSharedFlow()
 
     val uiState: StateFlow<ContactEditorUiState> = photoDelegate.state.map { photoState ->
         val photoSourceDialogUiState = if (photoState.showPhotoActionChooserDialog) {
@@ -99,7 +101,7 @@ internal class ContactEditorViewModel
 
     private fun emitEffect(effect: ContactEditorEffect) {
         viewModelScope.launch {
-            _effects.emit(effect)
+            _contactEditorEffects.emit(effect)
         }
     }
 
