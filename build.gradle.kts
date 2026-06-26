@@ -1,6 +1,5 @@
 import com.android.build.api.dsl.LibraryExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
-
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.hilt) apply false

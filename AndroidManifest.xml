@@ -521,10 +521,9 @@
             android:theme="@style/BackgroundOnlyTheme"/>
 
         <activity
-            android:name=".activities.SimImportActivity"
+            android:name=".sim.ui.SimImportActivity"
             android:label="@string/sim_import_title"
-            android:theme="@style/PeopleThemeAppCompat.FullScreenDialog.SimImportActivity"/>
-
+            android:theme="@style/Theme.Compose"/>
 
         <service
             android:name=".vcard.VCardService"

@@ -15,6 +15,7 @@ guava = "33.5.0-android"
 material = "1.13.0"
 palette = "1.0.0"
 swiperefreshlayout = "1.2.0"
+accompanist = "0.37.3"
 
 junit4 = "4.13.2"
 mockk = "1.14.9"
@@ -39,9 +40,11 @@ androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose" }
 
 androidx-palette = { module = "androidx.palette:palette", version.ref = "palette" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanist" }
 
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 
