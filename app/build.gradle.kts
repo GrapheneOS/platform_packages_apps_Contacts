@@ -91,6 +91,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.accompanist.drawablepainter)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
