@@ -28,6 +28,7 @@ import com.android.contacts.ui.simimport.screen.model.SimImportUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Test
@@ -50,7 +51,7 @@ class SimImportScreenTest {
     fun showCurrentAccount() = runComposeUiTest {
         val account = AccountInfoFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
-            accounts = listOf(account),
+            accounts = persistentListOf(account),
             currentAccount = account,
         )
 
@@ -64,7 +65,7 @@ class SimImportScreenTest {
         val account1 = AccountInfoFactory.build(name = "First")
         val account2 = AccountInfoFactory.build(name = "Second")
         fakeUiStateFlow.value = SimImportUiState(
-            accounts = listOf(account1, account2),
+            accounts = persistentListOf(account1, account2),
             currentAccount = account1,
         )
 
@@ -84,9 +85,9 @@ class SimImportScreenTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
-            accounts = listOf(account),
+            accounts = persistentListOf(account),
             currentAccount = account,
-            contactsToImport = listOf(SelectableItem(contact, false)),
+            contactsToImport = persistentListOf(SelectableItem(contact, false)),
         )
 
         setScreenContent()
@@ -100,9 +101,9 @@ class SimImportScreenTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
-            accounts = listOf(account),
+            accounts = persistentListOf(account),
             currentAccount = account,
-            contactsToImport = listOf(SelectableItem(contact, false)),
+            contactsToImport = persistentListOf(SelectableItem(contact, false)),
         )
 
         setScreenContent()
@@ -115,9 +116,9 @@ class SimImportScreenTest {
     fun checkTopBarActionsCanBeDisabled() = runComposeUiTest {
         val account = AccountInfoFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
-            accounts = listOf(account),
+            accounts = persistentListOf(account),
             currentAccount = account,
-            contactsToImport = emptyList(),
+            contactsToImport = persistentListOf(),
         )
 
         setScreenContent()

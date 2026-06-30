@@ -111,7 +111,11 @@ private fun SimContactInnerCell(
 }
 
 @Composable
-private fun itemClipShape(isFirst: Boolean, isLast: Boolean, isSelected: Boolean): Shape {
+private fun itemClipShape(
+    isFirst: Boolean,
+    isLast: Boolean,
+    isSelected: Boolean,
+): Shape {
     // All corners are the same in our shapes
     val cornerSize = MaterialTheme.shapes.extraSmall.topStart
     return RoundedCornerShape(

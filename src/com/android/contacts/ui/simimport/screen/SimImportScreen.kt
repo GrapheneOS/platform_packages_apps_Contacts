@@ -57,6 +57,8 @@ import com.android.contacts.ui.simimport.common.SimContactSelectableCell
 import com.android.contacts.ui.simimport.common.SimImportAccountPicker
 import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
 import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SimImportScreen(
@@ -197,8 +199,8 @@ private fun SimImportTopAppBar(
 
 @Composable
 private fun ContactsList(
-    contactsToImport: List<SelectableItem<SimContact>>,
-    contactsAlreadyImported: List<SimContact>,
+    contactsToImport: ImmutableList<SelectableItem<SimContact>>,
+    contactsAlreadyImported: ImmutableList<SimContact>,
     onContactClicked: (SimContact) -> Unit,
 ) {
     LazyColumn(
@@ -285,9 +287,9 @@ private fun SimImportScreenPreview() {
         SimImportContent(
             uiState = State(
                 isLoading = true,
-                accounts = listOf(account),
+                accounts = persistentListOf(account),
                 currentAccount = account,
-                contactsToImport = listOf(
+                contactsToImport = persistentListOf(
                     SelectableItem(
                         item = SimContact(1, "Anna Smith", null),
                         isSelected = false,
@@ -297,7 +299,7 @@ private fun SimImportScreenPreview() {
                         isSelected = true,
                     ),
                 ),
-                contactsAlreadyImported = listOf(
+                contactsAlreadyImported = persistentListOf(
                     SimContact(3, "Carl Smith", null),
                 ),
             ),
@@ -330,10 +332,10 @@ private fun SimImportScreenWithoutContactsPreview() {
         SimImportContent(
             uiState = State(
                 isLoading = false,
-                accounts = listOf(account),
+                accounts = persistentListOf(account),
                 currentAccount = account,
-                contactsToImport = emptyList(),
-                contactsAlreadyImported = emptyList(),
+                contactsToImport = persistentListOf(),
+                contactsAlreadyImported = persistentListOf(),
             ),
             onAction = {},
         )

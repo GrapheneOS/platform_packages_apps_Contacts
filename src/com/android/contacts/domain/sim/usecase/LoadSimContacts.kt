@@ -12,6 +12,8 @@ import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.util.concurrent.ContactsExecutors
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -40,8 +42,8 @@ internal class LoadSimContactsImpl @Inject constructor(
         val contacts = simContactDao.loadContactsForSim(sim).orEmpty()
         val accountsMap = simContactDao.findAccountsOfExistingSimContacts(contacts).orEmpty()
         return SimContactsResult(
-            contacts = contacts,
-            existingContactsInAccounts = accountsMap,
+            contacts = contacts.toImmutableList(),
+            existingContactsInAccounts = accountsMap.toImmutableMap(),
         )
     }
 }

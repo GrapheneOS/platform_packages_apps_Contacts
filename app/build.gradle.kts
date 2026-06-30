@@ -93,6 +93,7 @@ dependencies {
 
     implementation(libs.guava)
 
+    implementation(libs.kotlinx.immutable)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.material)
