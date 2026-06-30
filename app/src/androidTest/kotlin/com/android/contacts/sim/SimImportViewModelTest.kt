@@ -15,6 +15,8 @@ import com.android.contacts.tests.SimContactFactory
 import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.simimport.screen.SimImportViewModel
 import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -38,12 +40,12 @@ class SimImportViewModelTest {
             val account1 = AccountInfoFactory.build()
             val account2 = AccountInfoFactory.build()
             val viewModel = createViewModel(
-                loadAccounts = { flowOf(listOf(account1, account2)) },
+                loadAccounts = { flowOf(persistentListOf(account1, account2)) },
             )
             advanceUntilIdle()
 
             with(viewModel.uiState.value) {
-                assertEquals(listOf(account1, account2), accounts)
+                assertEquals(persistentListOf(account1, account2), accounts)
                 assertEquals(account1, currentAccount)
             }
         }
@@ -54,12 +56,12 @@ class SimImportViewModelTest {
         val account2 = AccountInfoFactory.build()
         val subject = createViewModel(
             getDefaultAccount = { account2.account },
-            loadAccounts = { flowOf(listOf(account1, account2)) },
+            loadAccounts = { flowOf(persistentListOf(account1, account2)) },
         )
         advanceUntilIdle()
 
         val state = subject.uiState.value
-        assertEquals(listOf(account1, account2), state.accounts)
+        assertEquals(persistentListOf(account1, account2), state.accounts)
         assertEquals(account2, state.currentAccount)
     }
 
@@ -68,8 +70,8 @@ class SimImportViewModelTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
         val subject = createViewModel(
-            loadAccounts = { flowOf(listOf(account)) },
-            loadSimContacts = { flowOf(SimContactsResult(contacts = listOf(contact))) },
+            loadAccounts = { flowOf(persistentListOf(account)) },
+            loadSimContacts = { flowOf(SimContactsResult(contacts = persistentListOf(contact))) },
         )
         advanceUntilIdle()
 
@@ -86,9 +88,9 @@ class SimImportViewModelTest {
         val contact1 = SimContactFactory.build()
         val contact2 = SimContactFactory.build()
         val subject = createViewModel(
-            loadAccounts = { flowOf(listOf(account)) },
+            loadAccounts = { flowOf(persistentListOf(account)) },
             loadSimContacts = {
-                flowOf(SimContactsResult(contacts = listOf(contact1, contact2)))
+                flowOf(SimContactsResult(contacts = persistentListOf(contact1, contact2)))
             },
         )
         advanceUntilIdle()
@@ -121,9 +123,9 @@ class SimImportViewModelTest {
         val contact1 = SimContactFactory.build()
         val contact2 = SimContactFactory.build()
         val subject = createViewModel(
-            loadAccounts = { flowOf(listOf(account)) },
+            loadAccounts = { flowOf(persistentListOf(account)) },
             loadSimContacts = {
-                flowOf(SimContactsResult(contacts = listOf(contact1, contact2)))
+                flowOf(SimContactsResult(contacts = persistentListOf(contact1, contact2)))
             },
         )
         advanceUntilIdle()
@@ -156,8 +158,8 @@ class SimImportViewModelTest {
         val account2 = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
         val subject = createViewModel(
-            loadAccounts = { flowOf(listOf(account1, account2)) },
-            loadSimContacts = { flowOf(SimContactsResult(contacts = listOf(contact))) },
+            loadAccounts = { flowOf(persistentListOf(account1, account2)) },
+            loadSimContacts = { flowOf(SimContactsResult(contacts = persistentListOf(contact))) },
         )
         advanceUntilIdle()
 
@@ -192,12 +194,16 @@ class SimImportViewModelTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
         val subject = createViewModel(
-            loadAccounts = { flowOf(listOf(account)) },
+            loadAccounts = { flowOf(persistentListOf(account)) },
             loadSimContacts = {
                 flowOf(
                     SimContactsResult(
-                        contacts = listOf(contact),
-                        existingContactsInAccounts = mapOf(account.account to setOf(contact)),
+                        contacts = persistentListOf(contact),
+                        existingContactsInAccounts = persistentMapOf(
+                            account.account to setOf(
+                                contact,
+                            ),
+                        ),
                     ),
                 )
             },
@@ -219,8 +225,8 @@ class SimImportViewModelTest {
         var startSimImportCall: Triple<Int?, List<SimContact>, AccountWithDataSet>? = null
         val subject = createViewModel(
             subscriptionId = subscriptionId,
-            loadAccounts = { flowOf(listOf(account)) },
-            loadSimContacts = { flowOf(SimContactsResult(contacts = listOf(contact))) },
+            loadAccounts = { flowOf(persistentListOf(account)) },
+            loadSimContacts = { flowOf(SimContactsResult(contacts = persistentListOf(contact))) },
             startSimImport = { a, b, c -> startSimImportCall = Triple(a, b, c) },
         )
 
@@ -229,7 +235,7 @@ class SimImportViewModelTest {
 
         startSimImportCall?.let { (callSubscriptionId, callContacts, callAccount) ->
             assertEquals(subscriptionId, callSubscriptionId)
-            assertEquals(listOf(contact), callContacts)
+            assertEquals(persistentListOf(contact), callContacts)
             assertEquals(account.account, callAccount)
         }
     }
@@ -241,7 +247,7 @@ class SimImportViewModelTest {
         loadAccounts: LoadAccounts = { emptyFlow() },
         startSimImport: StartSimImport = { _, _, _ -> },
     ) = SimImportViewModel(
-        SavedStateHandle(mapOf(UIIntents.EXTRA_SUBSCRIPTION_ID to subscriptionId)),
+        SavedStateHandle(persistentMapOf(UIIntents.EXTRA_SUBSCRIPTION_ID to subscriptionId)),
         getDefaultAccount = getDefaultAccount,
         loadSimContacts = loadSimContacts,
         loadAccounts = loadAccounts,

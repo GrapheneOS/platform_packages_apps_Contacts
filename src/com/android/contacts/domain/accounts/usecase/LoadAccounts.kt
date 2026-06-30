@@ -11,6 +11,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -18,7 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 internal fun interface LoadAccounts {
-    operator fun invoke(): Flow<List<AccountInfo>>
+    operator fun invoke(): Flow<ImmutableList<AccountInfo>>
 }
 
 internal class LoadAccountsImpl @Inject constructor(
@@ -28,7 +31,7 @@ internal class LoadAccountsImpl @Inject constructor(
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : LoadAccounts {
 
-    override operator fun invoke(): Flow<List<AccountInfo>> =
+    override operator fun invoke(): Flow<ImmutableList<AccountInfo>> =
         buildBroadcastReceiverFlow(IntentFilter(AccountTypeManager.BROADCAST_ACCOUNTS_CHANGED))
             .onStart { emit(Unit) }
             .map { load() }
@@ -40,15 +43,16 @@ internal class LoadAccountsImpl @Inject constructor(
                 .filterAccountsAsync(AccountTypeManager.insertableFilter(context))
                 .get()
                 .orEmpty()
+                .toImmutableList()
         } catch (e: InterruptedException) {
             Log.w(TAG, "Could not load accounts", e)
-            emptyList()
+            persistentListOf()
         } catch (e: ExecutionException) {
             Log.w(TAG, "Could not load accounts", e)
-            emptyList()
+            persistentListOf()
         } catch (e: CancellationException) {
             Log.w(TAG, "Could not load accounts", e)
-            emptyList()
+            persistentListOf()
         }
 
     companion object {

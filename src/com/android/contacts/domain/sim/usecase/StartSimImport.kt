@@ -6,11 +6,12 @@ import com.android.contacts.model.SimContact
 import com.android.contacts.model.account.AccountWithDataSet
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.collections.immutable.ImmutableList
 
 fun interface StartSimImport {
     operator fun invoke(
         subscriptionId: Int,
-        contacts: List<SimContact>,
+        contacts: ImmutableList<SimContact>,
         account: AccountWithDataSet,
     )
 }
@@ -21,7 +22,7 @@ internal class StartSimImportImpl @Inject constructor(
 ) : StartSimImport {
     override operator fun invoke(
         subscriptionId: Int,
-        contacts: List<SimContact>,
+        contacts: ImmutableList<SimContact>,
         account: AccountWithDataSet,
     ) {
         SimImportService.startImport(

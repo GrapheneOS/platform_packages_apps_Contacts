@@ -41,10 +41,12 @@ import com.android.contacts.model.account.AccountInfo
 import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SimImportAccountPicker(
-    list: List<AccountInfo>,
+    list: ImmutableList<AccountInfo>,
     current: AccountInfo?,
     onChange: (AccountInfo) -> Unit,
 ) {
@@ -165,7 +167,7 @@ private fun SimImportAccountPickerSinglePreview() {
     )
     ContactsPreviewColumn {
         SimImportAccountPicker(
-            list = listOf(account),
+            list = persistentListOf(account),
             current = account,
             onChange = {},
         )
@@ -197,7 +199,7 @@ private fun SimImportAccountPickerMultiplePreview() {
     )
     ContactsPreviewColumn {
         SimImportAccountPicker(
-            list = listOf(account1, account2),
+            list = persistentListOf(account1, account2),
             current = account1,
             onChange = {},
         )
