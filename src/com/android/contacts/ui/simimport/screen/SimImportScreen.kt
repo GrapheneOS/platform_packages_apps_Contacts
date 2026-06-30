@@ -1,4 +1,4 @@
-package com.android.contacts.sim.ui
+package com.android.contacts.ui.simimport.screen
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.background
@@ -30,6 +30,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,51 +40,76 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
 import com.android.contacts.model.SimContact
 import com.android.contacts.model.account.AccountDisplayInfo
 import com.android.contacts.model.account.AccountInfo
 import com.android.contacts.model.account.AccountWithDataSet
-import com.android.contacts.sim.ui.SimImportViewModel
-import com.android.contacts.ui.core.AppScaffold
-import com.android.contacts.ui.core.AppTheme
+import com.android.contacts.ui.common.model.SelectableItem
+import com.android.contacts.ui.core.ContactsPreviewTheme
+import com.android.contacts.ui.simimport.common.SimContactCell
+import com.android.contacts.ui.simimport.common.SimContactSelectableCell
+import com.android.contacts.ui.simimport.common.SimImportAccountPicker
+import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
+import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
 
 @Composable
-fun SimImportScreen(
-    state: SimImportViewModel.State,
-    onEvent: (SimImportViewModel.Event) -> Unit,
-    onClose: () -> Unit,
+internal fun SimImportScreen(
+    effectHandler: SimImportEffectHandler,
+    modifier: Modifier = Modifier,
+    screenModel: SimImportScreenModel = viewModel<SimImportViewModel>(),
+) {
+    val uiState by screenModel.uiState.collectAsStateWithLifecycle()
+    val effectHandler by rememberUpdatedState(effectHandler)
+
+    LaunchedEffect(screenModel, effectHandler) {
+        screenModel.effects.collect(effectHandler::handle)
+    }
+
+    SimImportContent(
+        uiState = uiState,
+        onAction = screenModel::onAction,
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun SimImportContent(
+    uiState: State,
+    onAction: (Action) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        Modifier
+        modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainer),
     ) {
         SimImportTopAppBar(
-            state = state,
-            onEvent = onEvent,
-            onClose = onClose
+            uiState = uiState,
+            onAction = onAction,
         )
 
-        state.currentAccount?.let {
+        uiState.currentAccount?.let {
             SimImportAccountPicker(
-                list = state.accounts,
-                current = state.currentAccount,
-                onChange = { onEvent(SimImportViewModel.Event.AccountChanged(it)) },
+                list = uiState.accounts,
+                current = uiState.currentAccount,
+                onChange = { onAction(Action.AccountChanged(it)) },
             )
         }
 
         Box(Modifier.fillMaxSize()) {
-            if (state.contactsToImport.any() || state.contactsAlreadyImported.any()) {
+            if (uiState.contactsToImport.any() || uiState.contactsAlreadyImported.any()) {
                 ContactsList(
-                    contactsToImport = state.contactsToImport,
-                    contactsAlreadyImported = state.contactsAlreadyImported,
-                    onContactClicked = { onEvent(SimImportViewModel.Event.ContactClicked(it)) },
+                    contactsToImport = uiState.contactsToImport,
+                    contactsAlreadyImported = uiState.contactsAlreadyImported,
+                    onContactClicked = { onAction(Action.ContactClicked(it)) },
                 )
-            } else if (!state.isLoading) {
+            } else if (!uiState.isLoading) {
                 Text(
                     text = stringResource(R.string.sim_import_empty_message),
                     style = MaterialTheme.typography.labelLarge,
@@ -94,7 +121,7 @@ fun SimImportScreen(
                 )
             }
 
-            if (state.isLoading) {
+            if (uiState.isLoading) {
                 CircularProgressIndicator(
                     Modifier
                         .align(Alignment.Center)
@@ -103,22 +130,17 @@ fun SimImportScreen(
             }
         }
     }
-
-    if (state.close) {
-        LaunchedEffect(Unit) { onClose() }
-    }
 }
 
 @Composable
 private fun SimImportTopAppBar(
-    state: SimImportViewModel.State,
-    onEvent: (SimImportViewModel.Event) -> Unit,
-    onClose: () -> Unit,
+    uiState: State,
+    onAction: (Action) -> Unit,
 ) {
     @OptIn(ExperimentalMaterial3Api::class)
     TopAppBar(
         navigationIcon = {
-            IconButton(onClick = onClose) {
+            IconButton(onClick = { onAction(Action.CloseClicked) }) {
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = stringResource(
@@ -129,8 +151,8 @@ private fun SimImportTopAppBar(
         },
         title = {
             Text(
-                text = if (state.selectedContactsCount > 0) {
-                    state.selectedContactsCount.toString()
+                text = if (uiState.selectedContactsCount > 0) {
+                    uiState.selectedContactsCount.toString()
                 } else {
                     stringResource(R.string.sim_import_title_none_selected)
                 },
@@ -138,8 +160,8 @@ private fun SimImportTopAppBar(
         },
         actions = {
             IconButton(
-                onClick = { onEvent(SimImportViewModel.Event.SelectAllClicked) },
-                enabled = state.isSelectAllEnabled,
+                onClick = { onAction(Action.SelectAllClicked) },
+                enabled = uiState.isSelectAllEnabled,
                 modifier = Modifier.testTag(TEST_TAG_SIM_IMPORT_SELECT_ALL),
             ) {
                 Icon(
@@ -148,8 +170,8 @@ private fun SimImportTopAppBar(
                 )
             }
             IconButton(
-                onClick = { onEvent(SimImportViewModel.Event.DeselectAllClicked) },
-                enabled = state.isDeselectAllEnabled,
+                onClick = { onAction(Action.DeselectAllClicked) },
+                enabled = uiState.isDeselectAllEnabled,
                 modifier = Modifier.testTag(TEST_TAG_SIM_IMPORT_DESELECT_ALL),
             ) {
                 Icon(
@@ -160,8 +182,8 @@ private fun SimImportTopAppBar(
                 )
             }
             TextButton(
-                onClick = { onEvent(SimImportViewModel.Event.ImportClicked) },
-                enabled = state.isImportEnabled,
+                onClick = { onAction(Action.ImportClicked) },
+                enabled = uiState.isImportEnabled,
                 modifier = Modifier.testTag(TEST_TAG_SIM_IMPORT_IMPORT_BUTTON),
             ) {
                 Text(stringResource(R.string.sim_import_button_text))
@@ -239,9 +261,9 @@ private fun ContactsList(
     }
 }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimImportScreenPreview() {
+private fun SimImportScreenPreview() {
     val resources = LocalResources.current
     val context = LocalContext.current
     val icon = ResourcesCompat.getDrawable(
@@ -259,37 +281,34 @@ fun SimImportScreenPreview() {
         ),
         null,
     )
-    AppTheme {
-        AppScaffold {
-            SimImportScreen(
-                state = SimImportViewModel.State(
-                    isLoading = true,
-                    accounts = listOf(account),
-                    currentAccount = account,
-                    contactsToImport = listOf(
-                        SelectableItem(
-                            item = SimContact(1, "Anna Smith", null),
-                            isSelected = false,
-                        ),
-                        SelectableItem(
-                            item = SimContact(2, "Bob Smith", null),
-                            isSelected = true,
-                        ),
+    ContactsPreviewTheme {
+        SimImportContent(
+            uiState = State(
+                isLoading = true,
+                accounts = listOf(account),
+                currentAccount = account,
+                contactsToImport = listOf(
+                    SelectableItem(
+                        item = SimContact(1, "Anna Smith", null),
+                        isSelected = false,
                     ),
-                    contactsAlreadyImported = listOf(
-                        SimContact(3, "Carl Smith", null),
+                    SelectableItem(
+                        item = SimContact(2, "Bob Smith", null),
+                        isSelected = true,
                     ),
                 ),
-                onEvent = {},
-                onClose = {},
-            )
-        }
+                contactsAlreadyImported = listOf(
+                    SimContact(3, "Carl Smith", null),
+                ),
+            ),
+            onAction = {},
+        )
     }
 }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimImportScreenWithoutContactsPreview() {
+private fun SimImportScreenWithoutContactsPreview() {
     val resources = LocalResources.current
     val context = LocalContext.current
     val icon = ResourcesCompat.getDrawable(
@@ -307,20 +326,17 @@ fun SimImportScreenWithoutContactsPreview() {
         ),
         null,
     )
-    AppTheme {
-        AppScaffold {
-            SimImportScreen(
-                state = SimImportViewModel.State(
-                    isLoading = false,
-                    accounts = listOf(account),
-                    currentAccount = account,
-                    contactsToImport = emptyList(),
-                    contactsAlreadyImported = emptyList(),
-                ),
-                onEvent = {},
-                onClose = {},
-            )
-        }
+    ContactsPreviewTheme {
+        SimImportContent(
+            uiState = State(
+                isLoading = false,
+                accounts = listOf(account),
+                currentAccount = account,
+                contactsToImport = emptyList(),
+                contactsAlreadyImported = emptyList(),
+            ),
+            onAction = {},
+        )
     }
 }
 

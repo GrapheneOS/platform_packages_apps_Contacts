@@ -1,4 +1,4 @@
-package com.android.contacts.sim.ui
+package com.android.contacts.ui.simimport.common
 
 import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.Image
@@ -32,18 +32,18 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.android.contacts.R
 import com.android.contacts.model.account.AccountDisplayInfo
 import com.android.contacts.model.account.AccountInfo
 import com.android.contacts.model.account.AccountWithDataSet
-import com.android.contacts.ui.core.AppTheme
+import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
-fun SimImportAccountPicker(
+internal fun SimImportAccountPicker(
     list: List<AccountInfo>,
     current: AccountInfo?,
     onChange: (AccountInfo) -> Unit,
@@ -129,7 +129,7 @@ private fun ExposedDropdownMenuBoxScope.AccountTextField(
 }
 
 @Composable
-fun AccountIcon(account: AccountInfo) {
+internal fun AccountIcon(account: AccountInfo) {
     Image(
         painter = account.icon?.let { rememberDrawablePainter(it) }
             ?: painterResource(R.drawable.accounts_empty),
@@ -143,9 +143,9 @@ fun AccountIcon(account: AccountInfo) {
     )
 }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimImportAccountPickerSinglePreview() {
+private fun SimImportAccountPickerSinglePreview() {
     val resources = LocalResources.current
     val context = LocalContext.current
     val icon = ResourcesCompat.getDrawable(
@@ -163,7 +163,7 @@ fun SimImportAccountPickerSinglePreview() {
         ),
         null,
     )
-    AppTheme {
+    ContactsPreviewColumn {
         SimImportAccountPicker(
             list = listOf(account),
             current = account,
@@ -172,9 +172,9 @@ fun SimImportAccountPickerSinglePreview() {
     }
 }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimImportAccountPickerMultiplePreview() {
+private fun SimImportAccountPickerMultiplePreview() {
     val account1 = AccountInfo(
         AccountDisplayInfo(
             AccountWithDataSet("user@example.org", null, null),
@@ -195,7 +195,7 @@ fun SimImportAccountPickerMultiplePreview() {
         ),
         null,
     )
-    AppTheme {
+    ContactsPreviewColumn {
         SimImportAccountPicker(
             list = listOf(account1, account2),
             current = account1,

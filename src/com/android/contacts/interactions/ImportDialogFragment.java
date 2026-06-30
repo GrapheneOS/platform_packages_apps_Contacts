@@ -46,7 +46,8 @@ import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.SimCard;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
-import com.android.contacts.sim.ui.SimImportActivity;
+import com.android.contacts.ui.UIIntents;
+import com.android.contacts.ui.simimport.SimImportActivity;
 import com.android.contacts.util.AccountSelectionUtil;
 import com.google.common.util.concurrent.Futures;
 
@@ -249,7 +250,7 @@ public class ImportDialogFragment extends DialogFragment {
 
     private void handleSimImportRequest(SimCard sim) {
         startActivity(
-                SimImportActivity.Companion.getIntent(
+                UIIntents.INSTANCE.getSimImportIntent(
                         getActivity(),
                         Integer.valueOf(sim.getSubscriptionId()
                         )
