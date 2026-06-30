@@ -521,7 +521,7 @@
             android:theme="@style/BackgroundOnlyTheme"/>
 
         <activity
-            android:name=".sim.ui.SimImportActivity"
+            android:name=".ui.simimport.SimImportActivity"
             android:label="@string/sim_import_title"
             android:theme="@style/Theme.Compose"/>
 

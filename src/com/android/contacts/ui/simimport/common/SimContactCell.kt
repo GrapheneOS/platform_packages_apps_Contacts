@@ -1,4 +1,4 @@
-package com.android.contacts.sim.ui
+package com.android.contacts.ui.simimport.common
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,13 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.android.contacts.model.SimContact
-import com.android.contacts.ui.core.AppTheme
+import com.android.contacts.ui.common.model.SelectableItem
+import com.android.contacts.ui.core.ContactsPreviewColumn
 
 @Composable
-fun SimContactCell(
+internal fun SimContactCell(
     contact: SimContact,
     isFirst: Boolean,
     isLast: Boolean,
@@ -37,7 +38,7 @@ fun SimContactCell(
 }
 
 @Composable
-fun SimContactSelectableCell(
+internal fun SimContactSelectableCell(
     item: SelectableItem<SimContact>,
     isFirst: Boolean,
     isLast: Boolean,
@@ -54,7 +55,7 @@ fun SimContactSelectableCell(
 }
 
 @Composable
-fun SimContactInnerCell(
+private fun SimContactInnerCell(
     contact: SimContact,
     isSelectable: Boolean = false,
     isSelected: Boolean = false,
@@ -134,10 +135,10 @@ private val SimContact.label
             ""
         }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimContactCellPreview() {
-    AppTheme {
+private fun SimContactCellPreview() {
+    ContactsPreviewColumn {
         SimContactCell(
             contact = SimContact(1, "Anna Smith", null),
             isFirst = false,
@@ -146,10 +147,10 @@ fun SimContactCellPreview() {
     }
 }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimContactCellDeselectedPreview() {
-    AppTheme {
+private fun SimContactCellDeselectedPreview() {
+    ContactsPreviewColumn {
         SimContactSelectableCell(
             SelectableItem(
                 item = SimContact(1, "Anna Smith", null),
@@ -162,10 +163,10 @@ fun SimContactCellDeselectedPreview() {
     }
 }
 
+@PreviewLightDark
 @Composable
-@Preview
-fun SimContactCellSelectedPreview() {
-    AppTheme {
+private fun SimContactCellSelectedPreview() {
+    ContactsPreviewColumn {
         SimContactSelectableCell(
             SelectableItem(
                 item = SimContact(1, "Anna Smith", null),

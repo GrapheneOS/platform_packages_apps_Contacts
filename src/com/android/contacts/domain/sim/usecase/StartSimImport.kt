@@ -1,12 +1,25 @@
-package com.android.contacts.sim
+package com.android.contacts.domain.sim.usecase
 
 import android.content.Context
 import com.android.contacts.SimImportService
 import com.android.contacts.model.SimContact
 import com.android.contacts.model.account.AccountWithDataSet
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class StartSimImport(private val context: Context) {
+fun interface StartSimImport {
     operator fun invoke(
+        subscriptionId: Int,
+        contacts: List<SimContact>,
+        account: AccountWithDataSet,
+    )
+}
+
+internal class StartSimImportImpl @Inject constructor(
+    @param:ApplicationContext
+    private val context: Context,
+) : StartSimImport {
+    override operator fun invoke(
         subscriptionId: Int,
         contacts: List<SimContact>,
         account: AccountWithDataSet,

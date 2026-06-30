@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.telecom.TelecomManager
 import android.telephony.TelephonyManager
 import com.android.contacts.list.ContactListFilterController
+import com.android.contacts.util.concurrent.ContactsExecutors
 import com.android.contacts.util.core.CurrentTimeProvider
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asCoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -94,5 +96,12 @@ internal class CoreProvidesModule {
     @Reusable
     fun provideCurrentTimeProvider(): CurrentTimeProvider {
         return CurrentTimeProvider { System.currentTimeMillis() }
+    }
+
+    @Provides
+    @Reusable
+    @SimReadDispatcher
+    fun provideSimReadDispatcher(): CoroutineDispatcher {
+        return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
     }
 }

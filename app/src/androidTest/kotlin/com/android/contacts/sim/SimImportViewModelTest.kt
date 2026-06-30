@@ -1,64 +1,64 @@
 package com.android.contacts.sim
 
+import androidx.lifecycle.SavedStateHandle
+import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
+import com.android.contacts.domain.accounts.usecase.LoadAccounts
+import com.android.contacts.domain.sim.model.SimContactsResult
+import com.android.contacts.domain.sim.usecase.LoadSimContacts
+import com.android.contacts.domain.sim.usecase.StartSimImport
 import com.android.contacts.model.SimCard
 import com.android.contacts.model.SimContact
-import com.android.contacts.model.account.AccountInfo
 import com.android.contacts.model.account.AccountWithDataSet
-import com.android.contacts.sim.ui.SimImportViewModel
 import com.android.contacts.tests.AccountInfoFactory
+import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.SimContactFactory
-import kotlinx.coroutines.Dispatchers
+import com.android.contacts.ui.UIIntents
+import com.android.contacts.ui.simimport.screen.SimImportViewModel
+import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
-import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SimImportViewModelTest {
 
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun currentAccountIsFirstAccountWhenThereIsNoDefault() = runTest {
-        val account1 = AccountInfoFactory.build()
-        val account2 = AccountInfoFactory.build()
-        val subject = buildViewModel(
-            loadAccounts = { flowOf(listOf(account1, account2)) },
-        )
+    fun currentAccountIsFirstAccountWhenThereIsNoDefault() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val account1 = AccountInfoFactory.build()
+            val account2 = AccountInfoFactory.build()
+            val viewModel = createViewModel(
+                loadAccounts = { flowOf(listOf(account1, account2)) },
+            )
+            advanceUntilIdle()
 
-        val state = subject.state.value
-        assertEquals(listOf(account1, account2), state.accounts)
-        assertEquals(account1, state.currentAccount)
-    }
+            with(viewModel.uiState.value) {
+                assertEquals(listOf(account1, account2), accounts)
+                assertEquals(account1, currentAccount)
+            }
+        }
 
     @Test
     fun defaultsToDefaultAccount() = runTest {
         val account1 = AccountInfoFactory.build()
         val account2 = AccountInfoFactory.build()
-        val subject = buildViewModel(
+        val subject = createViewModel(
             getDefaultAccount = { account2.account },
             loadAccounts = { flowOf(listOf(account1, account2)) },
         )
+        advanceUntilIdle()
 
-        val state = subject.state.value
+        val state = subject.uiState.value
         assertEquals(listOf(account1, account2), state.accounts)
         assertEquals(account2, state.currentAccount)
     }
@@ -67,12 +67,13 @@ class SimImportViewModelTest {
     fun contactsAreSelectedByDefault() = runTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
-        val subject = buildViewModel(
+        val subject = createViewModel(
             loadAccounts = { flowOf(listOf(account)) },
-            loadSimContacts = { flowOf(LoadSimContacts.Result(contacts = listOf(contact))) },
+            loadSimContacts = { flowOf(SimContactsResult(contacts = listOf(contact))) },
         )
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertEquals(1, contactsToImport.size)
             assertEquals(contact, contactsToImport.first().item)
             assertTrue(contactsToImport.first().isSelected)
@@ -84,28 +85,31 @@ class SimImportViewModelTest {
         val account = AccountInfoFactory.build()
         val contact1 = SimContactFactory.build()
         val contact2 = SimContactFactory.build()
-        val subject = buildViewModel(
+        val subject = createViewModel(
             loadAccounts = { flowOf(listOf(account)) },
             loadSimContacts = {
-                flowOf(LoadSimContacts.Result(contacts = listOf(contact1, contact2)))
+                flowOf(SimContactsResult(contacts = listOf(contact1, contact2)))
             },
         )
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertTrue(contactsToImport.first().isSelected)
             assertTrue(contactsToImport.last().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.ContactClicked(contact1))
+        subject.onAction(Action.ContactClicked(contact1))
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertFalse(contactsToImport.first().isSelected)
             assertTrue(contactsToImport.last().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.ContactClicked(contact1))
+        subject.onAction(Action.ContactClicked(contact1))
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertTrue(contactsToImport.first().isSelected)
             assertTrue(contactsToImport.last().isSelected)
         }
@@ -116,28 +120,31 @@ class SimImportViewModelTest {
         val account = AccountInfoFactory.build()
         val contact1 = SimContactFactory.build()
         val contact2 = SimContactFactory.build()
-        val subject = buildViewModel(
+        val subject = createViewModel(
             loadAccounts = { flowOf(listOf(account)) },
             loadSimContacts = {
-                flowOf(LoadSimContacts.Result(contacts = listOf(contact1, contact2)))
+                flowOf(SimContactsResult(contacts = listOf(contact1, contact2)))
             },
         )
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertTrue(contactsToImport.first().isSelected)
             assertTrue(contactsToImport.last().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.DeselectAllClicked)
+        subject.onAction(Action.DeselectAllClicked)
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertFalse(contactsToImport.first().isSelected)
             assertFalse(contactsToImport.last().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.SelectAllClicked)
+        subject.onAction(Action.SelectAllClicked)
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertTrue(contactsToImport.first().isSelected)
             assertTrue(contactsToImport.last().isSelected)
         }
@@ -148,30 +155,34 @@ class SimImportViewModelTest {
         val account1 = AccountInfoFactory.build()
         val account2 = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
-        val subject = buildViewModel(
+        val subject = createViewModel(
             loadAccounts = { flowOf(listOf(account1, account2)) },
-            loadSimContacts = { flowOf(LoadSimContacts.Result(contacts = listOf(contact))) },
+            loadSimContacts = { flowOf(SimContactsResult(contacts = listOf(contact))) },
         )
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertTrue(contactsToImport.first().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.ContactClicked(contact))
+        subject.onAction(Action.ContactClicked(contact))
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertFalse(contactsToImport.first().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.AccountChanged(account2))
+        subject.onAction(Action.AccountChanged(account2))
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertTrue(contactsToImport.first().isSelected)
         }
 
-        subject.onEvent(SimImportViewModel.Event.AccountChanged(account1))
+        subject.onAction(Action.AccountChanged(account1))
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertFalse(contactsToImport.first().isSelected)
         }
     }
@@ -180,19 +191,20 @@ class SimImportViewModelTest {
     fun contactsAlreadyImportedAreSeparate() = runTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
-        val subject = buildViewModel(
+        val subject = createViewModel(
             loadAccounts = { flowOf(listOf(account)) },
             loadSimContacts = {
                 flowOf(
-                    LoadSimContacts.Result(
+                    SimContactsResult(
                         contacts = listOf(contact),
                         existingContactsInAccounts = mapOf(account.account to setOf(contact)),
                     ),
                 )
             },
         )
+        advanceUntilIdle()
 
-        with(subject.state.value) {
+        with(subject.uiState.value) {
             assertEquals(0, contactsToImport.size)
             assertEquals(1, contactsAlreadyImported.size)
             assertEquals(contact, contactsAlreadyImported.first())
@@ -205,14 +217,15 @@ class SimImportViewModelTest {
         val account = AccountInfoFactory.build()
         val contact = SimContactFactory.build()
         var startSimImportCall: Triple<Int?, List<SimContact>, AccountWithDataSet>? = null
-        val subject = buildViewModel(
+        val subject = createViewModel(
             subscriptionId = subscriptionId,
             loadAccounts = { flowOf(listOf(account)) },
-            loadSimContacts = { flowOf(LoadSimContacts.Result(contacts = listOf(contact))) },
+            loadSimContacts = { flowOf(SimContactsResult(contacts = listOf(contact))) },
             startSimImport = { a, b, c -> startSimImportCall = Triple(a, b, c) },
         )
 
-        subject.onEvent(SimImportViewModel.Event.ImportClicked)
+        subject.onAction(Action.ImportClicked)
+        advanceUntilIdle()
 
         startSimImportCall?.let { (callSubscriptionId, callContacts, callAccount) ->
             assertEquals(subscriptionId, callSubscriptionId)
@@ -221,14 +234,14 @@ class SimImportViewModelTest {
         }
     }
 
-    private fun buildViewModel(
+    private fun createViewModel(
         subscriptionId: Int = SimCard.NO_SUBSCRIPTION_ID,
-        getDefaultAccount: () -> AccountWithDataSet? = { null },
-        loadSimContacts: (Int) -> Flow<LoadSimContacts.Result> = { emptyFlow() },
-        loadAccounts: () -> Flow<List<AccountInfo>> = { emptyFlow() },
-        startSimImport: (Int, List<SimContact>, AccountWithDataSet) -> Unit = { _, _, _ -> },
+        getDefaultAccount: GetDefaultAccount = { null },
+        loadSimContacts: LoadSimContacts = { emptyFlow() },
+        loadAccounts: LoadAccounts = { emptyFlow() },
+        startSimImport: StartSimImport = { _, _, _ -> },
     ) = SimImportViewModel(
-        subscriptionId = subscriptionId,
+        SavedStateHandle(mapOf(UIIntents.EXTRA_SUBSCRIPTION_ID to subscriptionId)),
         getDefaultAccount = getDefaultAccount,
         loadSimContacts = loadSimContacts,
         loadAccounts = loadAccounts,
