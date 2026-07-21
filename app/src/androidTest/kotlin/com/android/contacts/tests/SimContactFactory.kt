@@ -2,7 +2,6 @@ package com.android.contacts.tests
 
 import com.android.contacts.model.SimContact
 import kotlin.random.Random
-import kotlin.random.nextUInt
 
 object SimContactFactory {
     fun build(

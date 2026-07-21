@@ -1,4 +1,4 @@
-package com.android.contacts.domain.sim
+package com.android.contacts.di.sim
 
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
 import com.android.contacts.domain.sim.usecase.LoadSimContactsImpl

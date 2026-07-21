@@ -3,7 +3,7 @@ package com.android.contacts.ui.simimport.common
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
@@ -26,14 +26,16 @@ internal fun SimContactCell(
     contact: SimContact,
     isFirst: Boolean,
     isLast: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     SimContactInnerCell(
         contact = contact,
-        isSelectable = false,
-        isSelected = false,
         isFirst = isFirst,
         isLast = isLast,
-        onClick = null,
+        modifier = modifier,
+        isSelectable = false,
+        isSelected = false,
+        onSelectedChange = null,
     )
 }
 
@@ -42,26 +44,29 @@ internal fun SimContactSelectableCell(
     item: SelectableItem<SimContact>,
     isFirst: Boolean,
     isLast: Boolean,
-    onClick: (() -> Unit),
+    onSelectedChange: ((Boolean) -> Unit),
+    modifier: Modifier = Modifier,
 ) {
     SimContactInnerCell(
         contact = item.item,
-        isSelectable = true,
-        isSelected = item.isSelected,
         isFirst = isFirst,
         isLast = isLast,
-        onClick = onClick,
+        modifier = modifier,
+        isSelectable = true,
+        isSelected = item.isSelected,
+        onSelectedChange = onSelectedChange,
     )
 }
 
 @Composable
 private fun SimContactInnerCell(
     contact: SimContact,
-    isSelectable: Boolean = false,
-    isSelected: Boolean = false,
     isFirst: Boolean,
     isLast: Boolean,
-    onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    isSelectable: Boolean = false,
+    isSelected: Boolean = false,
+    onSelectedChange: ((Boolean) -> Unit)? = null,
 ) {
     Surface(
         color = if (isSelected || !isSelectable) {
@@ -74,17 +79,18 @@ private fun SimContactInnerCell(
             isLast = isLast,
             isSelected = isSelected,
         ),
+        modifier = modifier,
     ) {
         Row(
             Modifier
                 .fillMaxWidth()
                 .run {
-                    if (isSelectable && onClick != null) {
-                        selectable(
-                            selected = isSelected,
+                    if (isSelectable && onSelectedChange != null) {
+                        toggleable(
+                            value = isSelected,
                             enabled = true,
                             role = Role.Checkbox,
-                            onClick = onClick,
+                            onValueChange = onSelectedChange,
                         )
                     } else {
                         this
@@ -162,7 +168,7 @@ private fun SimContactCellDeselectedPreview() {
             ),
             isFirst = false,
             isLast = false,
-            onClick = {},
+            onSelectedChange = {},
         )
     }
 }
@@ -178,7 +184,7 @@ private fun SimContactCellSelectedPreview() {
             ),
             isFirst = false,
             isLast = false,
-            onClick = {},
+            onSelectedChange = {},
         )
     }
 }

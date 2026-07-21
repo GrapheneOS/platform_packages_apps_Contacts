@@ -188,10 +188,6 @@
 
     <dimen name="contact_browser_list_item_height">56dp</dimen>
 
-    <!-- Default activity margins, per the Android Material Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-
     <dimen name="nav_new_badge_corners">3dp</dimen>
     <dimen name="nav_new_badge_vertical_pad">2dp</dimen>
     <dimen name="nav_new_badge_horizontal_pad">5dp</dimen>

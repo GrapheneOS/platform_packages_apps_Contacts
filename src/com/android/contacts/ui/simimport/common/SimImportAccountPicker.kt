@@ -1,6 +1,5 @@
 package com.android.contacts.ui.simimport.common
 
-import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,19 +35,20 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.android.contacts.R
-import com.android.contacts.model.account.AccountDisplayInfo
-import com.android.contacts.model.account.AccountInfo
-import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.simimport.screen.model.AccountUiModel
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SimImportAccountPicker(
-    list: ImmutableList<AccountInfo>,
-    current: AccountInfo?,
-    onChange: (AccountInfo) -> Unit,
+    list: ImmutableList<AccountUiModel>,
+    current: AccountUiModel?,
+    onChange: (AccountUiModel) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val current = current ?: return
     val canChangeAccounts = list.size > 1
@@ -58,8 +58,8 @@ internal fun SimImportAccountPicker(
     ExposedDropdownMenuBox(
         expanded = isExpanded,
         onExpandedChange = { isExpanded = it },
-        modifier = Modifier
-            .testTag(TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER)
+        modifier = modifier
+            .testTag(SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG)
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
     ) {
@@ -71,7 +71,7 @@ internal fun SimImportAccountPicker(
         ) {
             list.forEach { account ->
                 DropdownMenuItem(
-                    text = { Text(account.nameLabel?.toString().orEmpty()) },
+                    text = { Text(account.name.orEmpty()) },
                     onClick = {
                         onChange(account)
                         isExpanded = false
@@ -87,7 +87,7 @@ internal fun SimImportAccountPicker(
                         }
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    modifier = Modifier.testTag(TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM),
+                    modifier = Modifier.testTag(SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG),
                 )
             }
         }
@@ -97,11 +97,11 @@ internal fun SimImportAccountPicker(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExposedDropdownMenuBoxScope.AccountTextField(
-    current: AccountInfo,
+    current: AccountUiModel,
     canChangeAccounts: Boolean,
     isExpanded: Boolean,
 ) {
-    val currentAccountLabel = current.nameLabel?.toString().orEmpty()
+    val currentAccountLabel = current.name.orEmpty()
     OutlinedTextField(
         value = currentAccountLabel,
         onValueChange = {},
@@ -131,7 +131,7 @@ private fun ExposedDropdownMenuBoxScope.AccountTextField(
 }
 
 @Composable
-internal fun AccountIcon(account: AccountInfo) {
+internal fun AccountIcon(account: AccountUiModel) {
     Image(
         painter = account.icon?.let { rememberDrawablePainter(it) }
             ?: painterResource(R.drawable.accounts_empty),
@@ -155,16 +155,7 @@ private fun SimImportAccountPickerSinglePreview() {
         R.drawable.logo_quick_contacts_color_44in48dp,
         context.theme,
     )
-    val account = AccountInfo(
-        AccountDisplayInfo(
-            AccountWithDataSet("user@example.org", null, null),
-            "user@example.org",
-            null,
-            icon,
-            false,
-        ),
-        null,
-    )
+    val account = AccountUiModel("user@example.org")
     ContactsPreviewColumn {
         SimImportAccountPicker(
             list = persistentListOf(account),
@@ -177,26 +168,8 @@ private fun SimImportAccountPickerSinglePreview() {
 @PreviewLightDark
 @Composable
 private fun SimImportAccountPickerMultiplePreview() {
-    val account1 = AccountInfo(
-        AccountDisplayInfo(
-            AccountWithDataSet("user@example.org", null, null),
-            "user@example.org",
-            null,
-            null,
-            false,
-        ),
-        null,
-    )
-    val account2 = AccountInfo(
-        AccountDisplayInfo(
-            AccountWithDataSet("another@example.org", null, null),
-            "another@example.org",
-            null,
-            null,
-            false,
-        ),
-        null,
-    )
+    val account1 = AccountUiModel("user@example.org")
+    val account2 = AccountUiModel("another@example.org")
     ContactsPreviewColumn {
         SimImportAccountPicker(
             list = persistentListOf(account1, account2),
@@ -205,9 +178,3 @@ private fun SimImportAccountPickerMultiplePreview() {
         )
     }
 }
-
-@VisibleForTesting
-const val TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER = "sim_import_account_picker"
-
-@VisibleForTesting
-const val TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM = "sim_import_account_picker_menu_item"

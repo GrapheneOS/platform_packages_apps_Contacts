@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Importuj"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Wybierz kontakty"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"Brak kontaktów na karcie SIM"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Kontakt znajduje się już na Twojej liście"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{Zaimportowano # kontakt z karty SIM}few{Zaimportowano # kontakty z karty SIM}many{Zaimportowano # kontaktów z karty SIM}other{Zaimportowano # kontaktu z karty SIM}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Nie udało się zaimportować kontaktów z karty SIM"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Importuj z karty SIM"</string>

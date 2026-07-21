@@ -6,6 +6,9 @@ complexity:
   LongParameterList:
     ignoreDefaultParameters: true
   TooManyFunctions:
+    allowedFunctionsPerClass: 60
+    allowedFunctionsPerFile: 15
+    allowedFunctionsPerInterface: 50
     ignoreAnnotatedFunctions:
       - Preview
 
@@ -15,11 +18,15 @@ naming:
       - Composable
 
 style:
+  ForbiddenComment:
+    active: false
+
   MagicNumber:
     ignoreCompanionObjectPropertyDeclaration: true
     ignorePropertyDeclaration: true
     ignoreAnnotated:
       - Composable
+
   UnusedPrivateFunction:
     ignoreAnnotated:
       - Preview

@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"درآمد کریں"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"رابطے منتخب کریں"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"‏آپ کے SIM کارڈ پر کوئی رابطے نہیں ہیں"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"رابطہ پہلے سے آپ کی فہرست میں موجود ہے"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{‏# SIM کا رابطہ درآمد کیا گیا}other{‏# SIM کے رابطے در آمد کیے گئے}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"‏SIM رابطے درآمد کرنے میں ناکام"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"‏SIM سے درآمد کریں"</string>

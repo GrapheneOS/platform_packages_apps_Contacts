@@ -18,7 +18,6 @@ package com.android.contacts.model.account;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.StringRes;
-import androidx.compose.runtime.Immutable;
 
 import android.text.TextUtils;
 
@@ -28,7 +27,6 @@ import android.text.TextUtils;
  * The raw values for name and type in AccountWithDataSet are not always (or even usually)
  * appropriate for direct display to the user.
  */
-@Immutable
 public class AccountDisplayInfo {
     private final AccountWithDataSet mSource;
 
