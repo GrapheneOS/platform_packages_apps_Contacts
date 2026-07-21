@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Імпортувати"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Вибрати контакти"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"На SIM-карті немає контактів"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Контакт уже є у вашому списку"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{Імпортовано # контакт із SIM-карти}one{Імпортовано # контакт із SIM-карти}few{Імпортовано # контакти із SIM-карти}many{Імпортовано # контактів із SIM-карти}other{Імпортовано # контакта із SIM-карти}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Не вдалось імпортувати контакти із SIM-карти"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Імпорт із SIM-карти"</string>

@@ -1,4 +1,4 @@
-package com.android.contacts.domain.common
+package com.android.contacts.domain.util
 
 import android.content.BroadcastReceiver
 import android.content.Context

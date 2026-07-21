@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"ഇമ്പോർട്ടുചെയ്യുക"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"കോണ്‍‌ടാക്റ്റുകൾ തിരഞ്ഞെടുക്കുക"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"നിങ്ങളുടെ സിം കാർഡിൽ കോൺടാക്‌റ്റുകളില്ല"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"കോൺടാക്‌റ്റ്‌ നിലവിൽ നിങ്ങളുടെ ലിസ്‌റ്റിലുണ്ട്‌"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# സിം കോൺടാക്റ്റ് ഇമ്പോർട്ട് ചെയ്‌തു}other{# സിം കോൺടാക്റ്റുകൾ ഇമ്പോർട്ട് ചെയ്‌തു}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"സിം കോൺടാക്‌റ്റുകൾ ഇമ്പോർട്ടുചെയ്യാനായില്ല"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"സിം കാർഡിൽ നിന്ന്‌ ഇമ്പോർട്ടുചെയ്യുക"</string>

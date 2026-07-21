@@ -17,8 +17,6 @@ package com.android.contacts.model.account;
 
 import android.graphics.drawable.Drawable;
 
-import androidx.compose.runtime.Immutable;
-
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -31,7 +29,6 @@ import java.util.Objects;
 /**
  * Holds an {@link AccountWithDataSet} and the corresponding {@link AccountType} for an account.
  */
-@Immutable
 public class AccountInfo {
 
     private final AccountDisplayInfo mDisplayInfo;

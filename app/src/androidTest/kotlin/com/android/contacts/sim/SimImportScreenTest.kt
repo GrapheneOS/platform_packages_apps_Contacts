@@ -10,19 +10,18 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import com.android.contacts.tests.AccountInfoFactory
+import com.android.contacts.tests.AccountUiModelFactory
 import com.android.contacts.tests.SimContactFactory
 import com.android.contacts.ui.common.model.SelectableItem
-import com.android.contacts.ui.core.AppScaffold
-import com.android.contacts.ui.simimport.common.TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER
-import com.android.contacts.ui.simimport.common.TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM
 import com.android.contacts.ui.simimport.screen.SimImportEffectHandler
 import com.android.contacts.ui.simimport.screen.SimImportScreen
 import com.android.contacts.ui.simimport.screen.SimImportScreenModel
-import com.android.contacts.ui.simimport.screen.TEST_TAG_SIM_IMPORT_CONTACTS_TO_IMPORT_TITLE
-import com.android.contacts.ui.simimport.screen.TEST_TAG_SIM_IMPORT_DESELECT_ALL
-import com.android.contacts.ui.simimport.screen.TEST_TAG_SIM_IMPORT_IMPORT_BUTTON
-import com.android.contacts.ui.simimport.screen.TEST_TAG_SIM_IMPORT_SELECT_ALL
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_CONTACTS_TO_IMPORT_TITLE_TEST_TAG
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_DESELECT_ALL_TEST_TAG
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_IMPORT_BUTTON_TEST_TAG
+import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_SELECT_ALL_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SimImportAction
 import com.android.contacts.ui.simimport.screen.model.SimImportUiState
 import io.mockk.every
@@ -49,7 +48,7 @@ class SimImportScreenTest {
 
     @Test
     fun showCurrentAccount() = runComposeUiTest {
-        val account = AccountInfoFactory.build()
+        val account = AccountUiModelFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account),
             currentAccount = account,
@@ -57,13 +56,13 @@ class SimImportScreenTest {
 
         setScreenContent()
 
-        onNodeWithText(account.nameLabel.toString()).assertIsDisplayed()
+        onNodeWithText(account.name!!).assertIsDisplayed()
     }
 
     @Test
     fun pickAnotherAccount() = runComposeUiTest {
-        val account1 = AccountInfoFactory.build(name = "First")
-        val account2 = AccountInfoFactory.build(name = "Second")
+        val account1 = AccountUiModelFactory.build(name = "First")
+        val account2 = AccountUiModelFactory.build(name = "Second")
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account1, account2),
             currentAccount = account1,
@@ -71,71 +70,72 @@ class SimImportScreenTest {
 
         setScreenContent()
 
-        onNodeWithText(account1.nameLabel.toString()).assertIsDisplayed()
-        onNodeWithTag(TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER).performClick()
+        onNodeWithText(account1.name!!).assertIsDisplayed()
+        onNodeWithTag(SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG).performClick()
         onNode(
-            hasText(account2.nameLabel.toString())
-                .and(hasTestTag(TEST_TAG_SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM)),
+            hasText(account2.name!!)
+                .and(hasTestTag(SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG)),
         ).performClick()
         verify { screenModel.onAction(SimImportAction.AccountChanged(account2)) }
     }
 
     @Test
     fun showContactToImport() = runComposeUiTest {
-        val account = AccountInfoFactory.build()
+        val account = AccountUiModelFactory.build()
         val contact = SimContactFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account),
             currentAccount = account,
             contactsToImport = persistentListOf(SelectableItem(contact, false)),
+            contactsAlreadyImported = persistentListOf(),
         )
 
         setScreenContent()
 
-        onNodeWithTag(TEST_TAG_SIM_IMPORT_CONTACTS_TO_IMPORT_TITLE).assertIsDisplayed()
+        onNodeWithTag(SIM_IMPORT_CONTACTS_TO_IMPORT_TITLE_TEST_TAG).assertIsDisplayed()
         onNodeWithText(contact.name).assertIsDisplayed()
     }
 
     @Test
     fun clickContact() = runComposeUiTest {
-        val account = AccountInfoFactory.build()
+        val account = AccountUiModelFactory.build()
         val contact = SimContactFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account),
             currentAccount = account,
             contactsToImport = persistentListOf(SelectableItem(contact, false)),
+            contactsAlreadyImported = persistentListOf(),
         )
 
         setScreenContent()
 
         onNodeWithText(contact.name).performClick()
-        verify { screenModel.onAction(SimImportAction.ContactClicked(contact)) }
+        verify { screenModel.onAction(SimImportAction.ContactSelectionChanged(contact, true)) }
     }
 
     @Test
     fun checkTopBarActionsCanBeDisabled() = runComposeUiTest {
-        val account = AccountInfoFactory.build()
+        val account = AccountUiModelFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account),
             currentAccount = account,
             contactsToImport = persistentListOf(),
+            contactsAlreadyImported = persistentListOf(),
         )
 
         setScreenContent()
 
-        onNodeWithTag(TEST_TAG_SIM_IMPORT_IMPORT_BUTTON).assertIsNotEnabled()
-        onNodeWithTag(TEST_TAG_SIM_IMPORT_SELECT_ALL).assertIsNotEnabled()
-        onNodeWithTag(TEST_TAG_SIM_IMPORT_DESELECT_ALL).assertIsNotEnabled()
+        onNodeWithTag(SIM_IMPORT_IMPORT_BUTTON_TEST_TAG).assertIsNotEnabled()
+        onNodeWithTag(SIM_IMPORT_SELECT_ALL_TEST_TAG).assertIsNotEnabled()
+        onNodeWithTag(SIM_IMPORT_DESELECT_ALL_TEST_TAG).assertIsNotEnabled()
     }
 
     private fun ComposeUiTest.setScreenContent() {
         setContent {
-            AppScaffold {
-                SimImportScreen(
-                    effectHandler = effectHandler,
-                    screenModel = screenModel,
-                )
-            }
+            SimImportScreen(
+                effectHandler = effectHandler,
+                screenModel = screenModel,
+            )
         }
     }
 }

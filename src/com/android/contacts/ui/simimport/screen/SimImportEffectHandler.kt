@@ -7,12 +7,21 @@ internal interface SimImportEffectHandler {
     fun handle(effect: Effect)
 }
 
-internal class SimImportEffectHandlerImpl(private val activity: Activity) :
-    SimImportEffectHandler {
+internal class SimImportEffectHandlerImpl(
+    private val activity: Activity,
+) : SimImportEffectHandler {
 
     override fun handle(effect: Effect) {
         when (effect) {
-            Effect.Close -> activity.finish()
+            is Effect.Close -> {
+                activity.setResult(
+                    when (effect.isSuccessful) {
+                        true -> Activity.RESULT_OK
+                        false -> Activity.RESULT_CANCELED
+                    }
+                )
+                activity.finish()
+            }
         }
     }
 }

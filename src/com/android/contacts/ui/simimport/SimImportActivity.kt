@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.android.contacts.ui.core.AppScaffold
 import com.android.contacts.ui.core.AppTheme
 import com.android.contacts.ui.simimport.screen.SimImportEffectHandlerImpl
 import com.android.contacts.ui.simimport.screen.SimImportScreen
@@ -22,11 +21,9 @@ class SimImportActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                AppScaffold {
-                    SimImportScreen(
-                        effectHandler = effectHandler,
-                    )
-                }
+                SimImportScreen(
+                    effectHandler = effectHandler,
+                )
             }
         }
     }

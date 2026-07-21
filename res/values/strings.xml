@@ -1492,13 +1492,12 @@
     <!-- Toolbar title shown when importing SIM contacts and none are selected -->
     <string name="sim_import_title_none_selected">Select contacts</string>
 
+    <!-- Message shown when the SIM import screen is displayed but there are no accounts -->
+    <string name="sim_import_empty_accounts_message">No accounts for SIM card contacts import</string>
+
     <!-- Message shown when the SIM import screen is displayed but there are no contacts on the
          SIM card  -->
     <string name="sim_import_empty_message">No contacts on your SIM card</string>
-
-    <!-- Snackbar message shown on the SIM import screen when the user taps on a contact that
-         is disabled because an exact duplicate already exists in their contacts [CHAR LIMIT=60] -->
-    <string name="sim_import_contact_exists_toast">Contact already exists in your list</string>
 
     <!-- Toast shown on settings screen when importing from SIM completes successfully -->
     <string name="sim_import_success_toast_fmt"> {count, plural,
@@ -1527,6 +1526,12 @@
 
     <!-- Content description of the icon button to deselect all contacts to import -->
     <string name="sim_import_deselect_all_contacts">Deselect all contacts</string>
+
+    <!-- SIM import screen topbar title when there are selected contacts -->
+    <plurals name="sim_import_selected_contacts_title">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> selected</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> selected</item>
+    </plurals>
 
     <!-- Alert for letting user know that their device auto-sync setting is turned off,
          in case they are wondering why they are not seeing any contact. [CHAR LIMIT=150] -->

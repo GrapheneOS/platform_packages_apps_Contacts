@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"インポート"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"連絡先の選択"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"SIM カードに連絡先がありません"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"この連絡先はすでに連絡先リストに登録されています"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# 件の連絡先を SIM からインポートしました}other{# 件の連絡先を SIM からインポートしました}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"SIM の連絡先をインポートできませんでした"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"SIM からのインポート"</string>

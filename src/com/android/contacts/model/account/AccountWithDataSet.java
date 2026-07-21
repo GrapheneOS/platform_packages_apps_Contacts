@@ -29,8 +29,6 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
 
-import androidx.compose.runtime.Immutable;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
@@ -41,7 +39,6 @@ import java.util.regex.Pattern;
 /**
  * Wrapper for an account that includes a data set (which may be null).
  */
-@Immutable
 public class AccountWithDataSet implements Parcelable {
     private static final String STRINGIFY_SEPARATOR = "\u0001";
     private static final String ARRAY_STRINGIFY_SEPARATOR = "\u0002";

@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"იმპორტი"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"კონტაქტების არჩევა"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"თქვენს SIM ბარათზე კონტაქტები არ არის"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"კონტაქტი უკვე არსებობს თქვენს სიაში"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{იმპორტირებულია SIM-ის # კონტაქტი}other{იმპორტირებულია SIM-ის # კონტაქტი}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"SIM კონტაქტების იმპორტირება ვერ მოხერხდა"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"SIM-იდან იმპორტი"</string>

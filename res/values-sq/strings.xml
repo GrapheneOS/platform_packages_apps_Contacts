@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Importo"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Zgjidh kontaktet"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"S\'ka kontakte në kartën SIM"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Kontakti ekziston tashmë në listën tënde"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# kontakt i kartës SIM u importua}other{# kontakte të kartës SIM u importuan}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Importimi i kontakteve të kartës SIM dështoi"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Importo nga karta SIM"</string>
