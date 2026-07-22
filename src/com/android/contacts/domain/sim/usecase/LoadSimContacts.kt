@@ -8,6 +8,7 @@ import com.android.contacts.domain.accounts.mapper.AccountModelMapper
 import com.android.contacts.domain.sim.model.SimContactsResult
 import com.android.contacts.domain.util.BuildBroadcastReceiverFlow
 import com.android.contacts.model.AccountTypeManager
+import javax.inject.Inject
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.CancellationException
@@ -17,7 +18,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import javax.inject.Inject
 
 internal fun interface LoadSimContacts {
     operator fun invoke(subscriptionId: Int): Flow<SimContactsResult>

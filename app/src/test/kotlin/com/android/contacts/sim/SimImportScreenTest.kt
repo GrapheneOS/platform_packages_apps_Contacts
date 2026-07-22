@@ -9,9 +9,9 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.tests.AccountUiModelFactory
-import com.android.contacts.tests.SimContactFactory
+import com.android.contacts.tests.SimContactUiModelFactory
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.simimport.screen.SimImportEffectHandler
 import com.android.contacts.ui.simimport.screen.SimImportScreen
@@ -31,8 +31,11 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalTestApi::class)
+@RunWith(RobolectricTestRunner::class)
 class SimImportScreenTest {
 
     private val fakeUiStateFlow = MutableStateFlow(SimImportUiState())
@@ -82,7 +85,7 @@ class SimImportScreenTest {
     @Test
     fun showContactToImport() = runComposeUiTest {
         val account = AccountUiModelFactory.build()
-        val contact = SimContactFactory.build()
+        val contact = SimContactUiModelFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account),
             currentAccount = account,
@@ -93,13 +96,13 @@ class SimImportScreenTest {
         setScreenContent()
 
         onNodeWithTag(SIM_IMPORT_CONTACTS_TO_IMPORT_TITLE_TEST_TAG).assertIsDisplayed()
-        onNodeWithText(contact.name).assertIsDisplayed()
+        onNodeWithText(contact.label).assertIsDisplayed()
     }
 
     @Test
     fun clickContact() = runComposeUiTest {
         val account = AccountUiModelFactory.build()
-        val contact = SimContactFactory.build()
+        val contact = SimContactUiModelFactory.build()
         fakeUiStateFlow.value = SimImportUiState(
             accounts = persistentListOf(account),
             currentAccount = account,
@@ -109,7 +112,7 @@ class SimImportScreenTest {
 
         setScreenContent()
 
-        onNodeWithText(contact.name).performClick()
+        onNodeWithText(contact.label).performClick()
         verify { screenModel.onAction(SimImportAction.ContactSelectionChanged(contact, true)) }
     }
 

@@ -1,7 +1,6 @@
 package com.android.contacts.ui.simimport.screen.model
 
 import androidx.compose.runtime.Immutable
-import com.android.contacts.model.SimContact
 import com.android.contacts.ui.common.model.SelectableItem
 import kotlinx.collections.immutable.ImmutableList
 
@@ -9,8 +8,8 @@ import kotlinx.collections.immutable.ImmutableList
 internal data class SimImportUiState(
     val accounts: ImmutableList<AccountUiModel>? = null,
     val currentAccount: AccountUiModel? = null,
-    val contactsToImport: ImmutableList<SelectableItem<SimContact>>? = null,
-    val contactsAlreadyImported: ImmutableList<SimContact>? = null,
+    val contactsToImport: ImmutableList<SelectableItem<SimContactUiModel>>? = null,
+    val contactsAlreadyImported: ImmutableList<SimContactUiModel>? = null,
 ) {
     val isLoading
         get() = accounts == null || contactsToImport == null || contactsAlreadyImported == null

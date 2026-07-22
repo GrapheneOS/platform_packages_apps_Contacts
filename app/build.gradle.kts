@@ -15,6 +15,14 @@ java {
     }
 }
 
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        },
+    )
+}
+
 detekt {
     basePath.set(rootDir)
     buildUponDefaultConfig = true
@@ -67,6 +75,13 @@ android {
         res.directories.add("../res")
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
     lint {
         abortOnError = false
         disable += setOf("UnusedResources", "UnusedIds")
@@ -107,6 +122,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
@@ -114,6 +130,7 @@ dependencies {
     testImplementation(libs.mockk.android)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

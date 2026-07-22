@@ -9,6 +9,8 @@ import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.util.BuildBroadcastReceiverFlow
 import com.android.contacts.model.AccountTypeManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.concurrent.ExecutionException
+import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -17,8 +19,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import java.util.concurrent.ExecutionException
-import javax.inject.Inject
 
 internal fun interface LoadAccounts {
     operator fun invoke(): Flow<ImmutableList<AccountDisplayModel>>

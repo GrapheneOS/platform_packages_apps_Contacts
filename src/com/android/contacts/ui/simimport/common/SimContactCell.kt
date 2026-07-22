@@ -17,13 +17,13 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.android.contacts.model.SimContact
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.simimport.screen.model.SimContactUiModel
 
 @Composable
 internal fun SimContactCell(
-    contact: SimContact,
+    contact: SimContactUiModel,
     isFirst: Boolean,
     isLast: Boolean,
     modifier: Modifier = Modifier,
@@ -41,7 +41,7 @@ internal fun SimContactCell(
 
 @Composable
 internal fun SimContactSelectableCell(
-    item: SelectableItem<SimContact>,
+    item: SelectableItem<SimContactUiModel>,
     isFirst: Boolean,
     isLast: Boolean,
     onSelectedChange: ((Boolean) -> Unit),
@@ -60,7 +60,7 @@ internal fun SimContactSelectableCell(
 
 @Composable
 private fun SimContactInnerCell(
-    contact: SimContact,
+    contact: SimContactUiModel,
     isFirst: Boolean,
     isLast: Boolean,
     modifier: Modifier = Modifier,
@@ -69,10 +69,9 @@ private fun SimContactInnerCell(
     onSelectedChange: ((Boolean) -> Unit)? = null,
 ) {
     Surface(
-        color = if (isSelected || !isSelectable) {
-            MaterialTheme.colorScheme.surfaceVariant
-        } else {
-            MaterialTheme.colorScheme.surface
+        color = when {
+            isSelected || !isSelectable -> MaterialTheme.colorScheme.surfaceVariant
+            else -> MaterialTheme.colorScheme.surface
         },
         shape = itemClipShape(
             isFirst = isFirst,
@@ -85,16 +84,13 @@ private fun SimContactInnerCell(
             Modifier
                 .fillMaxWidth()
                 .run {
-                    if (isSelectable && onSelectedChange != null) {
-                        toggleable(
-                            value = isSelected,
-                            enabled = true,
-                            role = Role.Checkbox,
-                            onValueChange = onSelectedChange,
-                        )
-                    } else {
-                        this
-                    }
+                    if (!isSelectable || onSelectedChange == null) return@run this
+                    toggleable(
+                        value = isSelected,
+                        enabled = true,
+                        role = Role.Checkbox,
+                        onValueChange = onSelectedChange,
+                    )
                 }
                 .padding(vertical = 12.dp, horizontal = 16.dp),
         ) {
@@ -132,25 +128,12 @@ private fun itemClipShape(
     )
 }
 
-private val SimContact.label
-    get() =
-        if (hasName()) {
-            name
-        } else if (hasPhone()) {
-            phone
-        } else if (hasEmails()) {
-            emails[0]
-        } else {
-            // This isn't really possible because we skip empty SIM contacts during loading
-            ""
-        }
-
 @PreviewLightDark
 @Composable
 private fun SimContactCellPreview() {
     ContactsPreviewColumn {
         SimContactCell(
-            contact = SimContact(1, "Anna Smith", null),
+            contact = SimContactUiModel(1, "Anna Smith"),
             isFirst = false,
             isLast = false,
         )
@@ -163,7 +146,7 @@ private fun SimContactCellDeselectedPreview() {
     ContactsPreviewColumn {
         SimContactSelectableCell(
             SelectableItem(
-                item = SimContact(1, "Anna Smith", null),
+                item = SimContactUiModel(1, "Anna Smith"),
                 isSelected = false,
             ),
             isFirst = false,
@@ -179,7 +162,7 @@ private fun SimContactCellSelectedPreview() {
     ContactsPreviewColumn {
         SimContactSelectableCell(
             SelectableItem(
-                item = SimContact(1, "Anna Smith", null),
+                item = SimContactUiModel(1, "Anna Smith"),
                 isSelected = true,
             ),
             isFirst = false,
