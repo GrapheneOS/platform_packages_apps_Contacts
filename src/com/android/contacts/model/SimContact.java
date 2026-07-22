@@ -26,11 +26,8 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.text.TextUtils;
 
-import androidx.compose.runtime.Immutable;
-
 import com.android.contacts.ContactPhotoManager;
 import com.android.contacts.model.account.AccountWithDataSet;
-
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 
@@ -44,7 +41,6 @@ import java.util.Objects;
 /**
  * Holds data for contacts loaded from the SIM card.
  */
-@Immutable
 public class SimContact implements Parcelable {
     private final int mRecordNumber;
     private final String mName;

@@ -47,7 +47,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
-import com.android.contacts.model.SimContact
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.simimport.common.SimContactCell
@@ -58,10 +57,11 @@ import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_CONTACTS_TO_IMP
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_DESELECT_ALL_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_IMPORT_BUTTON_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_SELECT_ALL_TEST_TAG
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import com.android.contacts.ui.simimport.screen.model.SimContactUiModel
 import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
 import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun SimImportScreen(
@@ -237,9 +237,9 @@ private fun SimImportTopAppBar(
 @Composable
 private fun ContactsList(
     contentPadding: PaddingValues,
-    contactsToImport: ImmutableList<SelectableItem<SimContact>>,
-    contactsAlreadyImported: ImmutableList<SimContact>,
-    onContactSelectionChange: (SimContact, Boolean) -> Unit,
+    contactsToImport: ImmutableList<SelectableItem<SimContactUiModel>>,
+    contactsAlreadyImported: ImmutableList<SimContactUiModel>,
+    onContactSelectionChange: (SimContactUiModel, Boolean) -> Unit,
 ) {
     LazyColumn(
         contentPadding = PaddingValues(
@@ -317,16 +317,16 @@ private fun SimImportScreenPreview() {
                 currentAccount = account,
                 contactsToImport = persistentListOf(
                     SelectableItem(
-                        item = SimContact(1, "Anna Smith", null),
+                        item = SimContactUiModel(1, "Anna Smith"),
                         isSelected = false,
                     ),
                     SelectableItem(
-                        item = SimContact(2, "Bob Smith", null),
+                        item = SimContactUiModel(2, "Bob Smith"),
                         isSelected = true,
                     ),
                 ),
                 contactsAlreadyImported = persistentListOf(
-                    SimContact(3, "Carl Smith", null),
+                    SimContactUiModel(3, "Carl Smith"),
                 ),
             ),
             onAction = {},

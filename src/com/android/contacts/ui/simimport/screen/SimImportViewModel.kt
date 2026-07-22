@@ -13,9 +13,15 @@ import com.android.contacts.model.SimCard
 import com.android.contacts.model.SimContact
 import com.android.contacts.ui.UIIntents.EXTRA_SUBSCRIPTION_ID
 import com.android.contacts.ui.common.model.SelectableItem
+import com.android.contacts.ui.simimport.screen.mapper.SimContactUiModelMapper
 import com.android.contacts.ui.simimport.screen.model.AccountContactsEntry
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
+import com.android.contacts.ui.simimport.screen.model.SimContactUiModel
+import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
+import com.android.contacts.ui.simimport.screen.model.SimImportEffect as Effect
+import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.ImmutableSet
@@ -42,10 +48,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
-import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
-import com.android.contacts.ui.simimport.screen.model.SimImportEffect as Effect
-import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
 
 internal interface SimImportScreenModel {
     val effects: Flow<Effect>
@@ -60,6 +62,7 @@ internal class SimImportViewModel @Inject constructor(
     private val getDefaultAccount: GetDefaultAccount,
     loadSimContacts: LoadSimContacts,
     loadAccounts: LoadAccounts,
+    private val simContactUiModelMapper: SimContactUiModelMapper,
     private val startSimImport: StartSimImport,
 ) : ViewModel(),
     SimImportScreenModel {
@@ -71,7 +74,7 @@ internal class SimImportViewModel @Inject constructor(
     override val uiState = _uiState.asStateFlow()
 
     private val simContacts =
-        MutableStateFlow<ImmutableList<SimContact>?>(null)
+        MutableStateFlow<ImmutableList<SimContactUiModel>?>(null)
     private val existingContacts =
         MutableStateFlow<ImmutableMap<AccountModel, ImmutableSet<Int>>>(persistentMapOf())
     private val selectedContacts = MutableStateFlow(restoreSelectedContacts())
@@ -84,7 +87,8 @@ internal class SimImportViewModel @Inject constructor(
     init {
         loadSimContacts(subscriptionId)
             .onEach { result ->
-                simContacts.value = result.contacts
+                simContacts.value =
+                    result.contacts.map(simContactUiModelMapper::map).toImmutableList()
                 existingContacts.value = result.existingContactsInAccounts
                     .mapValues { (_, set) ->
                         set.map { it.recordNumber }.distinct().toImmutableSet()
@@ -220,7 +224,7 @@ internal class SimImportViewModel @Inject constructor(
         _uiState.update { state -> state.copy(currentAccount = account) }
     }
 
-    private fun changeContactSelection(contact: SimContact, isSelected: Boolean) {
+    private fun changeContactSelection(contact: SimContactUiModel, isSelected: Boolean) {
         val account = uiState.value.currentAccount ?: return
         selectedContacts.update { map ->
             val currentSelectedContacts = map[account.toModel()].orEmpty().toPersistentSet()
@@ -261,7 +265,7 @@ internal class SimImportViewModel @Inject constructor(
     private fun getSelectedContacts(): ImmutableList<SimContact>? {
         return uiState.value.contactsToImport
             ?.filter { it.isSelected }
-            ?.map { it.item }
+            ?.map { simContactUiModelMapper.unmap(it.item) }
             ?.ifEmpty { null }
             ?.toImmutableList()
     }
@@ -272,7 +276,7 @@ internal class SimImportViewModel @Inject constructor(
 
     private fun Map<AccountModel, Set<Int>>.contains(
         account: AccountUiModel,
-        contact: SimContact,
+        contact: SimContactUiModel,
     ) = this[account.toModel()]?.contains(contact.recordNumber) == true
 
     private companion object {
