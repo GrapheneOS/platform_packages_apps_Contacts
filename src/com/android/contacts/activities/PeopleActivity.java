@@ -48,6 +48,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
@@ -62,10 +63,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
+import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.drawer.DrawerFragment;
 import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
 import com.android.contacts.editor.ContactEditorFragment;
-import com.android.contacts.editor.SelectAccountDialogFragment;
 import com.android.contacts.group.GroupListItem;
 import com.android.contacts.group.GroupMembersFragment;
 import com.android.contacts.group.GroupNameEditDialogFragment;
@@ -85,6 +86,8 @@ import com.android.contacts.logging.ScreenEvent.ScreenType;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.ui.UIIntents;
+import com.android.contacts.ui.interactions.account.SelectAccountActivity;
 import com.android.contacts.ui.settings.SettingsActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.Constants;
@@ -109,10 +112,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Displays a list to browse contacts.
  */
 public class PeopleActivity extends AppCompatContactsActivity implements
-        DrawerFragmentListener,
-        SelectAccountDialogFragment.Listener {
+        DrawerFragmentListener {
 
-    /** Possible views of Contacts app. */
+    /**
+     * Possible views of Contacts app.
+     */
     public enum ContactsView {
         NONE,
         ALL_CONTACTS,
@@ -125,7 +129,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private static final String TAG_ALL = "contacts-all";
     private static final String TAG_UNAVAILABLE = "contacts-unavailable";
     private static final String TAG_GROUP_VIEW = "contacts-groups";
-    private static final String TAG_SELECT_ACCOUNT_DIALOG = "selectAccountDialog";
     private static final String TAG_GROUP_NAME_EDIT_DIALOG = "groupNameEditDialog";
 
     public static final String TAG_ASSISTANT = "contacts-assistant";
@@ -138,6 +141,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private static final String KEY_GROUP_URI = "groupUri";
     private static final String KEY_CONTACTS_VIEW = "contactsView";
     private static final String KEY_NEW_GROUP_ACCOUNT = "newGroupAccount";
+
+    private static final int REQUEST_SELECT_ACCOUNT = 1001;
 
     private static final long DRAWER_CLOSE_DELAY = 300L;
 
@@ -175,13 +180,17 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     private boolean mShouldSwitchToAllContacts;
 
-    /** Sequential ID assigned to each instance; used for logging */
+    /**
+     * Sequential ID assigned to each instance; used for logging
+     */
     private final int mInstanceId;
     private static final AtomicInteger sNextInstanceId = new AtomicInteger();
 
     private ContactListFilterController mContactListFilterController;
 
-    /** Navigation drawer related */
+    /**
+     * Navigation drawer related
+     */
     private DrawerLayout mDrawerLayout;
     private DrawerFragment mDrawerFragment;
     private ContactsActionBarDrawerToggle mToggle;
@@ -265,7 +274,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 PeopleActivity.this);
 
         public ContactsActionBarDrawerToggle(AppCompatActivity activity, DrawerLayout drawerLayout,
-                Toolbar toolbar, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+                                             Toolbar toolbar, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
             super(activity, drawerLayout, toolbar, openDrawerContentDescRes,
                     closeDrawerContentDescRes);
         }
@@ -415,7 +424,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         createViewsAndFragments();
 
         if (!PermissionsUtil.hasPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
-            requestPermissions(new String[] { Manifest.permission.POST_NOTIFICATIONS }, 1);
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
 
         if (Log.isLoggable(Constants.PERFORMANCE_TAG, Log.DEBUG)) {
@@ -499,8 +508,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
      *
      * @param forNewIntent set true if it's called from {@link #onNewIntent(Intent)}.
      * @return {@code true} if {@link PeopleActivity} should continue running.  {@code false}
-     *         if it shouldn't, in which case the caller should finish() itself and shouldn't do
-     *         farther initialization.
+     * if it shouldn't, in which case the caller should finish() itself and shouldn't do
+     * farther initialization.
      */
     private boolean processIntent(boolean forNewIntent) {
         // Extract relevant information from the intent
@@ -719,7 +728,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 && (mProviderStatus.equals(providerStatus))) return;
         mProviderStatus = providerStatus;
 
-        final FragmentManager fragmentManager= getFragmentManager();
+        final FragmentManager fragmentManager = getFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         // Change in CP2's provider status may not take effect immediately, see b/30566908.
@@ -1007,7 +1016,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private void switchView(ContactsView contactsView) {
         mCurrentView = contactsView;
 
-        final FragmentManager fragmentManager =  getFragmentManager();
+        final FragmentManager fragmentManager = getFragmentManager();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
         popSecondLevel();
         if (isGroupView()) {
@@ -1136,7 +1145,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                     ? null : extras.getString(Intents.Insert.EXTRA_DATA_SET);
             final AccountWithDataSet accountWithDataSet = new AccountWithDataSet(
                     account.name, account.type, dataSet);
-            onAccountChosen(accountWithDataSet, /* extraArgs */ null);
+            onAccountChosen(accountWithDataSet);
         }
     }
 
@@ -1153,30 +1162,51 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         }
         // If there is a single writable account, use it w/o showing a dialog.
         if (accounts.size() == 1) {
-            onAccountChosen(accounts.get(0).getAccount(), /* extraArgs */ null);
+            onAccountChosen(accounts.get(0).getAccount());
             return;
         }
-        SelectAccountDialogFragment.show(getFragmentManager(), R.string.dialog_new_group_account,
-                AccountTypeManager.AccountFilter.GROUPS_WRITABLE, /* extraArgs */ null,
-                TAG_SELECT_ACCOUNT_DIALOG);
+        startActivityForResult(
+                UIIntents.INSTANCE.getSelectAccountDialogIntent(
+                        this,
+                        Integer.valueOf(R.string.dialog_new_group_account),
+                        AccountTypeManager.AccountFilter.GROUPS_WRITABLE
+                ),
+                REQUEST_SELECT_ACCOUNT
+        );
     }
 
-    // Implementation of SelectAccountDialogFragment.Listener
     @Override
-    public void onAccountChosen(AccountWithDataSet account, Bundle extraArgs) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != REQUEST_SELECT_ACCOUNT || resultCode != RESULT_OK || data == null) {
+            return;
+        }
+
+        AccountModel account =
+                data.getParcelableExtra(SelectAccountActivity.EXTRA_ACCOUNT, AccountModel.class);
+        if (account == null) {
+            return;
+        }
+
+        onAccountChosen(
+                new AccountWithDataSet(
+                        account.getName(),
+                        account.getType(),
+                        account.getDataSet()
+                )
+        );
+    }
+
+    private void onAccountChosen(AccountWithDataSet account) {
         mNewGroupAccount = account;
         GroupNameEditDialogFragment.newInstanceForCreation(
-                mNewGroupAccount, GroupUtil.ACTION_CREATE_GROUP)
+                        mNewGroupAccount, GroupUtil.ACTION_CREATE_GROUP)
                 .show(getFragmentManager(), TAG_GROUP_NAME_EDIT_DIALOG);
-    }
-
-    @Override
-    public void onAccountSelectorCancelled() {
     }
 
     // Implementation of DrawerFragmentListener
     @Override
-    public void onDrawerItemClicked(){
+    public void onDrawerItemClicked() {
         closeDrawer();
     }
 
