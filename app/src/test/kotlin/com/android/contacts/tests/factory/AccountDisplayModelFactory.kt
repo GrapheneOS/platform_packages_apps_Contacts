@@ -1,4 +1,4 @@
-package com.android.contacts.tests
+package com.android.contacts.tests.factory
 
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountIconData
