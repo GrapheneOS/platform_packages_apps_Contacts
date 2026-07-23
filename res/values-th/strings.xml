@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"นำเข้า"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"เลือกผู้ติดต่อ"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"ไม่มีผู้ติดต่อในซิมการ์ด"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"มีผู้ติดต่อคนนี้อยู่ในรายชื่อแล้ว"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{นำเข้ารายชื่อติดต่อ # รายการจากซิมแล้ว}other{นำเข้ารายชื่อติดต่อ # รายการจากซิมแล้ว}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"นำเข้าผู้ติดต่อจากซิมไม่สำเร็จ"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"นำเข้าจากซิมการ์ด"</string>

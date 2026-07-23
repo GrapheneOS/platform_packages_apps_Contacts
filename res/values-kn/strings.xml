@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"ಆಮದು"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"ಸಂಪರ್ಕಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಿ"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"ನಿಮ್ಮ ಸಿಮ್‌ ಕಾರ್ಡ್‌ನಲ್ಲಿ ಯಾವುದೇ ಸಂಪರ್ಕಗಳಿಲ್ಲ"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"ಸಂಪರ್ಕ ಈಗಾಗಲೇ ನಿಮ್ಮ ಪಟ್ಟಿಯಲ್ಲಿ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# ಸಿಮ್ ಸಂಪರ್ಕವನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಲಾಗಿದೆ}one{# ಸಿಮ್ ಸಂಪರ್ಕಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಲಾಗಿದೆ}other{# ಸಿಮ್ ಸಂಪರ್ಕಗಳನ್ನು ಆಮದು ಮಾಡಿಕೊಳ್ಳಲಾಗಿದೆ}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"ಸಿಮ್ ಸಂಪರ್ಕಗಳನ್ನು ಆಮದು ಮಾಡಲು ವಿಫಲವಾಗಿದೆ"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"ಸಿಮ್‌ನಿಂದ ಆಮದು ಮಾಡಿ"</string>

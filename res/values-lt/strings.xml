@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Importuoti"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Pasirinkti kontaktus"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"SIM kortelėje nėra jokių kontaktų"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Kontaktas jau yra jūsų kontaktų sąraše"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{Importuotas # SIM kortelės kontaktas}one{Importuotas # SIM kortelės kontaktas}few{Importuoti # SIM kortelės kontaktai}many{Importuota # SIM kortelės kontaktų}other{Importuota # SIM kortelės kontaktų}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Nepavyko importuoti SIM kortelės kontaktų"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Importuoti iš SIM kortelės"</string>

@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"ከውጭ አምጣ"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"እውቂያዎችን ምረጥ"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"በ ሲም ካርድዎ ላይ ዕውቂያዎች የሉም"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"እውቂያው ቀድሞም በዝርዝርዎ ውስጥ አለ"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# የሲም እውቂያ መጥቷል}one{# የሲም እውቂያዎች መጥተዋል}other{# የሲም እውቂያዎች መጥተዋል}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"የሲም እውቂያዎችን ማምጣት አልተሳካም"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"ከሲም አምጣ"</string>

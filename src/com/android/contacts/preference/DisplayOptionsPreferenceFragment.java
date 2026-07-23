@@ -54,7 +54,6 @@ import com.android.contacts.SimImportService;
 import com.android.contacts.compat.TelecomManagerUtil;
 import com.android.contacts.compat.TelephonyManagerCompat;
 import com.android.contacts.interactions.ExportDialogFragment;
-import com.android.contacts.interactions.ImportDialogFragment;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.list.ContactListFilterController;
 import com.android.contacts.logging.ScreenEvent.ScreenType;
@@ -62,10 +61,10 @@ import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.AccountsLoader;
+import com.android.contacts.ui.UIIntents;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contactsbind.HelpUtils;
-
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Collections;
@@ -367,7 +366,7 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             ((ContactsPreferenceActivity) getActivity()).showAboutFragment();
             return true;
         } else if (KEY_IMPORT.equals(prefKey)) {
-            ImportDialogFragment.show(getFragmentManager());
+            startActivity(UIIntents.INSTANCE.getImportDialogIntent(getActivity()));
             return true;
         } else if (KEY_EXPORT.equals(prefKey)) {
             ExportDialogFragment.show(

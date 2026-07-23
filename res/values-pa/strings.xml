@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"ਆਯਾਤ ਕਰੋ"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"ਸੰਪਰਕ ਚੁਣੋ"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"ਤੁਹਾਡੇ ਸਿਮ ਕਾਰਡ \'ਤੇ ਕੋਈ ਸੰਪਰਕ ਨਹੀਂ ਹਨ"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"ਸੰਪਰਕ ਪਹਿਲਾਂ ਹੀ ਤੁਹਾਡੀ ਸੂਚੀ ਵਿੱਚ ਮੌਜੂਦ ਹੈ"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# ਸਿਮ ਵਾਲਾ ਸੰਪਰਕ ਆਯਾਤ ਕੀਤਾ ਗਿਆ}one{# ਸਿਮ ਵਾਲਾ ਸੰਪਰਕ ਆਯਾਤ ਕੀਤਾ ਗਿਆ}other{# ਸਿਮ ਵਾਲੇ ਸੰਪਰਕ ਆਯਾਤ ਕੀਤੇ ਗਏ}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"SIM ਸੰਪਰਕਾਂ ਨੂੰ ਆਯਾਤ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"SIM ਤੋਂ ਆਯਾਤ ਕਰੋ"</string>
