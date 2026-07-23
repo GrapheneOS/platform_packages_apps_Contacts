@@ -1,4 +1,4 @@
-package com.android.contacts.sim
+package com.android.contacts.ui.simimport
 
 import androidx.lifecycle.SavedStateHandle
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
@@ -9,9 +9,9 @@ import com.android.contacts.domain.sim.model.SimContactsResult
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
 import com.android.contacts.domain.sim.usecase.StartSimImport
 import com.android.contacts.model.SimContact
-import com.android.contacts.tests.AccountDisplayModelFactory
 import com.android.contacts.tests.MainDispatcherRule
-import com.android.contacts.tests.SimContactFactory
+import com.android.contacts.tests.factory.AccountDisplayModelFactory
+import com.android.contacts.tests.factory.SimContactFactory
 import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.simimport.screen.SimImportViewModel
 import com.android.contacts.ui.simimport.screen.mapper.SimContactUiModelMapperImpl

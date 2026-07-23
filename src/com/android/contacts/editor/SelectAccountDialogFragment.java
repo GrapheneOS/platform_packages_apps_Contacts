@@ -17,7 +17,6 @@
 package com.android.contacts.editor;
 
 import android.app.Activity;
-import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -25,6 +24,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.contacts.R;
 import com.android.contacts.model.AccountTypeManager;
@@ -96,7 +97,10 @@ public final class SelectAccountDialogFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(
+                getActivity(),
+                androidx.appcompat.R.style.Theme_AppCompat_DayNight_Dialog
+        );
         final Bundle args = getArguments();
 
         mAccountsAdapter = new AccountsListAdapter(builder.getContext());

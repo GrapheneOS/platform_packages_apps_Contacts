@@ -521,6 +521,11 @@
             android:theme="@style/BackgroundOnlyTheme"/>
 
         <activity
+            android:name=".ui.interactions.importing.ImportActivity"
+            android:label="@string/dialog_import"
+            android:theme="@style/Theme.Compose.Dialog"/>
+
+        <activity
             android:name=".ui.simimport.SimImportActivity"
             android:label="@string/sim_import_title"
             android:theme="@style/Theme.Compose"/>

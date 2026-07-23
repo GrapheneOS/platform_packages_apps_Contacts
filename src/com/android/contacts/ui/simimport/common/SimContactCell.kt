@@ -4,21 +4,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.core.itemClipShape
 import com.android.contacts.ui.simimport.screen.model.SimContactUiModel
 
 @Composable
@@ -110,22 +108,6 @@ private fun SimContactInnerCell(
             }
         }
     }
-}
-
-@Composable
-private fun itemClipShape(
-    isFirst: Boolean,
-    isLast: Boolean,
-    isSelected: Boolean,
-): Shape {
-    // All corners are the same in our shapes
-    val cornerSize = MaterialTheme.shapes.extraSmall.topStart
-    return RoundedCornerShape(
-        topStart = if (isFirst || isSelected) cornerSize else CornerSize(0.dp),
-        topEnd = if (isFirst || isSelected) cornerSize else CornerSize(0.dp),
-        bottomStart = if (isLast || isSelected) cornerSize else CornerSize(0.dp),
-        bottomEnd = if (isLast || isSelected) cornerSize else CornerSize(0.dp),
-    )
 }
 
 @PreviewLightDark

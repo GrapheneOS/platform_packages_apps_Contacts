@@ -1,4 +1,4 @@
-package com.android.contacts.sim
+package com.android.contacts.ui.simimport
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -10,8 +10,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import com.android.contacts.tests.AccountUiModelFactory
-import com.android.contacts.tests.SimContactUiModelFactory
+import com.android.contacts.tests.factory.AccountUiModelFactory
+import com.android.contacts.tests.factory.SimContactUiModelFactory
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.simimport.screen.SimImportEffectHandler
 import com.android.contacts.ui.simimport.screen.SimImportScreen

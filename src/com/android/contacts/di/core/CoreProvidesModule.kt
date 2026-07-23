@@ -1,5 +1,6 @@
 package com.android.contacts.di.core
 
+import androidx.core.text.BidiFormatter
 import com.android.contacts.util.concurrent.ContactsExecutors
 import dagger.Module
 import dagger.Provides
@@ -40,5 +41,11 @@ internal class CoreProvidesModule {
     @SimReadDispatcher
     fun provideSimReadDispatcher(): CoroutineDispatcher {
         return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
+    }
+
+    @Provides
+    @Reusable
+    fun provideBidiFormatter(): BidiFormatter {
+        return BidiFormatter.getInstance()
     }
 }

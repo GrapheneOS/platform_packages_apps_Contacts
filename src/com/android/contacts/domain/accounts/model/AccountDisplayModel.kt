@@ -11,4 +11,12 @@ internal data class AccountDisplayModel(
     val dataSet: String? = null,
     val icon: Drawable? = null,
     val isDeviceAccount: Boolean = true,
-)
+) {
+    fun toModel(): AccountModel {
+        return AccountModel(
+            name = name,
+            type = type,
+            dataSet = dataSet,
+        )
+    }
+}
