@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 
 internal fun interface LoadSimCards {
     operator fun invoke(): Flow<List<SimCard>>
@@ -27,7 +26,6 @@ internal class LoadSimCardsImpl @Inject constructor(
 
     override operator fun invoke(): Flow<List<SimCard>> {
         return onSubcriptionsChange()
-            .onStart { emit(Unit) }
             .map { load() }
             .flowOn(coroutineDispatcher)
     }
@@ -43,6 +41,7 @@ internal class LoadSimCardsImpl @Inject constructor(
                 coroutineDispatcher.asExecutor(),
                 listener,
             )
+            trySend(Unit)
             awaitClose {
                 subscriptionManager.removeOnSubscriptionsChangedListener(listener)
             }
