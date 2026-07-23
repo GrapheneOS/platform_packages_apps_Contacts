@@ -7,6 +7,7 @@ import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimCards
+import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapper
 import com.android.contacts.ui.interactions.importing.screen.model.ImportAction as Action
 import com.android.contacts.ui.interactions.importing.screen.model.ImportEffect as Effect
@@ -64,7 +65,7 @@ internal class ImportViewModel @Inject constructor(
         )
 
     init {
-        loadAccounts()
+        loadAccounts(AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE)
             .onEach { accounts = it }
             .launchIn(viewModelScope)
     }

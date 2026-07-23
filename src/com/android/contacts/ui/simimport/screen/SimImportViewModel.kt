@@ -11,6 +11,7 @@ import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimCards
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
 import com.android.contacts.domain.sim.usecase.StartSimImport
+import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.model.SimCard
 import com.android.contacts.model.SimContact
 import com.android.contacts.ui.UIIntents.EXTRA_SUBSCRIPTION_ID
@@ -115,7 +116,7 @@ internal class SimImportViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        loadAccounts()
+        loadAccounts(AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE)
             .onEach { newAccounts ->
                 accounts.value = newAccounts
                 currentAccount.value = findCurrentAccount(newAccounts)
