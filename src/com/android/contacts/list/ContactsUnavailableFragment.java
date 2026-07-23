@@ -36,7 +36,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.android.contacts.R;
-import com.android.contacts.interactions.ImportDialogFragment;
+import com.android.contacts.ui.UIIntents;
 import com.android.contacts.util.ImplicitIntentsUtil;
 
 /**
@@ -135,8 +135,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
             ImplicitIntentsUtil.startActivityOutsideApp(getActivity(), intent);
 
         } else if (id == R.id.import_contacts_button) {
-            ImportDialogFragment.show(getFragmentManager());
-
+            getActivity().startActivity(UIIntents.INSTANCE.getImportDialogIntent(getActivity()));
         }
     }
 
