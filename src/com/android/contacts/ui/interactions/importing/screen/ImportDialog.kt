@@ -82,6 +82,7 @@ internal fun ImportDialog(
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 internal fun ImportDialogContent(
     uiState: State,
     onAction: (Action) -> Unit,
@@ -140,6 +141,10 @@ internal fun ImportDialogContent(
             }
         },
     )
+    // Workaround to ensure the sheet is always expanded, even when the content changes
+    LaunchedEffect(uiState.isVCardImportAvailable, uiState.simCardOptions) {
+        sheetState.expand()
+    }
 }
 
 @Composable
