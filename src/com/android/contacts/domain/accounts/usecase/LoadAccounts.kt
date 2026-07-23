@@ -8,6 +8,8 @@ import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.util.BuildBroadcastReceiverFlow
 import com.android.contacts.model.AccountTypeManager
+import com.android.contacts.model.account.AccountInfo
+import com.google.common.base.Predicate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
@@ -21,7 +23,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 internal fun interface LoadAccounts {
-    operator fun invoke(): Flow<ImmutableList<AccountDisplayModel>>
+    operator fun invoke(
+        filter: AccountTypeManager.AccountFilter?,
+    ): Flow<ImmutableList<AccountDisplayModel>>
 }
 
 internal class LoadAccountsImpl @Inject constructor(
@@ -32,16 +36,18 @@ internal class LoadAccountsImpl @Inject constructor(
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : LoadAccounts {
 
-    override operator fun invoke(): Flow<ImmutableList<AccountDisplayModel>> =
+    override operator fun invoke(
+        filter: AccountTypeManager.AccountFilter?,
+    ): Flow<ImmutableList<AccountDisplayModel>> =
         buildBroadcastReceiverFlow(IntentFilter(AccountTypeManager.BROADCAST_ACCOUNTS_CHANGED))
             .onStart { emit(Unit) }
-            .map { load() }
+            .map { load(filter) }
             .flowOn(coroutineDispatcher)
 
-    private fun load() =
+    private fun load(filter: AccountTypeManager.AccountFilter?) =
         try {
             accountTypeManager
-                .filterAccountsAsync(AccountTypeManager.insertableFilter(context))
+                .filterAccountsAsync(prepareFilter(filter))
                 .get()
                 .orEmpty()
                 .map(accountDisplayModelMapper::map)
@@ -53,6 +59,17 @@ internal class LoadAccountsImpl @Inject constructor(
             Log.w(TAG, "Could not load accounts", e)
             persistentListOf()
         }
+
+    private fun prepareFilter(filter: AccountTypeManager.AccountFilter?): Predicate<AccountInfo> {
+        return when {
+            filter == null ->
+                AccountTypeManager.AccountFilter.ALL
+            filter === AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE ->
+                AccountTypeManager.insertableFilter(context)
+            else ->
+                filter
+        }
+    }
 
     companion object {
         private const val TAG = "LoadAccounts"

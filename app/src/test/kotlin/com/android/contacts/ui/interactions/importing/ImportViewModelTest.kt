@@ -75,7 +75,7 @@ class ImportViewModelTest {
             viewModel.effects.test {
                 viewModel.onAction(Action.VCardClick)
                 advanceUntilIdle()
-                assertEquals(Effect.OpenVCardImport(account.toModel()), awaitItem())
+                assertEquals(Effect.OpenVCardImport(account.account), awaitItem())
             }
         }
 

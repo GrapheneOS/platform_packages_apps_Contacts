@@ -1,11 +1,8 @@
 package com.android.contacts.ui.simimport.common
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenuItem
@@ -24,22 +21,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import com.android.contacts.R
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.interactions.account.common.AccountIcon
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -130,21 +124,6 @@ private fun ExposedDropdownMenuBoxScope.AccountTextField(
     )
 }
 
-@Composable
-internal fun AccountIcon(account: AccountUiModel) {
-    Image(
-        painter = account.icon?.let { rememberDrawablePainter(it) }
-            ?: painterResource(R.drawable.accounts_empty),
-        // contentDescription set in parent
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .size(24.dp),
-    )
-}
-
 @PreviewLightDark
 @Composable
 private fun SimImportAccountPickerSinglePreview() {
@@ -155,7 +134,7 @@ private fun SimImportAccountPickerSinglePreview() {
         R.drawable.logo_quick_contacts_color_44in48dp,
         context.theme,
     )
-    val account = AccountUiModel("user@example.org")
+    val account = AccountUiModel(name = "user@example.org", icon = icon)
     ContactsPreviewColumn {
         SimImportAccountPicker(
             list = persistentListOf(account),

@@ -9,6 +9,7 @@ import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
 import com.android.contacts.domain.sim.usecase.StartSimImport
+import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.model.SimCard
 import com.android.contacts.model.SimContact
 import com.android.contacts.ui.UIIntents.EXTRA_SUBSCRIPTION_ID
@@ -97,7 +98,7 @@ internal class SimImportViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        loadAccounts()
+        loadAccounts(AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE)
             .onEach { accounts ->
                 val uiAccounts = accounts.map(::AccountUiModel).toImmutableList()
                 _uiState.update { state ->
@@ -116,7 +117,7 @@ internal class SimImportViewModel @Inject constructor(
         ) { accounts, contacts ->
             selectedContacts.update { oldSelectedContactsMap ->
                 accounts.associate { account ->
-                    val oldSelectedContacts = oldSelectedContactsMap[account.toModel()]
+                    val oldSelectedContacts = oldSelectedContactsMap[account.account]
                     val selectedContacts = if (oldSelectedContacts == null) {
                         // If we get a new account, select all contacts for import
                         contacts.map { it.recordNumber }
@@ -125,7 +126,7 @@ internal class SimImportViewModel @Inject constructor(
                         val newContactsIds = contacts.map { it.recordNumber }
                         oldSelectedContacts.filter { newContactsIds.contains(it) }
                     }
-                    account.toModel() to selectedContacts.toImmutableSet()
+                    account.account to selectedContacts.toImmutableSet()
                 }.toImmutableMap()
             }
         }
@@ -161,7 +162,7 @@ internal class SimImportViewModel @Inject constructor(
             .mapNotNull { it.currentAccount }
             .distinctUntilChanged()
             .onEach {
-                savedStateHandle[KEY_CURRENT_ACCOUNT] = it.toModel()
+                savedStateHandle[KEY_CURRENT_ACCOUNT] = it.account
             }.launchIn(viewModelScope)
 
         selectedContacts
@@ -204,7 +205,7 @@ internal class SimImportViewModel @Inject constructor(
 
     private fun getSavedAccount(accounts: List<AccountUiModel>): AccountUiModel? {
         return savedStateHandle.get<AccountModel>(KEY_CURRENT_ACCOUNT)?.let { savedAccount ->
-            accounts.firstOrNull { it.isSameAccount(savedAccount) }
+            accounts.firstOrNull { it.account == savedAccount }
         }
     }
 
@@ -212,7 +213,7 @@ internal class SimImportViewModel @Inject constructor(
         accounts: List<AccountUiModel>,
     ): AccountUiModel? {
         return getDefaultAccount()?.let { defaultAccount ->
-            accounts.firstOrNull { it.isSameAccount(defaultAccount) }
+            accounts.firstOrNull { it.account == defaultAccount }
         }
     }
 
@@ -227,9 +228,9 @@ internal class SimImportViewModel @Inject constructor(
     private fun changeContactSelection(contact: SimContactUiModel, isSelected: Boolean) {
         val account = uiState.value.currentAccount ?: return
         selectedContacts.update { map ->
-            val currentSelectedContacts = map[account.toModel()].orEmpty().toPersistentSet()
+            val currentSelectedContacts = map[account.account].orEmpty().toPersistentSet()
             map.toPersistentMap() + (
-                account.toModel() to when {
+                account.account to when {
                     isSelected -> currentSelectedContacts + contact.recordNumber
                     else -> currentSelectedContacts - contact.recordNumber
                 }
@@ -242,20 +243,20 @@ internal class SimImportViewModel @Inject constructor(
         val allContacts = uiState.value.contactsToImport ?: return
         selectedContacts.update { map ->
             map.toPersistentMap() +
-                (account.toModel() to allContacts.map { it.item.recordNumber }.toImmutableSet())
+                (account.account to allContacts.map { it.item.recordNumber }.toImmutableSet())
         }
     }
 
     private fun deselectAll() {
         val account = uiState.value.currentAccount ?: return
         selectedContacts.update { map ->
-            map.toPersistentMap() + (account.toModel() to persistentSetOf())
+            map.toPersistentMap() + (account.account to persistentSetOf())
         }
     }
 
     private fun startImport() {
         val state = uiState.value
-        val account = state.currentAccount?.toModel() ?: return
+        val account = state.currentAccount?.account ?: return
         val selectedContacts = getSelectedContacts() ?: return
 
         startSimImport(subscriptionId, selectedContacts, account)
@@ -277,7 +278,7 @@ internal class SimImportViewModel @Inject constructor(
     private fun Map<AccountModel, Set<Int>>.contains(
         account: AccountUiModel,
         contact: SimContactUiModel,
-    ) = this[account.toModel()]?.contains(contact.recordNumber) == true
+    ) = this[account.account]?.contains(contact.recordNumber) == true
 
     private companion object {
         const val TAG = "SimImportViewModel"

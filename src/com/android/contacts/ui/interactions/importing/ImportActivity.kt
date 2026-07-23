@@ -1,5 +1,6 @@
 package com.android.contacts.ui.interactions.importing
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -8,19 +9,16 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.contacts.domain.accounts.mapper.AccountModelMapper
 import com.android.contacts.domain.accounts.model.AccountModel
-import com.android.contacts.editor.SelectAccountDialogFragment
-import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.core.AppTheme
+import com.android.contacts.ui.interactions.account.SelectAccountActivity
 import com.android.contacts.ui.interactions.importing.screen.ImportDialog
 import com.android.contacts.ui.interactions.importing.screen.ImportEffectHandlerImpl
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @AndroidEntryPoint
-class ImportActivity :
-    FragmentActivity(),
-    SelectAccountDialogFragment.Listener {
+class ImportActivity : FragmentActivity() {
 
     @Inject
     internal lateinit var accountModelMapper: AccountModelMapper
@@ -48,14 +46,25 @@ class ImportActivity :
         }
     }
 
-    override fun onAccountChosen(
-        account: AccountWithDataSet?,
-        extraArgs: Bundle?,
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
     ) {
-        accountChosen.value = account?.let(accountModelMapper::map)
+        super.onActivityResult(requestCode, resultCode, data)
+        when {
+            requestCode == REQUEST_SELECT_ACCOUNT && resultCode == RESULT_OK -> {
+                data
+                    ?.getParcelableExtra(
+                        SelectAccountActivity.EXTRA_ACCOUNT,
+                        AccountModel::class.java
+                    )
+                    ?.let { accountChosen.value = it }
+            }
+        }
     }
 
-    override fun onAccountSelectorCancelled() {
-        // No need to do anything
+    internal companion object {
+        const val REQUEST_SELECT_ACCOUNT = 100
     }
 }
