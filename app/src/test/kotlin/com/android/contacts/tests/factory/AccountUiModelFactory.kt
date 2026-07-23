@@ -1,21 +1,19 @@
-package com.android.contacts.tests
+package com.android.contacts.tests.factory
 
 import android.graphics.drawable.Drawable
-import com.android.contacts.domain.accounts.model.AccountDisplayModel
+import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 import kotlin.random.Random
 
-internal object AccountDisplayModelFactory {
+internal object AccountUiModelFactory {
     fun build(
         name: String = "Account ${Random.nextInt().toString().take(4)}",
         type: String? = null,
         dataSet: String? = null,
         icon: Drawable? = null,
-        isDeviceAccount: Boolean = true,
-    ) = AccountDisplayModel(
+    ) = AccountUiModel(
         name = name,
         type = type,
         dataSet = dataSet,
         icon = icon,
-        isDeviceAccount = isDeviceAccount,
     )
 }

@@ -37,17 +37,13 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.android.contacts.MoreContactUtils;
 import com.android.contacts.R;
-import com.android.contacts.editor.SelectAccountDialogFragment;
-import com.android.contacts.interactions.ImportDialogFragment;
 import com.android.contacts.list.ProviderStatusWatcher;
-import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.DisplayOptionsPreferenceFragment.ProfileListener;
 import com.android.contacts.preference.DisplayOptionsPreferenceFragment.ProfileQuery;
-import com.android.contacts.util.AccountSelectionUtil;
 
 /** Contacts settings. */
 public final class ContactsPreferenceActivity extends PreferenceActivity
-        implements ProfileListener, SelectAccountDialogFragment.Listener {
+        implements ProfileListener {
 
     private static final String TAG_ABOUT = "about_contacts";
     private static final String TAG_DISPLAY_OPTIONS = "display_options";
@@ -222,16 +218,4 @@ public final class ContactsPreferenceActivity extends PreferenceActivity
                         getFragmentManager().findFragmentByTag(TAG_DISPLAY_OPTIONS);
         fragment.updateMyInfoPreference(hasProfile, displayName, contactId, displayNameSource);
     }
-
-    @Override
-    public void onAccountChosen(AccountWithDataSet account, Bundle extraArgs) {
-        AccountSelectionUtil.doImport(
-                this,
-                extraArgs.getInt(ImportDialogFragment.KEY_RES_ID),
-                account,
-                extraArgs.getInt(ImportDialogFragment.KEY_SUBSCRIPTION_ID));
-    }
-
-    @Override
-    public void onAccountSelectorCancelled() {}
 }

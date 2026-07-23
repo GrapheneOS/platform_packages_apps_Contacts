@@ -1,4 +1,4 @@
-package com.android.contacts.tests
+package com.android.contacts.tests.factory
 
 import com.android.contacts.ui.simimport.screen.model.SimContactUiModel
 import kotlin.random.Random
