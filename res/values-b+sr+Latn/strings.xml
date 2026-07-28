@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Uvezi"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Izaberite kontakte"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"Nema kontakata na SIM kartici"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Kontakt je već na listi"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{Uvezen je # kontakt sa SIM-a}one{Uvezen je # kontakt sa SIM-a}few{Uvezena su # kontakta sa SIM-a}other{Uvezeno je # kontakata sa SIM-a}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Uvoz kontakata sa SIM kartice nije uspeo"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Uvezite sa SIM-a"</string>

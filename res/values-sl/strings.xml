@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Uvozi"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Izbiranje stikov"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"Na kartici SIM ni nobenega stika"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Stik že obstaja na seznamu"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# stik s kartice SIM je bil uvožen.}one{# stik s kartice SIM je bil uvožen.}two{# stika s kartice SIM sta bila uvožena.}few{# stiki s kartice SIM so bili uvoženi.}other{# stikov s kartice SIM je bilo uvoženih.}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Stikov s kartice SIM ni bilo mogoče uvoziti"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Uvoz s kartice SIM"</string>

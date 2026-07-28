@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Импортлох"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Харилцагчдыг сонгох"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"Таны SIM картанд харилцагчид байхгүй байна"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Харилцагч аль хэдийн таны жагсаалтанд байна"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# SIM-н харилцагчийг импорт хийсэн}other{# SIM-н харилцагчийг импорт хийсэн}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"SIM-н харилцагчдыг импортолж чадсангүй"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"SIM-с импортлох"</string>

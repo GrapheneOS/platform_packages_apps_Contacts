@@ -19,7 +19,7 @@ private val AppShapes = Shapes(
 )
 
 @Composable
-fun AppTheme(
+internal fun AppTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current

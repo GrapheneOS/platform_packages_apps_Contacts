@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Importați"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Selectați persoane de contact"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"Nicio persoană de contact pe cardul SIM."</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Persoana de contact există deja în listă."</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# persoană de contact de pe SIM a fost importată}few{# persoane de contact de pe SIM au fost importate}other{# de persoane de contact de pe SIM au fost importate}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Nu s-au importat persoanele de contact de pe SIM."</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Importați de pe SIM"</string>

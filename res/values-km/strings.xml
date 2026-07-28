@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"នាំចូល"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"ជ្រើស​រើសទំនាក់ទំនង"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"គ្មាន​ទំនាក់ទំនង​នៅ​ក្នុង​​ស៊ីមកាត​របស់​អ្នក​ទេ"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"ទំនាក់ទំនង​មាន​រួច​ហើយ​នៅ​ក្នុង​បញ្ជី​របស់​អ្នក"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{បាននាំចូល​ទំនាក់ទំនង # នៅក្នុង​ស៊ីម}other{បាននាំចូល​ទំនាក់ទំនង # នៅក្នុង​ស៊ីម}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"មិន​អាច​នាំចូល​ទំនាក់ទំនង​ពី SIM បាន​ទេ"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"នាំចូល​ពី SIM"</string>

@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"ଇମ୍ପୋର୍ଟ କରନ୍ତୁ"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"ଯୋଗାଯୋଗ ଚୟନ କରନ୍ତୁ"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"ଆପଣଙ୍କ SIM କାର୍ଡରେ କୌଣସି ଯୋଗାଯୋଗ ନାହାନ୍ତି"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"ଏହି ଯୋଗାଯୋଗ ପୂର୍ବରୁ ଆପଣଙ୍କ ତାଲିକାରେ ଅଛି"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{SIMରେ ଥିବା #ଟି ଯୋଗାଯୋଗକୁ ଇମ୍ପୋର୍ଟ କରାଯାଇଛି}other{SIMରେ ଥିବା #ଟି ଯୋଗାଯୋଗକୁ ଇମ୍ପୋର୍ଟ କରାଯାଇଛି}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"SIMରେ ଥିବା ଯୋଗାଯୋଗ ଇମ୍ପୋର୍ଟ କରିହେଲା ନାହିଁ"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"SIMରୁ ଇମ୍ପୋର୍ଟ କରନ୍ତୁ"</string>
