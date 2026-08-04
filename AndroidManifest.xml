@@ -473,10 +473,9 @@
 
         <!-- vCard related -->
         <activity
-            android:name=".vcard.ImportVCardActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:name=".ui.vcard.ImportVCardActivity"
             android:exported="true"
-            android:theme="@style/BackgroundOnlyTheme">
+            android:theme="@style/Theme.Compose.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 

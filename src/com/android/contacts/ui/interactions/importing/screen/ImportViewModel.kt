@@ -2,12 +2,8 @@ package com.android.contacts.ui.interactions.importing.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.contacts.domain.accounts.model.AccountDisplayModel
-import com.android.contacts.domain.accounts.model.AccountModel
-import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimCards
 import com.android.contacts.domain.vcard.usecase.CanImportFromVCard
-import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapper
 import com.android.contacts.ui.interactions.importing.screen.model.ImportAction as Action
 import com.android.contacts.ui.interactions.importing.screen.model.ImportEffect as Effect
@@ -21,12 +17,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 internal interface ImportScreenModel {
     val effects: Flow<Effect>
@@ -40,7 +33,6 @@ internal class ImportViewModel @Inject constructor(
     canImportFromVCard: CanImportFromVCard,
     loadSimCards: LoadSimCards,
     simCardOptionMapper: SimCardOptionMapper,
-    loadAccounts: LoadAccounts,
 ) : ViewModel(),
     ImportScreenModel {
 
@@ -52,8 +44,6 @@ internal class ImportViewModel @Inject constructor(
     )
     override val uiState = _uiState.asStateFlow()
 
-    private val accounts = MutableStateFlow<List<AccountDisplayModel>?>(null)
-
     init {
         loadSimCards()
             .onEach {
@@ -64,10 +54,6 @@ internal class ImportViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
-
-        loadAccounts(AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE)
-            .onEach { accounts.value = it }
-            .launchIn(viewModelScope)
     }
 
     override fun onAction(action: Action) {
@@ -76,34 +62,18 @@ internal class ImportViewModel @Inject constructor(
                 emitEffect(Effect.Close)
             }
             Action.VCardClick -> {
-                onVCardClick()
+                emitEffect(Effect.OpenVCardImport)
             }
             is Action.SimOptionClick -> {
                 emitEffect(Effect.OpenSimImport(action.simCardOption.subscriptionId))
             }
             is Action.AccountChosen -> {
-                openVCardImport(action.account)
+                emitEffect(Effect.OpenVCardImport)
             }
         }
     }
 
     private fun emitEffect(effect: Effect) {
         _effects.tryEmit(effect)
-    }
-
-    private fun onVCardClick() {
-        viewModelScope.launch {
-            val accounts = accounts.filterNotNull().first()
-
-            if (accounts.size > 1) {
-                emitEffect(Effect.OpenSelectAccount)
-            } else {
-                openVCardImport(accounts.firstOrNull()?.account)
-            }
-        }
-    }
-
-    private fun openVCardImport(account: AccountModel?) {
-        emitEffect(Effect.OpenVCardImport(account))
     }
 }

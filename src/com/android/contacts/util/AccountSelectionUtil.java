@@ -17,11 +17,9 @@
 package com.android.contacts.util;
 
 import android.app.Activity;
-import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -32,11 +30,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+
 import com.android.contacts.R;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountWithDataSet;
-import com.android.contacts.vcard.ImportVCardActivity;
 
 import java.util.List;
 
@@ -47,11 +47,9 @@ public class AccountSelectionUtil {
     // TODO: maybe useful for EditContactActivity.java...
     private static final String LOG_TAG = "AccountSelectionUtil";
 
-    public static boolean mVCardShare = false;
-
     public static Uri mPath;
 
-    public static class AccountSelectedListener
+    public static abstract class AccountSelectedListener
             implements DialogInterface.OnClickListener {
 
         final private Activity mActivity;
@@ -78,10 +76,7 @@ public class AccountSelectionUtil {
             this(activity, accountList, resId, /* subscriptionId = */ -1);
         }
 
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            doImport(mActivity, mResId, mAccountList.get(which), mSubscriptionId);
-        }
+        public abstract void onClick(DialogInterface dialog, int which);
     }
 
     /**
@@ -89,7 +84,7 @@ public class AccountSelectionUtil {
      * The default OnCancelListener just closes itself with {@link Dialog#dismiss()}.
      */
     public static Dialog getSelectAccountDialog(Activity activity, int resId,
-            DialogInterface.OnClickListener onClickListener,
+            @NonNull DialogInterface.OnClickListener onClickListener,
             DialogInterface.OnCancelListener onCancelListener) {
         final AccountTypeManager accountTypes = AccountTypeManager.getInstance(activity);
         final List<AccountWithDataSet> writableAccountList =
@@ -132,11 +127,6 @@ public class AccountSelectionUtil {
             }
         };
 
-        if (onClickListener == null) {
-            AccountSelectedListener accountSelectedListener =
-                new AccountSelectedListener(activity, writableAccountList, resId);
-            onClickListener = accountSelectedListener;
-        }
         if (onCancelListener == null) {
             onCancelListener = new DialogInterface.OnCancelListener() {
                 public void onCancel(DialogInterface dialog) {
@@ -152,45 +142,5 @@ public class AccountSelectionUtil {
         builder.setOnCancelListener(onCancelListener);
         final AlertDialog result = builder.create();
         return result;
-    }
-
-    public static void doImport(Activity activity, int resId, AccountWithDataSet account,
-            int subscriptionId) {
-        if (resId == R.string.import_from_sim) {
-            doImportFromSim(activity, account, subscriptionId);
-        } else if (resId == R.string.import_from_vcf_file) {
-            doImportFromVcfFile(activity, account);
-        }
-    }
-
-    public static void doImportFromSim(Context context, AccountWithDataSet account,
-            int subscriptionId) {
-        Intent importIntent = new Intent(Intent.ACTION_VIEW);
-        importIntent.setType("vnd.android.cursor.item/sim-contact");
-        if (account != null) {
-            importIntent.putExtra("account_name", account.name);
-            importIntent.putExtra("account_type", account.type);
-            importIntent.putExtra("data_set", account.dataSet);
-        }
-        importIntent.putExtra("subscription_id", (Integer) subscriptionId);
-        importIntent.setClassName("com.android.phone", "com.android.phone.SimContacts");
-        context.startActivity(importIntent);
-    }
-
-    public static void doImportFromVcfFile(Activity activity, AccountWithDataSet account) {
-        Intent importIntent = new Intent(activity, ImportVCardActivity.class);
-        if (account != null) {
-            importIntent.putExtra("account_name", account.name);
-            importIntent.putExtra("account_type", account.type);
-            importIntent.putExtra("data_set", account.dataSet);
-        }
-
-        if (mVCardShare) {
-            importIntent.setAction(Intent.ACTION_VIEW);
-            importIntent.setData(mPath);
-        }
-        mVCardShare = false;
-        mPath = null;
-        activity.startActivityForResult(importIntent, 0);
     }
 }
