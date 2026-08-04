@@ -18,7 +18,6 @@ package com.android.contacts.vcard;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,14 +29,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.RawContacts;
-import androidx.core.app.NotificationCompat;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.android.contacts.R;
 import com.android.contacts.util.ContactsNotificationChannelsUtil;
 import com.android.vcard.VCardEntry;
 
 import java.text.NumberFormat;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.qualifiers.ApplicationContext;
 
 public class NotificationImportExportListener implements VCardImportExportListener,
         Handler.Callback {
@@ -52,12 +56,13 @@ public class NotificationImportExportListener implements VCardImportExportListen
     /* package */ static final String FAILURE_NOTIFICATION_TAG = "VCardServiceFailure";
 
     private final NotificationManager mNotificationManager;
-    private final Activity mContext;
+    private final Context mContext;
     private final Handler mHandler;
 
-    public NotificationImportExportListener(Activity activity) {
-        mContext = activity;
-        mNotificationManager = (NotificationManager) activity.getSystemService(
+    @Inject
+    public NotificationImportExportListener(@ApplicationContext Context context) {
+        mContext = context;
+        mNotificationManager = (NotificationManager) context.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         mHandler = new Handler(this);
     }

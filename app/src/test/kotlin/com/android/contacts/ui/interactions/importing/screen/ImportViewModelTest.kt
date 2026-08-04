@@ -4,11 +4,9 @@ import app.cash.turbine.awaitItem
 import app.cash.turbine.test
 import com.android.contacts.data.settings.model.SettingsAvailability
 import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
-import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimCards
 import com.android.contacts.model.SimCard
 import com.android.contacts.tests.MainDispatcherRule
-import com.android.contacts.tests.factory.AccountDisplayModelFactory
 import com.android.contacts.tests.factory.SimCardFactory
 import com.android.contacts.tests.factory.SimCardOptionFactory
 import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapper
@@ -19,7 +17,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -88,31 +85,9 @@ class ImportViewModelTest {
         }
 
     @Test
-    fun withMultipleAccounts_onVCardClick_openSelectAccountIsEmitted() =
+    fun onVCardClick_openVCardImport() =
         runTest(context = mainDispatcherRule.testDispatcher) {
-            val viewModel = createViewModel(
-                loadAccounts = {
-                    flowOf(
-                        (1..3).map { AccountDisplayModelFactory.build() }.toImmutableList(),
-                    )
-                },
-            )
-
-            viewModel.effects.test {
-                advanceUntilIdle()
-                viewModel.onAction(Action.VCardClick)
-                advanceUntilIdle()
-                assertEquals(Effect.OpenSelectAccount, awaitItem())
-            }
-        }
-
-    @Test
-    fun withOneAccount_onVCardClick_openVCardImport() =
-        runTest(context = mainDispatcherRule.testDispatcher) {
-            val account = AccountDisplayModelFactory.build()
-            val viewModel = createViewModel(
-                loadAccounts = { flowOf(persistentListOf(account)) },
-            )
+            val viewModel = createViewModel()
 
             viewModel.uiState.test {
                 advanceUntilIdle()
@@ -122,7 +97,7 @@ class ImportViewModelTest {
             viewModel.effects.test {
                 viewModel.onAction(Action.VCardClick)
                 advanceUntilIdle()
-                assertEquals(Effect.OpenVCardImport(account.account), awaitItem())
+                assertEquals(Effect.OpenVCardImport, awaitItem())
             }
         }
 
@@ -151,12 +126,10 @@ class ImportViewModelTest {
         settingsAvailabilityRepository: SettingsAvailabilityRepository = settingsAvailabilityRepo,
         loadSimCards: LoadSimCards = { emptyFlow() },
         simCardOptionMapper: SimCardOptionMapper = { SimCardOptionFactory.build() },
-        loadAccounts: LoadAccounts = { emptyFlow() },
     ) = ImportViewModel(
         settingsAvailabilityRepository = settingsAvailabilityRepository,
         loadSimCards = loadSimCards,
         simCardOptionMapper = simCardOptionMapper,
-        loadAccounts = loadAccounts,
     )
 
     companion object {
