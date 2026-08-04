@@ -180,21 +180,6 @@
         <item name="titleTextAppearance">@style/ContactsActionBarTitleTextAppCompat</item>
     </style>
 
-    <style name="LightToolbarNavigationButtonStyle" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
-        <item name="android:tint">?android:textColorSecondary</item>
-    </style>
-
-    <style name="LightToolbarThemeOverlay" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="toolbarNavigationButtonStyle">@style/LightToolbarNavigationButtonStyle</item>
-    </style>
-
-    <style name="LightToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
-        <item name="android:background">@color/contextual_selection_bar_color</item>
-        <item name="background">@color/contextual_selection_bar_color</item>
-        <item name="android:titleTextAppearance">@style/ContactsActionBarTitleTextBlack</item>
-        <item name="titleTextAppearance">@style/ContactsActionBarTitleTextBlack</item>
-    </style>
-
     <!-- Text in the action bar at the top of the screen -->
     <style name="ContactsActionBarTitleText"
         parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
@@ -449,27 +434,6 @@ background and text color. See also android:style/Widget.Holo.TextView.ListSepar
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
-    </style>
-
-    <style name="FullScreenDialogAnimationStyle">
-        <item name="android:windowEnterAnimation">@anim/slide_and_fade_in</item>
-        <item name="android:windowExitAnimation">@anim/slide_and_fade_out</item>
-    </style>
-
-    <style name="PeopleThemeAppCompat.FullScreenDialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:listSelector">?android:attr/listChoiceBackgroundIndicator</item>
-        <item name="android:windowAnimationStyle">@style/FullScreenDialogAnimationStyle</item>
-    </style>
-
-    <style name="PeopleThemeAppCompat.FullScreenDialog.SimImportActivity">
-        <!-- This is necessary because the window is partially transparent during the enter
-             and exit animations -->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:statusBarColor">@color/contextual_selection_bar_status_bar_color</item>
     </style>
 
     <!-- Style for item in navigation drawer -->

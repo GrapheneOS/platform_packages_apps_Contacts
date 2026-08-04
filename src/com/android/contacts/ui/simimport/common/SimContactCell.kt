@@ -120,11 +120,12 @@ private fun itemClipShape(
 ): Shape {
     // All corners are the same in our shapes
     val cornerSize = MaterialTheme.shapes.extraSmall.topStart
+    val defaultCornerSize = CornerSize(2.dp)
     return RoundedCornerShape(
-        topStart = if (isFirst || isSelected) cornerSize else CornerSize(0.dp),
-        topEnd = if (isFirst || isSelected) cornerSize else CornerSize(0.dp),
-        bottomStart = if (isLast || isSelected) cornerSize else CornerSize(0.dp),
-        bottomEnd = if (isLast || isSelected) cornerSize else CornerSize(0.dp),
+        topStart = if (isFirst || isSelected) cornerSize else defaultCornerSize,
+        topEnd = if (isFirst || isSelected) cornerSize else defaultCornerSize,
+        bottomStart = if (isLast || isSelected) cornerSize else defaultCornerSize,
+        bottomEnd = if (isLast || isSelected) cornerSize else defaultCornerSize,
     )
 }
 

@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.telecom.TelecomManager
+import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import com.android.contacts.list.ContactListFilterController
 import com.android.contacts.util.concurrent.ContactsExecutors
@@ -22,6 +23,8 @@ import kotlinx.coroutines.asCoroutineDispatcher
 @Module
 @InstallIn(SingletonComponent::class)
 internal class CoreProvidesModule {
+
+    // Coroutine Dispatchers
 
     @Provides
     @Reusable
@@ -43,6 +46,8 @@ internal class CoreProvidesModule {
     fun provideMainDispatcher(): CoroutineDispatcher {
         return Dispatchers.Main
     }
+
+    // Others
 
     @Provides
     @Reusable
@@ -103,5 +108,13 @@ internal class CoreProvidesModule {
     @SimReadDispatcher
     fun provideSimReadDispatcher(): CoroutineDispatcher {
         return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
+    }
+
+    @Provides
+    @Reusable
+    fun provideSubscriptionManager(
+        @ApplicationContext context: Context,
+    ): SubscriptionManager {
+        return context.getSystemService(SubscriptionManager::class.java)
     }
 }

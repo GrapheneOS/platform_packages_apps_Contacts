@@ -41,8 +41,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -186,19 +188,7 @@ private fun SimImportTopAppBar(
                 )
             }
         },
-        title = {
-            Text(
-                text = when {
-                    uiState.selectedContactsCount > 0 ->
-                        pluralStringResource(
-                            R.plurals.sim_import_selected_contacts_title,
-                            uiState.selectedContactsCount,
-                            uiState.selectedContactsCount,
-                        )
-                    else -> stringResource(R.string.sim_import_title_none_selected)
-                },
-            )
-        },
+        title = { SimImportTitle(uiState) },
         actions = {
             IconButton(
                 onClick = { onAction(Action.SelectAllClicked) },
@@ -231,6 +221,23 @@ private fun SimImportTopAppBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+    )
+}
+
+@Composable
+private fun SimImportTitle(uiState: State) {
+    Text(
+        text = when {
+            uiState.selectedContactsCount > 0 ->
+                pluralStringResource(
+                    R.plurals.sim_import_selected_contacts_title,
+                    uiState.selectedContactsCount,
+                    uiState.selectedContactsCount,
+                )
+            else -> stringResource(R.string.sim_import_title_none_selected)
+        },
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
     )
 }
 

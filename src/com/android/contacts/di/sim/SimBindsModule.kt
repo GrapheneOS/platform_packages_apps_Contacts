@@ -1,5 +1,7 @@
 package com.android.contacts.di.sim
 
+import com.android.contacts.domain.sim.usecase.LoadSimCards
+import com.android.contacts.domain.sim.usecase.LoadSimCardsImpl
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
 import com.android.contacts.domain.sim.usecase.LoadSimContactsImpl
 import com.android.contacts.domain.sim.usecase.StartSimImport
@@ -13,6 +15,12 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class SimBindsModule {
+
+    @Binds
+    @Reusable
+    abstract fun bindLoadSimCards(
+        impl: LoadSimCardsImpl,
+    ): LoadSimCards
 
     @Binds
     @Reusable

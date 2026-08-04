@@ -47,7 +47,6 @@ import com.android.contacts.model.SimCard;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.ui.UIIntents;
-import com.android.contacts.ui.simimport.SimImportActivity;
 import com.android.contacts.util.AccountSelectionUtil;
 import com.google.common.util.concurrent.Futures;
 

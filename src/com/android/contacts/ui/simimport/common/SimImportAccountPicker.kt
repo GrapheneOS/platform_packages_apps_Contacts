@@ -1,11 +1,9 @@
 package com.android.contacts.ui.simimport.common
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenuItem
@@ -24,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
@@ -57,7 +54,11 @@ internal fun SimImportAccountPicker(
     @OptIn(ExperimentalMaterial3Api::class)
     ExposedDropdownMenuBox(
         expanded = isExpanded,
-        onExpandedChange = { isExpanded = it },
+        onExpandedChange = {
+            if (canChangeAccounts) {
+                isExpanded = it
+            }
+        },
         modifier = modifier
             .testTag(SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG)
             .fillMaxWidth()
@@ -139,8 +140,6 @@ internal fun AccountIcon(account: AccountUiModel) {
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .size(24.dp),
     )
 }
