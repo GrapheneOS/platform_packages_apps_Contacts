@@ -29,7 +29,9 @@ import com.android.contacts.util.PermissionsUtil
 import com.android.contacts.util.PhoneNumberHelper
 
 /** Repository to fetch Sdn data from [CarrierConfigManager]. */
-class SdnRepository constructor(private val context: Context) {
+class SdnRepository constructor(
+    private val context: Context,
+) {
 
     fun isSdnPresent(): Boolean {
         if (
@@ -111,7 +113,10 @@ class SdnRepository constructor(private val context: Context) {
 }
 
 /** Hold the Service dialing number information to be displayed in SdnActivity. */
-data class Sdn(val serviceName: String, val serviceNumber: String) {
+data class Sdn(
+    val serviceName: String,
+    val serviceNumber: String,
+) {
 
     /** Generate lookup key that will help identify SDN when Opening QuickContact. */
     fun lookupKey(): String {

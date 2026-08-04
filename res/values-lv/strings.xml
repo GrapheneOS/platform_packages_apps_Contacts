@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Importēt"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Atlasiet kontaktpersonas"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"SIM kartē nav nevienas kontaktpersonas."</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Kontaktpersona jau ir jūsu sarakstā"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{Importēta # SIM kartes kontaktpersona.}zero{Importētas # SIM kartes kontaktpersonas.}one{Importēta # SIM kartes kontaktpersona.}other{Importētas # SIM kartes kontaktpersonas.}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Neizdevās importēt SIM kartes kontaktpersonas."</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Importēt no SIM"</string>

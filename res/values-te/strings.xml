@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"దిగుమతి చేయండి"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"కాంటాక్ట్‌లను ఎంచుకోండి"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"మీ SIM కార్డ్‌లో కాంటాక్ట్‌లు ఏవీ లేవు"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"కాంటాక్ట్ మీ లిస్ట్‌లో ఇప్పటికే ఉంది"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# SIM కాంటాక్ట్ దిగుమతి చేయబడింది}other{# SIM కాంటాక్ట్‌లు దిగుమతి చేయబడ్డాయి}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"SIM కాంటాక్ట్‌లను దిగుమతి చేయడంలో విఫలమైంది"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"SIM నుండి దిగుమతి చేసుకోండి"</string>

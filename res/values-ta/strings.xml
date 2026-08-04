@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"இறக்கு"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"தொடர்புகளைத் தேர்ந்தெடு"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"சிம் கார்டில் தொடர்புகள் இல்லை"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"தொடர்பு ஏற்கனவே உங்கள் பட்டியலில் உள்ளது"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# சிம் தொடர்பு இறக்கப்பட்டது}other{# சிம் தொடர்புகள் இறக்கப்பட்டன}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"சிம் தொடர்புகளை இறக்க முடியவில்லை"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"சிம்மிலிருந்து இறக்கு"</string>

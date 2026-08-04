@@ -27,10 +27,11 @@ import android.content.OperationApplicationException;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.TimingLogger;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import android.util.TimingLogger;
 
 import com.android.contacts.activities.PeopleActivity;
 import com.android.contacts.database.SimContactDao;

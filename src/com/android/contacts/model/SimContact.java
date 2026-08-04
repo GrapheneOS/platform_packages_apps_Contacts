@@ -28,7 +28,6 @@ import android.text.TextUtils;
 
 import com.android.contacts.ContactPhotoManager;
 import com.android.contacts.model.account.AccountWithDataSet;
-
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 

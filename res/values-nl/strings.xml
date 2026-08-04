@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"Importeren"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"Contacten selecteren"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"Geen contacten op je simkaart"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"Contact staat al in je lijst"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{# contact op simkaart geïmporteerd}other{# contacten op simkaart geïmporteerd}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"Kan contacten op simkaart niet importeren"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"Importeren van simkaart"</string>
