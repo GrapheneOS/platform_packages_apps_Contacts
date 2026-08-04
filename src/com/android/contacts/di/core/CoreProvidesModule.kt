@@ -4,6 +4,7 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.PowerManager
 import android.os.UserManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
@@ -46,6 +47,13 @@ internal class CoreProvidesModule {
     @MainDispatcher
     fun provideMainDispatcher(): CoroutineDispatcher {
         return Dispatchers.Main
+    }
+
+    @Provides
+    @Reusable
+    @SimReadDispatcher
+    fun provideSimReadDispatcher(): CoroutineDispatcher {
+        return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
     }
 
     // Others
@@ -98,13 +106,6 @@ internal class CoreProvidesModule {
 
     @Provides
     @Reusable
-    @SimReadDispatcher
-    fun provideSimReadDispatcher(): CoroutineDispatcher {
-        return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
-    }
-
-    @Provides
-    @Reusable
     fun provideSubscriptionManager(
         @ApplicationContext context: Context,
     ): SubscriptionManager {
@@ -122,5 +123,13 @@ internal class CoreProvidesModule {
     @Provides
     fun provideBidiFormatter(): BidiFormatter {
         return BidiFormatter.getInstance()
+    }
+
+    @Provides
+    @Reusable
+    fun providePowerManager(
+        @ApplicationContext context: Context,
+    ): PowerManager {
+        return context.getSystemService(Context.POWER_SERVICE) as PowerManager
     }
 }

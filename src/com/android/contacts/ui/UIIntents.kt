@@ -8,12 +8,17 @@ import com.android.contacts.ui.interactions.account.SelectAccountActivity
 import com.android.contacts.ui.interactions.account.screen.SelectAccountViewModel
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.simimport.SimImportActivity
+import com.android.contacts.ui.vcard.ImportVCardActivity
 
 internal object UIIntents {
     const val EXTRA_SUBSCRIPTION_ID: String = "extraSubscriptionId"
 
     fun getImportDialogIntent(context: Context): Intent {
         return Intent(context, ImportActivity::class.java)
+    }
+
+    fun getImportVCardIntent(context: Context): Intent {
+        return Intent(context, ImportVCardActivity::class.java)
     }
 
     fun getSelectAccountDialogIntent(
