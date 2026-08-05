@@ -2,6 +2,8 @@ package com.android.contacts.di.settings
 
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.data.settings.repository.DisplaySettingsRepositoryImpl
+import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
+import com.android.contacts.data.settings.repository.SettingsAvailabilityRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -17,4 +19,10 @@ internal abstract class SettingsBindsModule {
     abstract fun bindDisplaySettingsRepository(
         impl: DisplaySettingsRepositoryImpl,
     ): DisplaySettingsRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindSettingsAvailabilityRepository(
+        impl: SettingsAvailabilityRepositoryImpl,
+    ): SettingsAvailabilityRepository
 }
