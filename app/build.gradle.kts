@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
 }
 
@@ -12,6 +13,14 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        },
+    )
 }
 
 detekt {
@@ -66,6 +75,13 @@ android {
         res.directories.add("../res")
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
     lint {
         abortOnError = false
         disable += setOf("UnusedResources", "UnusedIds")
@@ -76,6 +92,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.accompanist.drawablepainter)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
@@ -85,12 +102,14 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
     implementation(libs.guava)
 
+    implementation(libs.kotlinx.immutable)
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.material)
@@ -103,6 +122,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.junit4)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
@@ -110,6 +130,7 @@ dependencies {
     testImplementation(libs.mockk.android)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
