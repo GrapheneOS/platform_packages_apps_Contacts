@@ -1,5 +1,7 @@
 package com.android.contacts.di.settings
 
+import com.android.contacts.data.profile.repository.ProfileRepository
+import com.android.contacts.data.profile.repository.ProfileRepositoryImpl
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.data.settings.repository.DisplaySettingsRepositoryImpl
 import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
@@ -25,4 +27,10 @@ internal abstract class SettingsBindsModule {
     abstract fun bindSettingsAvailabilityRepository(
         impl: SettingsAvailabilityRepositoryImpl,
     ): SettingsAvailabilityRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindProfileRepository(
+        impl: ProfileRepositoryImpl,
+    ): ProfileRepository
 }

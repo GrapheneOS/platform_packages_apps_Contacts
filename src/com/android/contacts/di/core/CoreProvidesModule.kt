@@ -1,5 +1,6 @@
 package com.android.contacts.di.core
 
+import android.content.ContentResolver
 import android.content.Context
 import android.telephony.TelephonyManager
 import dagger.Module
@@ -42,5 +43,13 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): TelephonyManager {
         return context.getSystemService(TelephonyManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideContentResolver(
+        @ApplicationContext context: Context,
+    ): ContentResolver {
+        return context.contentResolver
     }
 }
