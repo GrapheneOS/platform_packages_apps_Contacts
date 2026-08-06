@@ -56,6 +56,7 @@ android {
     namespace = "com.android.contacts"
 
     buildFeatures {
+        buildConfig = true
         compose = true
         resValues = true
     }
