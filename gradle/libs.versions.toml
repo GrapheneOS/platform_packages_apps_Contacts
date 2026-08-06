@@ -9,7 +9,7 @@ ktlint-gradle = "14.2.0"
 
 activity-compose = "1.13.0"
 appcompat = "1.7.1"
-compose-bom = "2026.03.01"
+compose-bom = "2026.06.01"
 coroutines = "1.10.2"
 guava = "33.5.0-android"
 material = "1.13.0"
