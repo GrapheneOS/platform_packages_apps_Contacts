@@ -3,6 +3,8 @@ package com.android.contacts.di.core
 import android.content.ContentResolver
 import android.content.Context
 import android.telephony.TelephonyManager
+import com.android.contacts.list.ContactListFilterController
+import com.android.contacts.util.core.CurrentTimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -51,5 +53,19 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): ContentResolver {
         return context.contentResolver
+    }
+
+    @Provides
+    @Reusable
+    fun provideContactListFilterController(
+        @ApplicationContext context: Context,
+    ): ContactListFilterController {
+        return ContactListFilterController.getInstance(context)
+    }
+
+    @Provides
+    @Reusable
+    fun provideCurrentTimeProvider(): CurrentTimeProvider {
+        return CurrentTimeProvider { System.currentTimeMillis() }
     }
 }
