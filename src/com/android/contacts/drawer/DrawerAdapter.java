@@ -18,7 +18,6 @@ package com.android.contacts.drawer;
 
 import android.app.Activity;
 import android.graphics.PorterDuff;
-import androidx.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
+
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
+import com.android.contacts.domain.debug.usecase.IsDebugEnabled;
 import com.android.contacts.group.GroupListItem;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.model.account.AccountDisplayInfo;
@@ -38,6 +40,8 @@ import com.android.contactsbind.ObjectFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dagger.hilt.android.EntryPointAccessors;
 
 public class DrawerAdapter extends BaseAdapter {
 
@@ -86,11 +90,15 @@ public class DrawerAdapter extends BaseAdapter {
 
     private List<BaseDrawerItem> mItemsList = new ArrayList<>();
     private AccountDisplayInfoFactory mAccountDisplayFactory;
+    private IsDebugEnabled isDebugEnabled;
 
     public DrawerAdapter(Activity activity) {
         super();
         mInflater = LayoutInflater.from(activity);
         mActivity = activity;
+        isDebugEnabled = EntryPointAccessors
+                .fromApplication(activity.getApplicationContext(), IsDebugEnabled.Provider.class)
+                .isDebugEnabled();
         initializeDrawerMenuItems();
     }
 
@@ -118,6 +126,9 @@ public class DrawerAdapter extends BaseAdapter {
         if (HelpUtils.isHelpAndFeedbackAvailable()) {
             mMiscItems.add(new MiscItem(R.id.nav_help, R.string.menu_help,
                     R.drawable.quantum_ic_help_vd_theme_24));
+        }
+        if (isDebugEnabled.invoke()) {
+            mMiscItems.add(new MiscItem(R.id.nav_debug, R.string.menu_debug, 0));
         }
         rebuildItemsList();
     }
@@ -167,7 +178,7 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return  mItemsList.size();
+        return mItemsList.size();
     }
 
     public BaseDrawerItem getItem(int position) {
@@ -208,7 +219,7 @@ public class DrawerAdapter extends BaseAdapter {
         throw new IllegalStateException("Unknown drawer item " + drawerItem);
     }
 
-    private View getBaseItemView(@LayoutRes int layoutResID, View result,ViewGroup parent) {
+    private View getBaseItemView(@LayoutRes int layoutResID, View result, ViewGroup parent) {
         if (result == null) {
             result = mInflater.inflate(layoutResID, parent, false);
         }
