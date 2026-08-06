@@ -14,6 +14,8 @@ import com.android.contacts.data.simimport.repository.SimImportResultRepository
 import com.android.contacts.data.simimport.repository.SimImportResultRepositoryImpl
 import com.android.contacts.domain.settings.usecase.GetSettingsData
 import com.android.contacts.domain.settings.usecase.GetSettingsDataImpl
+import com.android.contacts.ui.settings.screen.mapper.SettingsUiStateMapper
+import com.android.contacts.ui.settings.screen.mapper.SettingsUiStateMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -65,4 +67,10 @@ internal abstract class SettingsBindsModule {
     abstract fun bindGetSettingsData(
         impl: GetSettingsDataImpl,
     ): GetSettingsData
+
+    @Binds
+    @Reusable
+    abstract fun bindSettingsUiStateMapper(
+        impl: SettingsUiStateMapperImpl,
+    ): SettingsUiStateMapper
 }
