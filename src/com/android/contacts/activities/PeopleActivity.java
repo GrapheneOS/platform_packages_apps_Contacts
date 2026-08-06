@@ -90,6 +90,7 @@ import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.ContactsPreferenceActivity;
 import com.android.contacts.ui.UIIntents;
+import com.android.contacts.ui.debug.DebugOptionsMenu;
 import com.android.contacts.ui.interactions.account.SelectAccountActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.Constants;
@@ -110,9 +111,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Displays a list to browse contacts.
  */
+@AndroidEntryPoint
 public class PeopleActivity extends AppCompatContactsActivity implements
         DrawerFragmentListener {
 
@@ -204,6 +210,9 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private Object mStatusChangeListenerHandle;
 
     private final Handler mHandler = new Handler();
+
+    @Inject
+    DebugOptionsMenu debugOptionsMenu;
 
     private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
         public void onStatusChanged(int which) {
@@ -1248,6 +1257,11 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     @Override
     public void onLaunchHelpFeedback() {
         HelpUtils.launchHelpAndFeedbackForMainScreen(this);
+    }
+
+    @Override
+    public void onShowDebugOptions() {
+        debugOptionsMenu.show(this);
     }
 
     @Override
