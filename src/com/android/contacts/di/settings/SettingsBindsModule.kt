@@ -1,5 +1,7 @@
 package com.android.contacts.di.settings
 
+import com.android.contacts.data.accounts.repository.AccountsRepository
+import com.android.contacts.data.accounts.repository.AccountsRepositoryImpl
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepositoryImpl
 import com.android.contacts.data.profile.repository.ProfileRepository
@@ -10,6 +12,8 @@ import com.android.contacts.data.settings.repository.SettingsAvailabilityReposit
 import com.android.contacts.data.settings.repository.SettingsAvailabilityRepositoryImpl
 import com.android.contacts.data.simimport.repository.SimImportResultRepository
 import com.android.contacts.data.simimport.repository.SimImportResultRepositoryImpl
+import com.android.contacts.domain.settings.usecase.GetSettingsData
+import com.android.contacts.domain.settings.usecase.GetSettingsDataImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -49,4 +53,16 @@ internal abstract class SettingsBindsModule {
     abstract fun bindSimImportResultRepository(
         impl: SimImportResultRepositoryImpl,
     ): SimImportResultRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindAccountsRepository(
+        impl: AccountsRepositoryImpl,
+    ): AccountsRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindGetSettingsData(
+        impl: GetSettingsDataImpl,
+    ): GetSettingsData
 }
