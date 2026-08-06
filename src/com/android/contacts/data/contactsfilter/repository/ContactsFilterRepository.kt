@@ -4,9 +4,9 @@ import com.android.contacts.data.contactsfilter.model.ContactsFilter
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.list.ContactListFilter
 import com.android.contacts.list.ContactListFilterController
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 internal interface ContactsFilterRepository {
     suspend fun getContactsFilter(): ContactsFilter?
