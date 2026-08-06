@@ -3,7 +3,7 @@ agp = "9.1.0"
 detekt = "2.0.0-alpha.2"
 hilt = "2.59.2"
 kotlin = "2.3.20"
-ksp = "2.3.6"
+ksp = "2.3.10"
 ktlint = "1.8.0"
 ktlint-gradle = "14.2.0"
 
