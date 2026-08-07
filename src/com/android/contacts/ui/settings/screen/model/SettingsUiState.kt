@@ -13,4 +13,5 @@ internal data class SettingsUiState(
     val sortOrder: SortOrder? = null,
     val displayOrder: DisplayOrder? = null,
     val phoneticNameDisplay: PhoneticNameDisplay? = null,
+    val buildVersion: String? = null,
 )

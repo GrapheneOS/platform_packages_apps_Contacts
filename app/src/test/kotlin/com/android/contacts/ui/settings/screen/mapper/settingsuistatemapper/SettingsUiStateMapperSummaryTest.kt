@@ -138,6 +138,16 @@ internal class SettingsUiStateMapperSummaryTest : BaseSettingsUiStateMapperTest(
     }
 
     @Test
+    fun map_copiesBuildVersionForTheAboutScreen() {
+        val uiState = mapper.map(
+            settingsData = settingsData(buildVersion = "1.7.40"),
+            profile = null,
+        )
+
+        assertEquals("1.7.40", uiState.buildVersion)
+    }
+
+    @Test
     fun map_copiesSelectedDisplayOptionsForTheDialogs() {
         val uiState = mapper.map(settingsData = alternativeDisplayOptions(), profile = null)
 

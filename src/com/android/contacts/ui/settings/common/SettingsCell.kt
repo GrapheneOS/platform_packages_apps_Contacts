@@ -1,5 +1,6 @@
 package com.android.contacts.ui.settings.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -21,18 +23,20 @@ internal fun SettingsCell(
     title: String,
     isFirst: Boolean,
     isLast: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     summary: String? = null,
+    onClick: (() -> Unit)? = null,
 ) {
     Surface(
-        onClick = onClick,
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = cellShape(
             isFirst = isFirst,
             isLast = isLast,
         ),
-        modifier = modifier,
+        modifier = when (onClick) {
+            null -> modifier.semantics(mergeDescendants = true) {}
+            else -> modifier.clickable(onClick = onClick)
+        },
     ) {
         Column(
             Modifier
@@ -112,6 +116,12 @@ private fun SettingsCellSinglePreview() {
             isFirst = true,
             isLast = true,
             onClick = {},
+        )
+        SettingsCell(
+            title = "Build version",
+            summary = "1.0.0",
+            isFirst = true,
+            isLast = true,
         )
     }
 }

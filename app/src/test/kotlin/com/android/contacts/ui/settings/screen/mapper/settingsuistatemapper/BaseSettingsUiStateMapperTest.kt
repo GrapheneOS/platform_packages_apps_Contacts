@@ -32,12 +32,14 @@ internal abstract class BaseSettingsUiStateMapperTest {
         displaySettings: DisplaySettings = DISPLAY_SETTINGS,
         defaultAccountLabel: String? = null,
         contactsFilter: ContactsFilter? = null,
+        buildVersion: String? = null,
     ): SettingsData {
         return SettingsData(
             availability = availability,
             displaySettings = displaySettings,
             defaultAccountLabel = defaultAccountLabel,
             contactsFilter = contactsFilter,
+            buildVersion = buildVersion,
         )
     }
 

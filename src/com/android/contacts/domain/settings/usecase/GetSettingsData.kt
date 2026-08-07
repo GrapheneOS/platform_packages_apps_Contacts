@@ -1,6 +1,7 @@
 package com.android.contacts.domain.settings.usecase
 
 import com.android.contacts.data.accounts.repository.AccountsRepository
+import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
@@ -18,6 +19,7 @@ internal class GetSettingsDataImpl @Inject constructor(
     private val displaySettingsRepository: DisplaySettingsRepository,
     private val accountsRepository: AccountsRepository,
     private val contactsFilterRepository: ContactsFilterRepository,
+    private val appInfoRepository: AppInfoRepository,
 ) : GetSettingsData {
 
     override suspend fun invoke(): SettingsData {
@@ -34,12 +36,16 @@ internal class GetSettingsDataImpl @Inject constructor(
             val contactsFilter = async {
                 contactsFilterRepository.getContactsFilter()
             }
+            val buildVersion = async {
+                appInfoRepository.getBuildVersion()
+            }
 
             SettingsData(
                 availability = availability.await(),
                 displaySettings = displaySettings.await(),
                 defaultAccountLabel = defaultAccountLabel.await(),
                 contactsFilter = contactsFilter.await(),
+                buildVersion = buildVersion.await(),
             )
         }
     }

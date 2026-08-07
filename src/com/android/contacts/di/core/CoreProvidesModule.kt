@@ -2,6 +2,7 @@ package com.android.contacts.di.core
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.pm.PackageManager
 import android.telephony.TelephonyManager
 import com.android.contacts.list.ContactListFilterController
 import com.android.contacts.util.core.CurrentTimeProvider
@@ -45,6 +46,14 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): TelephonyManager {
         return context.getSystemService(TelephonyManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun providePackageManager(
+        @ApplicationContext context: Context,
+    ): PackageManager {
+        return context.packageManager
     }
 
     @Provides

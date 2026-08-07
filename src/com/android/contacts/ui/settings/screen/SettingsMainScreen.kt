@@ -23,12 +23,15 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import com.android.contacts.R
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
 import com.android.contacts.data.settings.model.SortOrder
 import com.android.contacts.ui.core.ContactsPreviewTheme
+import com.android.contacts.ui.settings.common.SETTINGS_BOTTOM_PADDING
+import com.android.contacts.ui.settings.common.SETTINGS_CELL_SPACING
+import com.android.contacts.ui.settings.common.SETTINGS_GROUP_SPACING
+import com.android.contacts.ui.settings.common.SETTINGS_HORIZONTAL_PADDING
 import com.android.contacts.ui.settings.common.SettingsCell
 import com.android.contacts.ui.settings.common.SettingsSectionHeader
 import com.android.contacts.ui.settings.common.SettingsSingleChoiceDialog
@@ -47,11 +50,6 @@ import com.android.contacts.ui.settings.screen.model.SettingsItemUiModel
 import com.android.contacts.ui.settings.screen.model.SettingsUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-
-private val HORIZONTAL_PADDING = 16.dp
-private val BOTTOM_PADDING = 32.dp
-private val GROUP_SPACING = 24.dp
-private val CELL_SPACING = 2.dp
 
 @Composable
 internal fun SettingsMainScreen(
@@ -116,12 +114,14 @@ private fun SettingsGroups(
 
     LazyColumn(
         contentPadding = PaddingValues(
-            start = HORIZONTAL_PADDING + contentPadding.calculateStartPadding(layoutDirection),
-            end = HORIZONTAL_PADDING + contentPadding.calculateEndPadding(layoutDirection),
+            start = SETTINGS_HORIZONTAL_PADDING +
+                contentPadding.calculateStartPadding(layoutDirection),
+            end = SETTINGS_HORIZONTAL_PADDING +
+                contentPadding.calculateEndPadding(layoutDirection),
             top = contentPadding.calculateTopPadding(),
-            bottom = BOTTOM_PADDING + contentPadding.calculateBottomPadding(),
+            bottom = SETTINGS_BOTTOM_PADDING + contentPadding.calculateBottomPadding(),
         ),
-        verticalArrangement = Arrangement.spacedBy(GROUP_SPACING),
+        verticalArrangement = Arrangement.spacedBy(SETTINGS_GROUP_SPACING),
         modifier = modifier.fillMaxSize(),
     ) {
         items(
@@ -168,7 +168,7 @@ private fun SettingsGroupCells(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(CELL_SPACING),
+        verticalArrangement = Arrangement.spacedBy(SETTINGS_CELL_SPACING),
         modifier = modifier,
     ) {
         group.items.forEachIndexed { index, item ->

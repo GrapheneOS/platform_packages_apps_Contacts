@@ -1,6 +1,7 @@
 package com.android.contacts.domain.settings.usecase
 
 import com.android.contacts.data.accounts.repository.AccountsRepository
+import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.contactsfilter.model.ContactsFilter
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
 import com.android.contacts.data.settings.model.DisplayOrder
@@ -31,12 +32,14 @@ class GetSettingsDataImplTest {
     private val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     private val accountsRepository = mockk<AccountsRepository>()
     private val contactsFilterRepository = mockk<ContactsFilterRepository>()
+    private val appInfoRepository = mockk<AppInfoRepository>()
 
     private val useCase = GetSettingsDataImpl(
         settingsAvailabilityRepository = settingsAvailabilityRepository,
         displaySettingsRepository = displaySettingsRepository,
         accountsRepository = accountsRepository,
         contactsFilterRepository = contactsFilterRepository,
+        appInfoRepository = appInfoRepository,
     )
 
     @Before
@@ -45,6 +48,7 @@ class GetSettingsDataImplTest {
         coEvery { displaySettingsRepository.getDisplaySettings() } returns DISPLAY_SETTINGS
         coEvery { accountsRepository.getDefaultAccountLabel() } returns "Device"
         coEvery { contactsFilterRepository.getContactsFilter() } returns ContactsFilter.CUSTOM
+        coEvery { appInfoRepository.getBuildVersion() } returns BUILD_VERSION
     }
 
     @Test
@@ -57,6 +61,7 @@ class GetSettingsDataImplTest {
                 displaySettings = DISPLAY_SETTINGS,
                 defaultAccountLabel = "Device",
                 contactsFilter = ContactsFilter.CUSTOM,
+                buildVersion = BUILD_VERSION,
             ),
             settingsData,
         )
@@ -92,6 +97,8 @@ class GetSettingsDataImplTest {
     }
 
     private companion object {
+        const val BUILD_VERSION = "1.7.40"
+
         val AVAILABILITY = SettingsAvailability(
             areContactsAvailable = true,
             areBlockedNumbersAvailable = true,

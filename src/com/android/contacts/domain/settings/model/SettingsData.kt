@@ -9,4 +9,5 @@ internal data class SettingsData(
     val displaySettings: DisplaySettings,
     val defaultAccountLabel: String?,
     val contactsFilter: ContactsFilter?,
+    val buildVersion: String?,
 )
