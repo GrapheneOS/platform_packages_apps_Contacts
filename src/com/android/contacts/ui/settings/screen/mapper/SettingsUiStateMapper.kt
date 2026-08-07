@@ -37,6 +37,7 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
             sortOrder = settingsData.displaySettings.sortOrder,
             displayOrder = settingsData.displaySettings.displayOrder,
             phoneticNameDisplay = settingsData.displaySettings.phoneticNameDisplay,
+            buildVersion = settingsData.buildVersion,
         )
     }
 
