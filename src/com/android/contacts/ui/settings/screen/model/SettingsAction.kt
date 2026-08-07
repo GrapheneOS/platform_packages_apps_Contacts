@@ -6,8 +6,6 @@ import com.android.contacts.data.settings.model.SortOrder
 
 internal sealed interface SettingsAction {
 
-    data object ContactsFilterChanged : SettingsAction
-    data object DefaultAccountChanged : SettingsAction
     data object LicensesClicked : SettingsAction
 
     data class ItemClicked(

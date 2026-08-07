@@ -253,11 +253,11 @@
 
         <!-- Used to set options -->
         <activity
-            android:name=".preference.ContactsPreferenceActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:exported="false"
             android:label="@string/activity_title_settings"
             android:launchMode="singleTop"
-            android:theme="@style/ContactsPreferencesTheme"/>
+            android:theme="@style/Theme.Compose"/>
 
         <activity
             android:name=".activities.LicenseActivity"

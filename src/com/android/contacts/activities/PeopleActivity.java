@@ -87,7 +87,7 @@ import com.android.contacts.logging.ScreenEvent.ScreenType;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
-import com.android.contacts.preference.ContactsPreferenceActivity;
+import com.android.contacts.ui.settings.SettingsActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.Constants;
 import com.android.contacts.util.ImplicitIntentsUtil;
@@ -1283,8 +1283,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     private Intent createPreferenceIntent() {
-        final Intent intent = new Intent(this, ContactsPreferenceActivity.class);
-        intent.putExtra(ContactsPreferenceActivity.EXTRA_NEW_LOCAL_PROFILE,
+        final Intent intent = new Intent(this, SettingsActivity.class);
+        intent.putExtra(SettingsActivity.EXTRA_NEW_LOCAL_PROFILE,
                 ContactEditorFragment.INTENT_EXTRA_NEW_LOCAL_PROFILE);
         return intent;
     }

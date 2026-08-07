@@ -5,7 +5,6 @@ import com.android.contacts.data.settings.model.DisplaySettings
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
 import com.android.contacts.data.settings.model.SortOrder
 import com.android.contacts.preference.ContactsPreferences
-import com.android.contacts.preference.PhoneticNameDisplayPreference
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -31,7 +30,7 @@ class DisplaySettingsRepositoryImplTest {
         givenStoredValues(
             sortOrder = ContactsPreferences.SORT_ORDER_PRIMARY,
             displayOrder = ContactsPreferences.DISPLAY_ORDER_PRIMARY,
-            phoneticNameDisplay = PhoneticNameDisplayPreference.SHOW_ALWAYS,
+            phoneticNameDisplay = ContactsPreferences.PHONETIC_NAME_DISPLAY_SHOW_ALWAYS,
         )
 
         val settings = repository.getDisplaySettings()
@@ -46,7 +45,7 @@ class DisplaySettingsRepositoryImplTest {
         givenStoredValues(
             sortOrder = ContactsPreferences.SORT_ORDER_ALTERNATIVE,
             displayOrder = ContactsPreferences.DISPLAY_ORDER_ALTERNATIVE,
-            phoneticNameDisplay = PhoneticNameDisplayPreference.HIDE_IF_EMPTY,
+            phoneticNameDisplay = ContactsPreferences.PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY,
         )
 
         val settings = repository.getDisplaySettings()
@@ -159,31 +158,37 @@ class DisplaySettingsRepositoryImplTest {
 
     @Test
     fun setPhoneticNameDisplay_whenShowAlwaysIsSelected_storesShowAlwaysValue() = runTest {
-        givenStoredValues(phoneticNameDisplay = PhoneticNameDisplayPreference.HIDE_IF_EMPTY)
+        givenStoredValues(
+            phoneticNameDisplay = ContactsPreferences.PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY,
+        )
 
         repository.setPhoneticNameDisplay(PhoneticNameDisplay.SHOW_ALWAYS)
 
         verify {
             contactsPreferences.phoneticNameDisplayPreference =
-                PhoneticNameDisplayPreference.SHOW_ALWAYS
+                ContactsPreferences.PHONETIC_NAME_DISPLAY_SHOW_ALWAYS
         }
     }
 
     @Test
     fun setPhoneticNameDisplay_whenHideIfEmptyIsSelected_storesHideIfEmptyValue() = runTest {
-        givenStoredValues(phoneticNameDisplay = PhoneticNameDisplayPreference.SHOW_ALWAYS)
+        givenStoredValues(
+            phoneticNameDisplay = ContactsPreferences.PHONETIC_NAME_DISPLAY_SHOW_ALWAYS,
+        )
 
         repository.setPhoneticNameDisplay(PhoneticNameDisplay.HIDE_IF_EMPTY)
 
         verify {
             contactsPreferences.phoneticNameDisplayPreference =
-                PhoneticNameDisplayPreference.HIDE_IF_EMPTY
+                ContactsPreferences.PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY
         }
     }
 
     @Test
     fun setPhoneticNameDisplay_whenSelectedValueIsAlreadyStored_doesNotWrite() = runTest {
-        givenStoredValues(phoneticNameDisplay = PhoneticNameDisplayPreference.SHOW_ALWAYS)
+        givenStoredValues(
+            phoneticNameDisplay = ContactsPreferences.PHONETIC_NAME_DISPLAY_SHOW_ALWAYS,
+        )
 
         repository.setPhoneticNameDisplay(PhoneticNameDisplay.SHOW_ALWAYS)
 
@@ -193,7 +198,7 @@ class DisplaySettingsRepositoryImplTest {
     private fun givenStoredValues(
         sortOrder: Int = ContactsPreferences.SORT_ORDER_PRIMARY,
         displayOrder: Int = ContactsPreferences.DISPLAY_ORDER_PRIMARY,
-        phoneticNameDisplay: Int = PhoneticNameDisplayPreference.SHOW_ALWAYS,
+        phoneticNameDisplay: Int = ContactsPreferences.PHONETIC_NAME_DISPLAY_SHOW_ALWAYS,
     ) {
         every { contactsPreferences.sortOrder } returns sortOrder
         every { contactsPreferences.displayOrder } returns displayOrder
