@@ -5,5 +5,6 @@ internal enum class SettingsGroupId {
     ACCOUNTS,
     DISPLAY,
     DATA,
+    PERMISSIONS,
     ABOUT,
 }

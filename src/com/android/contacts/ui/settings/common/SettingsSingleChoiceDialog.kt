@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +25,10 @@ import com.android.contacts.ui.settings.screen.model.SettingsChoice
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+private val DIALOG_CONTENT_PADDING = 24.dp
+private val CHOICE_VERTICAL_PADDING = 12.dp
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun <T> SettingsSingleChoiceDialog(
     title: String,
@@ -31,13 +38,27 @@ internal fun <T> SettingsSingleChoiceDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AlertDialog(
+    BasicAlertDialog(
         onDismissRequest = onDismissRequest,
-        title = {
-            Text(text = title)
-        },
-        text = {
-            Column {
+        modifier = modifier,
+    ) {
+        Surface(
+            shape = AlertDialogDefaults.shape,
+            color = AlertDialogDefaults.containerColor,
+            tonalElevation = AlertDialogDefaults.TonalElevation,
+        ) {
+            Column(Modifier.padding(vertical = DIALOG_CONTENT_PADDING)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = AlertDialogDefaults.titleContentColor,
+                    modifier = Modifier.padding(
+                        start = DIALOG_CONTENT_PADDING,
+                        end = DIALOG_CONTENT_PADDING,
+                        bottom = 16.dp,
+                    ),
+                )
+
                 options.forEach { option ->
                     SettingsChoiceRow(
                         choice = option,
@@ -46,10 +67,8 @@ internal fun <T> SettingsSingleChoiceDialog(
                     )
                 }
             }
-        },
-        confirmButton = {},
-        modifier = modifier,
-    )
+        }
+    }
 }
 
 @Composable
@@ -68,7 +87,10 @@ private fun <T> SettingsChoiceRow(
                 role = Role.RadioButton,
                 onClick = onSelect,
             )
-            .padding(vertical = 12.dp),
+            .padding(
+                horizontal = DIALOG_CONTENT_PADDING,
+                vertical = CHOICE_VERTICAL_PADDING,
+            ),
     ) {
         RadioButton(
             selected = isSelected,

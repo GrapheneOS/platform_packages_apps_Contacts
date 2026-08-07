@@ -33,6 +33,7 @@ internal abstract class BaseSettingsUiStateMapperTest {
         defaultAccountLabel: String? = null,
         contactsFilter: ContactsFilter? = null,
         buildVersion: String? = null,
+        isCallLogPermissionGranted: Boolean = true,
     ): SettingsData {
         return SettingsData(
             availability = availability,
@@ -40,6 +41,7 @@ internal abstract class BaseSettingsUiStateMapperTest {
             defaultAccountLabel = defaultAccountLabel,
             contactsFilter = contactsFilter,
             buildVersion = buildVersion,
+            isCallLogPermissionGranted = isCallLogPermissionGranted,
         )
     }
 

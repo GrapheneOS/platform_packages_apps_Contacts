@@ -4,6 +4,7 @@ import com.android.contacts.data.accounts.repository.AccountsRepository
 import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.contactsfilter.model.ContactsFilter
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
+import com.android.contacts.data.permissions.repository.PermissionsRepository
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.DisplaySettings
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
@@ -33,6 +34,7 @@ class GetSettingsDataImplTest {
     private val accountsRepository = mockk<AccountsRepository>()
     private val contactsFilterRepository = mockk<ContactsFilterRepository>()
     private val appInfoRepository = mockk<AppInfoRepository>()
+    private val permissionsRepository = mockk<PermissionsRepository>()
 
     private val useCase = GetSettingsDataImpl(
         settingsAvailabilityRepository = settingsAvailabilityRepository,
@@ -40,6 +42,7 @@ class GetSettingsDataImplTest {
         accountsRepository = accountsRepository,
         contactsFilterRepository = contactsFilterRepository,
         appInfoRepository = appInfoRepository,
+        permissionsRepository = permissionsRepository,
     )
 
     @Before
@@ -49,6 +52,7 @@ class GetSettingsDataImplTest {
         coEvery { accountsRepository.getDefaultAccountLabel() } returns "Device"
         coEvery { contactsFilterRepository.getContactsFilter() } returns ContactsFilter.CUSTOM
         coEvery { appInfoRepository.getBuildVersion() } returns BUILD_VERSION
+        coEvery { permissionsRepository.isCallLogGranted() } returns true
     }
 
     @Test
@@ -62,6 +66,7 @@ class GetSettingsDataImplTest {
                 defaultAccountLabel = "Device",
                 contactsFilter = ContactsFilter.CUSTOM,
                 buildVersion = BUILD_VERSION,
+                isCallLogPermissionGranted = true,
             ),
             settingsData,
         )

@@ -6,6 +6,7 @@ import android.content.ContentUris
 import android.content.Intent
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Settings as ContactsContractSettings
+import android.provider.Settings
 import android.telecom.TelecomManager
 import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.LicenseActivity
@@ -154,6 +155,17 @@ internal class SettingsEffectHandlerImplTest {
         effectHandler.handle(Effect.OpenBlockedNumbers)
 
         verify(exactly = 0) { activity.startActivity(any()) }
+    }
+
+    @Test
+    fun openAppPermissions_startsTheSystemAppDetails() {
+        every { activity.packageName } returns "com.android.contacts"
+
+        effectHandler.handle(Effect.OpenAppPermissions)
+
+        val intent = startedIntent()
+        assertEquals(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, intent.action)
+        assertEquals("package:com.android.contacts", intent.data.toString())
     }
 
     @Test

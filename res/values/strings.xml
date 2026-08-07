@@ -1334,6 +1334,18 @@
     <!-- Heading of the settings section with the import, export and blocking options [CHAR LIMIT=30] -->
     <string name="settings_section_manage_contacts">Manage contacts</string>
 
+    <!-- Heading of the settings section with the app permissions [CHAR LIMIT=30] -->
+    <string name="settings_section_permissions">Permissions</string>
+
+    <!-- Label of the setting that shows whether the app may read the call log [CHAR LIMIT=30] -->
+    <string name="settings_call_log_permission">Call logs</string>
+
+    <!-- Shown below a permission the user has granted to the app [CHAR LIMIT=30] -->
+    <string name="settings_permission_allowed">Allowed</string>
+
+    <!-- Shown below a permission the user has not granted to the app [CHAR LIMIT=30] -->
+    <string name="settings_permission_not_allowed">Not allowed</string>
+
     <!-- Action that shares favorite contacts [CHAR LIMIT=40]-->
     <string name="share_favorite_contacts">Share favorite contacts</string>
 

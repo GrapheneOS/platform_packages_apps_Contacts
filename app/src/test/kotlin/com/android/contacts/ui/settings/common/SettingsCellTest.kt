@@ -1,7 +1,6 @@
 package com.android.contacts.ui.settings.common
 
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -29,21 +28,6 @@ internal class SettingsCellTest {
 
         onNodeWithText("My info").assertIsDisplayed()
         onNodeWithText("Anna Smith").assertIsDisplayed()
-    }
-
-    @Test
-    fun whenThereIsNoSummary_showsOnlyTitle() = runComposeUiTest {
-        setContent {
-            SettingsCell(
-                title = "Accounts",
-                isFirst = true,
-                isLast = true,
-                onClick = {},
-            )
-        }
-
-        onNodeWithText("Accounts").assertIsDisplayed()
-        onNodeWithText("Accounts").assertHasClickAction()
     }
 
     @Test

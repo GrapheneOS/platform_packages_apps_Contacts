@@ -31,7 +31,10 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
 ) : SettingsUiStateMapper {
 
-    override fun map(settingsData: SettingsData, profile: ProfileData?): SettingsUiState {
+    override fun map(
+        settingsData: SettingsData,
+        profile: ProfileData?,
+    ): SettingsUiState {
         return SettingsUiState(
             groups = buildGroups(settingsData, profile),
             sortOrder = settingsData.displaySettings.sortOrder,
@@ -63,6 +66,11 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
                 id = SettingsGroupId.DATA,
                 items = dataItems(settingsData.availability),
                 titleResId = R.string.settings_section_manage_contacts,
+            ),
+            buildGroup(
+                id = SettingsGroupId.PERMISSIONS,
+                items = permissionItems(settingsData),
+                titleResId = R.string.settings_section_permissions,
             ),
             buildGroup(
                 id = SettingsGroupId.ABOUT,
@@ -174,6 +182,21 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
         }
     }
 
+    private fun permissionItems(settingsData: SettingsData): List<SettingsItemUiModel> {
+        val summaryResId = when {
+            settingsData.isCallLogPermissionGranted -> R.string.settings_permission_allowed
+            else -> R.string.settings_permission_not_allowed
+        }
+
+        return listOf(
+            buildItem(
+                id = SettingsItemId.CALL_LOG_PERMISSION,
+                titleResId = R.string.settings_call_log_permission,
+                summary = context.getString(summaryResId),
+            ),
+        )
+    }
+
     private fun aboutItems(availability: SettingsAvailability): List<SettingsItemUiModel> {
         return when {
             availability.isAboutAvailable -> listOf(
@@ -200,13 +223,14 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
     }
 
     private fun profileSummary(profile: ProfileData?): String? {
-        if (profile == null) {
-            return null
+        return when {
+            profile == null -> null
+            !profile.hasProfile -> context.getString(R.string.set_up_profile)
+            else -> profileDisplayName(profile)
         }
-        if (!profile.hasProfile) {
-            return context.getString(R.string.set_up_profile)
-        }
+    }
 
+    private fun profileDisplayName(profile: ProfileData): String {
         val displayName = profile.displayName
             ?.takeIf { it.isNotEmpty() }
             ?: context.getString(R.string.missing_name)

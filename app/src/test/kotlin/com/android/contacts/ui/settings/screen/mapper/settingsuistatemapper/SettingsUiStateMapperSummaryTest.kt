@@ -110,6 +110,32 @@ internal class SettingsUiStateMapperSummaryTest : BaseSettingsUiStateMapperTest(
     }
 
     @Test
+    fun map_whenCallLogPermissionIsGranted_showsItAsAllowed() {
+        val uiState = mapper.map(
+            settingsData = settingsData(isCallLogPermissionGranted = true),
+            profile = null,
+        )
+
+        assertEquals(
+            "string-${R.string.settings_permission_allowed}",
+            summaryOf(uiState, SettingsItemId.CALL_LOG_PERMISSION),
+        )
+    }
+
+    @Test
+    fun map_whenCallLogPermissionIsDenied_showsItAsNotAllowed() {
+        val uiState = mapper.map(
+            settingsData = settingsData(isCallLogPermissionGranted = false),
+            profile = null,
+        )
+
+        assertEquals(
+            "string-${R.string.settings_permission_not_allowed}",
+            summaryOf(uiState, SettingsItemId.CALL_LOG_PERMISSION),
+        )
+    }
+
+    @Test
     fun map_showsDefaultAccountLabelAsSummary() {
         val uiState = mapper.map(
             settingsData = settingsData(defaultAccountLabel = "Device"),
