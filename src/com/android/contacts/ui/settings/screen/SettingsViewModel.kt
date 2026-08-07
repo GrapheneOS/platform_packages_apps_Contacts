@@ -94,8 +94,6 @@ internal class SettingsViewModel @Inject constructor(
 
     override fun onAction(action: Action) {
         when (action) {
-            Action.ContactsFilterChanged -> refreshState()
-            Action.DefaultAccountChanged -> refreshState()
             Action.LicensesClicked -> emitEffect(Effect.OpenLicenses)
 
             is Action.ItemClicked -> {

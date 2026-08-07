@@ -2,7 +2,6 @@ package com.android.contacts.ui.settings.screen.settingsviewmodel
 
 import app.cash.turbine.test
 import com.android.contacts.data.profile.model.ProfileData
-import com.android.contacts.ui.settings.screen.model.SettingsAction as Action
 import com.android.contacts.ui.settings.screen.model.SettingsUiState
 import io.mockk.coEvery
 import io.mockk.every
@@ -62,31 +61,4 @@ internal class SettingsViewModelStateTest : BaseSettingsViewModelTest() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
-    @Test
-    fun onAction_whenContactsFilterChanged_reloadsSettingsData() =
-        runTest(context = mainDispatcherRule.testDispatcher) {
-            assertReloadsOn(Action.ContactsFilterChanged)
-        }
-
-    @Test
-    fun onAction_whenDefaultAccountChanged_reloadsSettingsData() =
-        runTest(context = mainDispatcherRule.testDispatcher) {
-            assertReloadsOn(Action.DefaultAccountChanged)
-        }
-
-    private suspend fun assertReloadsOn(action: Action) {
-        val viewModel = createViewModel()
-
-        viewModel.uiState.test {
-            assertEquals(SettingsUiState(), awaitItem())
-            assertEquals(mappedState, awaitItem())
-
-            coEvery { getSettingsData() } returns reloadedSettingsData
-            viewModel.onAction(action)
-
-            assertEquals(reloadedState, awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
 }

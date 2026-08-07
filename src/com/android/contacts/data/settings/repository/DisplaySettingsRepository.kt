@@ -6,7 +6,6 @@ import com.android.contacts.data.settings.model.PhoneticNameDisplay
 import com.android.contacts.data.settings.model.SortOrder
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.preference.ContactsPreferences
-import com.android.contacts.preference.PhoneticNameDisplayPreference
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -96,15 +95,20 @@ internal class DisplaySettingsRepositoryImpl @Inject constructor(
 
     private fun toPhoneticNameDisplay(value: Int): PhoneticNameDisplay {
         return when (value) {
-            PhoneticNameDisplayPreference.HIDE_IF_EMPTY -> PhoneticNameDisplay.HIDE_IF_EMPTY
+            ContactsPreferences.PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY ->
+                PhoneticNameDisplay.HIDE_IF_EMPTY
+
             else -> PhoneticNameDisplay.SHOW_ALWAYS
         }
     }
 
     private fun toPhoneticNameDisplayValue(phoneticNameDisplay: PhoneticNameDisplay): Int {
         return when (phoneticNameDisplay) {
-            PhoneticNameDisplay.SHOW_ALWAYS -> PhoneticNameDisplayPreference.SHOW_ALWAYS
-            PhoneticNameDisplay.HIDE_IF_EMPTY -> PhoneticNameDisplayPreference.HIDE_IF_EMPTY
+            PhoneticNameDisplay.SHOW_ALWAYS ->
+                ContactsPreferences.PHONETIC_NAME_DISPLAY_SHOW_ALWAYS
+
+            PhoneticNameDisplay.HIDE_IF_EMPTY ->
+                ContactsPreferences.PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY
         }
     }
 }

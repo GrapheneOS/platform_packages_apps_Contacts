@@ -62,6 +62,12 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
 
     public static final String PHONETIC_NAME_DISPLAY_KEY = "Phonetic_name_display";
 
+    /** The value for the PHONETIC_NAME_DISPLAY key to always show phonetic name fields. */
+    public static final int PHONETIC_NAME_DISPLAY_SHOW_ALWAYS = 0;
+
+    /** The value for the PHONETIC_NAME_DISPLAY key to hide empty phonetic name fields. */
+    public static final int PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY = 1;
+
     /**
      * Value to use when a preference is unassigned and needs to be read from the shared preferences
      */
@@ -168,9 +174,9 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
 
     public int getDefaultPhoneticNameDisplayPreference() {
         if (mContext.getResources().getBoolean(R.bool.config_default_hide_phonetic_name_if_empty)) {
-            return PhoneticNameDisplayPreference.HIDE_IF_EMPTY;
+            return PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY;
         } else {
-            return PhoneticNameDisplayPreference.SHOW_ALWAYS;
+            return PHONETIC_NAME_DISPLAY_SHOW_ALWAYS;
         }
     }
 
@@ -200,7 +206,7 @@ public class ContactsPreferences implements OnSharedPreferenceChangeListener {
     }
 
     public boolean shouldHidePhoneticNamesIfEmpty() {
-        return getPhoneticNameDisplayPreference() == PhoneticNameDisplayPreference.HIDE_IF_EMPTY;
+        return getPhoneticNameDisplayPreference() == PHONETIC_NAME_DISPLAY_HIDE_IF_EMPTY;
     }
 
     public boolean isDefaultAccountUserChangeable() {
