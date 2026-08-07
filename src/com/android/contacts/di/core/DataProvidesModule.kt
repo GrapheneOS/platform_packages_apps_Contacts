@@ -20,23 +20,31 @@ internal class DataProvidesModule {
     @Reusable
     fun contactsPreferences(
         @ApplicationContext context: Context,
-    ): ContactsPreferences = ContactsPreferences(context)
+    ): ContactsPreferences {
+        return ContactsPreferences(context)
+    }
 
     @Provides
     @Reusable
     fun accountTypeManager(
         @ApplicationContext context: Context,
-    ): AccountTypeManager = AccountTypeManager.getInstance(context)
+    ): AccountTypeManager {
+        return AccountTypeManager.getInstance(context)
+    }
 
     @Provides
     @Reusable
     fun simContactDao(
         @ApplicationContext context: Context,
-    ): SimContactDao = SimContactDao.create(context)
+    ): SimContactDao {
+        return SimContactDao.create(context)
+    }
 
     @Provides
     @Reusable
     fun localBroadcastManager(
         @ApplicationContext context: Context,
-    ): LocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+    ): LocalBroadcastManager {
+        return LocalBroadcastManager.getInstance(context)
+    }
 }

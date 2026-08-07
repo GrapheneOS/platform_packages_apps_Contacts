@@ -8,9 +8,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -22,6 +22,7 @@ import com.android.contacts.ui.core.ContactsPreviewTheme
 internal fun SettingsTopAppBar(
     title: String,
     onNavigateBack: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -40,11 +41,12 @@ internal fun SettingsTopAppBar(
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+        scrollBehavior = scrollBehavior,
         modifier = modifier,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @Composable
 private fun SettingsTopAppBarPreview() {
@@ -52,17 +54,7 @@ private fun SettingsTopAppBarPreview() {
         SettingsTopAppBar(
             title = "Settings",
             onNavigateBack = {},
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun SettingsTopAppBarLongTitlePreview() {
-    ContactsPreviewTheme {
-        SettingsTopAppBar(
-            title = "Contacts display and account settings",
-            onNavigateBack = {},
+            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
         )
     }
 }

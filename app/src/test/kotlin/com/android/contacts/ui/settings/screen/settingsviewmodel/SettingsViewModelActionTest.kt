@@ -44,6 +44,10 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
         assertItemClickEmits(SettingsItemId.BLOCKED_NUMBERS, Effect.OpenBlockedNumbers)
 
     @Test
+    fun onAction_whenCallLogPermissionClicked_opensAppPermissions() =
+        assertItemClickEmits(SettingsItemId.CALL_LOG_PERMISSION, Effect.OpenAppPermissions)
+
+    @Test
     fun onAction_whenLicensesClicked_opensLicenses() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             val viewModel = createViewModel()

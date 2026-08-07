@@ -28,6 +28,7 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
                 SettingsGroupId.ACCOUNTS,
                 SettingsGroupId.DISPLAY,
                 SettingsGroupId.DATA,
+                SettingsGroupId.PERMISSIONS,
                 SettingsGroupId.ABOUT,
             ),
             uiState.groups.map { it.id },
@@ -50,9 +51,20 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
                 SettingsItemId.IMPORT,
                 SettingsItemId.EXPORT,
                 SettingsItemId.BLOCKED_NUMBERS,
+                SettingsItemId.CALL_LOG_PERMISSION,
                 SettingsItemId.ABOUT,
             ),
             itemIds(allItems(uiState)),
+        )
+    }
+
+    @Test
+    fun map_headsThePermissionsSection() {
+        val uiState = mapper.map(settingsData = settingsData(), profile = null)
+
+        assertEquals(
+            "string-${R.string.settings_section_permissions}",
+            titleOf(uiState, SettingsGroupId.PERMISSIONS),
         )
     }
 

@@ -3,6 +3,7 @@ package com.android.contacts.data.profile.repository
 import android.content.ContentResolver
 import android.database.ContentObserver
 import android.database.MatrixCursor
+import android.database.sqlite.SQLiteException
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.DisplayNameSources
 import android.provider.ContactsContract.Profile
@@ -129,7 +130,19 @@ class ProfileRepositoryImplTest {
     fun observeProfile_whenProviderFails_emitsEmptyProfileData() = runTest {
         every {
             contentResolver.query(any(), any(), any(), any(), any())
-        } throws IllegalStateException("provider is down")
+        } throws SQLiteException("provider is down")
+
+        repository.observeProfile().test {
+            assertEquals(ProfileData(), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun observeProfile_whenPermissionIsMissing_emitsEmptyProfileData() = runTest {
+        every {
+            contentResolver.query(any(), any(), any(), any(), any())
+        } throws SecurityException("no read permission")
 
         repository.observeProfile().test {
             assertEquals(ProfileData(), awaitItem())

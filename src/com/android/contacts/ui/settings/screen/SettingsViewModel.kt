@@ -16,15 +16,13 @@ import com.android.contacts.ui.settings.screen.mapper.SettingsUiStateMapper
 import com.android.contacts.ui.settings.screen.model.SettingsAction as Action
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import com.android.contacts.ui.settings.screen.model.SettingsItemId
-import com.android.contacts.ui.settings.screen.model.SettingsUiState
+import com.android.contacts.ui.settings.screen.model.SettingsUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -36,7 +34,7 @@ import kotlinx.coroutines.launch
 
 internal interface SettingsScreenModel {
     val effects: Flow<Effect>
-    val uiState: StateFlow<SettingsUiState>
+    val uiState: StateFlow<State>
 
     fun refreshState()
     fun onAction(action: Action)
@@ -52,8 +50,8 @@ internal class SettingsViewModel @Inject constructor(
 ) : ViewModel(),
     SettingsScreenModel {
 
-    private val _effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
-    override val effects: Flow<Effect> = _effects.asSharedFlow()
+    private val _effects = Channel<Effect>(Channel.BUFFERED)
+    override val effects: Flow<Effect> = _effects.receiveAsFlow()
 
     private val refreshTriggers = Channel<Unit>(Channel.CONFLATED)
 
@@ -68,7 +66,7 @@ internal class SettingsViewModel @Inject constructor(
             initialValue = null,
         )
 
-    override val uiState: StateFlow<SettingsUiState> = combine(
+    override val uiState: StateFlow<State> = combine(
         settingsData,
         profile,
     ) { settingsData, profile ->
@@ -79,7 +77,7 @@ internal class SettingsViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STATE_STOP_TIMEOUT_MILLIS),
-        initialValue = SettingsUiState(),
+        initialValue = State(),
     )
 
     init {
@@ -94,7 +92,9 @@ internal class SettingsViewModel @Inject constructor(
 
     override fun onAction(action: Action) {
         when (action) {
-            Action.LicensesClicked -> emitEffect(Effect.OpenLicenses)
+            is Action.LicensesClicked -> {
+                emitEffect(Effect.OpenLicenses)
+            }
 
             is Action.ItemClicked -> {
                 onItemClicked(action.id)
@@ -103,6 +103,7 @@ internal class SettingsViewModel @Inject constructor(
             is Action.SortOrderSelected -> {
                 selectSortOrder(action.sortOrder)
             }
+
             is Action.DisplayOrderSelected -> {
                 selectDisplayOrder(action.displayOrder)
             }
@@ -122,6 +123,7 @@ internal class SettingsViewModel @Inject constructor(
             SettingsItemId.IMPORT -> emitEffect(Effect.ShowImportDialog)
             SettingsItemId.EXPORT -> emitEffect(Effect.ShowExportDialog)
             SettingsItemId.BLOCKED_NUMBERS -> emitEffect(Effect.OpenBlockedNumbers)
+            SettingsItemId.CALL_LOG_PERMISSION -> emitEffect(Effect.OpenAppPermissions)
 
             SettingsItemId.SORT_ORDER,
             SettingsItemId.DISPLAY_ORDER,
@@ -173,7 +175,7 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     private fun emitEffect(effect: Effect) {
-        _effects.tryEmit(effect)
+        _effects.trySend(effect)
     }
 
     private companion object {

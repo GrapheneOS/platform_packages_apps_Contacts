@@ -39,4 +39,19 @@ internal class SettingsViewModelSimImportTest : BaseSettingsViewModelTest() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun simImportResult_arrivingBeforeTheScreenCollects_isNotLost() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val viewModel = createViewModel()
+            advanceUntilIdle()
+
+            simImportResults.emit(SimImportResult.Success(importedCount = 3))
+            advanceUntilIdle()
+
+            viewModel.effects.test {
+                assertEquals(Effect.ShowSimImportSuccess(importedCount = 3), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 }

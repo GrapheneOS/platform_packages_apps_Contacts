@@ -8,10 +8,11 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -32,6 +34,7 @@ import com.android.contacts.ui.settings.common.SETTINGS_BOTTOM_PADDING
 import com.android.contacts.ui.settings.common.SETTINGS_CELL_SPACING
 import com.android.contacts.ui.settings.common.SETTINGS_GROUP_SPACING
 import com.android.contacts.ui.settings.common.SETTINGS_HORIZONTAL_PADDING
+import com.android.contacts.ui.settings.common.SETTINGS_TOP_PADDING
 import com.android.contacts.ui.settings.common.SettingsCell
 import com.android.contacts.ui.settings.common.SettingsSectionHeader
 import com.android.contacts.ui.settings.common.SettingsSingleChoiceDialog
@@ -51,6 +54,7 @@ import com.android.contacts.ui.settings.screen.model.SettingsUiState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun SettingsMainScreen(
     uiState: SettingsUiState,
@@ -61,13 +65,14 @@ internal fun SettingsMainScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var openedDialog by rememberSaveable { mutableStateOf<SettingsItemId?>(null) }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
             SettingsTopAppBar(
                 title = stringResource(R.string.activity_title_settings),
                 onNavigateBack = onNavigateBack,
+                scrollBehavior = scrollBehavior,
             )
         },
         snackbarHost = {
@@ -76,7 +81,7 @@ internal fun SettingsMainScreen(
                 modifier = Modifier.testTag(SETTINGS_SNACKBAR_TEST_TAG),
             )
         },
-        modifier = modifier,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         SettingsGroups(
             groups = uiState.groups,
@@ -88,8 +93,17 @@ internal fun SettingsMainScreen(
                     SettingsItemId.PHONETIC_NAME_DISPLAY,
                     -> openedDialog = id
 
+                    SettingsItemId.MY_INFO,
+                    SettingsItemId.ACCOUNTS,
+                    SettingsItemId.DEFAULT_ACCOUNT,
+                    SettingsItemId.CONTACTS_FILTER,
+                    SettingsItemId.IMPORT,
+                    SettingsItemId.EXPORT,
+                    SettingsItemId.BLOCKED_NUMBERS,
+                    SettingsItemId.CALL_LOG_PERMISSION,
+                    -> onAction(Action.ItemClicked(id))
+
                     SettingsItemId.ABOUT -> onNavigateToAbout()
-                    else -> onAction(Action.ItemClicked(id))
                 }
             },
         )
@@ -118,7 +132,7 @@ private fun SettingsGroups(
                 contentPadding.calculateStartPadding(layoutDirection),
             end = SETTINGS_HORIZONTAL_PADDING +
                 contentPadding.calculateEndPadding(layoutDirection),
-            top = contentPadding.calculateTopPadding(),
+            top = SETTINGS_TOP_PADDING + contentPadding.calculateTopPadding(),
             bottom = SETTINGS_BOTTOM_PADDING + contentPadding.calculateBottomPadding(),
         ),
         verticalArrangement = Arrangement.spacedBy(SETTINGS_GROUP_SPACING),
@@ -280,63 +294,65 @@ private fun phoneticNameDisplayChoices(): ImmutableList<SettingsChoice<PhoneticN
     )
 }
 
+private val PREVIEW_UI_STATE = SettingsUiState(
+    groups = persistentListOf(
+        SettingsGroupUiModel(
+            id = SettingsGroupId.PROFILE,
+            items = persistentListOf(
+                SettingsItemUiModel(
+                    id = SettingsItemId.MY_INFO,
+                    title = "My info",
+                    summary = "Anna Smith",
+                ),
+            ),
+        ),
+        SettingsGroupUiModel(
+            id = SettingsGroupId.ACCOUNTS,
+            items = persistentListOf(
+                SettingsItemUiModel(
+                    id = SettingsItemId.ACCOUNTS,
+                    title = "Accounts",
+                ),
+                SettingsItemUiModel(
+                    id = SettingsItemId.DEFAULT_ACCOUNT,
+                    title = "Default account for new contacts",
+                    summary = "Device",
+                ),
+                SettingsItemUiModel(
+                    id = SettingsItemId.CONTACTS_FILTER,
+                    title = "Contacts to display",
+                    summary = "All contacts",
+                ),
+            ),
+        ),
+        SettingsGroupUiModel(
+            id = SettingsGroupId.DISPLAY,
+            title = "Display options",
+            items = persistentListOf(
+                SettingsItemUiModel(
+                    id = SettingsItemId.SORT_ORDER,
+                    title = "Sort by",
+                    summary = "First name",
+                ),
+                SettingsItemUiModel(
+                    id = SettingsItemId.DISPLAY_ORDER,
+                    title = "Name format",
+                    summary = "First name first",
+                ),
+            ),
+        ),
+    ),
+    sortOrder = SortOrder.GIVEN_NAME_FIRST,
+    displayOrder = DisplayOrder.GIVEN_NAME_FIRST,
+    phoneticNameDisplay = PhoneticNameDisplay.SHOW_ALWAYS,
+)
+
 @PreviewLightDark
 @Composable
 private fun SettingsMainScreenPreview() {
     ContactsPreviewTheme {
         SettingsMainScreen(
-            uiState = SettingsUiState(
-                groups = persistentListOf(
-                    SettingsGroupUiModel(
-                        id = SettingsGroupId.PROFILE,
-                        items = persistentListOf(
-                            SettingsItemUiModel(
-                                id = SettingsItemId.MY_INFO,
-                                title = "My info",
-                                summary = "Anna Smith",
-                            ),
-                        ),
-                    ),
-                    SettingsGroupUiModel(
-                        id = SettingsGroupId.ACCOUNTS,
-                        items = persistentListOf(
-                            SettingsItemUiModel(
-                                id = SettingsItemId.ACCOUNTS,
-                                title = "Accounts",
-                            ),
-                            SettingsItemUiModel(
-                                id = SettingsItemId.DEFAULT_ACCOUNT,
-                                title = "Default account for new contacts",
-                                summary = "Device",
-                            ),
-                            SettingsItemUiModel(
-                                id = SettingsItemId.CONTACTS_FILTER,
-                                title = "Contacts to display",
-                                summary = "All contacts",
-                            ),
-                        ),
-                    ),
-                    SettingsGroupUiModel(
-                        id = SettingsGroupId.DISPLAY,
-                        title = "Display options",
-                        items = persistentListOf(
-                            SettingsItemUiModel(
-                                id = SettingsItemId.SORT_ORDER,
-                                title = "Sort by",
-                                summary = "First name",
-                            ),
-                            SettingsItemUiModel(
-                                id = SettingsItemId.DISPLAY_ORDER,
-                                title = "Name format",
-                                summary = "First name first",
-                            ),
-                        ),
-                    ),
-                ),
-                sortOrder = SortOrder.GIVEN_NAME_FIRST,
-                displayOrder = DisplayOrder.GIVEN_NAME_FIRST,
-                phoneticNameDisplay = PhoneticNameDisplay.SHOW_ALWAYS,
-            ),
+            uiState = PREVIEW_UI_STATE,
             onAction = {},
             onNavigateBack = {},
             onNavigateToAbout = {},

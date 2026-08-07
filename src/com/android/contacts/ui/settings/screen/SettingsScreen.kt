@@ -2,6 +2,7 @@ package com.android.contacts.ui.settings.screen
 
 import android.content.res.Resources
 import android.icu.text.MessageFormat
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import java.util.Locale
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingsScreen(
@@ -38,7 +40,12 @@ internal fun SettingsScreen(
         screenModel.effects.collect { effect ->
             when (effect) {
                 is Effect.Message -> {
-                    snackbarHostState.showSnackbar(message(resources, effect))
+                    launch {
+                        snackbarHostState.showSnackbar(
+                            message = message(resources, effect),
+                            duration = SnackbarDuration.Long,
+                        )
+                    }
                 }
 
                 is Effect.Host -> {

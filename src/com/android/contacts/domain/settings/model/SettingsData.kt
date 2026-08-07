@@ -10,4 +10,5 @@ internal data class SettingsData(
     val defaultAccountLabel: String?,
     val contactsFilter: ContactsFilter?,
     val buildVersion: String?,
+    val isCallLogPermissionGranted: Boolean,
 )

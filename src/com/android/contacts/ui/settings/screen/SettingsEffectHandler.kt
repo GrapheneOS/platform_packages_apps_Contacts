@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ContentUris
 import android.content.Intent
+import android.net.Uri
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Settings as ContactsContractSettings
+import android.provider.Settings
 import android.telecom.TelecomManager
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -41,6 +43,7 @@ internal class SettingsEffectHandlerImpl(
             is Effect.ShowExportDialog -> showExportDialog()
             is Effect.OpenBlockedNumbers -> openBlockedNumbers()
             is Effect.OpenLicenses -> openLicenses()
+            is Effect.OpenAppPermissions -> openAppPermissions()
         }
     }
 
@@ -86,6 +89,13 @@ internal class SettingsEffectHandlerImpl(
 
     private fun openBlockedNumbers() {
         val intent = TelecomManagerUtil.createManageBlockedNumbersIntent(telecomManager) ?: return
+
+        startActivity(intent)
+    }
+
+    private fun openAppPermissions() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            .setData(Uri.fromParts("package", activity.packageName, null))
 
         startActivity(intent)
     }

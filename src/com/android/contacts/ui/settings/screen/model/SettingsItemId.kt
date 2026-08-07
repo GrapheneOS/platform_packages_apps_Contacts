@@ -11,5 +11,6 @@ internal enum class SettingsItemId {
     IMPORT,
     EXPORT,
     BLOCKED_NUMBERS,
+    CALL_LOG_PERMISSION,
     ABOUT,
 }

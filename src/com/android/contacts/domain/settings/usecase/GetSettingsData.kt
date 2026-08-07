@@ -3,6 +3,7 @@ package com.android.contacts.domain.settings.usecase
 import com.android.contacts.data.accounts.repository.AccountsRepository
 import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
+import com.android.contacts.data.permissions.repository.PermissionsRepository
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
 import com.android.contacts.domain.settings.model.SettingsData
@@ -20,6 +21,7 @@ internal class GetSettingsDataImpl @Inject constructor(
     private val accountsRepository: AccountsRepository,
     private val contactsFilterRepository: ContactsFilterRepository,
     private val appInfoRepository: AppInfoRepository,
+    private val permissionsRepository: PermissionsRepository,
 ) : GetSettingsData {
 
     override suspend fun invoke(): SettingsData {
@@ -39,6 +41,9 @@ internal class GetSettingsDataImpl @Inject constructor(
             val buildVersion = async {
                 appInfoRepository.getBuildVersion()
             }
+            val isCallLogPermissionGranted = async {
+                permissionsRepository.isCallLogGranted()
+            }
 
             SettingsData(
                 availability = availability.await(),
@@ -46,6 +51,7 @@ internal class GetSettingsDataImpl @Inject constructor(
                 defaultAccountLabel = defaultAccountLabel.await(),
                 contactsFilter = contactsFilter.await(),
                 buildVersion = buildVersion.await(),
+                isCallLogPermissionGranted = isCallLogPermissionGranted.await(),
             )
         }
     }

@@ -3,7 +3,9 @@ package com.android.contacts.data.profile.repository
 import android.content.ContentResolver
 import android.database.ContentObserver
 import android.database.Cursor
+import android.database.sqlite.SQLiteException
 import android.net.Uri
+import android.os.OperationCanceledException
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.DisplayNameSources
 import android.provider.ContactsContract.Profile
@@ -12,7 +14,6 @@ import com.android.contacts.data.profile.model.ProfileData
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.preference.ContactsPreferences
 import javax.inject.Inject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -56,12 +57,19 @@ internal class ProfileRepositoryImpl @Inject constructor(
     private fun loadProfile(): ProfileData {
         return try {
             queryProfile()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: RuntimeException) {
-            Log.w(TAG, "Could not load the user profile", e)
-            ProfileData()
+        } catch (e: SecurityException) {
+            emptyProfile(e)
+        } catch (e: SQLiteException) {
+            emptyProfile(e)
+        } catch (e: OperationCanceledException) {
+            emptyProfile(e)
         }
+    }
+
+    private fun emptyProfile(cause: Exception): ProfileData {
+        Log.w(TAG, "Could not load the user profile", cause)
+
+        return ProfileData()
     }
 
     private fun queryProfile(): ProfileData {

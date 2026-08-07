@@ -2,6 +2,8 @@ package com.android.contacts.ui.settings.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,7 +58,7 @@ private fun SettingsNavHost(
         targetState = route,
         transitionSpec = { routeTransition() },
         label = "settings_navigation",
-        modifier = modifier,
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
     ) { currentRoute ->
         when (currentRoute) {
             SettingsNavRoute.Main -> {

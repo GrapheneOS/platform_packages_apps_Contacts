@@ -62,19 +62,21 @@ internal class SettingsScreenTest {
     }
 
     @Test
-    fun simImportResults_areNotPassedToTheEffectHandler() = runComposeUiTest {
+    fun otherEffects_arePassedToTheEffectHandler() = runComposeUiTest {
+        setScreenContent()
+
+        effects.tryEmit(Effect.OpenLicenses)
+        waitForIdle()
+
+        verify(exactly = 1) { effectHandler.handle(Effect.OpenLicenses) }
+    }
+
+    @Test
+    fun whileASnackbarIsShown_laterEffectsAreStillHandled() = runComposeUiTest {
         setScreenContent()
 
         effects.tryEmit(Effect.ShowSimImportFailure)
         waitForIdle()
-
-        verify(exactly = 0) { effectHandler.handle(any()) }
-    }
-
-    @Test
-    fun otherEffects_arePassedToTheEffectHandler() = runComposeUiTest {
-        setScreenContent()
-
         effects.tryEmit(Effect.OpenLicenses)
         waitForIdle()
 
