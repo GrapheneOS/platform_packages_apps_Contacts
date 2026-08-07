@@ -41,16 +41,16 @@ internal abstract class BaseSettingsUiStateMapperTest {
         )
     }
 
-    protected fun itemIds(items: List<SettingsItemUiModel>?): List<SettingsItemId>? {
-        return items?.map { it.id }
+    protected fun itemIds(items: List<SettingsItemUiModel>): List<SettingsItemId> {
+        return items.map { it.id }
     }
 
-    protected fun allItems(uiState: SettingsUiState): List<SettingsItemUiModel>? {
-        return uiState.groups?.flatMap { it.items }
+    protected fun allItems(uiState: SettingsUiState): List<SettingsItemUiModel> {
+        return uiState.groups.flatMap { it.items }
     }
 
     protected fun summaryOf(uiState: SettingsUiState, id: SettingsItemId): String? {
-        return allItems(uiState)?.first { it.id == id }?.summary
+        return allItems(uiState).first { it.id == id }.summary
     }
 
     protected companion object {

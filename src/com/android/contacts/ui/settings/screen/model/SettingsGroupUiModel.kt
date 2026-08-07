@@ -7,4 +7,5 @@ import kotlinx.collections.immutable.ImmutableList
 internal data class SettingsGroupUiModel(
     val id: SettingsGroupId,
     val items: ImmutableList<SettingsItemUiModel>,
+    val title: String? = null,
 )

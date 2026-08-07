@@ -45,23 +45,42 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
         profile: ProfileData?,
     ): ImmutableList<SettingsGroupUiModel> {
         return listOfNotNull(
-            buildGroup(SettingsGroupId.PROFILE, profileItems(profile)),
-            buildGroup(SettingsGroupId.ACCOUNTS, accountItems(settingsData)),
-            buildGroup(SettingsGroupId.DISPLAY, displayItems(settingsData.displaySettings)),
-            buildGroup(SettingsGroupId.DATA, dataItems(settingsData.availability)),
-            buildGroup(SettingsGroupId.ABOUT, aboutItems(settingsData.availability)),
+            buildGroup(
+                id = SettingsGroupId.PROFILE,
+                items = profileItems(profile),
+            ),
+            buildGroup(
+                id = SettingsGroupId.ACCOUNTS,
+                items = accountItems(settingsData),
+            ),
+            buildGroup(
+                id = SettingsGroupId.DISPLAY,
+                items = displayItems(settingsData.displaySettings),
+                titleResId = R.string.settings_section_display_options,
+            ),
+            buildGroup(
+                id = SettingsGroupId.DATA,
+                items = dataItems(settingsData.availability),
+                titleResId = R.string.settings_section_manage_contacts,
+            ),
+            buildGroup(
+                id = SettingsGroupId.ABOUT,
+                items = aboutItems(settingsData.availability),
+            ),
         ).toImmutableList()
     }
 
     private fun buildGroup(
         id: SettingsGroupId,
         items: List<SettingsItemUiModel>,
+        @StringRes titleResId: Int? = null,
     ): SettingsGroupUiModel? {
         return when {
             items.isEmpty() -> null
             else -> SettingsGroupUiModel(
                 id = id,
-                items = items.toImmutableList()
+                items = items.toImmutableList(),
+                title = titleResId?.let(context::getString),
             )
         }
     }

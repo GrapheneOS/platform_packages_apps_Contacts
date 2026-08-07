@@ -1328,6 +1328,12 @@
     <!-- Label of the "About" setting -->
     <string name="setting_about">About Contacts</string>
 
+    <!-- Heading of the settings section with the name display options [CHAR LIMIT=30] -->
+    <string name="settings_section_display_options">Display options</string>
+
+    <!-- Heading of the settings section with the import, export and blocking options [CHAR LIMIT=30] -->
+    <string name="settings_section_manage_contacts">Manage contacts</string>
+
     <!-- Action that shares favorite contacts [CHAR LIMIT=40]-->
     <string name="share_favorite_contacts">Share favorite contacts</string>
 
