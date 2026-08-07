@@ -1,8 +1,11 @@
 package com.android.contacts.ui.settings.screen.mapper.settingsuistatemapper
 
+import com.android.contacts.R
 import com.android.contacts.ui.settings.screen.model.SettingsGroupId
 import com.android.contacts.ui.settings.screen.model.SettingsItemId
+import com.android.contacts.ui.settings.screen.model.SettingsUiState
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,6 +13,10 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTest() {
+
+    private fun titleOf(uiState: SettingsUiState, id: SettingsGroupId): String? {
+        return uiState.groups.first { it.id == id }.title
+    }
 
     @Test
     fun map_buildsEveryGroupInScreenOrder() {
@@ -23,7 +30,7 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
                 SettingsGroupId.DATA,
                 SettingsGroupId.ABOUT,
             ),
-            uiState.groups?.map { it.id },
+            uiState.groups.map { it.id },
         )
     }
 
@@ -50,6 +57,29 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
     }
 
     @Test
+    fun map_headsTheDisplayAndDataSections() {
+        val uiState = mapper.map(settingsData = settingsData(), profile = null)
+
+        assertEquals(
+            "string-${R.string.settings_section_display_options}",
+            titleOf(uiState, SettingsGroupId.DISPLAY),
+        )
+        assertEquals(
+            "string-${R.string.settings_section_manage_contacts}",
+            titleOf(uiState, SettingsGroupId.DATA),
+        )
+    }
+
+    @Test
+    fun map_leavesTheRemainingSectionsWithoutAHeading() {
+        val uiState = mapper.map(settingsData = settingsData(), profile = null)
+
+        assertNull(titleOf(uiState, SettingsGroupId.PROFILE))
+        assertNull(titleOf(uiState, SettingsGroupId.ACCOUNTS))
+        assertNull(titleOf(uiState, SettingsGroupId.ABOUT))
+    }
+
+    @Test
     fun map_whenDisplayOptionsAreLocked_dropsTheWholeDisplayGroup() {
         val settingsData = settingsData(
             displaySettings = DISPLAY_SETTINGS.copy(
@@ -61,7 +91,7 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
 
         val uiState = mapper.map(settingsData = settingsData, profile = null)
 
-        assertTrue(uiState.groups?.none { it.id == SettingsGroupId.DISPLAY } == true)
+        assertTrue(uiState.groups.none { it.id == SettingsGroupId.DISPLAY })
     }
 
     @Test
@@ -77,7 +107,7 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
 
         assertEquals(
             listOf(SettingsItemId.SORT_ORDER),
-            itemIds(uiState.groups?.first { it.id == SettingsGroupId.DISPLAY }?.items),
+            itemIds(uiState.groups.first { it.id == SettingsGroupId.DISPLAY }.items),
         )
     }
 
@@ -91,7 +121,7 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
 
         assertEquals(
             listOf(SettingsItemId.IMPORT, SettingsItemId.BLOCKED_NUMBERS),
-            itemIds(uiState.groups?.first { it.id == SettingsGroupId.DATA }?.items),
+            itemIds(uiState.groups.first { it.id == SettingsGroupId.DATA }.items),
         )
     }
 
@@ -105,7 +135,7 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
 
         assertEquals(
             listOf(SettingsItemId.IMPORT, SettingsItemId.EXPORT),
-            itemIds(uiState.groups?.first { it.id == SettingsGroupId.DATA }?.items),
+            itemIds(uiState.groups.first { it.id == SettingsGroupId.DATA }.items),
         )
     }
 
@@ -117,6 +147,6 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
 
         val uiState = mapper.map(settingsData = settingsData, profile = null)
 
-        assertTrue(uiState.groups?.none { it.id == SettingsGroupId.ABOUT } == true)
+        assertTrue(uiState.groups.none { it.id == SettingsGroupId.ABOUT })
     }
 }
