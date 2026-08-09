@@ -67,15 +67,18 @@ class ContactDetailsMapperImplTest {
     private val accountTypeManager = mockk<AccountTypeManager>()
     private val accountType = mockk<AccountType>()
     private val dataKind = DataKind()
+    private val dataItemCollapser = mockk<DataItemCollapser>()
 
     private val mapper = ContactDetailsMapperImpl(
         context = context,
         accountTypeManager = accountTypeManager,
+        dataItemCollapser = dataItemCollapser,
     )
 
     @Before
     fun setUp() {
         every { accountTypeManager.getKindOrFallback(any(), any()) } returns dataKind
+        every { dataItemCollapser.collapse(any()) } answers { firstArg() }
         mockkStatic(InvisibleContactUtil::class)
         every { InvisibleContactUtil.isInvisibleAndAddable(any(), any()) } returns false
     }
@@ -403,33 +406,24 @@ class ContactDetailsMapperImplTest {
     }
 
     @Test
-    fun map_withCollapsibleDataItems_keepsOnlyTheCollapsedItem() {
-        val first = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 1L)
-        val second = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 2L)
-        every { first.shouldCollapseWith(second, context) } returns true
+    fun map_withSeveralMimeTypes_collapsesEachMimeTypeOnItsOwn() {
+        val phone = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 1L)
+        val otherPhone = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 2L)
+        val email = dataItem<EmailDataItem>(mimeType = Email.CONTENT_ITEM_TYPE, id = 3L)
 
-        assertEquals(listOf(1L), mapDataItems(first, second).map { it.id })
+        mapDataItems(phone, email, otherPhone)
+
+        verify { dataItemCollapser.collapse(listOf(phone, otherPhone)) }
+        verify { dataItemCollapser.collapse(listOf(email)) }
     }
 
     @Test
-    fun map_withLaterDataItemClaimingTheDuplicate_keepsTheLaterItem() {
+    fun map_withCollapsedDataItems_mapsOnlyTheSurvivors() {
         val first = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 1L)
         val second = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 2L)
-        every { second.shouldCollapseWith(first, context) } returns true
-
-        assertEquals(listOf(2L), mapDataItems(first, second).map { it.id })
-        verify { second.collapseWith(first) }
-    }
-
-    @Test
-    fun map_withDuplicateClaimedInBothDirections_keepsTheEarlierItem() {
-        val first = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 1L)
-        val second = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 2L)
-        every { first.shouldCollapseWith(second, context) } returns true
-        every { second.shouldCollapseWith(first, context) } returns true
+        every { dataItemCollapser.collapse(any()) } returns listOf(first)
 
         assertEquals(listOf(1L), mapDataItems(first, second).map { it.id })
-        verify { first.collapseWith(second) }
     }
 
     @Test
@@ -438,28 +432,6 @@ class ContactDetailsMapperImplTest {
         val second = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = 2L)
 
         assertEquals(listOf(1L, 2L), mapDataItems(first, second).map { it.id })
-    }
-
-    @Test
-    fun map_withMoreDataItemsThanTheCollapseLimit_keepsThemAll() {
-        val items = (1L..21L).map { id ->
-            dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = id)
-        }
-        items.forEach { item ->
-            every { item.shouldCollapseWith(any(), any()) } returns true
-        }
-
-        assertEquals(items.size, mapDataItems(*items.toTypedArray()).size)
-    }
-
-    @Test
-    fun map_withThreeCollapsibleDataItems_keepsOnlyTheFirst() {
-        val items = (1L..3L).map { id ->
-            dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE, id = id)
-        }
-        every { items[0].shouldCollapseWith(any(), any()) } returns true
-
-        assertEquals(listOf(1L), mapDataItems(*items.toTypedArray()).map { it.id })
     }
 
     @Test
@@ -735,7 +707,6 @@ class ContactDetailsMapperImplTest {
         every { item.buildDataStringForDisplay(context, dataKind) } returns dataString
         every { item.hasKindTypeColumn(dataKind) } returns (typeValue != null)
         every { item.getKindTypeColumn(dataKind) } returns (typeValue ?: 0)
-        every { item.shouldCollapseWith(any(), any()) } returns false
         stubLabel(item, label)
         item.block()
         return item
