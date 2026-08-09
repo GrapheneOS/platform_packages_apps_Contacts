@@ -8,7 +8,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.CommonDataKinds.SipAddress
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
-import android.provider.ContactsContract.DisplayNameSources
+import android.provider.ContactsContract.DisplayNameSources as Sources
 import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
@@ -51,6 +51,7 @@ internal interface ContactDetailsMapper {
 internal class ContactDetailsMapperImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val accountTypeManager: AccountTypeManager,
+    private val dataItemCollapser: DataItemCollapser,
 ) : ContactDetailsMapper {
 
     override fun map(
@@ -77,15 +78,12 @@ internal class ContactDetailsMapperImpl @Inject constructor(
 
     private fun mapDisplayNameSource(displayNameSource: Int): ContactDisplayNameSource {
         return when (displayNameSource) {
-            DisplayNameSources.EMAIL -> ContactDisplayNameSource.EMAIL
-            DisplayNameSources.PHONE -> ContactDisplayNameSource.PHONE
-            DisplayNameSources.ORGANIZATION -> ContactDisplayNameSource.ORGANIZATION
-            DisplayNameSources.NICKNAME -> ContactDisplayNameSource.NICKNAME
-
-            DisplayNameSources.STRUCTURED_PHONETIC_NAME ->
-                ContactDisplayNameSource.STRUCTURED_PHONETIC_NAME
-
-            DisplayNameSources.STRUCTURED_NAME -> ContactDisplayNameSource.STRUCTURED_NAME
+            Sources.EMAIL -> ContactDisplayNameSource.EMAIL
+            Sources.PHONE -> ContactDisplayNameSource.PHONE
+            Sources.ORGANIZATION -> ContactDisplayNameSource.ORGANIZATION
+            Sources.NICKNAME -> ContactDisplayNameSource.NICKNAME
+            Sources.STRUCTURED_PHONETIC_NAME -> ContactDisplayNameSource.STRUCTURED_PHONETIC_NAME
+            Sources.STRUCTURED_NAME -> ContactDisplayNameSource.STRUCTURED_NAME
             else -> ContactDisplayNameSource.UNDEFINED
         }
     }
@@ -124,7 +122,7 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             }
             .groupBy { dataItem -> dataItem.mimeType }
             .values
-            .flatMap(::collapseDuplicates)
+            .flatMap(dataItemCollapser::collapse)
             .map(::mapDataItem)
     }
 
@@ -165,39 +163,6 @@ internal class ContactDetailsMapperImpl @Inject constructor(
         }
 
         return !dataItem.buildDataString(context, dataKind).isNullOrEmpty()
-    }
-
-    private fun collapseDuplicates(dataItems: List<DataItem>): List<DataItem> {
-        if (dataItems.size > MAX_COLLAPSIBLE_ITEMS) {
-            return dataItems
-        }
-
-        val remaining: MutableList<DataItem?> = dataItems.toMutableList()
-        for (index in remaining.indices) {
-            val current = remaining[index] ?: continue
-            collapseFollowing(remaining, index, current)
-        }
-
-        return remaining.filterNotNull()
-    }
-
-    private fun collapseFollowing(
-        remaining: MutableList<DataItem?>,
-        index: Int,
-        current: DataItem,
-    ) {
-        for (otherIndex in index + 1 until remaining.size) {
-            val other = remaining[otherIndex] ?: continue
-
-            if (current.shouldCollapseWith(other, context)) {
-                current.collapseWith(other)
-                remaining[otherIndex] = null
-            } else if (other.shouldCollapseWith(current, context)) {
-                other.collapseWith(current)
-                remaining[index] = null
-                return
-            }
-        }
     }
 
     private fun mapDataItem(dataItem: DataItem): ContactDataItem {
@@ -468,9 +433,5 @@ internal class ContactDetailsMapperImpl @Inject constructor(
         }
 
         return resolve(dataItem.getKindTypeColumn(dataKind), label).toString()
-    }
-
-    private companion object {
-        const val MAX_COLLAPSIBLE_ITEMS = 20
     }
 }

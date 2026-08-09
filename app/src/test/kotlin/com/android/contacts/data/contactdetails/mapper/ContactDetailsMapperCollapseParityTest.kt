@@ -1,6 +1,5 @@
 package com.android.contacts.data.contactdetails.mapper
 
-import android.content.ContentValues
 import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Event
@@ -15,8 +14,6 @@ import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.model.Contact
 import com.android.contacts.model.RawContact
 import com.android.contacts.model.account.AccountType
-import com.android.contacts.model.account.AccountType.EditType
-import com.android.contacts.model.account.BaseAccountType.SimpleInflater
 import com.android.contacts.model.dataitem.DataItem
 import com.android.contacts.model.dataitem.DataKind
 import com.android.contacts.quickcontact.InvisibleContactUtil
@@ -43,6 +40,7 @@ class ContactDetailsMapperCollapseParityTest {
     private val mapper = ContactDetailsMapperImpl(
         context = context,
         accountTypeManager = accountTypeManager,
+        dataItemCollapser = DataItemCollapserImpl(DataItemCollapseMatcherImpl(context)),
     )
 
     @Before
@@ -251,10 +249,7 @@ class ContactDetailsMapperCollapseParityTest {
     }
 
     private fun legacyStates(rows: List<DataRow>): Map<String, List<ItemState>> {
-        val dataKind = anyDataKind()
-        val dataItems = rows
-            .map { row -> DataItem.createFrom(row.toContentValues()) }
-            .onEach { dataItem -> dataItem.dataKind = dataKind }
+        val dataItems = dataItems(rows, collapsibleDataKind())
 
         return dataItems.groupBy { dataItem -> dataItem.mimeType }
             .mapValues { (_, items) ->
@@ -265,9 +260,9 @@ class ContactDetailsMapperCollapseParityTest {
     }
 
     private fun mappedStates(rows: List<DataRow>): Map<String, List<ItemState>> {
-        val dataKind = anyDataKind()
+        val dataKind = collapsibleDataKind()
         every { accountTypeManager.getKindOrFallback(any(), any()) } returns dataKind
-        val dataItems = rows.map { row -> DataItem.createFrom(row.toContentValues()) }
+        val dataItems = dataItems(rows, dataKind)
 
         val mapped = mapper.map(contactWith(dataItems), emptySet())
 
@@ -277,6 +272,24 @@ class ContactDetailsMapperCollapseParityTest {
             }
             .groupBy { dataItem -> dataItem.mimeType }
             .mapValues { (_, items) -> items.map(::toItemState) }
+    }
+
+    private fun dataItems(
+        rows: List<DataRow>,
+        dataKind: DataKind,
+    ): List<DataItem> {
+        return rows.map { row ->
+            collapsibleDataItem(
+                id = row.id,
+                mimeType = row.mimeType,
+                data = row.data,
+                type = row.type,
+                protocol = row.protocol,
+                isPrimary = row.isPrimary,
+                isSuperPrimary = row.isSuperPrimary,
+                dataKind = dataKind,
+            )
+        }
     }
 
     private fun toItemState(dataItem: DataItem): ItemState {
@@ -307,19 +320,6 @@ class ContactDetailsMapperCollapseParityTest {
         every { contact.isUserProfile } returns false
         every { contact.areAllRawContactsSimAccounts(context) } returns false
         return contact
-    }
-
-    private fun anyDataKind(): DataKind {
-        return DataKind(Phone.CONTENT_ITEM_TYPE, -1, 10, true).apply {
-            actionBody = SimpleInflater(Data.DATA1)
-            typeColumn = Data.DATA2
-            typeList = listOf(
-                EditType(Phone.TYPE_MOBILE, -1),
-                EditType(Phone.TYPE_HOME, -1),
-                EditType(Phone.TYPE_WORK, -1),
-                EditType(Phone.TYPE_OTHER, -1),
-            )
-        }
     }
 
     private fun row(
@@ -396,19 +396,7 @@ class ContactDetailsMapperCollapseParityTest {
         val isPrimary: Boolean,
         val isSuperPrimary: Boolean,
         val protocol: Int? = null,
-    ) {
-        fun toContentValues(): ContentValues {
-            return ContentValues().apply {
-                put(Data._ID, id)
-                put(Data.MIMETYPE, mimeType)
-                put(Data.DATA1, data)
-                type?.let { value -> put(Data.DATA2, value) }
-                protocol?.let { value -> put(Data.DATA5, value) }
-                put(Data.IS_PRIMARY, if (isPrimary) 1 else 0)
-                put(Data.IS_SUPER_PRIMARY, if (isSuperPrimary) 1 else 0)
-            }
-        }
-    }
+    )
 
     private data class ItemState(
         val id: Long,
