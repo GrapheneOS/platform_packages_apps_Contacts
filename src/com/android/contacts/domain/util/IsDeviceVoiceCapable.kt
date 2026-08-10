@@ -1,4 +1,4 @@
-package com.android.contacts.domain.contactdetails.usecase.telephony
+package com.android.contacts.domain.util
 
 import android.telephony.TelephonyManager
 import javax.inject.Inject
@@ -12,6 +12,6 @@ internal class IsDeviceVoiceCapableImpl @Inject constructor(
 ) : IsDeviceVoiceCapable {
 
     override operator fun invoke(): Boolean {
-        return telephonyManager.isVoiceCapable
+        return telephonyManager.isDeviceVoiceCapable
     }
 }
