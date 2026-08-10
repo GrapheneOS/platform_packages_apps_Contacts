@@ -14,6 +14,10 @@ import com.android.contacts.data.contactdetails.repository.ContactShortcutReposi
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepositoryImpl
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.data.contactdetails.source.ContactLoaderSourceImpl
+import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
+import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
+import com.android.contacts.domain.contactdetails.usecase.telephony.IsDeviceVoiceCapable
+import com.android.contacts.domain.contactdetails.usecase.telephony.IsDeviceVoiceCapableImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -66,4 +70,16 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindContactShortcutRepository(
         impl: ContactShortcutRepositoryImpl,
     ): ContactShortcutRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindIsDeviceVoiceCapable(
+        impl: IsDeviceVoiceCapableImpl,
+    ): IsDeviceVoiceCapable
+
+    @Binds
+    @Reusable
+    abstract fun bindGetContactDetailsMenu(
+        impl: GetContactDetailsMenuImpl,
+    ): GetContactDetailsMenu
 }
