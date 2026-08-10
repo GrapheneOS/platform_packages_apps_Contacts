@@ -8,6 +8,8 @@ import android.provider.ContactsContract.CommonDataKinds.Note
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Relation
 import com.android.contacts.model.dataitem.DataItem
+import com.android.contacts.tests.factory.collapsibleDataItem
+import com.android.contacts.tests.factory.collapsibleDataKind
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

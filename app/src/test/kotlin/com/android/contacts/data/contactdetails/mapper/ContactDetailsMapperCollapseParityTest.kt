@@ -17,6 +17,8 @@ import com.android.contacts.model.account.AccountType
 import com.android.contacts.model.dataitem.DataItem
 import com.android.contacts.model.dataitem.DataKind
 import com.android.contacts.quickcontact.InvisibleContactUtil
+import com.android.contacts.tests.factory.collapsibleDataItem
+import com.android.contacts.tests.factory.collapsibleDataKind
 import com.google.common.collect.ImmutableList
 import io.mockk.every
 import io.mockk.mockk
