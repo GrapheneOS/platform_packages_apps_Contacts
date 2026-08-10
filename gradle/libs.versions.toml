@@ -1,6 +1,6 @@
 [versions]
 agp = "9.1.0"
-detekt = "2.0.0-alpha.2"
+detekt = "2.0.0-alpha.6"
 hilt = "2.59.2"
 kotlin = "2.3.20"
 ksp = "2.3.6"
