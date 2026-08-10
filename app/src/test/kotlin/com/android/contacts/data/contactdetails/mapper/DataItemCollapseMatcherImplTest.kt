@@ -9,6 +9,9 @@ import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.Data
 import com.android.contacts.model.dataitem.DataItem
 import com.android.contacts.model.dataitem.DataKind
+import com.android.contacts.tests.factory.collapsibleDataItem
+import com.android.contacts.tests.factory.collapsibleDataKind
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -17,7 +20,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class DataItemCollapseMatcherImplTest {
+internal class DataItemCollapseMatcherImplTest {
 
     private val context: Context = RuntimeEnvironment.getApplication()
 
@@ -46,6 +49,54 @@ class DataItemCollapseMatcherImplTest {
         val other = phone(number = "4155559999", dataKind = kind)
 
         assertTrue(matcher.shouldCollapse(current, other))
+    }
+
+    @Test
+    fun shouldCollapse_withEqualMimeTypesAndData_returnsTrue() {
+        assertItemsCollapse(mimeType = null, data = null, otherMimeType = null, otherData = null)
+        assertItemsCollapse(mimeType = "a", data = "b", otherMimeType = "a", otherData = "b")
+        assertItemsCollapse(
+            mimeType = Phone.CONTENT_ITEM_TYPE,
+            data = null,
+            otherMimeType = Phone.CONTENT_ITEM_TYPE,
+            otherData = null,
+        )
+        assertItemsCollapse(
+            mimeType = Phone.CONTENT_ITEM_TYPE,
+            data = "1",
+            otherMimeType = Phone.CONTENT_ITEM_TYPE,
+            otherData = "1",
+        )
+    }
+
+    @Test
+    fun shouldCollapse_withDifferentMimeTypes_returnsFalse() {
+        assertItemsDoNotCollapse(
+            mimeType = "a",
+            data = null,
+            otherMimeType = null,
+            otherData = null,
+        )
+        assertItemsDoNotCollapse(
+            mimeType = "a",
+            data = "b",
+            otherMimeType = null,
+            otherData = null,
+        )
+        assertItemsDoNotCollapse(mimeType = "a", data = "b", otherMimeType = null, otherData = "b")
+        assertItemsDoNotCollapse(mimeType = "a", data = "b", otherMimeType = "x", otherData = "b")
+    }
+
+    @Test
+    fun shouldCollapse_withEqualMimeTypesAndDifferentData_returnsFalse() {
+        assertItemsDoNotCollapse(
+            mimeType = null,
+            data = "a",
+            otherMimeType = null,
+            otherData = null,
+        )
+        assertItemsDoNotCollapse(mimeType = "a", data = "b", otherMimeType = "a", otherData = null)
+        assertItemsDoNotCollapse(mimeType = "a", data = "b", otherMimeType = "a", otherData = "x")
     }
 
     @Test
@@ -250,6 +301,48 @@ class DataItemCollapseMatcherImplTest {
         val other = relation(name = "Sam", type = Relation.TYPE_CUSTOM, label = "Landlord")
 
         assertFalse(matcher.shouldCollapse(current, other))
+    }
+
+    private fun assertItemsCollapse(
+        mimeType: String?,
+        data: String?,
+        otherMimeType: String?,
+        otherData: String?,
+    ) {
+        assertItemsCollapseInAnyOrder(true, mimeType, data, otherMimeType, otherData)
+    }
+
+    private fun assertItemsDoNotCollapse(
+        mimeType: String?,
+        data: String?,
+        otherMimeType: String?,
+        otherData: String?,
+    ) {
+        assertItemsCollapseInAnyOrder(false, mimeType, data, otherMimeType, otherData)
+    }
+
+    private fun assertItemsCollapseInAnyOrder(
+        expected: Boolean,
+        mimeType: String?,
+        data: String?,
+        otherMimeType: String?,
+        otherData: String?,
+    ) {
+        val message = "$mimeType/$data vs $otherMimeType/$otherData"
+        assertEquals(message, expected, shouldCollapse(mimeType, data, otherMimeType, otherData))
+        assertEquals(message, expected, shouldCollapse(otherMimeType, otherData, mimeType, data))
+    }
+
+    private fun shouldCollapse(
+        mimeType: String?,
+        data: String?,
+        otherMimeType: String?,
+        otherData: String?,
+    ): Boolean {
+        return matcher.shouldCollapse(
+            collapsibleDataItem(mimeType = mimeType, data = data),
+            collapsibleDataItem(mimeType = otherMimeType, data = otherData),
+        )
     }
 
     private fun phone(

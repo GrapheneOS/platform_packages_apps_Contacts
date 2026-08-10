@@ -1,6 +1,11 @@
-package com.android.contacts.data.contactdetails.model
+package com.android.contacts.tests.factory
 
 import android.net.Uri
+import com.android.contacts.data.contactdetails.model.ContactCapabilities
+import com.android.contacts.data.contactdetails.model.ContactDataItem
+import com.android.contacts.data.contactdetails.model.ContactDetails
+import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
+import com.android.contacts.data.contactdetails.model.ContactPhoto
 
 internal fun contactCapabilities(
     isDirectoryEntry: Boolean = false,
