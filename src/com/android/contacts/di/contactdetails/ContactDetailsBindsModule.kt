@@ -14,6 +14,8 @@ import com.android.contacts.data.contactdetails.repository.ContactShortcutReposi
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepositoryImpl
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.data.contactdetails.source.ContactLoaderSourceImpl
+import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
+import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCardsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
 import dagger.Binds
@@ -68,6 +70,12 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindContactShortcutRepository(
         impl: ContactShortcutRepositoryImpl,
     ): ContactShortcutRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindBuildContactDetailsCards(
+        impl: BuildContactDetailsCardsImpl,
+    ): BuildContactDetailsCards
 
     @Binds
     @Reusable
