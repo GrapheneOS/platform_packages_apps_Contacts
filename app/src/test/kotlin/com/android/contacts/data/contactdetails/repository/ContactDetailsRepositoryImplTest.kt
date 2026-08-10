@@ -3,19 +3,19 @@ package com.android.contacts.data.contactdetails.repository
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Loader
+import android.database.MatrixCursor
 import android.net.Uri
 import android.provider.ContactsContract.CommonDataKinds.Organization
+import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Directory
 import android.provider.ContactsContract.DisplayNameSources
 import android.provider.ContactsContract.RawContacts
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
-import com.android.contacts.data.contactdetails.model.ContactCapabilities
-import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
-import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
+import com.android.contacts.data.contactdetails.model.contactDetails
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.model.Contact
 import com.android.contacts.model.ContactLoader
@@ -25,14 +25,11 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -63,11 +60,6 @@ class ContactDetailsRepositoryImplTest {
         every { contactLoaderSource.create(any()) } returns contactLoader
         every { contactLoader.registerListener(any(), capture(listenerSlot)) } just Runs
         every { contactDetailsMapper.map(any(), any()) } returns MAPPED_DETAILS
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -137,15 +129,27 @@ class ContactDetailsRepositoryImplTest {
     }
 
     @Test
-    fun observeContactDetails_withALegacyAuthorityUri_startsTheLoaderForTheLookupUri() = runTest {
-        mockkStatic(RawContacts::class)
-        every { RawContacts.getContactLookupUri(contentResolver, any()) } returns LOOKUP_URI
+    fun observeContactDetails_withALegacyAuthorityUri_startsTheLoaderForTheContactLookupUri() =
+        runTest {
+            givenLookupRow(contactId = 7L, lookupKey = "lookup-key")
 
-        repository.observeContactDetails(LEGACY_URI, emptySet()).test {
-            verify { contactLoaderSource.create(LOOKUP_URI) }
-            cancelAndIgnoreRemainingEvents()
+            repository.observeContactDetails(LEGACY_URI, emptySet()).test {
+                verify { contactLoaderSource.create(Contacts.getLookupUri(7L, "lookup-key")) }
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
+
+    @Test
+    fun observeContactDetails_withALegacyAuthorityUriThatNoLongerResolves_emitsNotFound() =
+        runTest {
+            givenNoLookupRow()
+
+            repository.observeContactDetails(LEGACY_URI, emptySet()).test {
+                assertEquals(ContactDetailsResult.NotFound, awaitItem())
+                verify(exactly = 0) { contactLoaderSource.create(any()) }
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 
     @Test
     fun observeContactDetails_whenCollectionStops_releasesTheLoader() = runTest {
@@ -287,6 +291,19 @@ class ContactDetailsRepositoryImplTest {
         }
     }
 
+    private fun givenLookupRow(
+        contactId: Long,
+        lookupKey: String,
+    ) {
+        val cursor = MatrixCursor(arrayOf(RawContacts.CONTACT_ID, Contacts.LOOKUP_KEY))
+        cursor.addRow(arrayOf<Any>(contactId, lookupKey))
+        every { contentResolver.query(any(), any(), any(), any(), any()) } returns cursor
+    }
+
+    private fun givenNoLookupRow() {
+        every { contentResolver.query(any(), any(), any(), any(), any()) } returns null
+    }
+
     private fun deliver(contact: Contact) {
         listenerSlot.captured.onLoadComplete(contactLoader, contact)
     }
@@ -336,28 +353,6 @@ class ContactDetailsRepositoryImplTest {
         val LOOKUP_URI: Uri = Uri.parse("content://com.android.contacts/contacts/lookup/key/7")
         val LEGACY_URI: Uri = Uri.parse("content://contacts/people/7")
 
-        val MAPPED_DETAILS = ContactDetails(
-            contactId = 7L,
-            lookupKey = "key",
-            lookupUri = LOOKUP_URI,
-            nameRawContactId = 11L,
-            displayName = "Alex Doe",
-            alternativeDisplayName = "Doe, Alex",
-            phoneticName = null,
-            displayNameSource = ContactDisplayNameSource.STRUCTURED_NAME,
-            isStarred = false,
-            photoId = 0L,
-            photo = null,
-            customRingtone = null,
-            dataItems = emptyList(),
-            capabilities = ContactCapabilities(
-                isDirectoryEntry = false,
-                isAddableDirectoryContact = false,
-                isInvisibleAndAddable = false,
-                isUserProfile = false,
-                hasMultipleRawContacts = false,
-                areAllRawContactsSimAccounts = false,
-            ),
-        )
+        val MAPPED_DETAILS = contactDetails(lookupUri = LOOKUP_URI)
     }
 }

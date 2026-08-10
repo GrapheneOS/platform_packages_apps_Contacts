@@ -1,4 +1,4 @@
-package com.android.contacts.data.intents.repository
+package com.android.contacts.data.intents
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -9,20 +9,18 @@ import android.content.pm.ResolveInfo
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class IntentResolverRepositoryImplTest {
+class GetIntentLabelImplTest {
 
     private val packageManager = mockk<PackageManager>(relaxed = true)
 
-    private val repository = IntentResolverRepositoryImpl(packageManager = packageManager)
+    private val getIntentLabel = GetIntentLabelImpl(packageManager = packageManager)
 
     @Before
     fun setUp() {
@@ -31,35 +29,21 @@ class IntentResolverRepositoryImplTest {
     }
 
     @Test
-    fun isIntentRegistered_whenAnActivityHandlesTheIntent_returnsTrue() {
-        givenMatches(resolveInfo(packageName = "com.example.dialer", label = "Dialer"))
-
-        assertTrue(repository.isIntentRegistered(INTENT))
-    }
-
-    @Test
-    fun isIntentRegistered_whenNothingHandlesTheIntent_returnsFalse() {
+    fun invoke_whenNothingHandlesTheIntent_returnsNull() {
         givenMatches()
 
-        assertFalse(repository.isIntentRegistered(INTENT))
+        assertNull(getIntentLabel(INTENT))
     }
 
     @Test
-    fun resolveLabel_whenNothingHandlesTheIntent_returnsNull() {
-        givenMatches()
-
-        assertNull(repository.resolveLabel(INTENT))
-    }
-
-    @Test
-    fun resolveLabel_withASingleMatch_returnsItsLabel() {
+    fun invoke_withASingleMatch_returnsItsLabel() {
         givenMatches(resolveInfo(packageName = "com.example.dialer", label = "Dialer"))
 
-        assertEquals("Dialer", repository.resolveLabel(INTENT))
+        assertEquals("Dialer", getIntentLabel(INTENT))
     }
 
     @Test
-    fun resolveLabel_whenTheSystemResolvesTheIntent_returnsThatLabel() {
+    fun invoke_whenTheSystemResolvesTheIntent_returnsThatLabel() {
         givenMatches(
             resolveInfo(packageName = "com.example.first", label = "First"),
             resolveInfo(packageName = "com.example.second", label = "Second"),
@@ -72,48 +56,48 @@ class IntentResolverRepositoryImplTest {
             ),
         )
 
-        assertEquals("Default", repository.resolveLabel(INTENT))
+        assertEquals("Default", getIntentLabel(INTENT))
     }
 
     @Test
-    fun resolveLabel_whenTheSystemOffersTheDisambiguationDialog_prefersAKnownPackage() {
+    fun invoke_whenTheSystemOffersTheDisambiguationDialog_prefersAKnownPackage() {
         givenMatches(
             resolveInfo(packageName = "com.example.first", label = "First"),
             resolveInfo(packageName = "com.android.chrome", label = "Chrome"),
         )
         givenResolvedActivity(resolveInfo(packageName = "android", label = "Chooser"))
 
-        assertEquals("Chrome", repository.resolveLabel(INTENT))
+        assertEquals("Chrome", getIntentLabel(INTENT))
     }
 
     @Test
-    fun resolveLabel_whenNothingIsResolved_prefersAKnownPackage() {
+    fun invoke_whenNothingIsResolved_prefersAKnownPackage() {
         givenMatches(
             resolveInfo(packageName = "com.example.first", label = "First", isSystem = true),
             resolveInfo(packageName = "com.android.chrome", label = "Chrome"),
         )
 
-        assertEquals("Chrome", repository.resolveLabel(INTENT))
+        assertEquals("Chrome", getIntentLabel(INTENT))
     }
 
     @Test
-    fun resolveLabel_withoutAKnownPackage_prefersASystemApplication() {
+    fun invoke_withoutAKnownPackage_prefersASystemApplication() {
         givenMatches(
             resolveInfo(packageName = "com.example.first", label = "First"),
             resolveInfo(packageName = "com.example.system", label = "System", isSystem = true),
         )
 
-        assertEquals("System", repository.resolveLabel(INTENT))
+        assertEquals("System", getIntentLabel(INTENT))
     }
 
     @Test
-    fun resolveLabel_withoutAKnownOrSystemPackage_returnsTheFirstLabel() {
+    fun invoke_withoutAKnownOrSystemPackage_returnsTheFirstLabel() {
         givenMatches(
             resolveInfo(packageName = "com.example.first", label = "First"),
             resolveInfo(packageName = "com.example.second", label = "Second"),
         )
 
-        assertEquals("First", repository.resolveLabel(INTENT))
+        assertEquals("First", getIntentLabel(INTENT))
     }
 
     private fun givenResolvedActivity(resolveInfo: ResolveInfo?) {

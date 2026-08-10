@@ -61,14 +61,16 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         excludedMimeTypes: Set<String>,
     ): Flow<ContactDetailsResult> {
         return flow {
-            val contactLookupUri = toContactLookupUri(lookupUri)
+            when (val uri = toContactLookupUri(lookupUri)) {
+                null -> emit(ContactDetailsResult.NotFound)
 
-            emitAll(observeContact(contactLookupUri))
-        }
-            .map { contact ->
-                toResult(contact, excludedMimeTypes)
+                else -> emitAll(
+                    observeContact(uri).map { contact ->
+                        toResult(contact, excludedMimeTypes)
+                    },
+                )
             }
-            .flowOn(ioDispatcher)
+        }.flowOn(ioDispatcher)
     }
 
     override fun getDirectoryContactPrefill(): DirectoryContactPrefill? {
@@ -139,7 +141,7 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         loader.reset()
     }
 
-    private fun toContactLookupUri(lookupUri: Uri): Uri {
+    private fun toContactLookupUri(lookupUri: Uri): Uri? {
         if (lookupUri.authority != LEGACY_AUTHORITY) {
             return lookupUri
         }
