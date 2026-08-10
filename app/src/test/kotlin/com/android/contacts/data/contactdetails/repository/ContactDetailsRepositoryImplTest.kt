@@ -15,11 +15,11 @@ import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
-import com.android.contacts.data.contactdetails.model.contactDetails
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.model.Contact
 import com.android.contacts.model.ContactLoader
 import com.android.contacts.model.RawContact
+import com.android.contacts.tests.factory.contactDetails
 import com.google.common.collect.ImmutableList
 import io.mockk.Runs
 import io.mockk.every

@@ -1,4 +1,4 @@
-package com.android.contacts.data.contactdetails.mapper
+package com.android.contacts.tests.factory
 
 import android.content.ContentValues
 import android.provider.ContactsContract.CommonDataKinds.Phone

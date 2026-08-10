@@ -96,9 +96,8 @@ internal class ContactActionsRepositoryImpl @Inject constructor(
                     context: Context,
                     intent: Intent,
                 ) {
-                    toLinkOperation(intent.action)?.let { operation ->
-                        trySend(operation)
-                    }
+                    val operation = toLinkOperation(intent.action) ?: return
+                    trySend(operation)
                 }
             }
 

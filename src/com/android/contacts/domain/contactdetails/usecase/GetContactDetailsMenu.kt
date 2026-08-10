@@ -4,7 +4,7 @@ import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
-import com.android.contacts.domain.contactdetails.usecase.telephony.IsDeviceVoiceCapable
+import com.android.contacts.domain.util.IsDeviceVoiceCapable
 import javax.inject.Inject
 
 internal fun interface GetContactDetailsMenu {

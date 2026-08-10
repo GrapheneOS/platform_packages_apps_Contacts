@@ -2,6 +2,8 @@ package com.android.contacts.data.contactdetails.mapper
 
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import com.android.contacts.model.dataitem.DataItem
+import com.android.contacts.tests.factory.collapsibleDataItem
+import com.android.contacts.tests.factory.collapsibleDataKind
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -14,7 +16,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class DataItemCollapserImplTest {
+internal class DataItemCollapserImplTest {
 
     private val collapseMatcher = mockk<DataItemCollapseMatcher>()
     private val collapser = DataItemCollapserImpl(collapseMatcher)
