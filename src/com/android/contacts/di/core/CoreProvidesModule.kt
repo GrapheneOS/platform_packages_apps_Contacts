@@ -4,6 +4,7 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.pm.ShortcutManager
 import android.os.PowerManager
 import android.os.UserManager
 import android.telecom.TelecomManager
@@ -80,6 +81,14 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): ClipboardManager {
         return context.getSystemService(ClipboardManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideShortcutManager(
+        @ApplicationContext context: Context,
+    ): ShortcutManager {
+        return context.getSystemService(ShortcutManager::class.java)
     }
 
     @Provides
