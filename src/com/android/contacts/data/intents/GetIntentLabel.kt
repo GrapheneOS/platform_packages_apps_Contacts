@@ -1,4 +1,4 @@
-package com.android.contacts.data.intents.repository
+package com.android.contacts.data.intents
 
 import android.content.Intent
 import android.content.IntentFilter
@@ -7,21 +7,19 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import javax.inject.Inject
 
-internal interface IntentResolverRepository {
-    fun isIntentRegistered(intent: Intent): Boolean
-    fun resolveLabel(intent: Intent): String?
+internal fun interface GetIntentLabel {
+    operator fun invoke(intent: Intent): String?
 }
 
-internal class IntentResolverRepositoryImpl @Inject constructor(
+internal class GetIntentLabelImpl @Inject constructor(
     private val packageManager: PackageManager,
-) : IntentResolverRepository {
+) : GetIntentLabel {
 
-    override fun isIntentRegistered(intent: Intent): Boolean {
-        return queryActivities(intent).isNotEmpty()
-    }
-
-    override fun resolveLabel(intent: Intent): String? {
-        val matches = queryActivities(intent)
+    override operator fun invoke(intent: Intent): String? {
+        val matches = packageManager.queryIntentActivities(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY,
+        )
         if (matches.isEmpty()) {
             return null
         }
@@ -29,10 +27,6 @@ internal class IntentResolverRepositoryImpl @Inject constructor(
         return bestMatch(intent, matches)
             .loadLabel(packageManager)
             .toString()
-    }
-
-    private fun queryActivities(intent: Intent): List<ResolveInfo> {
-        return packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
     }
 
     private fun bestMatch(
