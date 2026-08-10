@@ -2,6 +2,7 @@ package com.android.contacts.di.core
 
 import android.content.Context
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.android.contacts.DynamicShortcuts
 import com.android.contacts.database.SimContactDao
 import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.preference.ContactsPreferences
@@ -38,6 +39,14 @@ internal class DataProvidesModule {
         @ApplicationContext context: Context,
     ): SimContactDao {
         return SimContactDao.create(context)
+    }
+
+    @Provides
+    @Reusable
+    fun dynamicShortcuts(
+        @ApplicationContext context: Context,
+    ): DynamicShortcuts {
+        return DynamicShortcuts(context)
     }
 
     @Provides
