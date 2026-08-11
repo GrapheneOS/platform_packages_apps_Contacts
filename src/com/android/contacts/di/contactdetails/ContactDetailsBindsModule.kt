@@ -18,6 +18,8 @@ import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCar
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCardsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
+import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
+import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -76,6 +78,12 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindBuildContactDetailsCards(
         impl: BuildContactDetailsCardsImpl,
     ): BuildContactDetailsCards
+
+    @Binds
+    @Reusable
+    abstract fun bindContactDetailsUiStateMapper(
+        impl: ContactDetailsUiStateMapperImpl,
+    ): ContactDetailsUiStateMapper
 
     @Binds
     @Reusable
