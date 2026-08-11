@@ -64,7 +64,7 @@ public class RequestPermissionsActivity extends RequestPermissionsActivityBase {
 
             if (packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
                 // Phone group
-                // These are only used in a few places such as QuickContactActivity and
+                // These are only used in a few places such as the contact details screen and
                 // ImportExportDialogFragment.  We work around missing this permission when
                 // telephony is not available on the device (i.e. on tablets).
                 permissions.add(permission.CALL_PHONE);

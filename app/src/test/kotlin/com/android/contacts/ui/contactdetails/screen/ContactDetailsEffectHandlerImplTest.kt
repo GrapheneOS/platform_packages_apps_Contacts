@@ -40,6 +40,7 @@ internal class ContactDetailsEffectHandlerImplTest {
     private val joinTargetLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val ringtoneLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val editorLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
+    private val directoryCopyLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
 
     private val handler = ContactDetailsEffectHandlerImpl(
         activity = activity,
@@ -47,6 +48,7 @@ internal class ContactDetailsEffectHandlerImplTest {
         joinTargetLauncher = joinTargetLauncher,
         ringtoneLauncher = ringtoneLauncher,
         editorLauncher = editorLauncher,
+        directoryCopyLauncher = directoryCopyLauncher,
     )
 
     @Before
@@ -84,7 +86,7 @@ internal class ContactDetailsEffectHandlerImplTest {
 
         handler.handle(Effect.AddDirectoryContact(prefill))
 
-        val intent = launchedIntent(editorLauncher)
+        val intent = launchedIntent(directoryCopyLauncher)
 
         assertEquals(Intent.ACTION_INSERT_OR_EDIT, intent.action)
         assertEquals(Contacts.CONTENT_ITEM_TYPE, intent.type)

@@ -16,9 +16,6 @@
 
 <resources>
 
-    <!-- Number of lines the QuickContact title can have -->
-    <integer name="quickcontact_title_lines">1</integer>
-
     <!-- The maximum allowed group name length -->
     <integer name="group_name_max_length">40</integer>
 
