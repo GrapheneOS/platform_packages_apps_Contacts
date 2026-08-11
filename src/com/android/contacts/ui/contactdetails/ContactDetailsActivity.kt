@@ -42,6 +42,11 @@ class ContactDetailsActivity : ComponentActivity() {
         ::applyEditorResult,
     )
 
+    private val directoryCopyLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+        ::applyDirectoryCopyResult,
+    )
+
     private val joinTargetLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
         ::applyJoinTargetResult,
@@ -71,6 +76,7 @@ class ContactDetailsActivity : ComponentActivity() {
             joinTargetLauncher = joinTargetLauncher,
             ringtoneLauncher = ringtoneLauncher,
             editorLauncher = editorLauncher,
+            directoryCopyLauncher = directoryCopyLauncher,
         )
 
         setContent {
@@ -129,12 +135,20 @@ class ContactDetailsActivity : ComponentActivity() {
         val isDeletedOrSplit = result.resultCode == ContactDeletionInteraction.RESULT_CODE_DELETED ||
             result.resultCode == ContactEditorActivity.RESULT_CODE_SPLIT
 
-        val data = result.data
-
-        when {
-            isDeletedOrSplit -> finish()
-            data != null -> bindIntent(data)
+        if (isDeletedOrSplit) {
+            finish()
         }
+    }
+
+    private fun applyDirectoryCopyResult(result: ActivityResult) {
+        setResult(result.resultCode)
+
+        val data = result.data
+        if (result.resultCode == RESULT_CANCELED || data == null) {
+            return
+        }
+
+        bindIntent(data)
     }
 
     private fun applyJoinTargetResult(result: ActivityResult) {

@@ -30,7 +30,6 @@ import android.provider.ContactsContract.QuickContact;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import com.android.contacts.logging.ScreenEvent.ScreenType;
 import com.android.contacts.model.account.GoogleAccountType;
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity;
 
@@ -98,28 +97,24 @@ public class ImplicitIntentsUtil {
     }
 
     /**
-     * Starts QuickContact in app with the default mode and specified previous screen type.
+     * Starts QuickContact in app with the default mode.
      */
-    public static void startQuickContact(Activity activity, Uri contactLookupUri,
-            int previousScreenType) {
+    public static void startQuickContact(Activity activity, Uri contactLookupUri) {
         final Intent intent = ImplicitIntentsUtil.composeQuickContactIntent(
-                activity, contactLookupUri, previousScreenType);
+                activity, contactLookupUri);
 
         startActivityInApp(activity, intent);
     }
 
     /**
-     * Returns an implicit intent for opening QuickContacts with the default mode and specified
-     * previous screen type.
+     * Returns an implicit intent for opening QuickContacts with the default mode.
      */
-    public static Intent composeQuickContactIntent(Context context, Uri contactLookupUri,
-            int previousScreenType) {
+    public static Intent composeQuickContactIntent(Context context, Uri contactLookupUri) {
         final Intent intent = new Intent(context, ContactDetailsActivity.class);
         intent.setAction(QuickContact.ACTION_QUICK_CONTACT);
         intent.setData(contactLookupUri);
         // Make sure not to show QuickContacts on top of another QuickContacts.
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(ContactDetailsActivity.EXTRA_PREVIOUS_SCREEN_TYPE, previousScreenType);
         return intent;
     }
 
@@ -147,12 +142,12 @@ public class ImplicitIntentsUtil {
     }
 
     public static Intent getIntentForQuickContactLauncherShortcut(Context context, Uri contactUri) {
-        final Intent intent = composeQuickContactIntent(context, contactUri, ScreenType.UNKNOWN);
+        final Intent intent = composeQuickContactIntent(context, contactUri);
         intent.setPackage(context.getPackageName());
 
         // When starting from the launcher, start in a new, cleared task.
         // CLEAR_WHEN_TASK_RESET cannot reset the root of a task, so we
-        // clear the whole thing preemptively here since QuickContactActivity will
+        // clear the whole thing preemptively here since the contact details screen will
         // finish itself when launching other detail activities. We need to use
         // Intent.FLAG_ACTIVITY_NO_ANIMATION since not all versions of launcher will respect
         // the INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION intent extra.

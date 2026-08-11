@@ -63,7 +63,6 @@ import com.android.contacts.list.UiIntentActions;
 import com.android.contacts.logging.ListEvent;
 import com.android.contacts.logging.ListEvent.ListType;
 import com.android.contacts.logging.Logger;
-import com.android.contacts.logging.ScreenEvent;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contactsbind.FeedbackHelper;
@@ -794,8 +793,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
         final int count = getAdapter().getCount();
         Logger.logListEvent(ListEvent.ActionType.CLICK, ListEvent.ListType.GROUP, count,
                 /* clickedIndex */ position, /* numSelected */ 0);
-        ImplicitIntentsUtil.startQuickContact(
-                getActivity(), uri, ScreenEvent.ScreenType.LIST_GROUP);
+        ImplicitIntentsUtil.startQuickContact(getActivity(), uri);
     }
 
     @Override
