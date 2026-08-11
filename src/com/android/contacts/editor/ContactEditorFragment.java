@@ -86,7 +86,7 @@ import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.AccountsLoader;
 import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.quickcontact.InvisibleContactUtil;
-import com.android.contacts.quickcontact.QuickContactActivity;
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity;
 import com.android.contacts.util.ContactDisplayUtils;
 import com.android.contacts.util.ContactPhotoUtils;
 import com.android.contacts.util.ImplicitIntentsUtil;
@@ -1533,7 +1533,7 @@ public class ContactEditorFragment extends Fragment
                         resultIntent =
                                 ImplicitIntentsUtil.composeQuickContactIntent(
                                         mContext, lookupUri, ScreenType.EDITOR);
-                        resultIntent.putExtra(QuickContactActivity.EXTRA_CONTACT_EDITED, true);
+                        resultIntent.putExtra(ContactDetailsActivity.EXTRA_CONTACT_EDITED, true);
                     } else {
                         resultIntent = null;
                     }

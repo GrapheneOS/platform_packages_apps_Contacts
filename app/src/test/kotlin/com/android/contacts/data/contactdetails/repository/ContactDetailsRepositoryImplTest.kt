@@ -36,6 +36,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -48,6 +49,7 @@ class ContactDetailsRepositoryImplTest {
     private val listenerSlot = slot<Loader.OnLoadCompleteListener<Contact>>()
 
     private val repository = ContactDetailsRepositoryImpl(
+        context = RuntimeEnvironment.getApplication(),
         contactLoaderSource = contactLoaderSource,
         contactDetailsMapper = contactDetailsMapper,
         contentResolver = contentResolver,

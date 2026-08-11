@@ -73,7 +73,6 @@ import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.ContactsPreferences;
-import com.android.contacts.quickcontact.QuickContactActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contacts.util.SharedPreferenceUtil;
@@ -973,7 +972,7 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
                         getContext(),
                         new Rect(),
                         contactLookupUri,
-                        QuickContactActivity.MODE_FULLY_EXPANDED,
+                        ContactsContract.QuickContact.MODE_LARGE,
                         null);
             } else {
                 final int previousScreen;
