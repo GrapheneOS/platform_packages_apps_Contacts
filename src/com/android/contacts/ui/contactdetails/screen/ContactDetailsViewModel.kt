@@ -2,6 +2,7 @@
 
 package com.android.contacts.ui.contactdetails.screen
 
+import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import androidx.core.os.BundleCompat
@@ -12,7 +13,10 @@ import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
+import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
+import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
@@ -50,6 +54,7 @@ internal interface ContactDetailsScreenModel {
         lookupUri: Uri,
         excludedMimeTypes: Set<String>,
         prioritizedMimeType: String?,
+        callbackActivity: Class<out Activity>,
     )
 
     fun onAction(action: Action)
@@ -62,9 +67,13 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val contactActionsRepository: ContactActionsRepository,
     private val buildContactDetailsCards: BuildContactDetailsCards,
     private val getContactDetailsMenu: GetContactDetailsMenu,
+    private val contactShortcutRepository: ContactShortcutRepository,
     private val contactDetailsUiStateMapper: ContactDetailsUiStateMapper,
 ) : ViewModel(),
     ContactDetailsScreenModel {
+
+    @Volatile
+    private var loadedDetails: ContactDetails? = null
 
     private val _effects = Channel<Effect>(Channel.BUFFERED)
     override val effects: Flow<Effect> = _effects.receiveAsFlow()
@@ -105,11 +114,13 @@ internal class ContactDetailsViewModel @Inject constructor(
         lookupUri: Uri,
         excludedMimeTypes: Set<String>,
         prioritizedMimeType: String?,
+        callbackActivity: Class<out Activity>,
     ) {
         savedStateHandle[KEY_ARGUMENTS] = Bundle().apply {
             putParcelable(KEY_LOOKUP_URI, lookupUri)
             putStringArray(KEY_EXCLUDED_MIME_TYPES, excludedMimeTypes.toTypedArray())
             putString(KEY_PRIORITIZED_MIME_TYPE, prioritizedMimeType)
+            putSerializable(KEY_CALLBACK_ACTIVITY, callbackActivity)
         }
     }
 
@@ -117,22 +128,19 @@ internal class ContactDetailsViewModel @Inject constructor(
         when (action) {
             is Action.BackClick -> sendNavigationEvent(NavEvent.Close)
             is Action.StarClick -> toggleStarred()
-            is Action.EditClick -> openEditor()
-            is Action.AddDetailsClick -> openEditor()
-            is Action.DeleteClick -> sendEffect(Effect.ConfirmDelete)
-            is Action.ShareClick -> sendEffect(Effect.ShareContact)
-            is Action.ShortcutClick -> sendEffect(Effect.CreateShortcut)
-            is Action.RingtoneClick -> sendEffect(Effect.PickRingtone)
-            is Action.JoinClick -> sendEffect(Effect.PickJoinTarget)
-            is Action.LinkedContactsClick -> sendEffect(Effect.ViewLinkedContacts)
+            is Action.EditClick -> editContact()
+            is Action.AddDetailsClick -> editContact()
+            is Action.DeleteClick -> deleteContact()
+            is Action.ShareClick -> shareContact()
+            is Action.ShortcutClick -> createShortcut()
+            is Action.RingtoneClick -> pickRingtone()
+            is Action.JoinClick -> pickJoinTarget()
+            is Action.LinkedContactsClick -> viewLinkedContacts()
             is Action.SetDefaultClick -> setDefault(action.dataId)
             is Action.ClearDefaultClick -> clearDefault(action.dataId)
             is Action.RingtonePicked -> setRingtone(action.ringtone)
             is Action.JoinTargetPicked -> joinContact(action.contactId)
-
-            is Action.EntryClick -> {
-                sendEffect(Effect.PerformEntryAction(action.action))
-            }
+            is Action.EntryClick -> performEntryAction(action.action)
 
             is Action.CopyClick -> {
                 sendEffect(Effect.CopyToClipboard(action.label, action.text))
@@ -163,6 +171,8 @@ internal class ContactDetailsViewModel @Inject constructor(
         details: ContactDetails,
         arguments: Bundle,
     ): Content {
+        loadedDetails = details
+
         return contactDetailsUiStateMapper.map(
             details = details,
             cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
@@ -187,9 +197,95 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun openEditor() {
-        contactDetailsRepository.cacheLoadedContact()
-        sendEffect(Effect.OpenEditor)
+    private fun editContact() {
+        val details = loadedDetails ?: return
+        val lookupUri = details.lookupUri ?: return
+
+        when {
+            details.capabilities.isDirectoryEntry -> addDirectoryContact()
+            details.capabilities.isInvisibleAndAddable -> addToDefaultGroup()
+
+            else -> {
+                contactDetailsRepository.cacheLoadedContact()
+                sendEffect(Effect.EditContact(lookupUri, details.photoId))
+            }
+        }
+    }
+
+    private fun addDirectoryContact() {
+        val prefill = contactDetailsRepository.getDirectoryContactPrefill() ?: return
+
+        sendEffect(Effect.AddDirectoryContact(prefill))
+    }
+
+    private fun addToDefaultGroup() {
+        val callbackActivity = callbackActivity() ?: return
+
+        contactDetailsRepository.addLoadedContactToDefaultGroup(callbackActivity)
+    }
+
+    private fun deleteContact() {
+        val lookupUri = loadedDetails?.lookupUri ?: return
+
+        sendEffect(Effect.ConfirmDelete(lookupUri))
+    }
+
+    private fun shareContact() {
+        val lookupKey = loadedDetails?.lookupKey ?: return
+
+        sendEffect(Effect.ShareContact(lookupKey))
+    }
+
+    private fun createShortcut() {
+        val details = loadedDetails ?: return
+        val loaded = uiState.value.content as? Content.Loaded ?: return
+
+        contactShortcutRepository.requestPinShortcut(
+            contactId = details.contactId,
+            lookupKey = details.lookupKey,
+            displayName = loaded.header.displayName,
+        )
+    }
+
+    private fun pickRingtone() {
+        val details = loadedDetails ?: return
+
+        sendEffect(Effect.PickRingtone(details.customRingtone))
+    }
+
+    private fun pickJoinTarget() {
+        val details = loadedDetails ?: return
+
+        sendEffect(Effect.PickJoinTarget(details.contactId))
+    }
+
+    private fun viewLinkedContacts() {
+        val lookupUri = loadedDetails?.lookupUri ?: return
+
+        sendEffect(Effect.ViewLinkedContacts(lookupUri))
+    }
+
+    private fun performEntryAction(action: ContactEntryAction) {
+        val effect = when (action) {
+            is ContactEntryAction.CallWithNote -> callWithNoteEffect(action) ?: return
+            else -> Effect.PerformEntryAction(action)
+        }
+
+        sendEffect(effect)
+    }
+
+    private fun callWithNoteEffect(action: ContactEntryAction.CallWithNote): Effect? {
+        val details = loadedDetails ?: return null
+
+        return Effect.CallWithNote(
+            number = action.number,
+            displayNumber = action.formattedNumber,
+            numberLabel = action.numberLabel,
+            lookupUri = details.lookupUri,
+            displayName = details.displayName,
+            photoId = details.photoId,
+            photoUri = (details.photo as? ContactPhoto.Uri)?.value,
+        )
     }
 
     private fun setDefault(dataId: Long) {
@@ -212,9 +308,19 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun joinContact(contactId: Long) {
+    private fun joinContact(targetContactId: Long) {
+        val details = loadedDetails ?: return
+        val callbackActivity = callbackActivity() ?: return
+
         _linkProgress.value = ContactLinkOperation.LINK
-        sendEffect(Effect.JoinContacts(contactId))
+
+        viewModelScope.launch {
+            contactActionsRepository.joinContacts(
+                contactId = details.contactId,
+                otherContactId = targetContactId,
+                callbackActivity = callbackActivity,
+            )
+        }
     }
 
     private fun sendEffect(effect: Effect) {
@@ -227,6 +333,17 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private fun lookupUri(): Uri? {
         return arguments()?.let { arguments -> lookupUri(arguments) }
+    }
+
+    private fun callbackActivity(): Class<out Activity>? {
+        val arguments = arguments() ?: return null
+
+        @Suppress("UNCHECKED_CAST")
+        return BundleCompat.getSerializable(
+            arguments,
+            KEY_CALLBACK_ACTIVITY,
+            Class::class.java,
+        ) as Class<out Activity>?
     }
 
     private fun arguments(): Bundle? {
@@ -252,6 +369,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         const val KEY_LOOKUP_URI = "contact_details_lookup_uri"
         const val KEY_EXCLUDED_MIME_TYPES = "contact_details_excluded_mime_types"
         const val KEY_PRIORITIZED_MIME_TYPE = "contact_details_prioritized_mime_type"
+        const val KEY_CALLBACK_ACTIVITY = "contact_details_callback_activity"
         const val STATE_TIMEOUT_MILLIS = 5_000L
     }
 }

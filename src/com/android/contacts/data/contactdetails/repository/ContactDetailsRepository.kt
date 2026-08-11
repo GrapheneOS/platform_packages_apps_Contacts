@@ -1,9 +1,12 @@
 package com.android.contacts.data.contactdetails.repository
 
 import android.accounts.Account
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.content.Loader
 import android.net.Uri
 import android.provider.Contacts as LegacyContacts
@@ -12,6 +15,7 @@ import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Directory
 import android.provider.ContactsContract.DisplayNameSources
 import android.provider.ContactsContract.RawContacts
+import com.android.contacts.ContactSaveService
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
@@ -20,6 +24,8 @@ import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.di.core.MainDispatcher
 import com.android.contacts.model.Contact
 import com.android.contacts.model.ContactLoader
+import com.android.contacts.quickcontact.InvisibleContactUtil
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
@@ -39,10 +45,13 @@ internal interface ContactDetailsRepository {
 
     fun getDirectoryContactPrefill(): DirectoryContactPrefill?
 
+    fun addLoadedContactToDefaultGroup(callbackActivity: Class<out Activity>)
+
     fun cacheLoadedContact()
 }
 
 internal class ContactDetailsRepositoryImpl @Inject constructor(
+    @param:ApplicationContext private val context: Context,
     private val contactLoaderSource: ContactLoaderSource,
     private val contactDetailsMapper: ContactDetailsMapper,
     private val contentResolver: ContentResolver,
@@ -99,6 +108,30 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
                 else -> null
             },
         )
+    }
+
+    override fun addLoadedContactToDefaultGroup(callbackActivity: Class<out Activity>) {
+        val contact = loadedContact ?: return
+        val deltas = contact.createRawContactDeltaList()
+
+        if (!InvisibleContactUtil.markAddToDefaultGroup(contact, deltas, context)) {
+            return
+        }
+
+        val intent = ContactSaveService.createSaveContactIntent(
+            context,
+            deltas,
+            /* saveModeExtraKey = */ "",
+            /* saveMode = */ 0,
+            /* isProfile = */ false,
+            callbackActivity,
+            /* callbackAction = */ Intent.ACTION_VIEW,
+            /* updatedPhotos = */ null,
+            /* joinContactIdExtraKey = */ null,
+            /* joinContactId = */ null,
+        )
+
+        ContactSaveService.startService(context, intent)
     }
 
     override fun cacheLoadedContact() {

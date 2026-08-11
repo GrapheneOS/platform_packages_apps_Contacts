@@ -7,12 +7,14 @@ import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
+import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.contactDetailsMenu
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity
 import com.android.contacts.ui.contactdetails.screen.ContactDetailsViewModel
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
@@ -21,7 +23,10 @@ import io.mockk.mockk
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -36,6 +41,7 @@ internal abstract class BaseContactDetailsViewModelTest {
 
     protected val contactDetailsRepository = mockk<ContactDetailsRepository>(relaxed = true)
     protected val contactActionsRepository = mockk<ContactActionsRepository>(relaxed = true)
+    protected val contactShortcutRepository = mockk<ContactShortcutRepository>(relaxed = true)
     protected val buildContactDetailsCards = mockk<BuildContactDetailsCards>()
     protected val getContactDetailsMenu = mockk<GetContactDetailsMenu>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
@@ -64,7 +70,20 @@ internal abstract class BaseContactDetailsViewModelTest {
             buildContactDetailsCards = buildContactDetailsCards,
             getContactDetailsMenu = getContactDetailsMenu,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
+            contactShortcutRepository = contactShortcutRepository,
         )
+    }
+
+    protected fun TestScope.loadedViewModel(
+        details: ContactDetails = contactDetails(lookupUri = LOOKUP_URI),
+    ): ContactDetailsViewModel {
+        val viewModel = createViewModel().bindContact()
+
+        viewModel.uiState.launchIn(backgroundScope)
+        results.tryEmit(ContactDetailsResult.Loaded(details))
+        advanceUntilIdle()
+
+        return viewModel
     }
 
     protected fun ContactDetailsViewModel.bindContact(): ContactDetailsViewModel {
@@ -72,6 +91,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             lookupUri = LOOKUP_URI,
             excludedMimeTypes = emptySet(),
             prioritizedMimeType = null,
+            callbackActivity = ContactDetailsActivity::class.java,
         )
 
         return this

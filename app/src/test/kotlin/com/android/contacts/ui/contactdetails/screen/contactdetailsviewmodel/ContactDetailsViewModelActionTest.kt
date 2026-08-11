@@ -2,11 +2,16 @@ package com.android.contacts.ui.contactdetails.screen.contactdetailsviewmodel
 
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.tests.factory.contactCapabilities
+import com.android.contacts.tests.factory.contactDetails
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -74,12 +79,12 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
 
     @Test
     fun onAction_withEditClick_cachesTheContactAndOpensTheEditor() = runTest {
-        val viewModel = createViewModel().bindContact()
+        val viewModel = loadedViewModel()
 
         viewModel.effects.test {
             viewModel.onAction(ContactDetailsAction.EditClick)
 
-            assertEquals(ContactDetailsEffect.OpenEditor, awaitItem())
+            assertEquals(editContactEffect(), awaitItem())
             verify { contactDetailsRepository.cacheLoadedContact() }
             cancelAndIgnoreRemainingEvents()
         }
@@ -87,40 +92,96 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
 
     @Test
     fun onAction_withAddDetailsClick_opensTheEditor() = runTest {
-        val viewModel = createViewModel().bindContact()
+        val viewModel = loadedViewModel()
 
         viewModel.effects.test {
             viewModel.onAction(ContactDetailsAction.AddDetailsClick)
 
-            assertEquals(ContactDetailsEffect.OpenEditor, awaitItem())
+            assertEquals(editContactEffect(), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun onAction_withMenuClicks_emitsTheMatchingHostEffects() = runTest {
-        val viewModel = createViewModel().bindContact()
+        val viewModel = loadedViewModel(
+            details = contactDetails(lookupUri = LOOKUP_URI, customRingtone = "content://tone/1"),
+        )
 
         viewModel.effects.test {
             viewModel.onAction(ContactDetailsAction.DeleteClick)
-            assertEquals(ContactDetailsEffect.ConfirmDelete, awaitItem())
+            assertEquals(ContactDetailsEffect.ConfirmDelete(LOOKUP_URI), awaitItem())
 
             viewModel.onAction(ContactDetailsAction.ShareClick)
-            assertEquals(ContactDetailsEffect.ShareContact, awaitItem())
-
-            viewModel.onAction(ContactDetailsAction.ShortcutClick)
-            assertEquals(ContactDetailsEffect.CreateShortcut, awaitItem())
+            assertEquals(ContactDetailsEffect.ShareContact("lookup-key"), awaitItem())
 
             viewModel.onAction(ContactDetailsAction.RingtoneClick)
-            assertEquals(ContactDetailsEffect.PickRingtone, awaitItem())
+            assertEquals(ContactDetailsEffect.PickRingtone("content://tone/1"), awaitItem())
 
             viewModel.onAction(ContactDetailsAction.JoinClick)
-            assertEquals(ContactDetailsEffect.PickJoinTarget, awaitItem())
+            assertEquals(ContactDetailsEffect.PickJoinTarget(CONTACT_ID_UNDER_TEST), awaitItem())
 
             viewModel.onAction(ContactDetailsAction.LinkedContactsClick)
-            assertEquals(ContactDetailsEffect.ViewLinkedContacts, awaitItem())
+            assertEquals(ContactDetailsEffect.ViewLinkedContacts(LOOKUP_URI), awaitItem())
 
             cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun onAction_withShortcutClick_asksForAPinnedShortcut() = runTest {
+        val viewModel = loadedViewModel()
+
+        viewModel.onAction(ContactDetailsAction.ShortcutClick)
+        advanceUntilIdle()
+
+        verify {
+            contactShortcutRepository.requestPinShortcut(
+                contactId = CONTACT_ID_UNDER_TEST,
+                lookupKey = "lookup-key",
+                displayName = any(),
+            )
+        }
+    }
+
+    @Test
+    fun onAction_forADirectoryContact_asksTheHostToCopyIt() = runTest {
+        val prefill = DirectoryContactPrefill(
+            name = "Alex Doe",
+            values = emptyList(),
+            account = null,
+            dataSet = null,
+        )
+        every { contactDetailsRepository.getDirectoryContactPrefill() } returns prefill
+        val viewModel = loadedViewModel(
+            details = contactDetails(
+                lookupUri = LOOKUP_URI,
+                capabilities = contactCapabilities(isDirectoryEntry = true),
+            ),
+        )
+
+        viewModel.effects.test {
+            viewModel.onAction(ContactDetailsAction.EditClick)
+
+            assertEquals(ContactDetailsEffect.AddDirectoryContact(prefill), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun onAction_forAnInvisibleContact_addsItToTheDefaultGroup() = runTest {
+        val viewModel = loadedViewModel(
+            details = contactDetails(
+                lookupUri = LOOKUP_URI,
+                capabilities = contactCapabilities(isInvisibleAndAddable = true),
+            ),
+        )
+
+        viewModel.onAction(ContactDetailsAction.EditClick)
+        advanceUntilIdle()
+
+        verify {
+            contactDetailsRepository.addLoadedContactToDefaultGroup(ContactDetailsActivity::class.java)
         }
     }
 
@@ -195,20 +256,24 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
     }
 
     @Test
-    fun onAction_withAJoinTargetPicked_asksTheHostToJoin() = runTest {
-        val viewModel = createViewModel().bindContact()
+    fun onAction_withAJoinTargetPicked_joinsTheContacts() = runTest {
+        val viewModel = loadedViewModel()
 
-        viewModel.effects.test {
-            viewModel.onAction(ContactDetailsAction.JoinTargetPicked(11L))
+        viewModel.onAction(ContactDetailsAction.JoinTargetPicked(11L))
+        advanceUntilIdle()
 
-            assertEquals(ContactDetailsEffect.JoinContacts(11L), awaitItem())
-            cancelAndIgnoreRemainingEvents()
+        coVerify {
+            contactActionsRepository.joinContacts(
+                contactId = CONTACT_ID_UNDER_TEST,
+                otherContactId = 11L,
+                callbackActivity = ContactDetailsActivity::class.java,
+            )
         }
     }
 
     @Test
     fun onAction_withAJoinTargetPicked_showsTheLinkingProgress() = runTest {
-        val viewModel = createViewModel().bindContact()
+        val viewModel = loadedViewModel()
 
         viewModel.uiState.test {
             awaitItem()
@@ -217,5 +282,13 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
             assertEquals(ContactLinkOperation.LINK, awaitItem().linkProgress)
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    private companion object {
+        const val CONTACT_ID_UNDER_TEST = 7L
+    }
+
+    private fun editContactEffect(): ContactDetailsEffect {
+        return ContactDetailsEffect.EditContact(lookupUri = LOOKUP_URI, photoId = 0L)
     }
 }

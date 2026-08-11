@@ -54,10 +54,10 @@ internal class ContactDetailsScreenTest {
         val received = mutableListOf<Effect>()
         setScreenContent(onEffect = { effect -> received += effect })
 
-        effects.tryEmit(Effect.ShareContact)
+        effects.tryEmit(Effect.ShareContact(lookupKey = "lookup-key"))
         waitForIdle()
 
-        assertEquals(listOf(Effect.ShareContact), received)
+        assertEquals(listOf(Effect.ShareContact(lookupKey = "lookup-key")), received)
     }
 
     @Test

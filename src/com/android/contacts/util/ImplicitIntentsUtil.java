@@ -32,7 +32,7 @@ import android.text.TextUtils;
 
 import com.android.contacts.logging.ScreenEvent.ScreenType;
 import com.android.contacts.model.account.GoogleAccountType;
-import com.android.contacts.quickcontact.QuickContactActivity;
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity;
 
 import java.util.List;
 
@@ -114,22 +114,12 @@ public class ImplicitIntentsUtil {
      */
     public static Intent composeQuickContactIntent(Context context, Uri contactLookupUri,
             int previousScreenType) {
-        return composeQuickContactIntent(context, contactLookupUri,
-                QuickContactActivity.MODE_FULLY_EXPANDED, previousScreenType);
-    }
-
-    /**
-     * Returns an implicit intent for opening QuickContacts.
-     */
-    public static Intent composeQuickContactIntent(Context context, Uri contactLookupUri,
-            int mode, int previousScreenType) {
-        final Intent intent = new Intent(context, QuickContactActivity.class);
+        final Intent intent = new Intent(context, ContactDetailsActivity.class);
         intent.setAction(QuickContact.ACTION_QUICK_CONTACT);
         intent.setData(contactLookupUri);
-        intent.putExtra(QuickContact.EXTRA_MODE, mode);
         // Make sure not to show QuickContacts on top of another QuickContacts.
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(QuickContactActivity.EXTRA_PREVIOUS_SCREEN_TYPE, previousScreenType);
+        intent.putExtra(ContactDetailsActivity.EXTRA_PREVIOUS_SCREEN_TYPE, previousScreenType);
         return intent;
     }
 
@@ -157,8 +147,7 @@ public class ImplicitIntentsUtil {
     }
 
     public static Intent getIntentForQuickContactLauncherShortcut(Context context, Uri contactUri) {
-        final Intent intent = composeQuickContactIntent(context, contactUri,
-                QuickContact.MODE_LARGE, ScreenType.UNKNOWN);
+        final Intent intent = composeQuickContactIntent(context, contactUri, ScreenType.UNKNOWN);
         intent.setPackage(context.getPackageName());
 
         // When starting from the launcher, start in a new, cleared task.
