@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"ບໍ່ມີລາຍຊື່ຜູ້ຕິດຕໍ່"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"ເພີ່ມ \"<xliff:g id="EMAIL">%s</xliff:g>\" ໃສ່ລາຍຊື່ຜູ່ຕິດຕໍ່?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ຊື່ຂອງລາຍຊື່ຜູ່ຕິດຕໍ່ຂອງທ່ານ"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"ຄລິກ​ເພື່ອ​ກັບ​ໄປ​ທີ່​ໜ້າຈໍ​ກ່ອນ​ໜ້າ​ນີ້"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"ເພີ່ມ​ເບີ​ໂທ​ລະ​ສັບ"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"ເພີ່ມອີເມວ"</string>
     <string name="missing_app" msgid="5674389915738964148">"ບໍ່ພົບແອັບຯທີ່ໃຊ້ເພື່ອດຳເນີນການ."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"ເພີ່ມບັນຊີໃໝ່"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"ສົ່ງອອກໄຟລ໌ຖານຂໍ້ມູນ"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"ສ້າງລາຍຊື່ຜູ້ຕິດຕໍ່ໃໝ່"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"​ເບິ່ງ​ເພີ່ມ​ເຕີມ"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"​​ເບິ່ງ​ໜ້ອຍ​ລົງ"</string>
     <string name="about_card_title" msgid="6635849009952435700">"ກ່ຽວກັບ"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"ກຳລັງສ້າງສຳເນົາສ່ວນໂຕ..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"ຕົກລົງ"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"IM"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"ອົງກອນ"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"ເປີດຕົວຕັດຕໍ່ບໍ່ສຳເລັດ."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"ກຳລັງບັນທຶກໃສ່"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"ຂໍ້ມູນລາຍຊື່ຜູ້ຕິດຕໍ່ຈາກ <xliff:g id="ACCOUNT">%s</xliff:g> ແມ່ນບໍ່ສາມາດແກ້ໄຂໄດ້"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"ລິ້ງ​ລາຍ​ຊື່​ຕິດ​ຕໍ່"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"ຍົກ​ເລີກ​"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"ລາຍ​ຊື່​ຕິດ​ຕໍ່​ນີ້"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"ເປັນ​ໄປ​ໄດ້​ວ່າມີ​ການ​ຊ້ຳ​ກັນ"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"ລາຍ​ຊື່​ຕິດ​ຕໍ່​ເຫຼົ່າ​ນີ້​ອາດ​ຈະ​ເປັນ​ຄົນ​ດຽວ​ກັນ. ທ່ານ​ສາ​ມາດ​ລິ້ງ​ພວກ​ມັນ​ເຂົ້າ​ກັນ​ເປັນ​ບັນ​ຊີ​ດຽວ​ໄດ້."</string>

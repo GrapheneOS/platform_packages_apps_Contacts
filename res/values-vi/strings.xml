@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Không có địa chỉ liên hệ nào"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Thêm \"<xliff:g id="EMAIL">%s</xliff:g>\" vào danh bạ?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Tên danh bạ của bạn"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"Nhấp để quay lại màn hình trước đó"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"Thêm số điện thoại"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"Thêm email"</string>
     <string name="missing_app" msgid="5674389915738964148">"Không tìm thấy ứng dụng nào để xử lý tác vụ này."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"Thêm tài khoản mới"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"Xuất các tệp cơ sở dữ liệu"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"Tạo người liên hệ mới"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"Xem thêm"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"Ẩn bớt"</string>
     <string name="about_card_title" msgid="6635849009952435700">"Giới thiệu"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"Đang tạo bản sao cá nhân..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"Đặt"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"IM"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"Tổ chức"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"Không mở được trình chỉnh sửa."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"Lưu vào"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"Thông tin liên hệ từ <xliff:g id="ACCOUNT">%s</xliff:g> không thể chỉnh sửa được"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"LIÊN KẾT LIÊN HỆ"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"HỦY"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"Liên hệ này"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"Có thể trùng lặp"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"Các liên hệ này có thể là cùng một người. Bạn có thể liên kết chúng với nhau thành một liên hệ duy nhất."</string>

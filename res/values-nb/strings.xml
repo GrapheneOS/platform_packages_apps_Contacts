@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Ingen kontakter"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Legg til «<xliff:g id="EMAIL">%s</xliff:g>» som kontakt?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Navn på kontakter"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"Klikk for å gå tilbake til den forrige skjermen"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"Legg til telefonnummer"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"Legg til e-post"</string>
     <string name="missing_app" msgid="5674389915738964148">"Kunne ikke finne noen app som kan håndtere denne handlingen."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"Legg til ny konto"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"Eksporter databasefilene"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"Opprett ny kontakt"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"Se mer"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"Se mindre"</string>
     <string name="about_card_title" msgid="6635849009952435700">"Info"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"Oppretter personlig kopi …"</string>
     <string name="date_time_set" msgid="8526160894146496334">"Angi"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"Chat"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"Organisasjon"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"Kunne ikke åpne redigeringsvinduet."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"Lagres i"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"Kontaktinformasjonen fra <xliff:g id="ACCOUNT">%s</xliff:g> kan ikke endres"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"SLÅ SAMMEN KONTAKTENE"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"AVBRYT"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"Denne kontakten"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"Mulige duplikater"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"Disse kontaktene kan være den samme personen. Du kan knytte dem sammen til én enkelt kontakt."</string>

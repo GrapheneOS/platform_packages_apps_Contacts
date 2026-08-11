@@ -18,11 +18,4 @@
     <dimen name="editor_round_button_padding_left">8dip</dimen>
     <dimen name="editor_round_button_padding_right">8dip</dimen>
 
-    <!-- When QC is uncollapsed, the title has this much margin on its left and right -->
-    <dimen name="quickcontact_title_initial_margin">32dp</dimen>
-    <!-- When QC is uncollapsed, the title has this much margin on its bottom -->
-    <dimen name="quickcontact_title_initial_bottom_margin">0dp</dimen>
-
-    <dimen name="expanding_entry_card_marginStartEnd">10dp</dimen>
-
 </resources>

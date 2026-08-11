@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Geen contacten"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Voeg \"<xliff:g id="EMAIL">%s</xliff:g>\" toe aan contactpersonen?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Namen van je contacten"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"Klik om terug te keren naar het vorige scherm"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"Telefoonnummer toevoegen"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"E-mailadres toevoegen"</string>
     <string name="missing_app" msgid="5674389915738964148">"Er is geen app gevonden om deze actie uit te voeren."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"Nieuw account toevoegen"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"Databasebestanden exporteren"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"Nieuw contact maken"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"Meer tonen"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"Minder tonen"</string>
     <string name="about_card_title" msgid="6635849009952435700">"Over"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"Een persoonlijke kopie maken..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"Instellen"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"Chat"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"Organisatie"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"Kan editor niet openen."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"Opslaan in"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"Contactgegevens van <xliff:g id="ACCOUNT">%s</xliff:g> kunnen niet worden bewerkt"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"CONTACTEN LINKEN"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"ANNULEREN"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"Dit contact"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"Mogelijke duplicaten"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"Deze contacten zijn mogelijk dezelfde persoon. Je kunt ze linken tot één contact."</string>

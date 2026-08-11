@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"ಯಾವುದೇ ಸಂಪರ್ಕಗಳಿಲ್ಲ"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" ಗೆ ಸಂಪರ್ಕಗಳನ್ನು ಸೇರಿಸುವುದೇ?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ನಿಮ್ಮ ಸಂಪರ್ಕಗಳ ಹೆಸರುಗಳು"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"ಹಿಂದಿನ ಪರದೆಗೆ ಹಿಂತಿರುಗಲು ಕ್ಲಿಕ್ ಮಾಡಿ"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಸೇರಿಸಿ"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"ಇಮೇಲ್ ಸೇರಿಸಿ"</string>
     <string name="missing_app" msgid="5674389915738964148">"ಈ ಕ್ರಿಯೆಯನ್ನು ನಿರ್ವಹಿಸಲು ಯಾವುದೇ ಆ್ಯಪ್‌ ಕಂಡುಬಂದಿಲ್ಲ."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"ಹೊಸ ಖಾತೆಯನ್ನು ಸೇರಿಸಿ"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"ಡೇಟಾಬೇಸ್‌‌ ಫೈಲ್‌ಗಳನ್ನು ರಫ್ತು ಮಾಡಿ"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"ಹೊಸ ಸಂಪರ್ಕ ರಚಿಸಿ"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"ಇನ್ನಷ್ಟು ನೋಡಿ"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"ಕಡಿಮೆ ನೋಡಿ"</string>
     <string name="about_card_title" msgid="6635849009952435700">"ಕುರಿತು"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"ವೈಯಕ್ತಿಕ ಪ್ರತಿಯನ್ನು ರಚಿಸಲಾಗುತ್ತಿದೆ…"</string>
     <string name="date_time_set" msgid="8526160894146496334">"ಸೆಟ್ ಮಾಡಿ"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"IM"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"ಸಂಸ್ಥೆ"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"ಸಂಪಾದಕವನ್ನು ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"ಇದಕ್ಕೆ ಸೇವ್ ಮಾಡಲಾಗುತ್ತಿದೆ"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> ನಲ್ಲಿನ ಸಂಪರ್ಕದ ಮಾಹಿತಿಯು ಎಡಿಟ್ ಮಾಡಲು ಆಗುವುದಿಲ್ಲ"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"ಲಿಂಕ್ ಸಂಪರ್ಕಗಳು"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"ರದ್ದುಮಾಡಿ"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"ಈ ಸಂಪರ್ಕ"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"ಸಂಭವನೀಯ ನಕಲಿಗಳು"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"ಈ ಸಂಪರ್ಕಗಳು ಅದೇ ವ್ಯಕ್ತಿಯದ್ದಾಗಿರಬಹುದು. ನೀವು ಅವುಗಳನ್ನು ಏಕ ಸಂಪರ್ಕವಾಗಿ ಒಟ್ಟಿಗೆ ಲಿಂಕ್ ಮಾಡಬಹುದು."</string>

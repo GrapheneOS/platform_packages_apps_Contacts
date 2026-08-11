@@ -17,7 +17,6 @@ import com.android.contacts.activities.LicenseActivity
 import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.list.AccountFilterActivity
-import com.android.contacts.logging.ScreenEvent.ScreenType
 import com.android.contacts.ui.settings.SettingsActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import com.android.contacts.util.ImplicitIntentsUtil
@@ -53,7 +52,7 @@ internal class SettingsEffectHandlerImpl(
     private fun openProfile(contactId: Long) {
         val contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, contactId)
 
-        ImplicitIntentsUtil.startQuickContact(activity, contactUri, ScreenType.ME_CONTACT)
+        ImplicitIntentsUtil.startQuickContact(activity, contactUri)
     }
 
     private fun copyBuildVersion(buildVersion: String) {

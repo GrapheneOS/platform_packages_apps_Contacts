@@ -51,6 +51,7 @@ internal class ContactDetailsEffectHandlerImpl(
     private val joinTargetLauncher: ActivityResultLauncher<Intent>,
     private val ringtoneLauncher: ActivityResultLauncher<Intent>,
     private val editorLauncher: ActivityResultLauncher<Intent>,
+    private val directoryCopyLauncher: ActivityResultLauncher<Intent>,
 ) : ContactDetailsEffectHandler {
 
     override fun handle(effect: Effect) {
@@ -80,7 +81,7 @@ internal class ContactDetailsEffectHandlerImpl(
     }
 
     private fun addDirectoryContact(prefill: DirectoryContactPrefill) {
-        editorLauncher.launch(directoryContactIntent(prefill))
+        directoryCopyLauncher.launch(directoryContactIntent(prefill))
     }
 
     private fun directoryContactIntent(prefill: DirectoryContactPrefill): Intent {

@@ -17,10 +17,8 @@
 package com.android.contacts.model.dataitem;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Relation;
-import android.text.TextUtils;
 
 /**
  * Represents a relation data item, wrapping the columns in
@@ -40,24 +38,4 @@ public class RelationDataItem extends DataItem {
         return getContentValues().getAsString(Relation.LABEL);
     }
 
-    @Override
-    public boolean shouldCollapseWith(DataItem t, Context context) {
-        if (!(t instanceof RelationDataItem) || mKind == null || t.getDataKind() == null) {
-            return false;
-        }
-        final RelationDataItem that = (RelationDataItem) t;
-        // Relations can have different types (assistant, father) but have the same name
-        if (!TextUtils.equals(getName(), that.getName())) {
-            return false;
-        } else if (!hasKindTypeColumn(mKind) || !that.hasKindTypeColumn(that.getDataKind())) {
-            return hasKindTypeColumn(mKind) == that.hasKindTypeColumn(that.getDataKind());
-        } else if (getKindTypeColumn(mKind) != that.getKindTypeColumn(that.getDataKind())) {
-            return false;
-        } else if (getKindTypeColumn(mKind) == Relation.TYPE_CUSTOM &&
-                !TextUtils.equals(getLabel(), that.getLabel())) {
-            // Check if custom types are not the same
-            return false;
-        }
-        return true;
-    }
 }

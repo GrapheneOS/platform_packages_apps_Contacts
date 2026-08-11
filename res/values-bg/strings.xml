@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Няма контакти"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Да се добави ли „<xliff:g id="EMAIL">%s</xliff:g>“ към контакти?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Имена на контактите ви"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"Кликнете за връщане към предишния екран"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"Добавяне на телефонен номер"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"Добавяне на имейл"</string>
     <string name="missing_app" msgid="5674389915738964148">"Не бе намерено приложение за извършване на това действие."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"Добавяне на нов профил"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"Експортиране на файловете на базата от данни"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"Създаване на нов контакт"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"Преглед на още"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"Преглед на по-малко"</string>
     <string name="about_card_title" msgid="6635849009952435700">"Информация"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"Създава се лично копие..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"Задаване"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"Незабавно съобщение"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"Организация"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"Отварянето на редактора не бе успешно."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"Запазва се във:"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"Данните за контакта от <xliff:g id="ACCOUNT">%s</xliff:g> не могат да се редактират"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"СВЪРЗВАНЕ НА КОНТАКТИТЕ"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"ОТКАЗ"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"Този контакт"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"Възможни дубликати"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"Тези контакти може да са един и същи човек. Можете да ги свържете в един."</string>

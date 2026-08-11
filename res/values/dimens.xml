@@ -20,26 +20,8 @@
     <!-- Values adjusted for nav bar size due to windowDrawsSystemBarBackgrounds -->
     <dimen name="launchscreens_product_logo_bottom">64dp</dimen>
 
-    <!-- Initial height of transparent space above QuickContacts -->
-    <dimen name="quickcontact_starting_empty_height">150dp</dimen>
-    <!-- Initial size of QuickContact's title size -->
-    <dimen name="quickcontact_maximum_title_size">32dp</dimen>
-    <!-- Initial size of QuickContact's phonetic name size -->
-    <dimen name="quickcontact_maximum_phonetic_name_size">28dp</dimen>
-    <!-- When QC is uncollapsed, the title has this much margin on its left and right. -->
-    <dimen name="quickcontact_title_initial_margin">16dp</dimen>
-    <!-- When QC is uncollapsed, the title has this much margin on its bottom -->
-    <dimen name="quickcontact_title_initial_bottom_margin">8dp</dimen>
     <!-- The ratio of width:height for the contact's photo in landscape -->
     <item name="quickcontact_landscape_photo_ratio" type="dimen" format="float">0.7</item>
-    <!-- How far QuickContacts can be dragged and released from the top of the window before we dismiss it. -->
-    <dimen name="quickcontact_dismiss_distance_on_release">40dp</dimen>
-    <!-- How far QuickContacts can be dragged from the top of the window before we dismiss it. -->
-    <dimen name="quickcontact_dismiss_distance_on_scroll">100dp</dimen>
-    <!-- When first flinging QuickContacts towards the top of the window if the fling is
-        predicted to scroll past the window top by less than this amount, then QuickContacts
-        snaps to the top of the window. -->
-    <dimen name="quickcontact_snap_to_top_slop_height">33dp</dimen>
 
     <!-- Account info left margin in editor. -->
     <dimen name="editor_account_left_margin">4dp</dimen>
@@ -117,72 +99,17 @@
 
     <dimen name="contact_filter_header_min_height">24dip</dimen>
 
-    <!-- Margins for ExpandingEntryCardView -->
-    <dimen name="expanding_entry_card_marginStartEnd">8dp</dimen>
-    <dimen name="expanding_entry_card_marginBottom">12dp</dimen>
-
     <!-- Top margin for the communication card, used to add space from header. -->
     <dimen name="first_card_marginTop">12dp</dimen>
 
-    <!-- Elevation of an ExpandingEntryCard, for the sake of shadow casting -->
-    <dimen name="expanding_entry_card_elevation">2dp</dimen>
     <!-- Elevation of the QuickContact's Toolbar, for the sake of shadow casting -->
     <dimen name="quick_contact_toolbar_elevation">4.5dp</dimen>
 
     <!-- Size of the title text for a ExpandingEntryCardView -->
     <dimen name="expanding_entry_card_title_text_size">16sp</dimen>
-    <!-- Padding for the title text for a ExpandingEntryCardView -->
-    <dimen name="expanding_entry_card_title_padding">16dp</dimen>
-    <!-- Extra top padding if the title is set to null -->
-    <dimen name="expanding_entry_card_null_title_top_extra_padding">2dp</dimen>
 
     <!-- Height of the separator between entries in an ExpandingEntryCardView and contact editor. -->
     <dimen name="divider_line_height">1dp</dimen>
-
-    <!-- Dimensions for an entry in ExpandingEntryCardView -->
-    <dimen name="expanding_entry_card_item_padding_start">20dp</dimen>
-    <dimen name="expanding_entry_card_item_padding_end">8dp</dimen>
-    <dimen name="expanding_entry_card_item_padding_top">13dp</dimen>
-    <dimen name="expanding_entry_card_item_padding_bottom">16dp</dimen>
-    <dimen name="expanding_entry_card_item_image_spacing">27dp</dimen>
-
-    <!-- Dimensions for a button in ExpandingEntryCardView -->
-    <dimen name="expanding_entry_card_button_padding_vertical">18dp</dimen>
-
-    <dimen name="expanding_entry_card_item_text_icon_margin_top">7dp</dimen>
-    <dimen name="expanding_entry_card_item_text_icon_margin_right">7dp</dimen>
-    <dimen name="expanding_entry_card_item_sub_header_icon_margin_right">4dp</dimen>
-    <dimen name="expanding_entry_card_item_sub_header_icon_margin_bottom">14dp</dimen>
-
-    <dimen name="expanding_entry_card_item_icon_margin_top">12dp</dimen>
-    <dimen name="expanding_entry_card_item_icon_margin_bottom">12dp</dimen>
-    <dimen name="expanding_entry_card_item_icon_margin_left">12dp</dimen>
-    <dimen name="expanding_entry_card_item_icon_margin_right">12dp</dimen>
-    <dimen name="expanding_entry_card_item_header_only_margin_top">6dp</dimen>
-
-    <dimen name="expanding_entry_card_card_corner_radius">2dp</dimen>
-    <dimen name="expanding_entry_card_header_margin_bottom">2dp</dimen>
-    <!-- The top margin when the sub header and text views are both gone -->
-    <dimen name="expanding_entry_card_item_header_only_margin_bottom">2dp</dimen>
-    <dimen name="expanding_entry_card_item_no_icon_margin_top">6dp</dimen>
-
-    <dimen name="quickcontact_suggestion_card_icon_height">40dp</dimen>
-    <dimen name="quickcontact_suggestion_card_icon_width">40dp</dimen>
-    <dimen name="quickcontact_suggestion_card_image_spacing">20dp</dimen>
-    <dimen name="quickcontact_suggestion_card_layout_margin">8dp</dimen>
-    <dimen name="quickcontact_collapse_view_height">48dp</dimen>
-    <dimen name="quickcontact_collapse_icon_size">24dp</dimen>
-    <dimen name="quickcontact_collapse_text_padding">12dp</dimen>
-    <dimen name="quickcontact_collapse_image_padding">20dp</dimen>
-    <dimen name="quickcontact_expanding_help_text_size">14sp</dimen>
-    <dimen name="quickcontact_expanding_button_right_padding">16dp</dimen>
-    <dimen name="quickcontact_expanding_item_height">72dp</dimen>
-    <dimen name="quickcontact_expanding_item_image_padding">12dp</dimen>
-    <dimen name="quickcontact_expanding_button_section_height">48dp</dimen>
-    <dimen name="quickcontact_expanding_button_section_padding">8dp</dimen>
-
-    <dimen name="expanding_entry_card_item_icon_height">24dp</dimen>
-    <dimen name="expanding_entry_card_item_icon_width">24dp</dimen>
 
     <dimen name="contact_browser_list_item_padding_top_or_bottom">7dp</dimen>
 
@@ -338,14 +265,6 @@
 
     <!-- Size of the close icon in selection bar.-->
     <dimen name="selection_bar_close_icon_size">56dp</dimen>
-
-    <!-- Top margin for the Frequently Contacted section title -->
-    <dimen name="frequently_contacted_title_top_margin_when_first_row">16dp</dimen>
-    <!-- Top margin for the Frequently Contacted section title, when the title is the first
-         item in the list -->
-    <dimen name="frequently_contacted_title_top_margin">57dp</dimen>
-
-    <dimen name="frequently_contacted_title_text_size">24sp</dimen>
 
     <!-- Padding used around the periphery of the call subject dialog, as well as in between the
          items. -->
