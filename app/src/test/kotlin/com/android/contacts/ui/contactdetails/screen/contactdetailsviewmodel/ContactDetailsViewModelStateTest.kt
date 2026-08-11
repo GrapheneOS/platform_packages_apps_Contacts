@@ -9,6 +9,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import io.mockk.every
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -123,6 +124,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
 
         viewModel.uiState.test {
             awaitItem()
+            advanceUntilIdle()
             linkOperations.emit(ContactLinkOperation.LINK)
 
             assertNull(awaitItem().linkProgress)
@@ -135,6 +137,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
         val viewModel = createViewModel()
 
         viewModel.navigationEvents.test {
+            advanceUntilIdle()
             linkOperations.emit(ContactLinkOperation.UNLINK)
 
             assertEquals(ContactDetailsNavEvent.Close, awaitItem())
@@ -147,6 +150,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
         val viewModel = createViewModel()
 
         viewModel.navigationEvents.test {
+            advanceUntilIdle()
             linkOperations.emit(ContactLinkOperation.LINK)
 
             expectNoEvents()

@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import com.android.contacts.R
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
+import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntry
@@ -16,6 +17,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
@@ -46,8 +48,9 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         cards: ContactDetailsCards,
         menu: ContactDetailsMenu,
     ): ContactDetailsContent {
-        val contactCard = mapGroups(cards.contactCard)
-        val aboutCard = mapGroups(cards.aboutCard)
+        val isEditable = !details.capabilities.isDirectoryEntry
+        val contactCard = mapGroups(cards.contactCard, isEditable)
+        val aboutCard = mapGroups(cards.aboutCard, isEditable)
 
         return ContactDetailsContent.Loaded(
             header = mapHeader(details),
@@ -68,10 +71,18 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         return ContactHeaderUiModel(
             displayName = displayName,
             phoneticName = phoneticName(details, displayName),
-            photo = details.photo,
+            photo = avatarImage(details.photo),
             avatarSeed = details.lookupKey,
             isBusiness = details.displayNameSource == ContactDisplayNameSource.ORGANIZATION,
         )
+    }
+
+    private fun avatarImage(photo: ContactPhoto?): ContactAvatarImage? {
+        return when (photo) {
+            null -> null
+            is ContactPhoto.Bytes -> ContactAvatarImage.Bytes(photo.value)
+            is ContactPhoto.Uri -> ContactAvatarImage.Uri(photo.value)
+        }
     }
 
     private fun phoneticName(
@@ -94,16 +105,34 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
 
     private fun mapGroups(
         groups: List<ContactEntryGroup>,
+        isEditable: Boolean,
     ): ImmutableList<ContactEntryGroupUiModel> {
         return groups
-            .map { group -> mapGroup(group) }
+            .map { group -> mapGroup(group, isEditable) }
             .toImmutableList()
     }
 
-    private fun mapGroup(group: ContactEntryGroup): ContactEntryGroupUiModel {
+    private fun mapGroup(
+        group: ContactEntryGroup,
+        isEditable: Boolean,
+    ): ContactEntryGroupUiModel {
+        val hasSeveralOfMimeType = when (group.mimeType) {
+            Phone.CONTENT_ITEM_TYPE, Email.CONTENT_ITEM_TYPE -> group.entries.size > 1
+            else -> false
+        }
+
         return ContactEntryGroupUiModel(
             entries = group.entries
-                .map { entry -> mapEntry(group.mimeType, entry) }
+                .map { entry ->
+                    val isDefaultChangeable =
+                        isEditable && (hasSeveralOfMimeType || entry.isSuperPrimary)
+
+                    mapEntry(
+                        mimeType = group.mimeType,
+                        entry = entry,
+                        isDefaultChangeable = isDefaultChangeable,
+                    )
+                }
                 .toImmutableList(),
         )
     }
@@ -111,10 +140,12 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     private fun mapEntry(
         mimeType: String?,
         entry: ContactEntry,
+        isDefaultChangeable: Boolean,
     ): ContactEntryUiModel {
         return ContactEntryUiModel(
             id = entry.id,
             isSuperPrimary = entry.isSuperPrimary,
+            isDefaultChangeable = isDefaultChangeable,
             icon = entryIcon(mimeType),
             header = text(entry.header),
             subHeader = entry.subHeader,
@@ -201,6 +232,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         return ContactEntryUiModel(
             id = NO_DATA_ID,
             isSuperPrimary = false,
+            isDefaultChangeable = false,
             icon = icon,
             header = context.getString(headerResource),
             subHeader = null,
