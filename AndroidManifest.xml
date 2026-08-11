@@ -302,11 +302,11 @@
         </activity>
 
         <activity
-            android:name=".quickcontact.QuickContactActivity"
+            android:name=".ui.contactdetails.ContactDetailsActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:taskAffinity=""
-            android:theme="@style/Theme.QuickContact"
+            android:theme="@style/Theme.Compose"
             android:exported="true"
             android:windowSoftInputMode="stateUnchanged">
 
@@ -329,6 +329,11 @@
                 <data android:mimeType="vnd.android.cursor.item/raw_contact"/>
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".quickcontact.QuickContactActivity"
+            android:exported="true"
+            android:targetActivity=".ui.contactdetails.ContactDetailsActivity" />
 
         <receiver
             android:name=".quickcontact.QuickContactBroadcastReceiver"

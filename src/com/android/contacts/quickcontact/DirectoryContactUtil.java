@@ -23,6 +23,7 @@ import android.provider.ContactsContract.Directory;
 import android.widget.Toast;
 
 import com.android.contacts.ContactSaveService;
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity;
 import com.android.contacts.R;
 import com.android.contacts.model.Contact;
 import com.android.contacts.model.account.AccountWithDataSet;
@@ -52,7 +53,7 @@ public class DirectoryContactUtil {
                 Toast.LENGTH_LONG).show();
         Intent serviceIntent = ContactSaveService.createNewRawContactIntent(
                 context, values, account,
-                QuickContactActivity.class, Intent.ACTION_VIEW);
+                ContactDetailsActivity.class, Intent.ACTION_VIEW);
         context.startService(serviceIntent);
     }
 }

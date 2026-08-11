@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.tests.factory.contactDetails
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import io.mockk.every
@@ -74,6 +75,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
             lookupUri = LOOKUP_URI,
             excludedMimeTypes = setOf("vnd.example/thing"),
             prioritizedMimeType = "vnd.example/priority",
+            callbackActivity = ContactDetailsActivity::class.java,
         )
         val details = contactDetails()
 
