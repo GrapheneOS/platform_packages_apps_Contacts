@@ -11,5 +11,9 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/platform_external_libphonenumber" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/platform_frameworks_ex" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/platform_frameworks_opt_vcard" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lib/platform_packages_apps_PhoneCommon" vcs="Git" />
   </component>
 </project>
