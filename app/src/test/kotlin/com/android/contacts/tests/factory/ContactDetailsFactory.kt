@@ -6,6 +6,8 @@ import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
+import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
+import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 
 internal fun contactCapabilities(
     isDirectoryEntry: Boolean = false,
@@ -56,5 +58,27 @@ internal fun contactDetails(
         customRingtone = customRingtone,
         dataItems = dataItems,
         capabilities = capabilities,
+    )
+}
+
+internal fun contactDetailsMenu(
+    isStarVisible: Boolean = true,
+    editAction: ContactDetailsEditAction = ContactDetailsEditAction.EDIT,
+    isJoinVisible: Boolean = true,
+    isLinkedContactsVisible: Boolean = false,
+    isDeleteVisible: Boolean = true,
+    isShareVisible: Boolean = true,
+    isShortcutVisible: Boolean = true,
+    isRingtoneVisible: Boolean = true,
+): ContactDetailsMenu {
+    return ContactDetailsMenu(
+        isStarVisible = isStarVisible,
+        editAction = editAction,
+        isJoinVisible = isJoinVisible,
+        isLinkedContactsVisible = isLinkedContactsVisible,
+        isDeleteVisible = isDeleteVisible,
+        isShareVisible = isShareVisible,
+        isShortcutVisible = isShortcutVisible,
+        isRingtoneVisible = isRingtoneVisible,
     )
 }
