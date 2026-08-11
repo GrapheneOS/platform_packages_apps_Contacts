@@ -432,6 +432,9 @@
     <!-- Content description for a back button. [CHAR LIMIT=NONE] -->
     <string name="back_arrow_content_description">Back</string>
 
+    <!-- Content description for an overflow menu button. [CHAR LIMIT=NONE] -->
+    <string name="more_options">More options</string>
+
     <!-- Content description for the fake action menu up button as used
          inside edit or select. [CHAR LIMIT=NONE] -->
     <string name="action_menu_back_from_edit_select">close</string>

@@ -2,6 +2,7 @@ package com.android.contacts.ui.contactdetails.screen.mapper
 
 import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.provider.ContactsContract.CommonDataKinds.Organization
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import com.android.contacts.R
@@ -19,10 +20,12 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryText
 import com.android.contacts.tests.factory.contactCapabilities
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.contactDetailsMenu
+import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -86,7 +89,7 @@ class ContactDetailsUiStateMapperImplTest {
 
         val header = mapOf(details).header
 
-        assertEquals(photo, header.photo)
+        assertEquals(ContactAvatarImage.Uri("content://photo/7"), header.photo)
         assertEquals("lookup-key", header.avatarSeed)
     }
 
@@ -157,7 +160,9 @@ class ContactDetailsUiStateMapperImplTest {
 
     @Test
     fun map_forAnAboutCardGroup_picksNoIcon() {
-        val state = mapOf(cards = cardsOf(aboutCard = groupOf(entry())))
+        val state = mapOf(
+            cards = cardsOf(aboutCard = groupOf(entry(), Organization.CONTENT_ITEM_TYPE)),
+        )
 
         assertNull(firstAboutEntry(state).icon)
     }
@@ -253,6 +258,62 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
+    fun map_withTheOnlyPhoneNumber_doesNotOfferChangingTheDefault() {
+        val cards = cardsOf(contactCard = groupOf(entry(), mimeType = Phone.CONTENT_ITEM_TYPE))
+
+        val state = mapOf(cards = cards)
+
+        assertFalse(firstContactEntry(state).isDefaultChangeable)
+    }
+
+    @Test
+    fun map_withSeveralPhoneNumbers_offersChangingTheDefault() {
+        val cards = cardsOf(
+            contactCard = listOf(
+                ContactEntryGroup(
+                    mimeType = Phone.CONTENT_ITEM_TYPE,
+                    entries = listOf(entry(), entry()),
+                ),
+            ),
+        )
+
+        val state = mapOf(cards = cards)
+
+        assertTrue(firstContactEntry(state).isDefaultChangeable)
+    }
+
+    @Test
+    fun map_forASuperPrimaryEntry_offersChangingTheDefault() {
+        val cards = cardsOf(
+            contactCard = groupOf(
+                entry(isSuperPrimary = true),
+                mimeType = Phone.CONTENT_ITEM_TYPE,
+            ),
+        )
+
+        val state = mapOf(cards = cards)
+
+        assertTrue(firstContactEntry(state).isDefaultChangeable)
+    }
+
+    @Test
+    fun map_forADirectoryContact_doesNotOfferChangingTheDefault() {
+        val details = contactDetails(
+            capabilities = contactCapabilities(isDirectoryEntry = true),
+        )
+        val cards = cardsOf(
+            contactCard = groupOf(
+                entry(isSuperPrimary = true),
+                mimeType = Phone.CONTENT_ITEM_TYPE,
+            ),
+        )
+
+        val state = mapOf(details, cards)
+
+        assertFalse(firstContactEntry(state).isDefaultChangeable)
+    }
+
+    @Test
     fun map_passesTheMenuAndTheStarredStateThrough() {
         val menu = contactDetailsMenu(isDeleteVisible = false)
 
@@ -293,11 +354,12 @@ class ContactDetailsUiStateMapperImplTest {
         header: ContactEntryText? = ContactEntryText.Value("value"),
         copyLabel: ContactEntryText? = null,
         actions: ContactEntryActions = ContactEntryActions(),
+        isSuperPrimary: Boolean = false,
     ): ContactEntry {
         return ContactEntry(
             id = 1L,
             mimeType = null,
-            isSuperPrimary = false,
+            isSuperPrimary = isSuperPrimary,
             header = header,
             subHeader = null,
             text = null,
