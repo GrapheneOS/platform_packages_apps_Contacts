@@ -11,7 +11,6 @@ import android.provider.ContactsContract.Settings as ContactsContractSettings
 import android.provider.Settings
 import android.telecom.TelecomManager
 import com.android.contacts.interactions.ExportDialogFragment
-import com.android.contacts.logging.ScreenEvent.ScreenType
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.settings.SettingsActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
@@ -65,7 +64,6 @@ internal class SettingsEffectHandlerImplTest {
             ImplicitIntentsUtil.startQuickContact(
                 activity,
                 ContentUris.withAppendedId(Contacts.CONTENT_URI, 7L),
-                ScreenType.ME_CONTACT,
             )
         }
     }

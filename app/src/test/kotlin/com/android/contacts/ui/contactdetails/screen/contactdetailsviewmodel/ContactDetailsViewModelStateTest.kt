@@ -159,4 +159,20 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
             cancelAndIgnoreRemainingEvents()
         }
     }
+    @Test
+    fun uiState_whenTheContactLoads_reportsTheShortcutUsageOnce() = runTest {
+        val viewModel = createViewModel().bindContact()
+
+        viewModel.uiState.test {
+            emitLoaded()
+            advanceUntilIdle()
+            emitLoaded()
+            advanceUntilIdle()
+
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        verify(exactly = 1) { contactShortcutRepository.reportShortcutUsed("lookup-key") }
+    }
+
 }

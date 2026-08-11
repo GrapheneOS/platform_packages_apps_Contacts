@@ -72,8 +72,9 @@ internal class ContactDetailsViewModel @Inject constructor(
 ) : ViewModel(),
     ContactDetailsScreenModel {
 
-    @Volatile
     private var loadedDetails: ContactDetails? = null
+
+    private var isShortcutUsageReported = false
 
     private val _effects = Channel<Effect>(Channel.BUFFERED)
     override val effects: Flow<Effect> = _effects.receiveAsFlow()
@@ -153,6 +154,7 @@ internal class ContactDetailsViewModel @Inject constructor(
 
         return contactDetailsRepository
             .observeContactDetails(lookupUri, excludedMimeTypes(arguments))
+            .onEach { result -> retainLoadedContact(result) }
             .map { result -> toContent(result, arguments) }
     }
 
@@ -171,8 +173,6 @@ internal class ContactDetailsViewModel @Inject constructor(
         details: ContactDetails,
         arguments: Bundle,
     ): Content {
-        loadedDetails = details
-
         return contactDetailsUiStateMapper.map(
             details = details,
             cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
@@ -234,6 +234,22 @@ internal class ContactDetailsViewModel @Inject constructor(
         val lookupKey = loadedDetails?.lookupKey ?: return
 
         sendEffect(Effect.ShareContact(lookupKey))
+    }
+
+    private fun retainLoadedContact(result: ContactDetailsResult) {
+        val details = (result as? ContactDetailsResult.Loaded)?.details ?: return
+
+        loadedDetails = details
+        reportShortcutUsed(details)
+    }
+
+    private fun reportShortcutUsed(details: ContactDetails) {
+        if (isShortcutUsageReported) {
+            return
+        }
+
+        isShortcutUsageReported = true
+        contactShortcutRepository.reportShortcutUsed(details.lookupKey)
     }
 
     private fun createShortcut() {
