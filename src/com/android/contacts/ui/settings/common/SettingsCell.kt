@@ -24,6 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.android.contacts.ui.core.itemClipShape
 
