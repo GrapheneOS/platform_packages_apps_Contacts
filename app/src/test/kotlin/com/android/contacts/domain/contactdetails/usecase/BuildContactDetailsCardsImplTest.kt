@@ -8,12 +8,18 @@ import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.domain.contactdetails.model.ContactEntry
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.domain.util.CanVideoCall
+import com.android.contacts.domain.util.IsCallWithNoteSupported
+import com.android.contacts.domain.util.IsDeviceVoiceCapable
+import com.android.contacts.domain.util.IsSipCallingSupported
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.custom
 import com.android.contacts.tests.factory.email
+import com.android.contacts.tests.factory.event
 import com.android.contacts.tests.factory.generic
 import com.android.contacts.tests.factory.im
 import com.android.contacts.tests.factory.nickname
@@ -21,17 +27,39 @@ import com.android.contacts.tests.factory.note
 import com.android.contacts.tests.factory.organization
 import com.android.contacts.tests.factory.phone
 import com.android.contacts.tests.factory.postal
+import com.android.contacts.tests.factory.relation
 import com.android.contacts.tests.factory.sipAddress
 import com.android.contacts.tests.factory.structuredName
 import com.android.contacts.tests.factory.website
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class BuildContactDetailsCardsImplTest {
 
-    private val buildContactDetailsCards = BuildContactDetailsCardsImpl()
+    private val isDeviceVoiceCapable = mockk<IsDeviceVoiceCapable>()
+    private val isCallWithNoteSupported = mockk<IsCallWithNoteSupported>()
+    private val canVideoCall = mockk<CanVideoCall>()
+    private val isSipCallingSupported = mockk<IsSipCallingSupported>()
+
+    private val buildContactDetailsCards = BuildContactDetailsCardsImpl(
+        isDeviceVoiceCapable = isDeviceVoiceCapable,
+        isCallWithNoteSupported = isCallWithNoteSupported,
+        canVideoCall = canVideoCall,
+        isSipCallingSupported = isSipCallingSupported,
+    )
+
+    @Before
+    fun setUp() {
+        every { isDeviceVoiceCapable() } returns true
+        every { isCallWithNoteSupported() } returns false
+        every { canVideoCall(any()) } returns false
+        every { isSipCallingSupported() } returns true
+    }
 
     @Test
     fun invoke_ordersTheContactCardByTheLeadingMimeTypes() {
@@ -389,6 +417,181 @@ class BuildContactDetailsCardsImplTest {
         assertTrue(cards.contactCard.isEmpty())
         assertTrue(cards.aboutCard.isEmpty())
         assertNull(cards.aboutCardGivenName)
+    }
+
+    @Test
+    fun invoke_forAPhone_offersCallingAndMessaging() {
+        val details = detailsOf(phone(number = "4155551212"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.Call("4155551212"), entry.actions.primary)
+        assertEquals(ContactEntryAction.Sms("4155551212"), entry.actions.alternate)
+        assertNull(entry.actions.third)
+    }
+
+    @Test
+    fun invoke_forAPhoneWithoutTelephony_offersMessagingOnly() {
+        every { isDeviceVoiceCapable() } returns false
+        val details = detailsOf(phone(number = "4155551212"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertNull(entry.actions.primary)
+        assertEquals(ContactEntryAction.Sms("4155551212"), entry.actions.alternate)
+    }
+
+    @Test
+    fun invoke_whenCallingWithANoteIsSupported_offersItAsTheThirdAction() {
+        every { isCallWithNoteSupported() } returns true
+        every { canVideoCall(any()) } returns true
+        val details = detailsOf(
+            phone(number = "4155551212", formattedNumber = "(415) 555-1212", typeLabel = "Mobile"),
+        )
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(
+            ContactEntryAction.CallWithNote(
+                number = "4155551212",
+                formattedNumber = "(415) 555-1212",
+                numberLabel = "Mobile",
+            ),
+            entry.actions.third,
+        )
+    }
+
+    @Test
+    fun invoke_whenOnlyVideoCallingIsAvailable_offersItAsTheThirdAction() {
+        every { canVideoCall(any()) } returns true
+        val details = detailsOf(phone(number = "4155551212"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.VideoCall("4155551212"), entry.actions.third)
+    }
+
+    @Test
+    fun invoke_forAPhone_asksVideoCallingAboutTheCarrierCapability() {
+        every { canVideoCall(true) } returns true
+        every { canVideoCall(false) } returns false
+        val details = detailsOf(
+            phone(id = 1L, number = "4155551111", isCarrierVideoCallCapable = true),
+            phone(id = 2L, number = "4155552222", isCarrierVideoCallCapable = false),
+        )
+
+        val entries = buildContactDetailsCards(details, null).contactCard.first().entries
+
+        assertEquals(ContactEntryAction.VideoCall("4155551111"), entries.first().actions.third)
+        assertNull(entries.last().actions.third)
+    }
+
+    @Test
+    fun invoke_forAnEmail_offersSendingAnEmail() {
+        val details = detailsOf(email(address = "alex@example.org"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.SendEmail("alex@example.org"), entry.actions.primary)
+        assertNull(entry.actions.alternate)
+    }
+
+    @Test
+    fun invoke_forAPostalAddress_offersTheMapAndDirections() {
+        val details = detailsOf(postal(formattedAddress = "1 Main St"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.ShowOnMap("1 Main St"), entry.actions.primary)
+        assertEquals(ContactEntryAction.ShowDirections("1 Main St"), entry.actions.alternate)
+    }
+
+    @Test
+    fun invoke_forASipAddress_offersASipCall() {
+        val details = detailsOf(sipAddress(address = "alex@sip.example.org"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.SipCall("alex@sip.example.org"), entry.actions.primary)
+    }
+
+    @Test
+    fun invoke_withoutSipCalling_offersNoSipAction() {
+        every { isSipCallingSupported() } returns false
+        val details = detailsOf(sipAddress(address = "alex@sip.example.org"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertNull(entry.actions.primary)
+    }
+
+    @Test
+    fun invoke_forAWebsite_offersOpeningTheUrl() {
+        val details = detailsOf(website(url = "example.org"))
+
+        val entry = buildContactDetailsCards(details, null).aboutCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.OpenUrl("example.org"), entry.actions.primary)
+    }
+
+    @Test
+    fun invoke_forAnEvent_offersTheDateInTheCalendar() {
+        val details = detailsOf(event(formattedDate = "May 20", isRecurringAnnually = true))
+
+        val entry = buildContactDetailsCards(details, null).aboutCard.first().entries.first()
+
+        assertEquals(
+            ContactEntryAction.ShowEventDate(date = "May 20", isRecurringAnnually = true),
+            entry.actions.primary,
+        )
+    }
+
+    @Test
+    fun invoke_forARelation_offersSearchingForTheName() {
+        val details = detailsOf(relation(name = "Sam"))
+
+        val entry = buildContactDetailsCards(details, null).aboutCard.first().entries.first()
+
+        assertEquals(ContactEntryAction.SearchContacts("Sam"), entry.actions.primary)
+    }
+
+    @Test
+    fun invoke_forAnIm_offersOpeningTheChat() {
+        val details = detailsOf(im(data = "alex@example.org", protocol = 5))
+
+        val entry = buildContactDetailsCards(details, null).aboutCard.first().entries.first()
+
+        assertEquals(
+            ContactEntryAction.OpenChat(
+                data = "alex@example.org",
+                protocol = 5,
+                customProtocol = null,
+            ),
+            entry.actions.primary,
+        )
+    }
+
+    @Test
+    fun invoke_forAGenericItem_offersViewingTheDataRow() {
+        val details = detailsOf(generic(id = 42L, mimeType = "vnd.example/thing"))
+
+        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
+
+        assertEquals(
+            ContactEntryAction.ViewDataItem(dataId = 42L, mimeType = "vnd.example/thing"),
+            entry.actions.primary,
+        )
+    }
+
+    @Test
+    fun invoke_forANote_offersNoAction() {
+        val details = detailsOf(note(note = "Met at the airport"))
+
+        val entry = buildContactDetailsCards(details, null).aboutCard.first().entries.first()
+
+        assertNull(entry.actions.primary)
+        assertNull(entry.actions.alternate)
+        assertNull(entry.actions.third)
     }
 
     private fun detailsOf(vararg dataItems: ContactDataItem): ContactDetails {

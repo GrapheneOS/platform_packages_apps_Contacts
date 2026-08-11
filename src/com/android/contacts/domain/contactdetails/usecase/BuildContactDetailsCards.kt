@@ -18,10 +18,16 @@ import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.domain.contactdetails.model.ContactEntryActions
 import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.domain.util.CanVideoCall
+import com.android.contacts.domain.util.IsCallWithNoteSupported
+import com.android.contacts.domain.util.IsDeviceVoiceCapable
+import com.android.contacts.domain.util.IsSipCallingSupported
 import com.android.contacts.model.dataitem.CustomDataItem
 import javax.inject.Inject
 
@@ -32,7 +38,12 @@ internal fun interface BuildContactDetailsCards {
     ): ContactDetailsCards
 }
 
-internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContactDetailsCards {
+internal class BuildContactDetailsCardsImpl @Inject constructor(
+    private val isDeviceVoiceCapable: IsDeviceVoiceCapable,
+    private val isCallWithNoteSupported: IsCallWithNoteSupported,
+    private val canVideoCall: CanVideoCall,
+    private val isSipCallingSupported: IsSipCallingSupported,
+) : BuildContactDetailsCards {
 
     override operator fun invoke(
         details: ContactDetails,
@@ -100,12 +111,13 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
         return ContactEntry(
             id = NO_DATA_ID,
             mimeType = null,
+            isSuperPrimary = false,
             header = ContactEntryText.Label(ContactEntryLabel.PHONETIC_NAME),
             subHeader = phoneticName,
             text = null,
-            isSuperPrimary = false,
             copyText = phoneticName,
             copyLabel = ContactEntryText.Label(ContactEntryLabel.PHONETIC_NAME),
+            actions = ContactEntryActions(),
         )
     }
 
@@ -156,12 +168,17 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
         return ContactEntry(
             id = dataItem.id,
             mimeType = dataItem.mimeType,
+            isSuperPrimary = dataItem.isSuperPrimary,
             header = content.header,
             subHeader = content.subHeader,
             text = content.text,
-            isSuperPrimary = dataItem.isSuperPrimary,
             copyText = content.copyText,
             copyLabel = content.copyLabel ?: content.header,
+            actions = ContactEntryActions(
+                primary = content.primaryAction,
+                alternate = content.alternateAction,
+                third = content.thirdAction,
+            ),
         )
     }
 
@@ -188,7 +205,8 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
     }
 
     private fun phoneContent(dataItem: ContactDataItem.Phone): EntryContent? {
-        if (dataItem.number.isNullOrEmpty()) {
+        val number = dataItem.number
+        if (number.isNullOrEmpty()) {
             return null
         }
 
@@ -199,7 +217,36 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             text = dataItem.typeLabel,
             copyText = header,
             copyLabel = ContactEntryText.Label(ContactEntryLabel.PHONE),
+            primaryAction = callAction(number),
+            alternateAction = ContactEntryAction.Sms(number),
+            thirdAction = thirdPhoneAction(dataItem, number),
         )
+    }
+
+    private fun callAction(number: String): ContactEntryAction? {
+        return when {
+            isDeviceVoiceCapable() -> ContactEntryAction.Call(number)
+            else -> null
+        }
+    }
+
+    private fun thirdPhoneAction(
+        dataItem: ContactDataItem.Phone,
+        number: String,
+    ): ContactEntryAction? {
+        return when {
+            isCallWithNoteSupported() -> ContactEntryAction.CallWithNote(
+                number = number,
+                formattedNumber = dataItem.formattedNumber,
+                numberLabel = dataItem.typeLabel,
+            )
+
+            canVideoCall(dataItem.isCarrierVideoCallCapable) -> {
+                ContactEntryAction.VideoCall(number)
+            }
+
+            else -> null
+        }
     }
 
     private fun emailContent(dataItem: ContactDataItem.Email): EntryContent? {
@@ -214,6 +261,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             text = dataItem.typeLabel,
             copyText = header,
             copyLabel = ContactEntryText.Label(ContactEntryLabel.EMAIL),
+            primaryAction = ContactEntryAction.SendEmail(header),
         )
     }
 
@@ -227,6 +275,8 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             text = dataItem.typeLabel,
             copyText = dataItem.formattedAddress,
             copyLabel = ContactEntryText.Label(ContactEntryLabel.POSTAL),
+            primaryAction = ContactEntryAction.ShowOnMap(dataItem.formattedAddress),
+            alternateAction = ContactEntryAction.ShowDirections(dataItem.formattedAddress),
         )
     }
 
@@ -240,16 +290,27 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             text = dataItem.typeLabel,
             copyText = dataItem.address,
             copyLabel = ContactEntryText.Label(ContactEntryLabel.PHONE),
+            primaryAction = sipCallAction(dataItem.address),
         )
     }
 
+    private fun sipCallAction(address: String): ContactEntryAction? {
+        return when {
+            isSipCallingSupported() -> ContactEntryAction.SipCall(address)
+            else -> null
+        }
+    }
+
     private fun imContent(dataItem: ContactDataItem.Im): EntryContent {
+        val action = chatAction(dataItem)
+
         if (dataItem.isCustomProtocol) {
             return EntryContent(
                 header = ContactEntryText.Label(ContactEntryLabel.IM),
                 subHeader = dataItem.protocolLabel,
                 text = dataItem.data,
                 copyText = dataItem.data,
+                primaryAction = action,
             )
         }
 
@@ -257,6 +318,20 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             header = ContactEntryText.Value(dataItem.protocolLabel.orEmpty()),
             subHeader = dataItem.data,
             copyText = dataItem.data,
+            primaryAction = action,
+        )
+    }
+
+    private fun chatAction(dataItem: ContactDataItem.Im): ContactEntryAction? {
+        val data = dataItem.data
+        if (data.isNullOrEmpty()) {
+            return null
+        }
+
+        return ContactEntryAction.OpenChat(
+            data = data,
+            protocol = dataItem.protocol,
+            customProtocol = dataItem.customProtocol,
         )
     }
 
@@ -306,6 +381,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             header = ContactEntryText.Label(ContactEntryLabel.WEBSITE),
             subHeader = dataItem.url,
             copyText = dataItem.url,
+            primaryAction = dataItem.url?.let(ContactEntryAction::OpenUrl),
         )
     }
 
@@ -315,6 +391,19 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             subHeader = dataItem.typeLabel,
             text = dataItem.formattedDate,
             copyText = dataItem.formattedDate,
+            primaryAction = eventDateAction(dataItem),
+        )
+    }
+
+    private fun eventDateAction(dataItem: ContactDataItem.Event): ContactEntryAction? {
+        val date = dataItem.displayString
+        if (date.isNullOrEmpty()) {
+            return null
+        }
+
+        return ContactEntryAction.ShowEventDate(
+            date = date,
+            isRecurringAnnually = dataItem.isRecurringAnnually,
         )
     }
 
@@ -324,6 +413,9 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             subHeader = dataItem.name,
             text = dataItem.typeLabel,
             copyText = dataItem.name,
+            primaryAction = dataItem.displayString
+                ?.takeIf { name -> name.isNotEmpty() }
+                ?.let(ContactEntryAction::SearchContacts),
         )
     }
 
@@ -348,6 +440,10 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
             text = dataItem.typeColumn,
             copyText = header,
             copyLabel = ContactEntryText.Value(dataItem.mimeType),
+            primaryAction = ContactEntryAction.ViewDataItem(
+                dataId = dataItem.id,
+                mimeType = dataItem.mimeType,
+            ),
         )
     }
 
@@ -357,6 +453,9 @@ internal class BuildContactDetailsCardsImpl @Inject constructor() : BuildContact
         val text: String? = null,
         val copyText: String? = null,
         val copyLabel: ContactEntryText? = null,
+        val primaryAction: ContactEntryAction? = null,
+        val alternateAction: ContactEntryAction? = null,
+        val thirdAction: ContactEntryAction? = null,
     ) {
         fun isEmpty(): Boolean {
             return isHeaderEmpty() && subHeader.isNullOrEmpty() && text.isNullOrEmpty()
