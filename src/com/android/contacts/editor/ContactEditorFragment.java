@@ -71,7 +71,6 @@ import com.android.contacts.activities.RequestPermissionsActivity;
 import com.android.contacts.editor.AggregationSuggestionEngine.Suggestion;
 import com.android.contacts.group.GroupUtil;
 import com.android.contacts.list.UiIntentActions;
-import com.android.contacts.logging.ScreenEvent.ScreenType;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.Contact;
 import com.android.contacts.model.ContactLoader;
@@ -194,21 +193,21 @@ public class ContactEditorFragment extends Fragment
 
     /**
      * Intent key to pass the photo palette primary color calculated by {@link
-     * com.android.contacts.quickcontact.QuickContactActivity} to the editor.
+     * com.android.contacts.ui.contactdetails.ContactDetailsActivity} to the editor.
      */
     public static final String INTENT_EXTRA_MATERIAL_PALETTE_PRIMARY_COLOR =
             "material_palette_primary_color";
 
     /**
      * Intent key to pass the photo palette secondary color calculated by {@link
-     * com.android.contacts.quickcontact.QuickContactActivity} to the editor.
+     * com.android.contacts.ui.contactdetails.ContactDetailsActivity} to the editor.
      */
     public static final String INTENT_EXTRA_MATERIAL_PALETTE_SECONDARY_COLOR =
             "material_palette_secondary_color";
 
     /** Intent key to pass the ID of the photo to display on the editor. */
     // TODO: This can be cleaned up if we decide to not pass the photo id through
-    // QuickContactActivity.
+    // the contact details screen.
     public static final String INTENT_EXTRA_PHOTO_ID = "photo_id";
 
     /**
@@ -1532,7 +1531,7 @@ public class ContactEditorFragment extends Fragment
                                         mContext, contactLookupUri, mLookupUri);
                         resultIntent =
                                 ImplicitIntentsUtil.composeQuickContactIntent(
-                                        mContext, lookupUri, ScreenType.EDITOR);
+                                        mContext, lookupUri);
                         resultIntent.putExtra(ContactDetailsActivity.EXTRA_CONTACT_EDITED, true);
                     } else {
                         resultIntent = null;

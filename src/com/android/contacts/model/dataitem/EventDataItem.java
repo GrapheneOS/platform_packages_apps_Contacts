@@ -17,10 +17,8 @@
 package com.android.contacts.model.dataitem;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Event;
-import android.text.TextUtils;
 
 /**
  * Represents an event data item, wrapping the columns in
@@ -40,24 +38,4 @@ public class EventDataItem extends DataItem {
         return getContentValues().getAsString(Event.LABEL);
     }
 
-    @Override
-    public boolean shouldCollapseWith(DataItem t, Context context) {
-        if (!(t instanceof EventDataItem) || mKind == null || t.getDataKind() == null) {
-            return false;
-        }
-        final EventDataItem that = (EventDataItem) t;
-        // Events can be different (anniversary, birthday) but have the same start date
-        if (!TextUtils.equals(getStartDate(), that.getStartDate())) {
-            return false;
-        } else if (!hasKindTypeColumn(mKind) || !that.hasKindTypeColumn(that.getDataKind())) {
-            return hasKindTypeColumn(mKind) == that.hasKindTypeColumn(that.getDataKind());
-        } else if (getKindTypeColumn(mKind) != that.getKindTypeColumn(that.getDataKind())) {
-            return false;
-        } else if (getKindTypeColumn(mKind) == Event.TYPE_CUSTOM &&
-                !TextUtils.equals(getLabel(), that.getLabel())) {
-            // Check if custom types are not the same
-            return false;
-        }
-        return true;
-    }
 }

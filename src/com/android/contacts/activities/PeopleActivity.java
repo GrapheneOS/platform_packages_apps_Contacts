@@ -516,8 +516,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
         switch (mRequest.getActionCode()) {
             case ContactsRequest.ACTION_VIEW_CONTACT: {
-                ImplicitIntentsUtil.startQuickContact(
-                        this, mRequest.getContactUri(), ScreenType.UNKNOWN);
+                ImplicitIntentsUtil.startQuickContact(this, mRequest.getContactUri());
                 return false;
             }
             case ContactsRequest.ACTION_INSERT_GROUP: {
