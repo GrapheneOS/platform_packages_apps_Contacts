@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"ไม่มีรายชื่อติดต่อที่สามารถส่งออกได้"</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"โปรแกรมเขียนข้อความ vCard เริ่มการทำงานไม่ถูกต้อง"</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"ไม่สามารถส่งออก"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"ไม่ได้ส่งออกข้อมูลรายชื่อติดต่อ\nสาเหตุ: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"กำลังนำเข้า <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"ไม่สามารถอ่านข้อมูล vCard"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"นำเข้า vCard <xliff:g id="FILENAME">%s</xliff:g> เรียบร้อยแล้ว"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"ข้อมูลของฉัน"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"ตั้งค่าโปรไฟล์ของคุณ"</string>
     <string name="setting_about" msgid="2941859292287597555">"เกี่ยวกับ \"รายชื่อติดต่อ\""</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"แชร์รายชื่อติดต่อโปรด"</string>
     <string name="share_contacts" msgid="2377773269568609796">"แชร์รายชื่อติดต่อทั้งหมด"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"ไม่สามารถแชร์รายชื่อติดต่อ"</string>
     <string name="dialog_export" msgid="3497435010655060068">"ส่งออกรายชื่อติดต่อ"</string>
     <string name="dialog_import" msgid="4590232235052756593">"นำเข้ารายชื่อติดต่อจาก"</string>
     <string name="share_error" msgid="4854612167186185739">"ไม่สามารถแชร์รายชื่อติดต่อนี้ได้"</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"ไม่มีรายชื่อติดต่อที่จะแชร์"</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"รายชื่อติดต่อที่จะแสดง"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"รายชื่อติดต่อที่จะแสดง"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"ปรับแต่งมุมมอง"</string>

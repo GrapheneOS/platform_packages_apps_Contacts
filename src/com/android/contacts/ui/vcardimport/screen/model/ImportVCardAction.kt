@@ -1,4 +1,4 @@
-package com.android.contacts.ui.vcard.screen.model
+package com.android.contacts.ui.vcardimport.screen.model
 
 import android.net.Uri
 import com.android.contacts.domain.accounts.model.AccountModel

@@ -1214,9 +1214,6 @@
     <!-- Dialog title shown when exporting Contact data failed. [CHAR LIMIT=20] -->
     <string name="exporting_contact_failed_title">Couldn\'t export</string>
 
-    <!-- Dialog message shown when exporting Contact data failed. [CHAR LIMIT=NONE] -->
-    <string name="exporting_contact_failed_message">The contact data wasn\'t exported.\nReason: \"<xliff:g id="fail_reason">%s</xliff:g>\"</string>
-
     <!-- Description shown when importing vCard data.
          The argument is the name of a contact which is being read.
          [CHAR LIMIT=20] -->
@@ -1326,14 +1323,10 @@
     <!-- Label of the "About" setting -->
     <string name="setting_about">About Contacts</string>
 
-    <!-- Action that shares favorite contacts [CHAR LIMIT=40]-->
-    <string name="share_favorite_contacts">Share favorite contacts</string>
-
     <!-- Action that shares contacts [CHAR LIMIT=30]-->
     <string name="share_contacts">Share all contacts</string>
 
     <!-- A framework exception can be thrown while attempting to share all contacts. If so, show this toast. [CHAR LIMIT=40]-->
-    <string name="share_contacts_failure">Failed to share contacts.</string>
 
     <!-- Dialog title when selecting the bulk operation to perform from a list. [CHAR LIMIT=36] -->
     <string name="dialog_export">Export contacts</string>
@@ -1343,9 +1336,6 @@
 
     <!-- Toast indicating that sharing a contact has failed. [CHAR LIMIT=NONE]  -->
     <string name="share_error">This contact can\'t be shared.</string>
-
-    <!-- Toast indicating that no visible contact to share [CHAR LIMIT=NONE]  -->
-    <string name="no_contact_to_share">There are no contacts to share.</string>
 
     <!-- The menu item to filter the list of contacts displayed -->
     <string name="menu_contacts_filter">Contacts to display</string>

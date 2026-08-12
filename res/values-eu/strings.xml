@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Ez dago esporta daitekeen kontakturik."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard txartelen idazlea ez da behar bezala hasi."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Ezin izan da esportatu"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Ez dira kontaktuaren datuak esportatu.\nArrazoia: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> inportatzen"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Ezin izan dira vCard datuak irakurri"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"<xliff:g id="FILENAME">%s</xliff:g> vCard fitxategia inportatzen amaitu da"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Nire informazioa"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Konfiguratu profila"</string>
     <string name="setting_about" msgid="2941859292287597555">"Kontaktuak zerbitzuari buruz"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Partekatu gogoko kontaktuak"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Partekatu kontaktu guztiak"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Ezin izan dira partekatu kontaktuak."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Esportatu kontaktuak"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Inportatu kontaktuak hemendik:"</string>
     <string name="share_error" msgid="4854612167186185739">"Ezin da kontaktua partekatu."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Ez dago parteka daitekeen kontakturik."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Bistaratu beharreko kontaktuak"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Bistaratu beharrekoak"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Pertsonalizatu ikuspegia"</string>

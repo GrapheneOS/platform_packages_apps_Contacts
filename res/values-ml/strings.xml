@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"എക്‌സ്‌പോർട്ടുചെയ്യാനാകുന്ന കോൺടാക്റ്റുകളൊന്നുമില്ല."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard കമ്പോസർ ശരിയായി ആരംഭിച്ചില്ല."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"എക്‌സ്‌പോർട്ടുചെയ്യാനായില്ല"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"കോൺടാക്റ്റ് ഡാറ്റ എക്‌സ്‌പോർട്ടുചെയ്‌തില്ല.\nകാരണം: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> എന്നയാളെ ഇമ്പോർട്ടുചെയ്യുന്നു"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard ഡാറ്റ വായിക്കാനായില്ല"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"vCard <xliff:g id="FILENAME">%s</xliff:g> ഇമ്പോർട്ടുചെയ്യൽ പൂർത്തിയായി"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"എന്റെ വിവരം"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"നിങ്ങളുടെ പ്രൊഫൈൽ സജ്ജമാക്കുക"</string>
     <string name="setting_about" msgid="2941859292287597555">"കോണ്‍ടാക്റ്റുകളെ കുറിച്ച്"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"പ്രിയപ്പെട്ട കോൺടാക്റ്റുകൾ പങ്കിടുക"</string>
     <string name="share_contacts" msgid="2377773269568609796">"എല്ലാ കോൺടാക്റ്റുകളും പങ്കിടുക"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"കോൺടാക്റ്റുകൾ പങ്കിടുന്നത് പരാജയം."</string>
     <string name="dialog_export" msgid="3497435010655060068">"കോൺടാക്റ്റുകൾ എക്‌സ്‌പോർട്ടുചെയ്യുക"</string>
     <string name="dialog_import" msgid="4590232235052756593">"ഇതിൽ നിന്ന്‌ കോൺടാക്‌റ്റ് ഇമ്പോർട്ടുചെയ്യൂ"</string>
     <string name="share_error" msgid="4854612167186185739">"ഈ കോൺടാക്റ്റ് പങ്കിടാനാകില്ല."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"പങ്കിടാൻ കോൺടാക്റ്റുകളൊന്നും ഇല്ല."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"ദൃശ്യമാക്കേണ്ട കോൺടാക്റ്റുകൾ"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"ദൃശ്യമാക്കേണ്ട കോൺടാക്റ്റുകൾ"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"കാഴ്‌ച ഇഷ്‌ടാനുസൃതമാക്കൂ"</string>

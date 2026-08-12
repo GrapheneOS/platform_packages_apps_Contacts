@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"ஏற்றத்தக்க தொடர்புகள் இல்லை."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard தொகுப்பான் முறையாகத் தொடங்கவில்லை."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"ஏற்றுமதி செய்ய முடியவில்லை"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"தொடர்பு தரவு ஏற்றுமதி செய்யப்படவில்லை.\nகாரணம்: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> ஐ இறக்குமதி செய்கிறது"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard தரவைப் படிக்க முடியவில்லை"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"vCard <xliff:g id="FILENAME">%s</xliff:g> இறக்கப்பட்டது"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"எனது தகவல்"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"சுயவிவரத்தை அமைக்கவும்"</string>
     <string name="setting_about" msgid="2941859292287597555">"தொடர்புகள் - ஓர் அறிமுகம்"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"பிடித்த தொடர்புகளைப் பகிர்"</string>
     <string name="share_contacts" msgid="2377773269568609796">"எல்லா தொடர்புகளையும் பகிர்"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"தொடர்புகளைப் பகிர முடியவில்லை."</string>
     <string name="dialog_export" msgid="3497435010655060068">"தொடர்புகளை ஏற்று"</string>
     <string name="dialog_import" msgid="4590232235052756593">"இதிலிருந்து தொடர்புகளை இறக்கு:"</string>
     <string name="share_error" msgid="4854612167186185739">"தொடர்பைப் பகிர முடியவில்லை."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"பகிர, தொடர்புகள் இல்லை."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"காட்ட வேண்டிய தொடர்புகள்"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"காட்ட வேண்டிய தொடர்புகள்"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"காட்சியைப் பிரத்தியேகமானதாக்கு"</string>

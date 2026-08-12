@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Er zijn geen contacten die kunnen worden geëxporteerd."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"De vCard-editor is niet correct gestart."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Kan niet exporteren"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"De contactgegevens zijn niet geëxporteerd.\nReden: \'<xliff:g id="FAIL_REASON">%s</xliff:g>\'"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> importeren"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Kan vCard-gegevens niet lezen"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"Importeren van vCard <xliff:g id="FILENAME">%s</xliff:g> voltooid"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Mijn info"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Je profiel instellen"</string>
     <string name="setting_about" msgid="2941859292287597555">"Over Contacten"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Favoriete contacten delen"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Alle contacten delen"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Kan contacten niet delen."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Contacten exporteren"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Contacten importeren vanuit"</string>
     <string name="share_error" msgid="4854612167186185739">"Dit contact kan niet worden gedeeld."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Er zijn geen contacten om te delen."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Zichtbare contacten"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Zichtbare contacten"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Weergave aanpassen"</string>

@@ -1,8 +1,8 @@
 package com.android.contacts.domain
 
-import android.content.Context
 import app.cash.turbine.test
 import com.android.contacts.domain.util.AcquireWakeLock
+import com.android.contacts.domain.vcard.model.ImportVCardError as Error
 import com.android.contacts.domain.vcard.model.VCardDetails
 import com.android.contacts.domain.vcard.model.VCardVersion
 import com.android.contacts.domain.vcard.usecase.ImportVCardsImpl
@@ -11,7 +11,6 @@ import com.android.contacts.domain.vcard.usecase.VCardServiceRunner
 import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.tests.factory.AccountModelFactory
 import com.android.contacts.tests.factory.ImportVCardSourceFactory
-import com.android.contacts.ui.vcard.screen.model.ImportVCardError as Error
 import com.android.contacts.vcard.ImportRequest
 import com.android.contacts.vcard.NotificationImportExportListener
 import com.android.contacts.vcard.VCardService
@@ -36,7 +35,6 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class ImportVCardsTest {
 
-    private val context = mockk<Context>()
     private val wakeLock = mockk<AcquireWakeLock.Wrapper>(relaxed = true)
     private val acquireWakeLock = mockk<AcquireWakeLock>(relaxed = true) {
         every { this@mockk.invoke(any(), any()) } returns wakeLock
@@ -102,7 +100,6 @@ class ImportVCardsTest {
         }
 
     private fun buildSubject() = ImportVCardsImpl(
-        context = context,
         acquireWakeLock = acquireWakeLock,
         parseVCardDetails = parseVCardDetails,
         vCardServiceRunner = vCardServiceRunner,

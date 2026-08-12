@@ -53,7 +53,6 @@ import com.android.contacts.R;
 import com.android.contacts.SimImportService;
 import com.android.contacts.compat.TelecomManagerUtil;
 import com.android.contacts.compat.TelephonyManagerCompat;
-import com.android.contacts.interactions.ExportDialogFragment;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.list.ContactListFilterController;
 import com.android.contacts.logging.ScreenEvent.ScreenType;
@@ -369,10 +368,7 @@ public class DisplayOptionsPreferenceFragment extends PreferenceFragment
             startActivity(UIIntents.INSTANCE.getImportDialogIntent(getActivity()));
             return true;
         } else if (KEY_EXPORT.equals(prefKey)) {
-            ExportDialogFragment.show(
-                    getFragmentManager(),
-                    ContactsPreferenceActivity.class,
-                    ExportDialogFragment.EXPORT_MODE_ALL_CONTACTS);
+            startActivity(UIIntents.INSTANCE.getExportVCardIntent(getActivity()));
             return true;
         } else if (KEY_MY_INFO.equals(prefKey)) {
             if (mHasProfile) {

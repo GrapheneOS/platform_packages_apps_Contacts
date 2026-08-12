@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Eksport qilish uchun hech qanday kontakt yo‘q."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard muharririni ishga tushirishda xatolik yuz berdi."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Eksport qilinmadi"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Kontakt ma’lumoti eksport qilinmadi.\nSababi: “<xliff:g id="FAIL_REASON">%s</xliff:g>”"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> import qilinmoqda"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard fayli ma’lumot-ni o‘qib bo‘lmadi"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"<xliff:g id="FILENAME">%s</xliff:g> vCard fayli import qilindi"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Men haqimda"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Profilingizni sozlang"</string>
     <string name="setting_about" msgid="2941859292287597555">"Kontaktlar ilovasi haqida"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Sevimli kontaktlarni yuborish"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Barcha kontaktlarni yuborish"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Kontaktlarni yuborib bo‘lmadi."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Kontaktlarni eksport qilish"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Kontaktlarni import qilish"</string>
     <string name="share_error" msgid="4854612167186185739">"Bu kontaktni yuborib bo‘lmaydi."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Yuborish uchun hech qanday kontakt yo‘q."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Kontaktlarni filtrlash"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Kontaktlarni filtrlash"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Maxsus tanlanma"</string>

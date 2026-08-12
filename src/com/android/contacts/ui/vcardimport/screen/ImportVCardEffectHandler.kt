@@ -1,10 +1,10 @@
-package com.android.contacts.ui.vcard.screen
+package com.android.contacts.ui.vcardimport.screen
 
 import android.app.Activity
 import android.widget.Toast
 import com.android.contacts.R
-import com.android.contacts.ui.vcard.screen.model.ImportVCardEffect as Effect
-import com.android.contacts.ui.vcard.screen.model.ImportVCardError
+import com.android.contacts.domain.vcard.model.ImportVCardError as Error
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardEffect as Effect
 
 internal interface ImportVCardEffectHandler {
     fun handle(effect: Effect)
@@ -27,12 +27,9 @@ internal class ImportVCardEffectHandlerImpl(
                     activity,
                     activity.getString(
                         when (effect.error) {
-                            ImportVCardError.OutOfMemory ->
-                                R.string.fail_reason_low_memory_during_import
-                            ImportVCardError.Io ->
-                                R.string.fail_reason_io_error
-                            ImportVCardError.NotSupported ->
-                                R.string.fail_reason_not_supported
+                            Error.OutOfMemory -> R.string.fail_reason_low_memory_during_import
+                            Error.Io -> R.string.fail_reason_io_error
+                            Error.NotSupported -> R.string.fail_reason_not_supported
                         },
                     ),
                     Toast.LENGTH_LONG,

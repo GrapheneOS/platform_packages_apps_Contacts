@@ -1,4 +1,4 @@
-package com.android.contacts.ui.vcard.screen.model
+package com.android.contacts.domain.vcard.model
 
 enum class ImportVCardError {
     OutOfMemory,

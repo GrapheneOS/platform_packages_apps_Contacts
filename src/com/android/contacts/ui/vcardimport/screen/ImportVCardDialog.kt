@@ -1,4 +1,4 @@
-package com.android.contacts.ui.vcard.screen
+package com.android.contacts.ui.vcardimport.screen
 
 import android.content.Context
 import android.content.Intent
@@ -27,11 +27,11 @@ import com.android.contacts.R
 import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.interactions.account.SelectAccountActivity
-import com.android.contacts.ui.vcard.screen.model.IMPORT_VCARD_CANCEL_TEST_TAG
-import com.android.contacts.ui.vcard.screen.model.IMPORT_VCARD_DIALOG_TEST_TAG
-import com.android.contacts.ui.vcard.screen.model.ImportVCardAction as Action
-import com.android.contacts.ui.vcard.screen.model.ImportVCardEffect
-import com.android.contacts.ui.vcard.screen.model.ImportVCardUiState as State
+import com.android.contacts.ui.vcardimport.screen.model.IMPORT_VCARD_CANCEL_TEST_TAG
+import com.android.contacts.ui.vcardimport.screen.model.IMPORT_VCARD_DIALOG_TEST_TAG
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardAction as Action
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardEffect
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardUiState as State
 import com.android.contacts.vcard.VCardService
 
 @Composable

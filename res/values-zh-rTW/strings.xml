@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"沒有聯絡人資料可供匯出。"</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard 編輯器並未正確啟動。"</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"無法匯出"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"聯絡人資料未匯出。\n原因：<xliff:g id="FAIL_REASON">%s</xliff:g>"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"正在匯入 <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"無法讀取 vCard 資料"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"已完成匯入 vCard 的 <xliff:g id="FILENAME">%s</xliff:g>"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"我的資訊"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"設定你的個人資料"</string>
     <string name="setting_about" msgid="2941859292287597555">"關於聯絡人"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"分享常用聯絡人資料"</string>
     <string name="share_contacts" msgid="2377773269568609796">"分享所有聯絡人資料"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"無法分享聯絡人資料。"</string>
     <string name="dialog_export" msgid="3497435010655060068">"匯出聯絡人"</string>
     <string name="dialog_import" msgid="4590232235052756593">"聯絡人匯入來源"</string>
     <string name="share_error" msgid="4854612167186185739">"無法分享這位聯絡人。"</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"沒有任何聯絡人資料可分享。"</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"要顯示的聯絡人"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"要顯示的聯絡人"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"自訂檢視"</string>

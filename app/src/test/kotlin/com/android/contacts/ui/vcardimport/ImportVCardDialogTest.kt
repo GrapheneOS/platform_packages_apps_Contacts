@@ -1,4 +1,4 @@
-package com.android.contacts.ui.vcard
+package com.android.contacts.ui.vcardimport
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -7,13 +7,13 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import com.android.contacts.ui.vcard.screen.ImportVCardDialog
-import com.android.contacts.ui.vcard.screen.ImportVCardEffectHandler
-import com.android.contacts.ui.vcard.screen.ImportVCardScreenModel
-import com.android.contacts.ui.vcard.screen.model.IMPORT_VCARD_CANCEL_TEST_TAG
-import com.android.contacts.ui.vcard.screen.model.IMPORT_VCARD_DIALOG_TEST_TAG
-import com.android.contacts.ui.vcard.screen.model.ImportVCardAction as Action
-import com.android.contacts.ui.vcard.screen.model.ImportVCardUiState as State
+import com.android.contacts.ui.vcardimport.screen.ImportVCardDialog
+import com.android.contacts.ui.vcardimport.screen.ImportVCardEffectHandler
+import com.android.contacts.ui.vcardimport.screen.ImportVCardScreenModel
+import com.android.contacts.ui.vcardimport.screen.model.IMPORT_VCARD_CANCEL_TEST_TAG
+import com.android.contacts.ui.vcardimport.screen.model.IMPORT_VCARD_DIALOG_TEST_TAG
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardAction as Action
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardUiState as State
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -473,7 +473,7 @@
 
         <!-- vCard related -->
         <activity
-            android:name=".ui.vcard.ImportVCardActivity"
+            android:name=".ui.vcardimport.ImportVCardActivity"
             android:exported="true"
             android:theme="@style/Theme.Compose.Dialog">
             <intent-filter>
@@ -512,12 +512,8 @@
             android:theme="@style/BackgroundOnlyTheme"/>
 
         <activity
-            android:name=".vcard.ExportVCardActivity"
-            android:theme="@style/BackgroundOnlyTheme"/>
-
-        <activity
-            android:name=".vcard.ShareVCardActivity"
-            android:theme="@style/BackgroundOnlyTheme"/>
+            android:name=".ui.vcardexport.ExportVCardComposeActivity"
+            android:theme="@style/Theme.Compose.Dialog"/>
 
         <activity
             android:name=".ui.interactions.importing.ImportActivity"

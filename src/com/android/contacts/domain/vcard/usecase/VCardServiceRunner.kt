@@ -36,7 +36,7 @@ internal class VCardServiceRunnerImpl @Inject constructor(
             val intent = Intent(context, VCardService::class.java)
             context.startService(intent)
             context.bindService(
-                Intent(context, VCardService::class.java),
+                intent,
                 connection,
                 Context.BIND_AUTO_CREATE,
             )

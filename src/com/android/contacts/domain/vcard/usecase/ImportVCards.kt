@@ -1,17 +1,15 @@
 package com.android.contacts.domain.vcard.usecase
 
-import android.content.Context
 import android.util.Log
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.util.AcquireWakeLock
+import com.android.contacts.domain.vcard.model.ImportVCardError as Error
 import com.android.contacts.domain.vcard.model.ImportVCardSource as Source
 import com.android.contacts.model.account.AccountWithDataSet
-import com.android.contacts.ui.vcard.screen.model.ImportVCardError as Error
 import com.android.contacts.vcard.ImportRequest
 import com.android.contacts.vcard.NotificationImportExportListener
 import com.android.vcard.exception.VCardException
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -28,7 +26,6 @@ internal fun interface ImportVCards {
 }
 
 internal class ImportVCardsImpl @Inject constructor(
-    @param:ApplicationContext private val context: Context,
     private val acquireWakeLock: AcquireWakeLock,
     private val parseVCardDetails: ParseVCardDetails,
     private val vCardServiceRunner: VCardServiceRunner,

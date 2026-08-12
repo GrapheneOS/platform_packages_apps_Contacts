@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"ਨਿਰਯਾਤ ਕਰਨ ਯੋਗ ਕੋਈ ਸੰਪਰਕ ਨਹੀਂ ਹਨ।"</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard ਕੰਪੋਜ਼ਰ ਸਹੀ ਢੰਗ ਨਾਲ ਚਾਲੂ ਨਹੀਂ ਹੋਇਆ।"</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"ਨਿਰਯਾਤ ਨਹੀਂ ਹੋ ਸਕਿਆ"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"ਸੰਪਰਕ  ਡਾਟਾ  ਨਿਰਯਾਤ ਨਹੀਂ ਕੀਤਾ ਗਿਆ ਸੀ।\nਕਾਰਨ: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> ਆਯਾਤ ਹੋ ਰਿਹਾ ਹੈ"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard  ਡਾਟਾ  ਪੜ੍ਹਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"vCard <xliff:g id="FILENAME">%s</xliff:g> ਨੂੰ ਆਯਾਤ ਕਰਨਾ ਮੁਕੰਮਲ ਹੋਇਆ"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"ਮੇਰੀ ਜਾਣਕਾਰੀ"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"ਆਪਣਾ ਪ੍ਰੋਫਾਈਲ ਸਥਾਪਤ ਕਰੋ"</string>
     <string name="setting_about" msgid="2941859292287597555">"ਸੰਪਰਕਾਂ ਬਾਰੇ"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"ਮਨਪਸੰਦ ਸੰਪਰਕਾਂ ਨੂੰ ਸਾਂਝਾ ਕਰੋ"</string>
     <string name="share_contacts" msgid="2377773269568609796">"ਸਾਰੇ ਸੰਪਰਕ ਸਾਂਝੇ ਕਰੋ"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"ਸੰਪਰਕ ਸਾਂਝੇ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ।"</string>
     <string name="dialog_export" msgid="3497435010655060068">"ਸੰਪਰਕ ਨਿਰਯਾਤ ਕਰੋ"</string>
     <string name="dialog_import" msgid="4590232235052756593">"ਇਸ ਤੋਂ ਸੰਪਰਕ ਆਯਾਤ ਕਰੋ"</string>
     <string name="share_error" msgid="4854612167186185739">"ਇਸ ਸੰਪਰਕ ਨੂੰ ਸਾਂਝਾ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।"</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"ਸਾਂਝਾ ਕਰਨ ਲਈ ਕੋਈ ਸੰਪਰਕ ਨਹੀਂ ਹਨ।"</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"ਪ੍ਰਦਰਸ਼ਿਤ ਕਰਨ ਲਈ ਸੰਪਰਕ"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"ਪ੍ਰਦਰਸ਼ਿਤ ਕਰਨ ਲਈ ਸੰਪਰਕ"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"ਦ੍ਰਿਸ਼ ਨੂੰ ਵਿਉਂਤਬੱਧ ਕਰੋ"</string>

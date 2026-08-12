@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Hakuna anwani zinazoweza kuhamishwa."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"Kitunzi cha vCard hakikuanza vizuri."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Imeshindwa kuhamisha"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Data ya anwani halikuhamishwa.\nSababu: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"Inaingiza <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Haikuweza kusoma data ya vKadi"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"Imemaliza kuleta vCard <xliff:g id="FILENAME">%s</xliff:g>"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Maelezo yangu"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Weka wasifu wako"</string>
     <string name="setting_about" msgid="2941859292287597555">"Kuhusu Anwani"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Shiriki anwani unazopenda"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Shiriki anwani zote"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Imeshindwa kushiriki anwani."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Hamisha anwani"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Leta anwani kutoka kwenye"</string>
     <string name="share_error" msgid="4854612167186185739">"Anwani hii haiwezi kushirikiwa."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Hakuna anwani za kushiriki."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Anwani za kuonyesha"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Anwani za kuonyesha"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Badilisha upendavyo"</string>

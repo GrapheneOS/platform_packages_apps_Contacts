@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"내보낼 수 있는 연락처가 없습니다."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard 작성기가 제대로 시작되지 않았습니다."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"내보내기 실패"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"주소록 데이터를 내보내지 못했습니다.\n(이유: \'<xliff:g id="FAIL_REASON">%s</xliff:g>\')"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> 가져오는 중"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard 데이터를 읽지 못했습니다."</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"<xliff:g id="FILENAME">%s</xliff:g> vCard 가져오기 완료"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"내 정보"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"프로필 설정"</string>
     <string name="setting_about" msgid="2941859292287597555">"주소록 정보"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"자주 사용하는 연락처 공유"</string>
     <string name="share_contacts" msgid="2377773269568609796">"모든 연락처 공유"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"연락처를 공유할 수 없습니다."</string>
     <string name="dialog_export" msgid="3497435010655060068">"연락처 내보내기"</string>
     <string name="dialog_import" msgid="4590232235052756593">"연락처를 가져올 위치"</string>
     <string name="share_error" msgid="4854612167186185739">"연락처를 공유할 수 없습니다."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"공유할 연락처가 없습니다."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"표시할 연락처"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"표시할 연락처"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"보기 맞춤설정"</string>

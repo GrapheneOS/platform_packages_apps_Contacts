@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Няма контакти, позволяващи експортиране."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"Създателят на vCard не се стартира правилно."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Не се експортира"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Данните за контакта не бяха експортирани.\nПричина: „<xliff:g id="FAIL_REASON">%s</xliff:g>“"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> се импортира"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Данните не можаха да бъдат прочетени"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"Импортирането на vCard <xliff:g id="FILENAME">%s</xliff:g> завърши"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Моята информация"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Настройте потребителския си профил"</string>
     <string name="setting_about" msgid="2941859292287597555">"Всичко за Контакти"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Споделяне на любимите контакти"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Споделяне на всички контакти"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Споделянето на контактите не бе успешно."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Експортиране на контакти"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Импортиране на контакти от"</string>
     <string name="share_error" msgid="4854612167186185739">"Този контакт не може да бъде споделен."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Няма контакти за споделяне."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Контакти за показване"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Контакти за показване"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Персонализиране"</string>

@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"ৰপ্তানি কৰিবপৰা কোনো সম্পৰ্ক নাই।"</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"ভি-কাৰ্ড কম্প\'জাৰ সঠিকভাবে আৰম্ভ নহ\'ল।"</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"ৰপ্তানি কৰিবপৰা নগ\'ল"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"সম্পৰ্কৰ ডেটা ৰপ্তানি কৰা হোৱা নাছিল।\nকাৰণ: <xliff:g id="FAIL_REASON">%s</xliff:g>"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> আমদানি কৰি থকা হৈছে"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"ভি-কাৰ্ডৰ ডেটা পঢ়িব পৰা নগ\'ল"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"ভি-কাৰ্ড আমদানি কৰা কাৰ্য সম্পূৰ্ণ হ’ল <xliff:g id="FILENAME">%s</xliff:g>"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"মোৰ তথ্য"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"আপোনাৰ প্ৰ\'ফাইল ছেট আপ কৰক"</string>
     <string name="setting_about" msgid="2941859292287597555">"সম্পৰ্কসূচীৰ বিষয়ে"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"প্ৰিয় সম্পৰ্কবোৰ শ্বেয়াৰ কৰক"</string>
     <string name="share_contacts" msgid="2377773269568609796">"সকলো সম্পৰ্ক শ্বেয়াৰ কৰক"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"সম্পৰ্কবোৰ শ্বেয়াৰ কৰিবপৰা নগ\'ল।"</string>
     <string name="dialog_export" msgid="3497435010655060068">"সম্পৰ্কবোৰ ৰপ্তানি কৰক"</string>
     <string name="dialog_import" msgid="4590232235052756593">"সম্পৰ্কবোৰ ইয়াৰ পৰা আমদানি কৰক"</string>
     <string name="share_error" msgid="4854612167186185739">"এই সম্পৰ্ক শ্বেয়াৰ কৰিব নোৱাৰি।"</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"শ্বেয়াৰ কৰিবলৈ কোনো একাউণ্ট নাই।"</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"দেখুৱাবলগীয়া সম্পৰ্কসূচী"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"দেখুৱাবলগীয়া সম্পৰ্কসূচী"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"নিজৰ উপযোগিতা অনুসৰি চাব পৰা কৰক"</string>

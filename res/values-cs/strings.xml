@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Nemáte žádné kontakty k exportu."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"Editor souboru vCard nebyl správně spuštěn."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Export se nezdařil"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Data kontaktů nebyla exportována.\nDůvod: <xliff:g id="FAIL_REASON">%s</xliff:g>"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"Probíhá import: <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Nepodařilo se přečíst údaje vizitky vCard."</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"Import souboru vCard (<xliff:g id="FILENAME">%s</xliff:g>) byl dokončen"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Moje údaje"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Nastavit váš profil"</string>
     <string name="setting_about" msgid="2941859292287597555">"O aplikaci Kontakty"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Sdílet oblíbené kontakty"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Sdílet všechny kontakty"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Kontakty se nepodařilo sdílet."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Exportovat kontakty"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Importovat kontakty z:"</string>
     <string name="share_error" msgid="4854612167186185739">"Tento kontakt nelze sdílet."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Nejsou dostupné žádné kontakty ke sdílení."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Zobrazit kontakty"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Zobrazit kontakty"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Přizpůsobit zobrazení"</string>

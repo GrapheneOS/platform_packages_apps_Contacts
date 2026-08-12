@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Aucun contact à exporter."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"Le système de composition vCard n\'a pas démarré correctement."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Échec exportation"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Les données du contact n\'ont pas été exportées.\nMotif : \"<xliff:g id="FAIL_REASON">%s</xliff:g>\"."</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"Importation en cours : <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Impossible de lire les données vCard."</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"Fichier vCard <xliff:g id="FILENAME">%s</xliff:g> importé"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Mes infos"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Configurer votre profil"</string>
     <string name="setting_about" msgid="2941859292287597555">"À propos de Contacts"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Partager les contacts favoris"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Partager tous les contacts"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Échec du partage des contacts."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Exporter les contacts"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Importer des contacts depuis"</string>
     <string name="share_error" msgid="4854612167186185739">"Impossible de partager ce contact."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Aucun contact à partager."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Contacts à afficher"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Contacts à afficher"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Personnaliser la vue"</string>

@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Nav eksportējamu kontaktpersonu."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"Netika pareizi startēts vCard veidotājs."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Nevarēja eksportēt"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Kontaktpersonas dati netika eksportēti.\nIemesls: <xliff:g id="FAIL_REASON">%s</xliff:g>"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"Notiek imp.: <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Nevarēja nolasīt vCard datus."</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"vCard faila <xliff:g id="FILENAME">%s</xliff:g> importēšana ir pabeigta"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Mana informācija"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Iestatiet savu profilu"</string>
     <string name="setting_about" msgid="2941859292287597555">"Par lietotni Kontaktpersonas"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Kopīgot izlases kontaktpersonas"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Kopīgot visas kontaktpersonas"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Neizdevās kopīgot kontaktpersonas."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Kontaktpersonu eksportēšana"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Kontaktpersonu importēšana no:"</string>
     <string name="share_error" msgid="4854612167186185739">"Šo kontaktpersonu nevar kopīgot."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Nav nevienas kopīgojamas kontaktpersonas."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Attēlojamās kontaktpersonas"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Attēlojamās kontaktpers."</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Skata pielāgošana"</string>

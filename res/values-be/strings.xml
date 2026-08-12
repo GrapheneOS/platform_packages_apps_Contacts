@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"Няма кантактаў, якія можна экспартаваць."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"Памылка запуску складальнiка файлаў vCard."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"Не атрымалася экспартаваць"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"Памылка экспарта кантактных дадзеных. \nПрычына: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"Імпарт <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"Немагчыма прачытаць дадзеныя vCard"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"Заканчэнне імпартавання vCard <xliff:g id="FILENAME">%s</xliff:g>"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"Мая інфармацыя"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"Наладзьце ваш профіль"</string>
     <string name="setting_about" msgid="2941859292287597555">"Інфармацыя аб Кантактах"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"Абагуліць выбраныя кантакты"</string>
     <string name="share_contacts" msgid="2377773269568609796">"Абагуліць усе кантакты"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"Збой абагульвання кантактаў."</string>
     <string name="dialog_export" msgid="3497435010655060068">"Экспартаваць кантакты"</string>
     <string name="dialog_import" msgid="4590232235052756593">"Імпартаваць кантакты з"</string>
     <string name="share_error" msgid="4854612167186185739">"Нельга падзялiцца гэтым кантактам."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"Няма кантактаў, якія можна абагуліць."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"Паказаць кантакты"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Адлюстроўваць кантакты"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"Наладзіць прагляд"</string>

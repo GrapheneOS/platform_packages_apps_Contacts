@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"אין אנשי קשר שניתן לייצא."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"‏יישום היצירה של ה-vCard לא הופעל כהלכה."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"לא ניתן לייצא"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"נתוני אנשי הקשר לא יוצאו.\nסיבה: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"מייבא את <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"‏לא ניתן לקרוא נתוני vCard"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"‏הייבוא של vCard בשם <xliff:g id="FILENAME">%s</xliff:g> הסתיים"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"המידע שלי"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"הגדרת הפרופיל שלך"</string>
     <string name="setting_about" msgid="2941859292287597555">"מידע על אנשי הקשר"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"שתף את אנשי הקשר המועדפים"</string>
     <string name="share_contacts" msgid="2377773269568609796">"שיתוף כל אנשי הקשר"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"לא ניתן היה לשתף את אנשי הקשר."</string>
     <string name="dialog_export" msgid="3497435010655060068">"ייצוא אנשי קשר"</string>
     <string name="dialog_import" msgid="4590232235052756593">"המקור לייבוא של אנשי הקשר"</string>
     <string name="share_error" msgid="4854612167186185739">"לא ניתן לשתף איש קשר זה."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"אין אנשי קשר שניתן לשתף."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"אנשי קשר להצגה"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"אנשי קשר להצגה"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"התאמה אישית של התצוגה"</string>

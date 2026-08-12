@@ -397,7 +397,6 @@
     <string name="composer_has_no_exportable_contact" msgid="473911071832548562">"कोई भी निर्यात-योग्‍य संपर्क नहीं है."</string>
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard कंपोज़र ठीक से शुरू नहीं हुआ."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"निर्यात नहीं कर सका"</string>
-    <string name="exporting_contact_failed_message" msgid="9198720310560773485">"संपर्क डेटा निर्या‍त नहीं किया गया था.\nकारण: \"<xliff:g id="FAIL_REASON">%s</xliff:g>\""</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> आयात कर रहा है"</string>
     <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard डेटा नहीं पढ़ा जा सका"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"vCard <xliff:g id="FILENAME">%s</xliff:g> इंपोर्ट पूरा हुआ"</string>
@@ -428,13 +427,10 @@
     <string name="settings_my_info_title" msgid="6236848378653551341">"मेरी जानकारी"</string>
     <string name="set_up_profile" msgid="3554999219868611431">"अपनी प्रोफ़ाइल सेट करें"</string>
     <string name="setting_about" msgid="2941859292287597555">"संपर्क के बारे में"</string>
-    <string name="share_favorite_contacts" msgid="8208444020721686178">"पसंदीदा संपर्कों को शेयर करें"</string>
     <string name="share_contacts" msgid="2377773269568609796">"सभी संपर्कों को शेयर करें"</string>
-    <string name="share_contacts_failure" msgid="1348777470180064086">"संपर्कों को शेयर करना विफल रहा."</string>
     <string name="dialog_export" msgid="3497435010655060068">"संपर्क निर्यात करें"</string>
     <string name="dialog_import" msgid="4590232235052756593">"संपर्क यहां से लाएं"</string>
     <string name="share_error" msgid="4854612167186185739">"यह संपर्क शेयर नहीं किया जा सकता."</string>
-    <string name="no_contact_to_share" msgid="6285287228557175749">"शेयर करने के लिए कोई भी संपर्क नहीं है."</string>
     <string name="menu_contacts_filter" msgid="5854584270038139275">"डिसप्ले के लिए संपर्क"</string>
     <string name="activity_title_contacts_filter" msgid="6340531582631006680">"डिसप्ले के लिए संपर्क"</string>
     <string name="custom_list_filter" msgid="2544327670202891979">"दृश्य कस्टमाइज़ करें"</string>
