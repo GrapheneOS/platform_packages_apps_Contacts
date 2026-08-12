@@ -29,7 +29,6 @@ import android.provider.ContactsContract.Profile;
 import android.provider.ContactsContract.RawContacts;
 import android.util.Log;
 
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountWithDataSet;
 
@@ -399,16 +398,6 @@ public class RawContactDelta implements Parcelable {
     }
 
     /**
-     * For compatibility purpose, this method is copied from {@link #possibleAdd} and takes
-     * BuilderWrapper and an ArrayList of CPOWrapper as parameters.
-     */
-    private void possibleAddWrapper(ArrayList<CPOWrapper> diff, BuilderWrapper bw) {
-        if (bw != null && bw.getBuilder() != null) {
-            diff.add(new CPOWrapper(bw.getBuilder().build(), bw.getType()));
-        }
-    }
-
-    /**
      * Build a list of {@link ContentProviderOperation} that will assert any
      * "before" state hasn't changed. This is maintained separately so that all
      * asserts can take place before any updates occur.
@@ -417,17 +406,6 @@ public class RawContactDelta implements Parcelable {
         final Builder builder = buildAssertHelper();
         if (builder != null) {
             buildInto.add(builder.build());
-        }
-    }
-
-    /**
-     * For compatibility purpose, this method is copied from {@link #buildAssert} and takes an
-     * ArrayList of CPOWrapper as parameter.
-     */
-    public void buildAssertWrapper(ArrayList<CPOWrapper> buildInto) {
-        final Builder builder = buildAssertHelper();
-        if (builder != null) {
-            buildInto.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_ASSERT));
         }
     }
 
@@ -519,80 +497,6 @@ public class RawContactDelta implements Parcelable {
             builder.withSelection(RawContacts._ID + "=?", new String[1]);
             builder.withSelectionBackReference(0, firstIndex);
             buildInto.add(builder.build());
-        }
-    }
-
-    /**
-     * For compatibility purpose, this method is copied from {@link #buildDiff} and takes an
-     * ArrayList of CPOWrapper as parameter.
-     */
-    public void buildDiffWrapper(ArrayList<CPOWrapper> buildInto) {
-        final int firstIndex = buildInto.size();
-
-        final boolean isContactInsert = mValues.isInsert();
-        final boolean isContactDelete = mValues.isDelete();
-        final boolean isContactUpdate = !isContactInsert && !isContactDelete;
-
-        final Long beforeId = mValues.getId();
-
-        if (isContactInsert) {
-            // TODO: for now simply disabling aggregation when a new contact is
-            // created on the phone.  In the future, will show aggregation suggestions
-            // after saving the contact.
-            mValues.put(RawContacts.AGGREGATION_MODE, RawContacts.AGGREGATION_MODE_SUSPENDED);
-        }
-
-        // Build possible operation at Contact level
-        BuilderWrapper bw = mValues.buildDiffWrapper(mContactsQueryUri);
-        possibleAddWrapper(buildInto, bw);
-
-        // Build operations for all children
-        for (ArrayList<ValuesDelta> mimeEntries : mEntries.values()) {
-            for (ValuesDelta child : mimeEntries) {
-                // Ignore children if parent was deleted
-                if (isContactDelete) continue;
-
-                // Use the profile data URI if the contact is the profile.
-                if (mContactsQueryUri.equals(Profile.CONTENT_RAW_CONTACTS_URI)) {
-                    bw = child.buildDiffWrapper(Uri.withAppendedPath(Profile.CONTENT_URI,
-                            RawContacts.Data.CONTENT_DIRECTORY));
-                } else {
-                    bw = child.buildDiffWrapper(Data.CONTENT_URI);
-                }
-
-                if (child.isInsert()) {
-                    if (isContactInsert) {
-                        // Parent is brand new insert, so back-reference _id
-                        bw.getBuilder().withValueBackReference(Data.RAW_CONTACT_ID, firstIndex);
-                    } else {
-                        // Inserting under existing, so fill with known _id
-                        bw.getBuilder().withValue(Data.RAW_CONTACT_ID, beforeId);
-                    }
-                } else if (isContactInsert && bw != null && bw.getBuilder() != null) {
-                    // Child must be insert when Contact insert
-                    throw new IllegalArgumentException("When parent insert, child must be also");
-                }
-                possibleAddWrapper(buildInto, bw);
-            }
-        }
-
-        final boolean addedOperations = buildInto.size() > firstIndex;
-        if (addedOperations && isContactUpdate) {
-            // Suspend aggregation while persisting updates
-            Builder builder =
-                    buildSetAggregationMode(beforeId, RawContacts.AGGREGATION_MODE_SUSPENDED);
-            buildInto.add(firstIndex, new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
-
-            // Restore aggregation mode as last operation
-            builder = buildSetAggregationMode(beforeId, RawContacts.AGGREGATION_MODE_DEFAULT);
-            buildInto.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
-        } else if (isContactInsert) {
-            // Restore aggregation mode as last operation
-            Builder builder = ContentProviderOperation.newUpdate(mContactsQueryUri);
-            builder.withValue(RawContacts.AGGREGATION_MODE, RawContacts.AGGREGATION_MODE_DEFAULT);
-            builder.withSelection(RawContacts._ID + "=?", new String[1]);
-            builder.withSelectionBackReference(0, firstIndex);
-            buildInto.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
         }
     }
 

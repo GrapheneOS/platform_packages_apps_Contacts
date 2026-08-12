@@ -30,8 +30,6 @@ import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.contacts.compat.CompatUtils;
-import com.android.contacts.compat.PhoneAccountSdkCompat;
 import com.android.contacts.util.PermissionsUtil;
 import com.android.contacts.util.PhoneNumberHelper;
 import com.android.contactsbind.FeedbackHelper;
@@ -150,8 +148,7 @@ public class CallUtil {
      * @return A bit-mask describing the current video capabilities.
      */
     public static int getVideoCallingAvailability(Context context) {
-        if (!PermissionsUtil.hasPermission(context, android.Manifest.permission.READ_PHONE_STATE)
-                || !CompatUtils.isVideoCompatible()) {
+        if (!PermissionsUtil.hasPermission(context, android.Manifest.permission.READ_PHONE_STATE)) {
             return VIDEO_CALLING_DISABLED;
         }
         TelecomManager telecommMgr = (TelecomManager)
@@ -166,13 +163,8 @@ public class CallUtil {
                 PhoneAccount account = telecommMgr.getPhoneAccount(accountHandle);
                 if (account != null) {
                     if (account.hasCapabilities(PhoneAccount.CAPABILITY_VIDEO_CALLING)) {
-                        // Builds prior to N do not have presence support.
-                        if (!CompatUtils.isVideoPresenceCompatible()) {
-                            return VIDEO_CALLING_ENABLED;
-                        }
-
                         int videoCapabilities = VIDEO_CALLING_ENABLED;
-                        if (account.hasCapabilities(PhoneAccountSdkCompat
+                        if (account.hasCapabilities(PhoneAccount
                                 .CAPABILITY_VIDEO_CALLING_RELIES_ON_PRESENCE)) {
                             videoCapabilities |= VIDEO_CALLING_PRESENCE;
                         }
@@ -197,8 +189,7 @@ public class CallUtil {
      *      subject specified, {@code false} otherwise.
      */
     public static boolean isCallWithSubjectSupported(Context context) {
-        if (!PermissionsUtil.hasPermission(context, android.Manifest.permission.READ_PHONE_STATE)
-                || !CompatUtils.isCallSubjectCompatible()) {
+        if (!PermissionsUtil.hasPermission(context, android.Manifest.permission.READ_PHONE_STATE)) {
             return false;
         }
         TelecomManager telecommMgr = (TelecomManager)
@@ -233,9 +224,8 @@ public class CallUtil {
      * experiment for using a fallback is enabled. Otherwise {@code false} is returned.
      */
     public static boolean isTachyonEnabled(Context context) {
-        // Need to be able to read phone state, and be on at least N to check PhoneAccount extras.
-        if (!PermissionsUtil.hasPermission(context, android.Manifest.permission.READ_PHONE_STATE)
-                || !CompatUtils.isNCompatible()) {
+        // Need to be able to read phone state.
+        if (!PermissionsUtil.hasPermission(context, android.Manifest.permission.READ_PHONE_STATE)) {
             return false;
         }
         TelecomManager telecommMgr = (TelecomManager)

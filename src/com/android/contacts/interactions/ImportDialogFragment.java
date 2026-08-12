@@ -17,7 +17,6 @@
 package com.android.contacts.interactions;
 
 import android.app.Activity;
-import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
@@ -27,8 +26,7 @@ import android.content.res.Resources;
 import android.icu.text.MessageFormat;
 import android.os.Bundle;
 import android.os.UserManager;
-import androidx.core.text.BidiFormatter;
-import androidx.core.text.TextDirectionHeuristicsCompat;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,9 +35,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.text.BidiFormatter;
+import androidx.core.text.TextDirectionHeuristicsCompat;
+
 import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
-import com.android.contacts.compat.PhoneNumberUtilsCompat;
 import com.android.contacts.database.SimContactDao;
 import com.android.contacts.editor.SelectAccountDialogFragment;
 import com.android.contacts.model.AccountTypeManager;
@@ -147,7 +147,7 @@ public class ImportDialogFragment extends DialogFragment {
                 }
                 if (phone != null) {
                     phone = sBidiFormatter.unicodeWrap(
-                            PhoneNumberUtilsCompat.createTtsSpannable(phone),
+                            PhoneNumberUtils.createTtsSpannable(phone),
                             TextDirectionHeuristicsCompat.LTR);
                 }
 
@@ -283,7 +283,7 @@ public class ImportDialogFragment extends DialogFragment {
         } else {
             AccountSelectionUtil.doImport(getActivity(), resId,
                     (size == 1 ? accountList.get(0) : null),
-                    (CompatUtils.isMSIMCompatible() ? subscriptionId : -1));
+                    subscriptionId);
         }
     }
 

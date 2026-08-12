@@ -15,8 +15,6 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.display.DisplayManager;
 import android.os.Trace;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Display;
@@ -36,9 +34,10 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
+import androidx.core.view.ViewCompat;
+import androidx.core.view.animation.PathInterpolatorCompat;
+
 import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
-import com.android.contacts.compat.EdgeEffectCompat;
 import com.android.contacts.quickcontact.ExpandingEntryCardView;
 import com.android.contacts.test.NeededForReflection;
 import com.android.contacts.util.SchedulingUtils;
@@ -535,7 +534,8 @@ public class MultiShrinkScroller extends FrameLayout {
                     if (delta > distanceFromMaxScrolling) {
                         // The ScrollView is being pulled upwards while there is no more
                         // content offscreen, and the view port is already fully expanded.
-                        EdgeEffectCompat.onPull(mEdgeGlowBottom, delta / getHeight(),
+                        mEdgeGlowBottom.onPull(
+                                delta / getHeight(),
                                 1 - event.getX() / getWidth());
                     }
 
@@ -563,12 +563,10 @@ public class MultiShrinkScroller extends FrameLayout {
     public void setHeaderTintColor(int color) {
         mHeaderTintColor = color;
         updatePhotoTintAndDropShadow();
-        if (CompatUtils.isLollipopCompatible()) {
-            // Use the same amount of alpha on the new tint color as the previous tint color.
-            final int edgeEffectAlpha = Color.alpha(mEdgeGlowBottom.getColor());
-            mEdgeGlowBottom.setColor((color & 0xffffff) | Color.argb(edgeEffectAlpha, 0, 0, 0));
-            mEdgeGlowTop.setColor(mEdgeGlowBottom.getColor());
-        }
+        // Use the same amount of alpha on the new tint color as the previous tint color.
+        final int edgeEffectAlpha = Color.alpha(mEdgeGlowBottom.getColor());
+        mEdgeGlowBottom.setColor((color & 0xffffff) | Color.argb(edgeEffectAlpha, 0, 0, 0));
+        mEdgeGlowTop.setColor(mEdgeGlowBottom.getColor());
     }
 
     /**

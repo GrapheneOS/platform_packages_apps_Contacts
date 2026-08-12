@@ -35,7 +35,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
@@ -357,9 +356,7 @@ public class SimImportActivityTest {
         assertTrue(mDevice.hasObject(By.text("Import Three").checked(false)));
         assertTrue(mDevice.hasObject(By.text("Import Six").checked(false)));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            contactsProviderClient.close();
-        }
+        contactsProviderClient.close();
     }
 
     private ListenableFuture<Intent> nextImportCompleteBroadcast() {

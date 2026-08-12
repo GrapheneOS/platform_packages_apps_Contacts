@@ -40,14 +40,11 @@ import android.util.SparseArray;
 
 import androidx.collection.ArrayMap;
 
-import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.model.SimCard;
 import com.android.contacts.model.SimContact;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.util.PermissionsUtil;
 import com.android.contacts.util.SharedPreferenceUtil;
-
 import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
@@ -109,10 +106,7 @@ public class SimContactDaoImpl extends SimContactDao {
         if (!canReadSimContacts()) {
             return Collections.emptyList();
         }
-        final List<SimCard> sims = CompatUtils.isMSIMCompatible() ?
-                getSimCardsFromSubscriptions() :
-                Collections.singletonList(SimCard.create(mTelephonyManager,
-                        mContext.getString(R.string.single_sim_display_label)));
+        final List<SimCard> sims = getSimCardsFromSubscriptions();
         return SharedPreferenceUtil.restoreSimStates(mContext, sims);
     }
 

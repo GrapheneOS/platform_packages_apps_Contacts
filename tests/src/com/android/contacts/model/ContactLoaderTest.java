@@ -30,7 +30,6 @@ import android.test.LoaderTestCase;
 
 import androidx.test.filters.LargeTest;
 
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.BaseAccountType;
@@ -159,10 +158,7 @@ public class ContactLoaderTest extends LoaderTestCase {
         assertEquals(lookupUri, contact.getLookupUri());
         assertEquals(1, contact.getRawContacts().size());
         assertEquals(1, contact.getStatuses().size());
-        if (CompatUtils.isMarshmallowCompatible()) {
-            assertEquals(
-                    1, contact.getRawContacts().get(0).getDataItems().get(0).getCarrierPresence());
-        }
+        assertEquals(1, contact.getRawContacts().get(0).getDataItems().get(0).getCarrierPresence());
         mContactsProvider.verify();
     }
 
@@ -310,7 +306,7 @@ public class ContactLoaderTest extends LoaderTestCase {
     class ContactQueries {
         public void fetchAllData(
                 Uri baseUri, long contactId, long rawContactId, long dataId, String encodedLookup) {
-            final String[] COLUMNS_INTERNAL = new String[] {
+            final String[] COLUMNS = new String[] {
                     Contacts.NAME_RAW_CONTACT_ID, Contacts.DISPLAY_NAME_SOURCE,
                     Contacts.LOOKUP_KEY, Contacts.DISPLAY_NAME,
                     Contacts.DISPLAY_NAME_ALTERNATIVE, Contacts.PHONETIC_NAME,
@@ -340,7 +336,7 @@ public class ContactLoaderTest extends LoaderTestCase {
 
                     Data.PRESENCE, Data.CHAT_CAPABILITY,
                     Data.STATUS, Data.STATUS_RES_PACKAGE, Data.STATUS_ICON,
-                    Data.STATUS_LABEL, Data.STATUS_TIMESTAMP,
+                    Data.STATUS_LABEL, Data.STATUS_TIMESTAMP, Data.CARRIER_PRESENCE,
 
                     Contacts.PHOTO_URI,
 
@@ -349,13 +345,7 @@ public class ContactLoaderTest extends LoaderTestCase {
                     Contacts.IS_USER_PROFILE,
             };
 
-            List<String> projectionList = Lists.newArrayList(COLUMNS_INTERNAL);
-            if (CompatUtils.isMarshmallowCompatible()) {
-                projectionList.add(Data.CARRIER_PRESENCE);
-            }
-            final String[] COLUMNS = projectionList.toArray(new String[projectionList.size()]);
-
-            final Object[] ROWS_INTERNAL = new Object[] {
+            final Object[] ROWS = new Object[] {
                     rawContactId, 40,
                     "aa%12%@!", "John Doe", "Doe, John", "jdo",
                     0, 0, StatusUpdates.AVAILABLE,
@@ -384,7 +374,7 @@ public class ContactLoaderTest extends LoaderTestCase {
 
                     StatusUpdates.INVISIBLE, null,
                     "Having dinner", "mockPkg3", 0,
-                    20, 0,
+                    20, 0, Data.CARRIER_PRESENCE_VT_CAPABLE,
 
                     "content:some.photo.uri",
 
@@ -392,12 +382,6 @@ public class ContactLoaderTest extends LoaderTestCase {
                     null,
                     0,
             };
-
-            List<Object> rowsList = Lists.newArrayList(ROWS_INTERNAL);
-            if (CompatUtils.isMarshmallowCompatible()) {
-                rowsList.add(Data.CARRIER_PRESENCE_VT_CAPABLE);
-            }
-            final Object[] ROWS = rowsList.toArray(new Object[rowsList.size()]);
 
             mContactsProvider.expectQuery(baseUri)
                     .withProjection(COLUMNS)

@@ -16,7 +16,6 @@
 
 package com.android.contacts.widget;
 
-import androidx.appcompat.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -27,6 +26,7 @@ import android.os.ResultReceiver;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +39,10 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.android.contacts.R;
 import com.android.contacts.compat.PhoneAccountCompat;
-import com.android.contacts.compat.PhoneNumberUtilsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +256,7 @@ public class SelectPhoneAccountDialogFragment extends DialogFragment {
             } else {
                 holder.numberTextView.setVisibility(View.VISIBLE);
                 holder.numberTextView.setText(
-                        PhoneNumberUtilsCompat.createTtsSpannable(
+                        PhoneNumberUtils.createTtsSpannable(
                                 account.getAddress().getSchemeSpecificPart()));
             }
             holder.imageView.setImageDrawable(PhoneAccountCompat.createIconDrawable(account,

@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.SearchSnippets;
+import android.telephony.PhoneNumberUtils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -45,21 +46,21 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.android.contacts.ContactPresenceIconUtil;
 import com.android.contacts.ContactStatusUtil;
 import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
-import com.android.contacts.compat.PhoneNumberUtilsCompat;
 import com.android.contacts.format.TextHighlighter;
 import com.android.contacts.util.ContactDisplayUtils;
 import com.android.contacts.util.SearchUtil;
 import com.android.contacts.util.ViewUtil;
 import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -1052,9 +1053,7 @@ public class ContactListItemView extends ViewGroup
         }
         if (mQuickContact == null) {
             mQuickContact = new QuickContactBadge(getContext());
-            if (CompatUtils.isLollipopCompatible()) {
-                mQuickContact.setOverlay(null);
-            }
+            mQuickContact.setOverlay(null);
             mQuickContact.setLayoutParams(getDefaultPhotoLayoutParams());
             if (mNameTextView != null) {
                 mQuickContact.setContentDescription(getContext().getString(
@@ -1165,9 +1164,7 @@ public class ContactListItemView extends ViewGroup
             mNameTextView.setGravity(Gravity.CENTER_VERTICAL);
             mNameTextView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
             mNameTextView.setId(R.id.cliv_name_textview);
-            if (CompatUtils.isLollipopCompatible()) {
-                mNameTextView.setElegantTextHeight(false);
-            }
+            mNameTextView.setElegantTextHeight(false);
             addView(mNameTextView);
         }
         return mNameTextView;
@@ -1342,12 +1339,10 @@ public class ContactListItemView extends ViewGroup
             mDeleteImageButton.setBackgroundColor(Color.TRANSPARENT);
             mDeleteImageButton.setContentDescription(
                     getResources().getString(R.string.description_delete_contact));
-            if (CompatUtils. isLollipopCompatible()) {
-                final TypedValue typedValue = new TypedValue();
-                getContext().getTheme().resolveAttribute(
-                        android.R.attr.selectableItemBackgroundBorderless, typedValue, true);
-                mDeleteImageButton.setBackgroundResource(typedValue.resourceId);
-            }
+            final TypedValue typedValue = new TypedValue();
+            getContext().getTheme().resolveAttribute(
+                    android.R.attr.selectableItemBackgroundBorderless, typedValue, true);
+            mDeleteImageButton.setBackgroundResource(typedValue.resourceId);
             addView(mDeleteImageButton);
         }
         // Reset onClickListener because after reloading the view, position might be changed.
@@ -1375,9 +1370,7 @@ public class ContactListItemView extends ViewGroup
             mDataView.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
             mDataView.setActivated(isActivated());
             mDataView.setId(R.id.cliv_data_view);
-            if (CompatUtils.isLollipopCompatible()) {
-                mDataView.setElegantTextHeight(false);
-            }
+            mDataView.setElegantTextHeight(false);
             addView(mDataView);
         }
         return mDataView;
@@ -1397,7 +1390,7 @@ public class ContactListItemView extends ViewGroup
             if (ContactDisplayUtils.isPossiblePhoneNumber(text)) {
                 // Give the text-to-speech engine a hint that it's a phone number
                 mSnippetView.setContentDescription(
-                        PhoneNumberUtilsCompat.createTtsSpannable(text));
+                        PhoneNumberUtils.createTtsSpannable(text));
             } else {
                 mSnippetView.setContentDescription(null);
             }
@@ -1535,7 +1528,7 @@ public class ContactListItemView extends ViewGroup
             // Give the text-to-speech engine a hint that it's a phone number
             mNameTextView.setTextDirection(View.TEXT_DIRECTION_LTR);
             mNameTextView.setContentDescription(
-                    PhoneNumberUtilsCompat.createTtsSpannable(name.toString()));
+                    PhoneNumberUtils.createTtsSpannable(name.toString()));
         } else {
             // Remove span tags of highlighting for talkback to avoid reading highlighting and rest
             // of the name into two separate parts.
@@ -1863,14 +1856,8 @@ public class ContactListItemView extends ViewGroup
         final Drawable drawable = ContextCompat.getDrawable(getContext(), drawableId);
         final int iconColor =
                 ContextCompat.getColor(getContext(), R.color.search_shortcut_icon_color);
-        if (CompatUtils.isLollipopCompatible()) {
-            photo.setImageDrawable(drawable);
-            photo.setImageTintList(ColorStateList.valueOf(iconColor));
-        } else {
-            final Drawable drawableWrapper = DrawableCompat.wrap(drawable).mutate();
-            DrawableCompat.setTint(drawableWrapper, iconColor);
-            photo.setImageDrawable(drawableWrapper);
-        }
+        photo.setImageDrawable(drawable);
+        photo.setImageTintList(ColorStateList.valueOf(iconColor));
     }
 
     @Override
