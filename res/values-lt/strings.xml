@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Pakeitimai, kuriuos atliksite visose programose ir paskyrose (ne tik „Google“ kontaktuose), bus atnaujinami žiniatinklyje ir jūsų įrenginiuose."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"Įjungti"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"Nėra ryšio"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM kort."</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"Rodyti daugiau"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM kortelės kontaktai importuoti"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"Nepavyko importuoti"</string>

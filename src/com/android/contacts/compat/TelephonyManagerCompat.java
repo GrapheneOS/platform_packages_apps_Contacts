@@ -17,9 +17,10 @@
 package com.android.contacts.compat;
 
 import android.net.Uri;
-import androidx.annotation.Nullable;
 import android.telecom.PhoneAccountHandle;
 import android.telephony.TelephonyManager;
+
+import androidx.annotation.Nullable;
 
 public class TelephonyManagerCompat {
     public static final String TELEPHONY_MANAGER_CLASS = "android.telephony.TelephonyManager";
@@ -43,14 +44,7 @@ public class TelephonyManagerCompat {
         if (telephonyManager == null) {
             return false;
         }
-        if (CompatUtils.isLollipopMr1Compatible()
-                || CompatUtils.isMethodAvailable(TELEPHONY_MANAGER_CLASS, "isVoiceCapable")) {
-            // isVoiceCapable was unhidden in L-MR1
-            return telephonyManager.isVoiceCapable();
-        }
-        final int phoneType = telephonyManager.getPhoneType();
-        return phoneType == TelephonyManager.PHONE_TYPE_CDMA ||
-                phoneType == TelephonyManager.PHONE_TYPE_GSM;
+        return telephonyManager.isVoiceCapable();
     }
 
     /**
@@ -66,11 +60,7 @@ public class TelephonyManagerCompat {
         if (telephonyManager == null) {
             return 1;
         }
-        if (CompatUtils.isMarshmallowCompatible() || CompatUtils
-                .isMethodAvailable(TELEPHONY_MANAGER_CLASS, "getPhoneCount")) {
-            return telephonyManager.getPhoneCount();
-        }
-        return 1;
+        return telephonyManager.getPhoneCount();
     }
 
     /**
@@ -87,12 +77,7 @@ public class TelephonyManagerCompat {
         if (telephonyManager == null) {
             return null;
         }
-        if (CompatUtils.isMarshmallowCompatible()
-                || CompatUtils.isMethodAvailable(TELEPHONY_MANAGER_CLASS,
-                        "getDeviceId", Integer.class)) {
-            return telephonyManager.getDeviceId(slotId);
-        }
-        return null;
+        return telephonyManager.getDeviceId(slotId);
     }
 
     /**
@@ -106,11 +91,7 @@ public class TelephonyManagerCompat {
         if (telephonyManager == null) {
             return false;
         }
-        if (CompatUtils.isMarshmallowCompatible()
-                || CompatUtils.isMethodAvailable(TELEPHONY_MANAGER_CLASS, "isTtyModeSupported")) {
-            return telephonyManager.isTtyModeSupported();
-        }
-        return false;
+        return telephonyManager.isTtyModeSupported();
     }
 
     /**
@@ -125,12 +106,7 @@ public class TelephonyManagerCompat {
         if (telephonyManager == null) {
             return false;
         }
-        if (CompatUtils.isMarshmallowCompatible()
-                || CompatUtils.isMethodAvailable(TELEPHONY_MANAGER_CLASS,
-                        "isHearingAidCompatibilitySupported")) {
-            return telephonyManager.isHearingAidCompatibilitySupported();
-        }
-        return false;
+        return telephonyManager.isHearingAidCompatibilitySupported();
     }
 
     /**
@@ -145,11 +121,7 @@ public class TelephonyManagerCompat {
     @Nullable
     public static Uri getVoicemailRingtoneUri(TelephonyManager telephonyManager,
             PhoneAccountHandle accountHandle) {
-        if (!CompatUtils.isNCompatible()) {
-            return null;
-        }
-        return TelephonyManagerSdkCompat
-                .getVoicemailRingtoneUri(telephonyManager, accountHandle);
+        return telephonyManager.getVoicemailRingtoneUri(accountHandle);
     }
 
     /**
@@ -162,10 +134,6 @@ public class TelephonyManagerCompat {
      */
     public static boolean isVoicemailVibrationEnabled(TelephonyManager telephonyManager,
             PhoneAccountHandle accountHandle) {
-        if (!CompatUtils.isNCompatible()) {
-            return true;
-        }
-        return TelephonyManagerSdkCompat
-                .isVoicemailVibrationEnabled(telephonyManager, accountHandle);
+        return telephonyManager.isVoicemailVibrationEnabled(accountHandle);
     }
 }

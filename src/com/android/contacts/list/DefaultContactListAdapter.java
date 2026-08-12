@@ -30,7 +30,7 @@ import android.provider.ContactsContract.Directory;
 import android.provider.ContactsContract.SearchSnippets;
 import android.text.TextUtils;
 import android.view.View;
-import com.android.contacts.compat.ContactsCompat;
+
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.ContactsPreferences;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class DefaultContactListAdapter extends ContactListAdapter {
                 args[0] = query + "%";
                 loader.setSelectionArgs(args);
             } else {
-                final Builder builder = ContactsCompat.getContentUri().buildUpon();
+                final Builder builder = Contacts.ENTERPRISE_CONTENT_FILTER_URI.buildUpon();
                 appendSearchParameters(builder, query, directoryId);
                 loader.setUri(builder.build());
                 loader.setProjection(getProjection(true));

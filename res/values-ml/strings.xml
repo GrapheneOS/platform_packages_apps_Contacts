@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google കോൺടാക്‌റ്റുകളിൽ മാത്രമല്ല, എല്ലാ ആപ്‌സുകളിലും അക്കൗണ്ടുകളിലും വരുത്തുന്ന മാറ്റങ്ങളെ വെബിലും നിങ്ങളുടെ ഉപകരണങ്ങളിലും അപ്‌റ്റു‌ഡേറ്റായി നിലനിർത്തും."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"ഓൺ ചെയ്യുക"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"കണക്ഷനൊന്നുമില്ല"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"സിം"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"കൂടുതൽ കാണിക്കൂ"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"സിം കാർഡ് ഇമ്പോർട്ടുചെയ്‌തു"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"ഇമ്പോർട്ടുചെയ്യൽ പരാജയപ്പെട്ടു"</string>

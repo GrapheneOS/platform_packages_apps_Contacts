@@ -29,7 +29,6 @@ import android.widget.ListView;
 
 import com.android.contacts.ContactPhotoManager.DefaultImageRequest;
 import com.android.contacts.R;
-import com.android.contacts.compat.ContactsCompat;
 import com.android.contacts.preference.ContactsPreferences;
 
 import java.util.HashSet;
@@ -190,7 +189,7 @@ public abstract class ContactListAdapter extends MultiSelectEntryContactListAdap
         final Cursor cursor = (Cursor) getItem(position);
         if (cursor != null) {
             final long contactId = cursor.getLong(ContactQuery.CONTACT_ID);
-            return ContactsCompat.isEnterpriseContactId(contactId);
+            return Contacts.isEnterpriseContactId(contactId);
         }
         return false;
     }

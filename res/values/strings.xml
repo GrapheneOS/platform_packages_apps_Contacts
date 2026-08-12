@@ -13,7 +13,8 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Application name used in Settings/Apps. Default label for activities
          that don't specify a label. -->
@@ -1540,9 +1541,6 @@
 
     <!-- No network connection error message [CHAR LIMIT=50] -->
     <string name="connection_error_message">No connection</string>
-
-    <!-- Generic label for the SIM card when there is only a single SIM in the device [CHAR LIMIT=10]-->
-    <string name="single_sim_display_label">SIM</string>
 
     <!-- Content description for dropdown arrow (https://material.io/icons/#ic_arrow_drop_down)
          This is used to indicate that a list of options can be opened by tapping on it.

@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"ការ​ផ្លាស់ប្ដូរ​ដែល​អ្នក​​ធ្វើ​ចំពោះ​កម្មវិធី និង​គណនី​ទាំងអស់ មិន​គ្រាន់តែ Google ទំនាក់ទំនង​ទេ នឹង​រក្សា​បច្ចុប្បន្នភាព​រវាង​បណ្ដាញ និង​ឧបករណ៍​របស់​អ្នក។"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"បើក"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"គ្មាន​ការ​តភ្ជាប់"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"បង្ហាញ​ជា​ច្រើន"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"បាន​បញ្ចប់​នាំចូល​ទំនាក់ទំនង​ក្នុង​ស៊ីមកាត"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"ការ​នាំចូល​មិន​បាន​សម្រេច"</string>

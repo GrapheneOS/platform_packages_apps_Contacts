@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
+import android.provider.ContactsContract;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +33,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.android.contacts.R;
-import com.android.contacts.compat.ProviderStatusCompat;
 import com.android.contacts.interactions.ImportDialogFragment;
 import com.android.contacts.util.ImplicitIntentsUtil;
 
@@ -100,10 +101,9 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
             // The view hasn't been inflated yet.
             return;
         }
-        if (providerStatus == ProviderStatusCompat.STATUS_EMPTY) {
+        if (providerStatus == ContactsContract.ProviderStatus.STATUS_EMPTY) {
             updateViewsForEmptyStatus();
-        } else if (providerStatus == ProviderStatusCompat.STATUS_BUSY
-                || providerStatus == ProviderStatusCompat.STATUS_CHANGING_LOCALE) {
+        } else if (providerStatus == ContactsContract.ProviderStatus.STATUS_BUSY) {
             updateViewsForBusyStatus();
         }
     }

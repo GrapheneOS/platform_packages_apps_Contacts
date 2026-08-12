@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"તમે બધી ઍપ્લિકેશનો અને એકાઉન્ટ્સમાં જે ફેરફારો કરો છો, માત્ર Google સંપર્કોમાં નહીં, તે વેબ અને તમારા ઉપકરણો વચ્ચે અપ ટુ ડેટ રાખવામાં આવશે."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"ચાલુ કરો"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"કોઈ કનેક્શન નથી"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"વધુ બતાવો"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM કાર્ડ આયાત કરવાનું સમાપ્ત થયું"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"આયાત કરવું નિષ્ફળ થયું"</string>

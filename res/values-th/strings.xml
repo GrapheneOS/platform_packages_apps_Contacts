@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"ระบบจะอัปเดตข้อมูลการเปลี่ยนแปลงต่างๆ ทั้ง Google Contacts รวมถึงแอปและบัญชีทั้งหมดให้เป็นปัจจุบันระหว่างเว็บและอุปกรณ์ของคุณ"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"เปิด"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"ไม่มีการเชื่อมต่อ"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"ซิม"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"แสดงเพิ่มเติม"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"นำเข้าจากซิมการ์ดเสร็จแล้ว"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"การนำเข้าล้มเหลว"</string>

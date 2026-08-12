@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google தொடர்புகள் மட்டுமல்லாமல் எல்லாப் பயன்பாடுகளிலும் கணக்குகளிலும் நீங்கள் செய்யும் மாற்றங்கள், இணையத்திலும் உங்கள் சாதனங்களிலும் புதுப்பித்த நிலையில் வைக்கப்படும்."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"இயக்கு"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"இணைப்பு இல்லை"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"சிம்"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"மேலும் காட்டு"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"சிம் கார்டு இறக்கப்பட்டது"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"இறக்க முடியவில்லை"</string>

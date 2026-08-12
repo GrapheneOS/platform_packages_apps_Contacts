@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Los cambios que realices en todas las aplicaciones y cuentas, no solo en Contactos de Google, se actualizarán en la Web y en tus dispositivos."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"Activar"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"No hay conexión"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"Mostrar más"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"Se ha importado la tarjeta SIM"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"No se ha podido realizar la importación"</string>

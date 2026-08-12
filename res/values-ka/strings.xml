@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"ის ცვლილებები, რომლებსაც შეიტანთ ყველა აპსა და ანგარიშში და არა მხოლოდ Google Contacts-ში, სინქრონიზებულად განახლდება ვებსა და თქვენს მოწყობილობას შორის."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"ჩართვა"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"კავშირი არ არის"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"მეტის ჩვენება"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM ბარათის იმპორტი დასრულდა"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"იმპორტი ვერ შესრულდა"</string>

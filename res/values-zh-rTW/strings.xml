@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"你對所有應用程式和帳戶 (不限於 Google 聯絡人) 所做的變更都會在網路和你的裝置之間保持同步。"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"開啟"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"沒有網路連線"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM 卡"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"顯示更多"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM 卡資料匯入完成"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"匯入失敗"</string>

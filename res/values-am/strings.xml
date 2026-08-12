@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"በGoogle እውቂያዎች ላይ ብቻ ሳይሆን፣ በሁሉም መተግበሪያዎች እና መለያዎች ላይ የሚያደርጓቸው ለውጦች፣ በድር እና በመሳሪያዎችዎ መካከል እንደዘመኑ ይቆያሉ።"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"አብራ"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"ምንም ግንኙነት የለም"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"ሲም"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"ተጨማሪ አሳይ"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"ሲም ካርድ ማምጣት ጨርሷል"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"ማስመጣት አልተሳካም"</string>

@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Veranderinge wat jy aan alle programme en rekeninge maak, nie net Google Kontakte nie, sal tussen die web en jou toestelle op datum gehou word."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"Skakel aan"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"Geen verbinding nie"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"Wys meer"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"Klaar SIM-kaart ingevoer"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"Kon nie invoer nie"</string>

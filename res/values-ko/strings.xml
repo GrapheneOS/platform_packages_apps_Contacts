@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google 주소록뿐만 아니라 모든 앱과 계정의 변경사항이 웹 및 기기 간에 최신 상태로 유지됩니다."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"사용"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"연결되지 않음"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"더보기"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM 카드 가져오기 완료"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"가져오기 실패"</string>

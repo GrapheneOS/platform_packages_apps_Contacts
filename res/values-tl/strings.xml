@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Ang mga pagbabagong ginagawa mo sa lahat ng app at account, hindi lang sa Google Contacts, ay pananatilihing up to date sa pagitan ng web at ng mga device mo."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"I-on"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"Walang koneksyon"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"Magpakita ng higit pa"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"Tapos nang i-import ang SIM card"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"Nabigong i-import"</string>

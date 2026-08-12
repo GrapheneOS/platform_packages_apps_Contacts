@@ -36,7 +36,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -45,13 +44,13 @@ import android.os.Build;
 import android.os.PersistableBundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import androidx.annotation.VisibleForTesting;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.os.BuildCompat;
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
+import androidx.core.os.BuildCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.android.contacts.activities.RequestPermissionsActivity;
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.lettertiles.LetterTileDrawable;
 import com.android.contacts.util.BitmapUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
@@ -479,17 +478,14 @@ public class DynamicShortcuts {
     public synchronized static void initialize(Context context) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             final Flags flags = Flags.getInstance();
-            Log.d(TAG, "DyanmicShortcuts.initialize\nVERSION >= N_MR1? " +
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) +
+            Log.d(TAG, "DyanmicShortcuts.initialize" +
                     "\nisJobScheduled? " +
-                    (CompatUtils.isLauncherShortcutCompatible() && isJobScheduled(context)) +
+                    isJobScheduled(context) +
                     "\nminDelay=" +
                     flags.getInteger(Experiments.DYNAMIC_MIN_CONTENT_CHANGE_UPDATE_DELAY_MILLIS) +
                     "\nmaxDelay=" +
                     flags.getInteger(Experiments.DYNAMIC_MAX_CONTENT_CHANGE_UPDATE_DELAY_MILLIS));
         }
-
-        if (!CompatUtils.isLauncherShortcutCompatible()) return;
 
         final DynamicShortcuts shortcuts = new DynamicShortcuts(context);
 
@@ -515,9 +511,6 @@ public class DynamicShortcuts {
                 (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         jobScheduler.cancel(ContactsJobService.DYNAMIC_SHORTCUTS_JOB_ID);
 
-        if (!CompatUtils.isLauncherShortcutCompatible()) {
-            return;
-        }
         new DynamicShortcuts(context).removeAllShortcuts();
     }
 
@@ -545,7 +538,7 @@ public class DynamicShortcuts {
     }
 
     public static void reportShortcutUsed(Context context, String lookupKey) {
-        if (!CompatUtils.isLauncherShortcutCompatible() || lookupKey == null) return;
+        if (lookupKey == null) return;
         final ShortcutManager shortcutManager = (ShortcutManager) context
                 .getSystemService(Context.SHORTCUT_SERVICE);
         shortcutManager.reportShortcutUsed(lookupKey);

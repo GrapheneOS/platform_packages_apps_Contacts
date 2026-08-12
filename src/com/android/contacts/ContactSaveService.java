@@ -48,19 +48,17 @@ import android.provider.ContactsContract.Groups;
 import android.provider.ContactsContract.Profile;
 import android.provider.ContactsContract.RawContacts;
 import android.provider.ContactsContract.RawContactsEntity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.v4.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.android.contacts.activities.ContactEditorActivity;
-import com.android.contacts.compat.CompatUtils;
-import com.android.contacts.compat.PinnedPositionsCompat;
 import com.android.contacts.database.ContactUpdateUtils;
 import com.android.contacts.database.SimContactDao;
 import com.android.contacts.model.AccountTypeManager;
-import com.android.contacts.model.CPOWrapper;
 import com.android.contacts.model.RawContactDelta;
 import com.android.contacts.model.RawContactDeltaList;
 import com.android.contacts.model.RawContactModifier;
@@ -70,7 +68,6 @@ import com.android.contacts.util.ContactDisplayUtils;
 import com.android.contacts.util.ContactPhotoUtils;
 import com.android.contacts.util.PermissionsUtil;
 import com.android.contactsbind.FeedbackHelper;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -519,13 +516,7 @@ public class ContactSaveService extends IntentService {
         while (tries++ < PERSIST_TRIES) {
             try {
                 // Build operations and try applying
-                final ArrayList<CPOWrapper> diffWrapper = state.buildDiffWrapper();
-
-                final ArrayList<ContentProviderOperation> diff = Lists.newArrayList();
-
-                for (CPOWrapper cpoWrapper : diffWrapper) {
-                    diff.add(cpoWrapper.getOperation());
-                }
+                final ArrayList<ContentProviderOperation> diff = state.buildDiff();
 
                 if (DEBUG) {
                     Log.v(TAG, "Content Provider Operations:");
@@ -553,13 +544,13 @@ public class ContactSaveService extends IntentService {
                     continue;
                 }
 
-                final long rawContactId = getRawContactId(state, diffWrapper, results);
+                final long rawContactId = getRawContactId(state, diff, results);
                 if (rawContactId == -1) {
                     throw new IllegalStateException("Could not determine RawContact ID after save");
                 }
                 // We don't have to check to see if the value is still -1.  If we reach here,
                 // the previous loop iteration didn't succeed, so any ID that we obtained is bogus.
-                insertedRawContactId = getInsertedRawContactId(diffWrapper, results);
+                insertedRawContactId = getInsertedRawContactId(diff, results);
                 if (isProfile) {
                     // Since the profile supports local raw contacts, which may have been completely
                     // removed if all information was removed, we need to do a special query to
@@ -714,30 +705,29 @@ public class ContactSaveService extends IntentService {
      * Find the ID of an existing or newly-inserted raw-contact.  If none exists, return -1.
      */
     private long getRawContactId(RawContactDeltaList state,
-            final ArrayList<CPOWrapper> diffWrapper,
+            final ArrayList<ContentProviderOperation> diff,
             final ContentProviderResult[] results) {
         long existingRawContactId = state.findRawContactId();
         if (existingRawContactId != -1) {
             return existingRawContactId;
         }
 
-        return getInsertedRawContactId(diffWrapper, results);
+        return getInsertedRawContactId(diff, results);
     }
 
     /**
      * Find the ID of a newly-inserted raw-contact.  If none exists, return -1.
      */
     private long getInsertedRawContactId(
-            final ArrayList<CPOWrapper> diffWrapper, final ContentProviderResult[] results) {
+            final ArrayList<ContentProviderOperation> diff, final ContentProviderResult[] results) {
         if (results == null) {
             return -1;
         }
-        final int diffSize = diffWrapper.size();
+        final int diffSize = diff.size();
         final int numResults = results.length;
         for (int i = 0; i < diffSize && i < numResults; i++) {
-            final CPOWrapper cpoWrapper = diffWrapper.get(i);
-            final boolean isInsert = CompatUtils.isInsertCompat(cpoWrapper);
-            if (isInsert && cpoWrapper.getOperation().getUri().getEncodedPath().contains(
+            final ContentProviderOperation cpo = diff.get(i);
+            if (cpo.isInsert() && cpo.getUri().getEncodedPath().contains(
                     RawContacts.CONTENT_URI.getEncodedPath())) {
                 return ContentUris.parseId(results[i].uri);
             }
@@ -1042,6 +1032,9 @@ public class ContactSaveService extends IntentService {
     }
 
     private void setStarred(Intent intent) {
+        ContentResolver contentResolver = getContentResolver();
+        if (contentResolver == null) return;
+
         Uri contactUri = intent.getParcelableExtra(EXTRA_CONTACT_URI);
         boolean value = intent.getBooleanExtra(EXTRA_STARRED_FLAG, false);
         if (contactUri == null) {
@@ -1051,10 +1044,10 @@ public class ContactSaveService extends IntentService {
 
         final ContentValues values = new ContentValues(1);
         values.put(Contacts.STARRED, value);
-        getContentResolver().update(contactUri, values, null, null);
+        contentResolver.update(contactUri, values, null, null);
 
         // Undemote the contact if necessary
-        final Cursor c = getContentResolver().query(contactUri, new String[] {Contacts._ID},
+        final Cursor c = contentResolver.query(contactUri, new String[] {Contacts._ID},
                 null, null, null);
         if (c == null) {
             return;
@@ -1065,7 +1058,7 @@ public class ContactSaveService extends IntentService {
 
                 // Don't bother undemoting if this contact is the user's profile.
                 if (id < Profile.MIN_ID) {
-                    PinnedPositionsCompat.undemote(getContentResolver(), id);
+                    ContactsContract.PinnedPositions.undemote(contentResolver, id);
                 }
             }
         } finally {

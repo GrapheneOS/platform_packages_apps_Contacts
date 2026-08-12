@@ -18,7 +18,6 @@ package com.android.contacts.editor;
 
 import static android.provider.ContactsContract.CommonDataKinds.GroupMembership;
 import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
-
 import static com.android.contacts.util.MaterialColorMapUtils.getDefaultPrimaryAndSecondaryColors;
 
 import android.content.Context;
@@ -28,7 +27,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Im;
@@ -40,9 +38,10 @@ import android.provider.ContactsContract.CommonDataKinds.Relation;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
-import androidx.core.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.widget.ImageView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.android.contacts.ContactPhotoManager;
 import com.android.contacts.ContactPhotoManager.DefaultImageProvider;
@@ -52,11 +51,9 @@ import com.android.contacts.R;
 import com.android.contacts.model.ValuesDelta;
 import com.android.contacts.model.account.AccountDisplayInfo;
 import com.android.contacts.model.account.AccountInfo;
-import com.android.contacts.model.dataitem.DataKind;
 import com.android.contacts.util.ContactPhotoUtils;
 import com.android.contacts.util.MaterialColorMapUtils.MaterialPalette;
 import com.android.contacts.widget.QuickContactImageView;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
@@ -204,30 +201,23 @@ public class EditorUiUtils {
     }
 
     /**
-     * Returns a ringtone string based on the ringtone URI and version #.
+     * Returns a ringtone string based on the ringtone URI.
      */
-    public static String getRingtoneStringFromUri(Uri pickedUri, int currentVersion) {
-        if (isNewerThanM(currentVersion)) {
-            if (pickedUri == null) return ""; // silent ringtone
-            if (RingtoneManager.isDefault(pickedUri)) return null; // default ringtone
-        }
-        if (pickedUri == null || RingtoneManager.isDefault(pickedUri)) return null;
+    public static String getRingtoneStringFromUri(Uri pickedUri) {
+        if (pickedUri == null) return ""; // silent ringtone
+        if (RingtoneManager.isDefault(pickedUri)) return null; // default ringtone
         return pickedUri.toString();
     }
 
     /**
-     * Returns a ringtone URI, based on the string and version #.
+     * Returns a ringtone URI, based on the string.
      */
-    public static Uri getRingtoneUriFromString(String str, int currentVersion) {
+    public static Uri getRingtoneUriFromString(String str) {
         if (str != null) {
-            if (isNewerThanM(currentVersion) && TextUtils.isEmpty(str)) return null;
+            if (TextUtils.isEmpty(str)) return null;
             return Uri.parse(str);
         }
         return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-    }
-
-    private static boolean isNewerThanM(int currentVersion) {
-        return currentVersion > Build.VERSION_CODES.M;
     }
 
     /** Returns the {@link Photo#PHOTO_FILE_ID} from the given ValuesDelta. */

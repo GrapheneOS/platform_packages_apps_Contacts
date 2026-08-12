@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"您对所有应用和账号（不只是 Google 通讯录）所做的更改都会在网络和您的设备之间保持同步。"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"开启"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"无网络连接"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM 卡"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"显示更多"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"已导入 SIM 卡联系人"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"导入失败"</string>

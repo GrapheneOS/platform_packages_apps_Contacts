@@ -36,18 +36,6 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.ProviderStatus;
-import androidx.annotation.LayoutRes;
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -59,10 +47,21 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.LayoutRes;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.drawer.DrawerFragment;
 import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
 import com.android.contacts.editor.ContactEditorFragment;
@@ -100,7 +99,7 @@ import com.android.contacts.widget.FloatingActionButtonController;
 import com.android.contactsbind.FeatureHighlightHelper;
 import com.android.contactsbind.HelpUtils;
 import com.android.contactsbind.ObjectFactory;
-
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.Futures;
 
 import java.util.Collections;
@@ -654,7 +653,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     public void updateStatusBarBackground(int color) {
-        if (!CompatUtils.isLollipopCompatible()) return;
         if (color == -1) {
             mDrawerLayout.setStatusBarBackgroundColor(
                     MaterialColorMapUtils.getStatusBarColor(this));
@@ -1088,10 +1086,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             mShouldSwitchToAllContacts = true;
         }
 
-        if (CompatUtils.isNCompatible()) {
-            getWindow().getDecorView()
-                    .sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
-        }
+        getWindow().getDecorView()
+                .sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         invalidateOptionsMenu();
     }
 

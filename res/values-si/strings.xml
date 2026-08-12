@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"හුදෙක් Google සම්බන්ධතා පමණක් නොව, ඔබ සියලු යෙදුම් සහ ගිණුම් වෙත කරන වෙනස් කිරීම් වෙබ සහ ඔබේ උපාංග අතර යාවත්කාලිනව තබා ගනු ඇත."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"ක්‍රියාත්මක කරන්න"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"සම්බන්ධතාව නැත"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"තව පෙන්වන්න"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM කාඩ්පත ආයාත කිරීම අවසන්ය"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"අයාත කිරීම අසාර්ථක විය"</string>

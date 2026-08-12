@@ -63,7 +63,7 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
             if (mode == SEARCH_MODE_DATA_SHORTCUT || mode == SEARCH_MODE_CONTACT_SHORTCUT) {
                 return Directory.CONTENT_URI;
             } else {
-                return DirectoryCompat.getContentUri();
+                return Directory.ENTERPRISE_CONTENT_URI;
             }
         }
     }

@@ -484,7 +484,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google အဆက်အသွယ်များသာမက အက်ပ်နှင့် အကောင့်အားလုံးတွင် သင်ပြုလုပ်သော အပြောင်းအလဲများကို ဝဘ်နှင့် သင့်ကိရိယာများအကြား အချိန်နှင့်တစ်ပြေးညီ မွမ်းမံပေးသွားပါမည်။"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"ဖွင့်ရန်"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"ချိတ်ဆက်မှုမရှိပါ"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"ဆင်းမ်ကတ်"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"ပိုပြပါ"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"ဆင်းမ်ကဒ်ကို တင်သွင်းပြီးပါပြီ"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"တင်သွင်း၍မရပါ"</string>
