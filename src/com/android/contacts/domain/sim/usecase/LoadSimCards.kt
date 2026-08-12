@@ -1,6 +1,7 @@
 package com.android.contacts.domain.sim.usecase
 
 import android.telephony.SubscriptionManager
+import android.util.Log
 import com.android.contacts.database.SimContactDao
 import com.android.contacts.di.core.SimReadDispatcher
 import com.android.contacts.model.SimCard
@@ -27,7 +28,7 @@ internal class LoadSimCardsImpl @Inject constructor(
     override operator fun invoke(): Flow<List<SimCard>> {
         return onSubcriptionsChange()
             .onStart { emit(Unit) }
-            .map { simContactDao.simCards }
+            .map { load() }
             .flowOn(coroutineDispatcher)
     }
 
@@ -46,5 +47,18 @@ internal class LoadSimCardsImpl @Inject constructor(
                 subscriptionManager.removeOnSubscriptionsChangedListener(listener)
             }
         }
+    }
+
+    private fun load(): List<SimCard> {
+        return try {
+            simContactDao.simCards ?: emptyList()
+        } catch (e: UnsupportedOperationException) {
+            Log.w(TAG, "Failed to load SIM cards", e)
+            emptyList()
+        }
+    }
+
+    private companion object {
+        const val TAG = "LoadSimCards"
     }
 }
