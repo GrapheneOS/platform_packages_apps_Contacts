@@ -27,8 +27,6 @@ import androidx.annotation.Nullable;
  */
 public class PhoneAccountCompat {
 
-    private static final String TAG = PhoneAccountCompat.class.getSimpleName();
-
     /**
      * Gets the {@link Icon} associated with the given {@link PhoneAccount}
      *

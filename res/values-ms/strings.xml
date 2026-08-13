@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Padam kenalan ini?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Padam"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Kenalan tidak wujud."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Kenalan ditambahkan pada Skrin utama."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> ditambahkan pada Skrin utama."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Tiada gambar tersedia pada peranti."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Foto kenalan"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Nama label peribadi"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Panggil alat kelui tempat kerja"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Panggil <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Panggil MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Panggil)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Hantar teks kepada <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"SMS ke rumah"</string>
     <string name="sms_mobile" msgid="433949735070334192">"SMS ke telefon mudah alih"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"SMS alat kelui tempat kerja"</string>
     <string name="sms_assistant" msgid="245045451580096547">"SMS ke <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"SMS kepada MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Hantar mesej)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Buat panggilan video"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Padam bersih senarai kerap dihubungi?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Anda akan mengosongkan senarai yang kerap dihubungi dalam apl Kenalan dan Telefon serta memaksa apl e-mel untuk mempelajari pilihan alamat anda dari awal."</string>

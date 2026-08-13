@@ -19,7 +19,6 @@ package com.android.contacts.editor;
 import android.content.Context;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.Settings;
 import android.test.AndroidTestCase;
 
@@ -138,40 +137,17 @@ public class EditorUiUtilsTest extends AndroidTestCase {
       assertEquals(expected, label);
     }
 
-    public void testGetRingtongStrFromUri_lessThanOrEqualsToM() {
-        final int currentVersion = Build.VERSION_CODES.M;
-        assertNull(EditorUiUtils.getRingtoneStringFromUri(null, currentVersion));
-        assertNull(EditorUiUtils.getRingtoneStringFromUri(Settings.System.DEFAULT_RINGTONE_URI,
-                currentVersion));
-        assertEquals(RINGTONE, EditorUiUtils.getRingtoneStringFromUri(Uri.parse(RINGTONE),
-                        currentVersion));
-    }
-
-    public void testGetRingtongStrFromUri_nOrGreater() {
-        final int currentVersion = Build.VERSION_CODES.M + 1;
-        assertEquals("", EditorUiUtils.getRingtoneStringFromUri(null, currentVersion));
-        assertNull(EditorUiUtils.getRingtoneStringFromUri(Settings.System.DEFAULT_RINGTONE_URI,
-                currentVersion));
-        assertEquals(RINGTONE, EditorUiUtils.getRingtoneStringFromUri(Uri.parse(RINGTONE),
-                        currentVersion));
-    }
-
-    public void testGetRingtongUriFromStr_lessThanOrEqualsToM() {
-        final int currentVersion = Build.VERSION_CODES.M;
-        assertEquals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE), EditorUiUtils
-                        .getRingtoneUriFromString(null, currentVersion));
-        assertEquals(Uri.parse(""), EditorUiUtils.getRingtoneUriFromString("", currentVersion));
-        assertEquals(Uri.parse(RINGTONE), EditorUiUtils.getRingtoneUriFromString(RINGTONE,
-                currentVersion));
+    public void testGetRingtongStrFromUri() {
+        assertEquals("", EditorUiUtils.getRingtoneStringFromUri(null));
+        assertNull(EditorUiUtils.getRingtoneStringFromUri(Settings.System.DEFAULT_RINGTONE_URI));
+        assertEquals(RINGTONE, EditorUiUtils.getRingtoneStringFromUri(Uri.parse(RINGTONE)));
     }
 
     public void testGetRingtongUriFromStr_nOrGreater() {
-        final int currentVersion = Build.VERSION_CODES.M + 1;
-        assertEquals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE), EditorUiUtils
-                        .getRingtoneUriFromString(null, currentVersion));
-        assertNull(EditorUiUtils.getRingtoneUriFromString("", currentVersion));
-        assertEquals(Uri.parse(RINGTONE), EditorUiUtils.getRingtoneUriFromString(RINGTONE,
-                currentVersion));
+        assertEquals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE),
+                EditorUiUtils.getRingtoneUriFromString(null));
+        assertNull(EditorUiUtils.getRingtoneUriFromString(""));
+        assertEquals(Uri.parse(RINGTONE), EditorUiUtils.getRingtoneUriFromString(RINGTONE));
     }
 
     private AccountDisplayInfo createDisplayableAccount() {

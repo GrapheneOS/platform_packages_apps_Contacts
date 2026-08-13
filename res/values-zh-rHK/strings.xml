@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"要刪除此聯絡人嗎？"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"刪除"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"聯絡人不存在。"</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"已將聯絡人增至主畫面"</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"已將<xliff:g id="NAME">%s</xliff:g>增至主畫面。"</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"裝置上沒有相片可供選用。"</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"聯絡人相片"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"自訂標籤名稱"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"致電公司傳呼機"</string>
     <string name="call_assistant" msgid="8556909944379826616">"致電<xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"致電 MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (通話)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"傳送短訊給<xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"傳送短訊至住宅電話"</string>
     <string name="sms_mobile" msgid="433949735070334192">"傳送短訊至手機"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"傳送短訊至公司傳呼機"</string>
     <string name="sms_assistant" msgid="245045451580096547">"傳送短訊至 <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"傳送短訊至 MMS 電話"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (訊息)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"進行視像通話"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"清除常用聯絡人？"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"您將清除「聯絡人」應用程式和「電話」應用程式中的常用聯絡人名單，並強制電子郵件應用程式重新取得您的寄件偏好設定。"</string>

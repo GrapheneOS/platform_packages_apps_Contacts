@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Supprimer ce contact ?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Supprimer"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Ce contact n\'existe pas."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Le contact a bien été ajouté à l\'écran d\'accueil."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"\"<xliff:g id="NAME">%s</xliff:g>\" a bien été ajouté à l\'écran d\'accueil."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Aucune image n\'est disponible sur l\'appareil."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Photo d\'un contact"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Libellé personnalisé"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Appeler téléavertisseur bureau"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Appeler le <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Appeler MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (appeler)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Envoyer un SMS au <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Envoyer un SMS au domicile"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Envoyer un SMS vers mobile"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Envoyer un SMS vers téléavertisseur (bureau)"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Envoyer un SMS à <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Envoyer un MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (envoyer un SMS)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Passer un appel vidéo"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Effacer les contacts fréquents ?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Cette opération efface la liste des personnes que vous contactez le plus souvent dans les applications Contacts et Téléphone, et entraîne une réinitialisation des adresses mémorisées comme celles que vous utilisez le plus fréquemment dans vos applications de messagerie électronique."</string>

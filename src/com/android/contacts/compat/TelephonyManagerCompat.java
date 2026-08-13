@@ -23,7 +23,6 @@ import android.telephony.TelephonyManager;
 import androidx.annotation.Nullable;
 
 public class TelephonyManagerCompat {
-    public static final String TELEPHONY_MANAGER_CLASS = "android.telephony.TelephonyManager";
 
     /**
      * @param telephonyManager The telephony manager instance to use for method calls.

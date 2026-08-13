@@ -23,7 +23,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.annotation.TargetApi;
 import android.app.job.JobScheduler;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -33,7 +32,6 @@ import android.content.pm.ShortcutManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.test.AndroidTestCase;
@@ -54,7 +52,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@TargetApi(Build.VERSION_CODES.N_MR1)
 @SmallTest
 public class DynamicShortcutsTests extends AndroidTestCase {
 

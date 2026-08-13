@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"ይህ እውቂያ ይሰረዝ?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"ሰርዝ"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"ዕውቅያው የለም።"</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"እውቂያ ወደ መነሻ ማያ ገፅ ታክሏል።"</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> ወደ መነሻ ማያ ገፅ ታክሏል።"</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"በመሣሪያው ላይ ፎቶዎች የሉም።"</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"የዕውቂያ ፎቶ"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"ብጁ መሰየሚያ ስም"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"የሥራ ጥሪ ምልክት  ማድረጊያ"</string>
     <string name="call_assistant" msgid="8556909944379826616">"ጥሪ <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"MMS ጥሪ"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (ጥሪ)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"ጽሁፍ <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"የፅሁፍመነሻ"</string>
     <string name="sms_mobile" msgid="433949735070334192">"የ ተንቀሳቃሽፅሁፍ"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"የፅሁፍ ሥራ ምልክት  ማድረጊያ"</string>
     <string name="sms_assistant" msgid="245045451580096547">"ጽሁፍ <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"የMMS ጽሁፍ"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (መልዕክት)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"የቪዲዮ ጥሪ ያድርጉ"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"በተደጋጋሚ ያገኝዋቸው ይጽዱ?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"በእውቂያዎች እና በስልክ መተግበሪያዎች ውስጥ በተደጋጋሚ ያገኟቸውን እውቂያዎች ዝርዝር አጽድተው የኢሜይል መተግበሪያዎች የአድራሻ አያያዝ ምርጫዎችዎን ከባዶ ተነስተው እንዲያውቁ ያስገድዱዋቸዋል።"</string>

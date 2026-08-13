@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Izbrisati ovaj kontakt?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Izbriši"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Kontakt ne postoji."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Kontakt je dodan na Početni ekran."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"Kontakt <xliff:g id="NAME">%s</xliff:g> je dodan na Početni ekran."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Na uređaju nema dostupnih slika."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Fotografija kontakta"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Prilagođeni naziv oznake"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Pozovi poslovni pejdžer"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Pozovi <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Pozovi MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Poziv)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Pošalji poruku na <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Pošalji tekstualnu poruku na kućni broj"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Pošalji tekstualnu poruku na mobilni"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Pošalji tekstualnu poruku na poslovni pejdžer"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Pošalji tekstualnu poruku <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Pošalji tekstualnu poruku na MMS broj"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Poruka)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Uputi video poziv"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Obrisati često kontaktirane osobe?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Obrisat ćete listu često kontaktiranih osoba u aplikacijama Kontakti i Telefon, pa će aplikacije za e-poštu morati ispočetka učiti vaše postavke adresa."</string>

@@ -1033,7 +1033,6 @@ public class ContactSaveService extends IntentService {
 
     private void setStarred(Intent intent) {
         ContentResolver contentResolver = getContentResolver();
-        if (contentResolver == null) return;
 
         Uri contactUri = intent.getParcelableExtra(EXTRA_CONTACT_URI);
         boolean value = intent.getBooleanExtra(EXTRA_STARRED_FLAG, false);

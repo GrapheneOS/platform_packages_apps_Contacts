@@ -21,11 +21,9 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.os.Build;
 import android.provider.ContactsContract.RawContacts;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.test.InstrumentationRegistry;
 
 import com.android.contacts.model.account.AccountWithDataSet;
@@ -85,14 +83,12 @@ public class AccountsTestHelper {
         return generateAccountName("test");
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void removeTestAccount(AccountWithDataSet account) {
         final Account remove = account.getAccountOrNull();
         mAccountManager.removeAccountExplicitly(remove);
         mAddedAccounts.remove(remove);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void removeTestAccount(String accountName) {
         removeTestAccount(new AccountWithDataSet(accountName, TEST_ACCOUNT_TYPE, null));
     }
@@ -109,7 +105,6 @@ public class AccountsTestHelper {
                 new String[] { account.name, account.type });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public void cleanup() {
         // Note that we don't need to cleanup up the contact data associated with the account.
         // CP2 will eventually do that automatically so as long as we're using unique account
@@ -123,7 +118,6 @@ public class AccountsTestHelper {
         mAddedAccounts.clear();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public static void removeAccountsWithPrefix(Context context, String prefix) {
         final AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -133,7 +127,5 @@ public class AccountsTestHelper {
                 accountManager.removeAccountExplicitly(account);
             }
         }
-
-
     }
 }

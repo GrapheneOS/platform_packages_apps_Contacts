@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"ລຶບລາຍ​ຊື່ຜູ້​ຕິດ​ຕໍ່​ນີ້ບໍ?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"​ລຶບ"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"ບໍ່ມີລາຍຊື່ຜູ້ຕິດຕໍ່."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"ເພີ່ມລາຍຊື່ຕິດຕໍ່ໃສ່ໜ້າຈໍຫຼັກແລ້ວ."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> ເພີ່ມ​ໃສ່​ໜ້າ​ຈໍ​ຫຼັກ​ແລ້ວ."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"ບໍ່ມີຮູບໃນອຸປະກອນທີ່ສາມາດໃຊ້ໄດ້."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"ຮູບລາຍຊື່ຜູ່ຕິດຕໍ່"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"ປ້າຍກຳກັບຊື່ກຳນົດເອງ"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"ໂທຫາ pager ບ່ອນເຮັດວຽກ"</string>
     <string name="call_assistant" msgid="8556909944379826616">"ໂທຫາ <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"ໂທ​ຫາເບີ MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (ໂທ)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"ສົ່ງຂໍ້ຄວາມຫາ <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"ສົ່ງຂໍ້ຄວາມຫາເບີບ້ານ"</string>
     <string name="sms_mobile" msgid="433949735070334192">"ສົ່ງຂໍ້ຄວາມຫາເບີມືຖື"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"ສົ່ງຂໍ້ຄວາມຫາເບີ pager ບ່ອນເຮັດວຽກ"</string>
     <string name="sms_assistant" msgid="245045451580096547">"ສົ່ງຂໍ້ຄວາມຫາ <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"ສົ່ງຂໍ້ຄວາມ MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (ສົ່ງຂໍ້ຄວາມ)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"ໂທອອກດ້ວຍວິດີໂອ"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"ລຶບລາຍຊື່ທີ່ຕິດຕໍ່ຫາເລື້ອຍໆ?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"ທ່ານຈະລຶບຂໍ້ມູນລາຍຊື່ທີ່ຕິດຕໍ່ຫາເລື້ອຍໆຢູ່ໃນແອັບລາຍຊື່ ແລະ ໂທລະສັບ ພ້ອມທັງບັງຄັບໃຫ້ແອັບອີເມວເລີ່ມຮຽນຮູ້ຄ່າກຳນົດທີ່ຢູ່ຂອງທ່ານໃໝ່ຕັ້ງແຕ່ຕົ້ນ."</string>
