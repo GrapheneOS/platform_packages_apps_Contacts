@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"გსურთ ამ კონტაქტის წაშლა?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"წაშლა"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"კონტაქტი არ არსებობს."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"კონტაქტი დაემატა მთავარ ეკრანს."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> დაემატა მთავარ ეკრანს."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"მოწყობილობაზე სურათები მიუწვდომელია."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"კონტაქტის ფოტო"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"მორგებული ლეიბლის სახელი"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"დარეკვა სამსახურის პეიჯერზე"</string>
     <string name="call_assistant" msgid="8556909944379826616">"ზარი <xliff:g id="CUSTOM_LABEL">%s</xliff:g>-თან"</string>
     <string name="call_mms" msgid="1760746475672950386">"დარეკვა MMS ნომერზე"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (ზარი)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"ტექსტური შეტყობინება <xliff:g id="CUSTOM_LABEL">%s</xliff:g>-ზე"</string>
     <string name="sms_home" msgid="6132392861245316613">"ტექსტური შეტყობინების გაგზავნა სახლში"</string>
     <string name="sms_mobile" msgid="433949735070334192">"ტექსტური შეტყობინების გაგზავნა მობილურზე"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"ტექსტური შეტყობინების გაგზავნა სამსახურის პეიჯერზე"</string>
     <string name="sms_assistant" msgid="245045451580096547">"ტექსტური შეტყობინების გაგზავნა <xliff:g id="ASSISTANT">%s</xliff:g>-ისთვის"</string>
     <string name="sms_mms" msgid="7395133080765833725">"ტექსტური შეტყობინების გაგზავნა MMS ნომერზე"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (შეტყობინება)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"ვიდეოზარის განხორციელება"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"გსურთ ხშირი კონტაქტების წაშლა?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"თქვენ წაშლით ხშირად დაკავშირებულთა სიას კონტაქტებიდან და ტელეფონის აპიდან და აიძულებთ ელფოსტის აპებს შეისწავლონ თქვენი ადრესატების პრიორიტეტები ნულიდან."</string>

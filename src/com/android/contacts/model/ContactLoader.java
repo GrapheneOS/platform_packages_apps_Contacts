@@ -177,12 +177,13 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
                 Data.STATUS_ICON,
                 Data.STATUS_LABEL,
                 Data.STATUS_TIMESTAMP,
-                Data.CARRIER_PRESENCE,
 
                 Contacts.PHOTO_URI,
                 Contacts.SEND_TO_VOICEMAIL,
                 Contacts.CUSTOM_RINGTONE,
                 Contacts.IS_USER_PROFILE,
+
+                Data.CARRIER_PRESENCE,
         };
 
         public static final int NAME_RAW_CONTACT_ID = 0;

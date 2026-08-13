@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"यो सम्पर्क ठेगाना मेटाउने हो?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"मेटाउनुहोस्"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"सम्पर्क उपलब्ध छैन।"</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"सम्पर्क गृह स्क्रिनमा थपियो।"</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> गृह स्क्रिनमा थपियो।"</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"यन्त्रमा कुनै पनि फोटोहरू उपलब्ध छैनन्।"</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"सम्पर्क फोटो"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">" कस्टम पारिएको लेबलको नाम"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"कामको पेजरमा कल गर्नुहोस्"</string>
     <string name="call_assistant" msgid="8556909944379826616">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> मा कल गर्नुहोस्"</string>
     <string name="call_mms" msgid="1760746475672950386">"MMS कल"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (कल गर्नुहोस्)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> मा टेक्स्ट म्यासेज पठाउनुहोस्"</string>
     <string name="sms_home" msgid="6132392861245316613">"पाठ गृह"</string>
     <string name="sms_mobile" msgid="433949735070334192">"पाठ मोबाइल"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"पाठ कार्य पेजर"</string>
     <string name="sms_assistant" msgid="245045451580096547">"पाठ <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"पाठ MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (म्यासेज पठाउनुहोस्)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"भिडियो कल बनाउनुहोस्"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"प्रायः सम्पर्क गरिएकाहरूलाई हटाउने हो?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"तपाईंले कन्ट्याक्टहरू र फोन एपहरूमा बारम्बार सम्पर्क गरेको सूची खाली गर्नुहुने छ र स्क्रयाचबाट तपाईंको ठेगाना प्राथमिकताहरू सिक्नको लागि इमेल एपहरूलाई दबाब दिनुहुने छ।"</string>

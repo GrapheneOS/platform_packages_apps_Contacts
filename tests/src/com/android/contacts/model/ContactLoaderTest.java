@@ -39,12 +39,8 @@ import com.android.contacts.test.mocks.MockContentProvider;
 import com.android.contacts.testing.InjectedServices;
 import com.android.contacts.util.Constants;
 
-import com.google.common.collect.Lists;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 /**
  * Runs ContactLoader tests for the the contact-detail and editor view.
@@ -336,13 +332,15 @@ public class ContactLoaderTest extends LoaderTestCase {
 
                     Data.PRESENCE, Data.CHAT_CAPABILITY,
                     Data.STATUS, Data.STATUS_RES_PACKAGE, Data.STATUS_ICON,
-                    Data.STATUS_LABEL, Data.STATUS_TIMESTAMP, Data.CARRIER_PRESENCE,
+                    Data.STATUS_LABEL, Data.STATUS_TIMESTAMP,
 
                     Contacts.PHOTO_URI,
 
                     Contacts.SEND_TO_VOICEMAIL,
                     Contacts.CUSTOM_RINGTONE,
                     Contacts.IS_USER_PROFILE,
+
+                    Data.CARRIER_PRESENCE,
             };
 
             final Object[] ROWS = new Object[] {
@@ -374,13 +372,15 @@ public class ContactLoaderTest extends LoaderTestCase {
 
                     StatusUpdates.INVISIBLE, null,
                     "Having dinner", "mockPkg3", 0,
-                    20, 0, Data.CARRIER_PRESENCE_VT_CAPABLE,
+                    20, 0,
 
                     "content:some.photo.uri",
 
                     0,
                     null,
                     0,
+
+                    Data.CARRIER_PRESENCE_VT_CAPABLE,
             };
 
             mContactsProvider.expectQuery(baseUri)

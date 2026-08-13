@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Xóa người liên hệ này?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Xóa"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Địa chỉ liên hệ không tồn tại."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Đã thêm liên hệ vào Màn hình chính."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"Đã thêm <xliff:g id="NAME">%s</xliff:g> vào Màn hình chính."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Không có ảnh nào trên thiết bị."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Ảnh của liên hệ"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Tên nhãn tùy chỉnh"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Gọi số máy nhắn tin tại cơ quan"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Gọi <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Gọi MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Gọi)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Gửi tin nhắn văn bản tới <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Nhắn tin tới số điện thoại nhà riêng"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Nhắn tin tới số điện thoại di động"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Nhắn tin tới số máy nhắn tin tại cơ quan"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Nhắn tin <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Nhắn tin tới số điện thoại MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Tin nhắn)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Gọi video"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Xóa danh sách liên hệ thường xuyên?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Bạn sẽ xóa danh sách liên hệ thường xuyên trong ứng dụng Danh bạ và điện thoại cũng như buộc các ứng dụng email phải tìm hiểu các tùy chọn gửi của bạn lại từ đầu."</string>

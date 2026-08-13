@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"I-delete ang contact na ito?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"I-delete"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Hindi umiiral ang contact."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Naidagdag ang contact sa Home screen."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"Naidagdag ang <xliff:g id="NAME">%s</xliff:g> sa Home screen."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Walang available na larawan sa device."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Larawan ng contact"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Custom na pangalan ng label"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Tawagan ang pager sa trabaho"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Tawagan ang <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Tawagan ang MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Tawagan)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"I-text ang <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Mag-text sa bahay"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Mag-text sa mobile"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Mag-text sa pager sa trabaho"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Mag-text sa <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Mag-text ng MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Imensahe)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Makipag-video call"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"I-clear ang mga madalas tinatawagan?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Iki-clear mo ang listahan ng madalas na kontakin sa mga app na Mga Contact at Telepono at pupuwersahin mo ang mga app ng email na matutunan ang iyong mga kagustuhan sa pag-a-address mula sa simula."</string>

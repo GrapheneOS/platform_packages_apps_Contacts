@@ -238,10 +238,8 @@
     <string name="invalidContactMessage">The contact doesn\'t exist.</string>
 
     <!-- Message without name displayed in a toast after you create a contact shortcut in the launcher [CHAR LIMIT=NONE]-->
-    <string name="createContactShortcutSuccessful_NoName">Contact added to Home screen.</string>
 
     <!-- Message with name displayed in a toast after you create a contact shortcut in the launcher [CHAR LIMIT=NONE]-->
-    <string name="createContactShortcutSuccessful"><xliff:g id="name">%s</xliff:g> added to Home screen.</string>
 
     <!-- The order of the items below is important, don't reorder without changing EditContactActivity.java -->
     <skip/>
@@ -756,7 +754,6 @@
     <!-- Action string for calling a MMS phone number -->
     <string name="call_mms">Call MMS</string>
     <!-- Action string for calling a contact by shortcut -->
-    <string name="call_by_shortcut"><xliff:g id="contact_name">%s</xliff:g> (Call)</string>
 
     <!-- Action string for sending an SMS to a custom phone number -->
     <string name="sms_custom">Text
@@ -805,7 +802,6 @@
     <!-- Action string for sending an SMS to a MMS phone number -->
     <string name="sms_mms">Text MMS</string>
     <!-- Action string for sending an SMS to a contact by shortcut -->
-    <string name="sms_by_shortcut"><xliff:g id="contact_name">%s</xliff:g> (Message)</string>
 
     <!-- Description string for an action button to initiate a video call. -->
     <string name="description_video_call">Make video call</string>

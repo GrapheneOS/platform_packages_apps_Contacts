@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Видалити цей контакт?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Видалити"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Контакт не існує."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Контакт додано на головний екран."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"Контакт <xliff:g id="NAME">%s</xliff:g> додано на головний екран."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"На пристрої немає зображень."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Фото контакта"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Назва"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Двон. на роб. пейдж."</string>
     <string name="call_assistant" msgid="8556909944379826616">"Зателефонувати на такий номер: <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Набрати ном. MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (зателефонувати)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Надіслати SMS на такий номер: <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"SMS на дом. тел."</string>
     <string name="sms_mobile" msgid="433949735070334192">"SMS на моб."</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"SMS на роб. пейдж."</string>
     <string name="sms_assistant" msgid="245045451580096547">"SMS на <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"SMS на ном. MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (надіслати повідомлення)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Здійснити відеодзвінок"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Очистити список частих контактів?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Буде видалено список користувачів, з якими ви часто спілкуєтеся, з додатків Контакти та Телефон і скинуто налаштування адрес у додатках для електронної пошти."</string>

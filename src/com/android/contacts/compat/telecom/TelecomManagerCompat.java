@@ -39,6 +39,5 @@ public class TelecomManagerCompat {
             return;
         }
         telecomManager.placeCall(intent.getData(), intent.getExtras());
-        return;
     }
 }

@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Vee hierdie kontak uit?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Vee uit"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Die kontak bestaan ​​nie."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Kontak is by Tuisskerm gevoeg."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> is by Tuisskerm gevoeg."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Geen prente is beskikbaar op die toestel nie."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Kontakfoto"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Gepasmaakte etiketnaam"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Bel werkroeper"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Bel <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Bel MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Bel)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"SMS <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Teks - tuis"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Teks - selfoon"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Teks - werkroeper"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Teks <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Teks - MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Boodskap)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Maak video-oproep"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Vee dikwels-gebruikte kontakte uit?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Jy gaan die lys van dikwels gebruikte kontakte in die Kontakte- en Foon-app uitvee en e-posapps dwing om jou adresvoorkeure van nuuts af te leer."</string>

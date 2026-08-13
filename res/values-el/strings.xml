@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Να διαγραφεί αυτή η επαφή;"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Διαγραφή"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Η επαφή δεν υπάρχει."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Η επαφή προστέθηκε στην Αρχική οθόνη."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"Ο/Η <xliff:g id="NAME">%s</xliff:g> προστέθηκε στην Αρχική οθόνη."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"Δεν υπάρχουν διαθέσιμες εικόνες στη συσκευή."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Φωτογραφία επαφής"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Προσαρμοσμένο όνομα ετικέτας"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Κλήση βομβητή εργασίας"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Κλήση προς <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Κλήση MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Κλήση)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Αποστολή SMS προς <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Αποστολή μηνύματος κειμένου προς οικία"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Αποστολή μηνύματος κειμένου προς κινητή συσκευή"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Αποστολή μηνύματος κειμένου προς βομβητή εργασίας"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Αποστολή μηνύματος κειμένου προς <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Αποστολή μηνύματος κειμένου ως MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Μήνυμα)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Πραγματοποίηση βιντεοκλήσης"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Διαγραφή ατόμων με συχνή επικοινωνία;"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Θα διαγράψετε τη λίστα συχνών επαφών στις εφαρμογές Επαφές και Τηλέφωνο και θα επιβάλλετε στις εφαρμογές ηλεκτρονικού ταχυδρομείου να μάθουν τις προτιμήσεις διευθύνσεών σας από την αρχή."</string>

@@ -83,7 +83,7 @@ android {
 
     // Uncomment to add the tests folder to the Gradle build path
     // sourceSets.getByName("androidTest") {
-    //    java.directories.add("../tests/src")
+    //     java.directories.add("../tests/src")
     // }
 
     lint {

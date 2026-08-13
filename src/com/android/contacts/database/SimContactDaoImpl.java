@@ -15,7 +15,6 @@
  */
 package com.android.contacts.database;
 
-import android.annotation.TargetApi;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -24,7 +23,6 @@ import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
@@ -232,7 +230,6 @@ public class SimContactDaoImpl extends SimContactDao {
         return mResolver.applyBatch(ContactsContract.AUTHORITY, ops);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     private List<SimCard> getSimCardsFromSubscriptions() {
         final SubscriptionManager subscriptionManager = (SubscriptionManager)
                 mContext.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
