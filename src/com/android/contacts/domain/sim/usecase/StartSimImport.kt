@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.ImmutableList
 internal fun interface StartSimImport {
     operator fun invoke(
         subscriptionId: Int,
-        contacts: ImmutableList<SimContact>,
+        contacts: List<SimContact>,
         account: AccountModel,
     )
 }
@@ -23,7 +23,7 @@ internal class StartSimImportImpl @Inject constructor(
 ) : StartSimImport {
     override operator fun invoke(
         subscriptionId: Int,
-        contacts: ImmutableList<SimContact>,
+        contacts: List<SimContact>,
         account: AccountModel,
     ) {
         SimImportService.startImport(

@@ -3,29 +3,37 @@ package com.android.contacts.ui.simimport.screen.model
 import androidx.compose.runtime.Immutable
 import com.android.contacts.ui.common.model.SelectableItem
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
-internal data class SimImportUiState(
-    val accounts: ImmutableList<AccountUiModel>? = null,
-    val currentAccount: AccountUiModel? = null,
-    val contactsToImport: ImmutableList<SelectableItem<SimContactUiModel>>? = null,
-    val contactsAlreadyImported: ImmutableList<SimContactUiModel>? = null,
-) {
-    val isLoading
-        get() = accounts == null || contactsToImport == null || contactsAlreadyImported == null
+internal sealed interface SimImportUiState {
 
-    val showEmptyState
-        get() = !isLoading && (
-            accounts?.isEmpty() == true ||
-                (contactsToImport?.isEmpty() == true && contactsAlreadyImported?.isEmpty() == true)
-            )
+    @Immutable
+    data object Loading : SimImportUiState
 
-    val selectedContactsCount = contactsToImport?.count { it.isSelected } ?: 0
+    @Immutable
+    sealed interface Empty : SimImportUiState {
+        @Immutable
+        data object NoAccounts : Empty
 
-    val isImportEnabled get() = selectedContactsCount > 0
+        @Immutable
+        data object NoContacts : Empty
+    }
 
-    val isSelectAllEnabled
-        get() = contactsToImport != null && selectedContactsCount != contactsToImport.size
+    @Immutable
+    data class Ready(
+        val accounts: ImmutableList<AccountUiModel> = persistentListOf(),
+        val currentAccount: AccountUiModel,
+        val contactsToImport: ImmutableList<SelectableItem<SimContactUiModel>> = persistentListOf(),
+        val contactsAlreadyImported: ImmutableList<SimContactUiModel> = persistentListOf(),
+    ) : SimImportUiState {
 
-    val isDeselectAllEnabled get() = selectedContactsCount != 0
+        val selectedContactsCount = contactsToImport.count { it.isSelected }
+
+        val isImportEnabled get() = selectedContactsCount > 0
+
+        val isSelectAllEnabled get() = selectedContactsCount != contactsToImport.size
+
+        val isDeselectAllEnabled get() = selectedContactsCount != 0
+    }
 }

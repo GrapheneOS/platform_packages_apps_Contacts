@@ -8,7 +8,7 @@ import kotlin.random.Random
 internal object AccountUiModelFactory {
     fun build(
         account: AccountModel = AccountModelFactory.build(),
-        name: String = account.name ?: "Account ${Random.nextInt().toString().take(4)}",
+        name: String = account.name ?: "Account",
         type: String? = account.type,
         icon: Drawable? = null,
     ) = AccountUiModel(

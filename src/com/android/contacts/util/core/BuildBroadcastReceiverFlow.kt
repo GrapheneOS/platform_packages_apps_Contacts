@@ -1,4 +1,4 @@
-package com.android.contacts.domain.util
+package com.android.contacts.util.core
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -26,7 +26,9 @@ internal class BuildBroadcastReceiverFlowImpl @Inject constructor(
                 trySend(Unit)
             }
         }
+
         localBroadcastManager.registerReceiver(receiver, intentFilter)
+        trySend(Unit)
         awaitClose { localBroadcastManager.unregisterReceiver(receiver) }
     }
 }

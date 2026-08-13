@@ -5,7 +5,7 @@ import kotlin.random.Random
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
-object SimContactUiModelFactory {
+internal object SimContactUiModelFactory {
     fun build(
         recordNumber: Int = Random.nextInt(),
         name: String = "Contact Name",

@@ -23,14 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
 import com.android.contacts.R
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
@@ -43,11 +40,10 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun SimImportAccountPicker(
     list: ImmutableList<AccountUiModel>,
-    current: AccountUiModel?,
+    current: AccountUiModel,
     onChange: (AccountUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val current = current ?: return
     val canChangeAccounts = list.size > 1
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -147,13 +143,6 @@ internal fun AccountIcon(account: AccountUiModel) {
 @PreviewLightDark
 @Composable
 private fun SimImportAccountPickerSinglePreview() {
-    val resources = LocalResources.current
-    val context = LocalContext.current
-    val icon = ResourcesCompat.getDrawable(
-        resources,
-        R.drawable.logo_quick_contacts_color_44in48dp,
-        context.theme,
-    )
     val account = AccountUiModel("user@example.org")
     ContactsPreviewColumn {
         SimImportAccountPicker(

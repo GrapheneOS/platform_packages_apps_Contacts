@@ -5,9 +5,8 @@ import com.android.contacts.ui.simimport.screen.model.SimContactUiModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.toImmutableList
 
-internal interface SimContactUiModelMapper {
+internal fun interface SimContactUiModelMapper {
     fun map(simContact: SimContact): SimContactUiModel
-    fun unmap(uiModel: SimContactUiModel): SimContact
 }
 
 internal class SimContactUiModelMapperImpl @Inject constructor() : SimContactUiModelMapper {
@@ -17,15 +16,6 @@ internal class SimContactUiModelMapperImpl @Inject constructor() : SimContactUiM
             name = simContact.name,
             phone = simContact.phone,
             emails = simContact.emails?.toImmutableList(),
-        )
-    }
-
-    override fun unmap(uiModel: SimContactUiModel): SimContact {
-        return SimContact(
-            uiModel.recordNumber,
-            uiModel.name,
-            uiModel.phone,
-            uiModel.emails?.toTypedArray(),
         )
     }
 }

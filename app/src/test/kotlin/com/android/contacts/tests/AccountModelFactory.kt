@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 internal object AccountModelFactory {
     fun build(
-        name: String = "Account ${Random.nextInt().toString().take(4)}",
+        name: String = "Account",
         type: String? = null,
         dataSet: String? = null,
     ) = AccountModel(

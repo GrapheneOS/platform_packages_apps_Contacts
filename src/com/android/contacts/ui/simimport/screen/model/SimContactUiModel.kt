@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
-data class SimContactUiModel(
+internal data class SimContactUiModel(
     val recordNumber: Int,
     val name: String? = null,
     val phone: String? = null,

@@ -7,13 +7,12 @@ import kotlin.random.Random
 
 internal object AccountDisplayModelFactory {
     fun build(
-        account: AccountModel = AccountModelFactory.build(),
-        name: String = account.name ?: "Account ${Random.nextInt().toString().take(4)}",
-        type: String? = account.type,
+        name: String = "Account",
+        type: String? = null,
         icon: Drawable? = null,
         isDeviceAccount: Boolean = true,
     ) = AccountDisplayModel(
-        account = account,
+        account = AccountModelFactory.build(name = name, type = type),
         name = name,
         type = type,
         icon = icon,

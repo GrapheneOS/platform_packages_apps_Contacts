@@ -22,8 +22,8 @@ import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_CONTACTS_TO_IMP
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_DESELECT_ALL_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_IMPORT_BUTTON_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_SELECT_ALL_TEST_TAG
-import com.android.contacts.ui.simimport.screen.model.SimImportAction
-import com.android.contacts.ui.simimport.screen.model.SimImportUiState
+import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
+import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -38,7 +38,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class SimImportScreenTest {
 
-    private val fakeUiStateFlow = MutableStateFlow(SimImportUiState())
+    private val fakeUiStateFlow = MutableStateFlow<State>(State.Loading)
     private lateinit var screenModel: SimImportScreenModel
     private lateinit var effectHandler: SimImportEffectHandler
 
@@ -52,7 +52,7 @@ class SimImportScreenTest {
     @Test
     fun showCurrentAccount() = runComposeUiTest {
         val account = AccountUiModelFactory.build()
-        fakeUiStateFlow.value = SimImportUiState(
+        fakeUiStateFlow.value = State.Ready(
             accounts = persistentListOf(account),
             currentAccount = account,
         )
@@ -66,7 +66,7 @@ class SimImportScreenTest {
     fun pickAnotherAccount() = runComposeUiTest {
         val account1 = AccountUiModelFactory.build(name = "First")
         val account2 = AccountUiModelFactory.build(name = "Second")
-        fakeUiStateFlow.value = SimImportUiState(
+        fakeUiStateFlow.value = State.Ready(
             accounts = persistentListOf(account1, account2),
             currentAccount = account1,
         )
@@ -79,14 +79,14 @@ class SimImportScreenTest {
             hasText(account2.name!!)
                 .and(hasTestTag(SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG)),
         ).performClick()
-        verify { screenModel.onAction(SimImportAction.AccountChanged(account2)) }
+        verify { screenModel.onAction(Action.AccountChanged(account2)) }
     }
 
     @Test
     fun showContactToImport() = runComposeUiTest {
         val account = AccountUiModelFactory.build()
         val contact = SimContactUiModelFactory.build()
-        fakeUiStateFlow.value = SimImportUiState(
+        fakeUiStateFlow.value = State.Ready(
             accounts = persistentListOf(account),
             currentAccount = account,
             contactsToImport = persistentListOf(SelectableItem(contact, false)),
@@ -103,7 +103,7 @@ class SimImportScreenTest {
     fun clickContact() = runComposeUiTest {
         val account = AccountUiModelFactory.build()
         val contact = SimContactUiModelFactory.build()
-        fakeUiStateFlow.value = SimImportUiState(
+        fakeUiStateFlow.value = State.Ready(
             accounts = persistentListOf(account),
             currentAccount = account,
             contactsToImport = persistentListOf(SelectableItem(contact, false)),
@@ -113,13 +113,13 @@ class SimImportScreenTest {
         setScreenContent()
 
         onNodeWithText(contact.label).performClick()
-        verify { screenModel.onAction(SimImportAction.ContactSelectionChanged(contact, true)) }
+        verify { screenModel.onAction(Action.ContactSelectionChanged(contact, true)) }
     }
 
     @Test
     fun checkTopBarActionsCanBeDisabled() = runComposeUiTest {
         val account = AccountUiModelFactory.build()
-        fakeUiStateFlow.value = SimImportUiState(
+        fakeUiStateFlow.value = State.Ready(
             accounts = persistentListOf(account),
             currentAccount = account,
             contactsToImport = persistentListOf(),
