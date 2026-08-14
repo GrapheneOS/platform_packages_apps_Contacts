@@ -1,5 +1,6 @@
 package com.android.contacts.di.core
 
+import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
@@ -55,6 +56,14 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): TelecomManager {
         return context.getSystemService(TelecomManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideClipboardManager(
+        @ApplicationContext context: Context,
+    ): ClipboardManager {
+        return context.getSystemService(ClipboardManager::class.java)
     }
 
     @Provides

@@ -1,4 +1,4 @@
-package com.android.contacts.ui.settings.about.ui
+package com.android.contacts.ui.settings.about
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +31,7 @@ import com.android.contacts.ui.settings.screen.model.ABOUT_LICENSES_TEST_TAG
 @Composable
 internal fun AboutScreen(
     buildVersion: String?,
+    onBuildVersionLongClick: () -> Unit,
     onLicensesClick: () -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -68,6 +69,8 @@ internal fun AboutScreen(
                 summary = buildVersion,
                 isFirst = true,
                 isLast = false,
+                onLongClick = onBuildVersionLongClick.takeIf { buildVersion != null },
+                onLongClickLabel = stringResource(R.string.copy_text),
                 modifier = Modifier.testTag(ABOUT_BUILD_VERSION_TEST_TAG),
             )
             SettingsCell(
@@ -88,6 +91,7 @@ private fun AboutScreenPreview() {
     ContactsPreviewTheme {
         AboutScreen(
             buildVersion = "1.7.40",
+            onBuildVersionLongClick = {},
             onLicensesClick = {},
             onNavigateBack = {},
         )

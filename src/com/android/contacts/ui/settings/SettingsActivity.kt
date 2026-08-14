@@ -1,5 +1,6 @@
 package com.android.contacts.ui.settings
 
+import android.content.ClipboardManager
 import android.os.Bundle
 import android.telecom.TelecomManager
 import androidx.activity.ComponentActivity
@@ -30,6 +31,9 @@ class SettingsActivity :
     @Inject
     lateinit var telecomManager: TelecomManager
 
+    @Inject
+    lateinit var clipboardManager: ClipboardManager
+
     private val contactsFilterLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
         ::applyContactsFilterResult,
@@ -44,6 +48,7 @@ class SettingsActivity :
             activity = this,
             newLocalProfileExtra = intent.getStringExtra(EXTRA_NEW_LOCAL_PROFILE),
             telecomManager = telecomManager,
+            clipboardManager = clipboardManager,
             contactsFilterLauncher = contactsFilterLauncher,
         )
 

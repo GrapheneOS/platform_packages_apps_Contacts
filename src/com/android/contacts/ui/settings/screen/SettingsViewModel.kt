@@ -96,6 +96,10 @@ internal class SettingsViewModel @Inject constructor(
                 emitEffect(Effect.OpenLicenses)
             }
 
+            is Action.BuildVersionLongClicked -> {
+                copyBuildVersion()
+            }
+
             is Action.ItemClicked -> {
                 onItemClicked(action.id)
             }
