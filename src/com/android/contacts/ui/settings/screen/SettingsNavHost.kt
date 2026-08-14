@@ -10,21 +10,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.android.contacts.ui.settings.about.ui.AboutScreen
+import com.android.contacts.ui.settings.about.AboutScreen
 import com.android.contacts.ui.settings.screen.model.SettingsAction as Action
 import com.android.contacts.ui.settings.screen.model.SettingsNavRoute
 import com.android.contacts.ui.settings.screen.model.SettingsUiState
 
 @Composable
-internal fun SettingsContent(
+internal fun SettingsNavHost(
     uiState: SettingsUiState,
     onAction: (Action) -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
+    val stateHolder = rememberSaveableStateHolder()
     var route by rememberSaveable(stateSaver = SettingsNavRouteSaver) {
         mutableStateOf(SettingsNavRoute.Main)
     }
@@ -33,50 +35,32 @@ internal fun SettingsContent(
         route = SettingsNavRoute.Main
     }
 
-    SettingsNavHost(
-        route = route,
-        uiState = uiState,
-        onAction = onAction,
-        onNavigateBack = onNavigateBack,
-        onRouteChange = { route = it },
-        snackbarHostState = snackbarHostState,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun SettingsNavHost(
-    route: SettingsNavRoute,
-    uiState: SettingsUiState,
-    onAction: (Action) -> Unit,
-    onNavigateBack: () -> Unit,
-    onRouteChange: (SettingsNavRoute) -> Unit,
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
-) {
     AnimatedContent(
         targetState = route,
         transitionSpec = { routeTransition() },
         label = "settings_navigation",
         modifier = modifier.background(MaterialTheme.colorScheme.background),
     ) { currentRoute ->
-        when (currentRoute) {
-            SettingsNavRoute.Main -> {
-                SettingsMainScreen(
-                    uiState = uiState,
-                    onAction = onAction,
-                    onNavigateBack = onNavigateBack,
-                    onNavigateToAbout = { onRouteChange(SettingsNavRoute.About) },
-                    snackbarHostState = snackbarHostState,
-                )
-            }
+        stateHolder.SaveableStateProvider(currentRoute.key) {
+            when (currentRoute) {
+                SettingsNavRoute.Main -> {
+                    SettingsMainScreen(
+                        uiState = uiState,
+                        onAction = onAction,
+                        onNavigateBack = onNavigateBack,
+                        onNavigateToAbout = { route = SettingsNavRoute.About },
+                        snackbarHostState = snackbarHostState,
+                    )
+                }
 
-            SettingsNavRoute.About -> {
-                AboutScreen(
-                    buildVersion = uiState.buildVersion,
-                    onLicensesClick = { onAction(Action.LicensesClicked) },
-                    onNavigateBack = { onRouteChange(SettingsNavRoute.Main) },
-                )
+                SettingsNavRoute.About -> {
+                    AboutScreen(
+                        buildVersion = uiState.buildVersion,
+                        onBuildVersionClick = { onAction(Action.BuildVersionClicked) },
+                        onLicensesClick = { onAction(Action.LicensesClicked) },
+                        onNavigateBack = { route = SettingsNavRoute.Main },
+                    )
+                }
             }
         }
     }

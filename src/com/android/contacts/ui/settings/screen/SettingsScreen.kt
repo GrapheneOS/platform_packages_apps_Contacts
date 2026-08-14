@@ -55,7 +55,7 @@ internal fun SettingsScreen(
         }
     }
 
-    SettingsContent(
+    SettingsNavHost(
         uiState = uiState,
         onAction = screenModel::onAction,
         onNavigateBack = onNavigateBack,
