@@ -8,10 +8,16 @@ import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.preference.ContactsPreferences
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 
 internal interface DisplaySettingsRepository {
-    suspend fun getDisplaySettings(): DisplaySettings
+    fun observeDisplaySettings(): Flow<DisplaySettings>
     suspend fun setSortOrder(sortOrder: SortOrder)
     suspend fun setDisplayOrder(displayOrder: DisplayOrder)
     suspend fun setPhoneticNameDisplay(phoneticNameDisplay: PhoneticNameDisplay)
@@ -22,47 +28,66 @@ internal class DisplaySettingsRepositoryImpl @Inject constructor(
     @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : DisplaySettingsRepository {
 
-    override suspend fun getDisplaySettings(): DisplaySettings {
-        return withContext(ioDispatcher) {
-            DisplaySettings(
-                sortOrder = toSortOrder(contactsPreferences.sortOrder),
-                isSortOrderChangeable = contactsPreferences.isSortOrderUserChangeable,
-                displayOrder = toDisplayOrder(contactsPreferences.displayOrder),
-                isDisplayOrderChangeable = contactsPreferences.isDisplayOrderUserChangeable,
-                phoneticNameDisplay = toPhoneticNameDisplay(
-                    contactsPreferences.phoneticNameDisplayPreference,
-                ),
-                isPhoneticNameDisplayChangeable =
-                    contactsPreferences.isPhoneticNameDisplayPreferenceChangeable,
-            )
-        }
+    private val changes = MutableSharedFlow<Unit>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+
+    override fun observeDisplaySettings(): Flow<DisplaySettings> {
+        return changes
+            .onStart { emit(Unit) }
+            .map { readDisplaySettings() }
+            .flowOn(ioDispatcher)
     }
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
         withContext(ioDispatcher) {
             val value = toSortOrderValue(sortOrder)
-            if (value != contactsPreferences.sortOrder) {
-                contactsPreferences.sortOrder = value
+            if (value == contactsPreferences.sortOrder) {
+                return@withContext
             }
+
+            contactsPreferences.sortOrder = value
+            changes.tryEmit(Unit)
         }
     }
 
     override suspend fun setDisplayOrder(displayOrder: DisplayOrder) {
         withContext(ioDispatcher) {
             val value = toDisplayOrderValue(displayOrder)
-            if (value != contactsPreferences.displayOrder) {
-                contactsPreferences.displayOrder = value
+            if (value == contactsPreferences.displayOrder) {
+                return@withContext
             }
+
+            contactsPreferences.displayOrder = value
+            changes.tryEmit(Unit)
         }
     }
 
     override suspend fun setPhoneticNameDisplay(phoneticNameDisplay: PhoneticNameDisplay) {
         withContext(ioDispatcher) {
             val value = toPhoneticNameDisplayValue(phoneticNameDisplay)
-            if (value != contactsPreferences.phoneticNameDisplayPreference) {
-                contactsPreferences.phoneticNameDisplayPreference = value
+            if (value == contactsPreferences.phoneticNameDisplayPreference) {
+                return@withContext
             }
+
+            contactsPreferences.phoneticNameDisplayPreference = value
+            changes.tryEmit(Unit)
         }
+    }
+
+    private fun readDisplaySettings(): DisplaySettings {
+        return DisplaySettings(
+            sortOrder = toSortOrder(contactsPreferences.sortOrder),
+            isSortOrderChangeable = contactsPreferences.isSortOrderUserChangeable,
+            displayOrder = toDisplayOrder(contactsPreferences.displayOrder),
+            isDisplayOrderChangeable = contactsPreferences.isDisplayOrderUserChangeable,
+            phoneticNameDisplay = toPhoneticNameDisplay(
+                contactsPreferences.phoneticNameDisplayPreference,
+            ),
+            isPhoneticNameDisplayChangeable =
+                contactsPreferences.isPhoneticNameDisplayPreferenceChangeable,
+        )
     }
 
     private fun toSortOrder(value: Int): SortOrder {

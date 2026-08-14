@@ -4,15 +4,18 @@ import com.android.contacts.data.accounts.repository.AccountsRepository
 import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
 import com.android.contacts.data.permissions.repository.PermissionsRepository
+import com.android.contacts.data.settings.model.DisplaySettings
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
 import com.android.contacts.domain.settings.model.SettingsData
 import javax.inject.Inject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 internal fun interface GetSettingsData {
-    suspend operator fun invoke(): SettingsData
+    operator fun invoke(): Flow<SettingsData>
 }
 
 internal class GetSettingsDataImpl @Inject constructor(
@@ -24,13 +27,17 @@ internal class GetSettingsDataImpl @Inject constructor(
     private val permissionsRepository: PermissionsRepository,
 ) : GetSettingsData {
 
-    override suspend fun invoke(): SettingsData {
+    override fun invoke(): Flow<SettingsData> {
+        return displaySettingsRepository.observeDisplaySettings()
+            .map { displaySettings ->
+                settingsData(displaySettings)
+            }
+    }
+
+    private suspend fun settingsData(displaySettings: DisplaySettings): SettingsData {
         return coroutineScope {
             val availability = async {
                 settingsAvailabilityRepository.getSettingsAvailability()
-            }
-            val displaySettings = async {
-                displaySettingsRepository.getDisplaySettings()
             }
             val defaultAccountLabel = async {
                 accountsRepository.getDefaultAccountLabel()
@@ -47,7 +54,7 @@ internal class GetSettingsDataImpl @Inject constructor(
 
             SettingsData(
                 availability = availability.await(),
-                displaySettings = displaySettings.await(),
+                displaySettings = displaySettings,
                 defaultAccountLabel = defaultAccountLabel.await(),
                 contactsFilter = contactsFilter.await(),
                 buildVersion = buildVersion.await(),

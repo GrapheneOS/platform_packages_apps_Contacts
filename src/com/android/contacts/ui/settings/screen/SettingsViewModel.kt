@@ -19,13 +19,14 @@ import com.android.contacts.ui.settings.screen.model.SettingsItemId
 import com.android.contacts.ui.settings.screen.model.SettingsUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -40,6 +41,7 @@ internal interface SettingsScreenModel {
     fun onAction(action: Action)
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
     private val getSettingsData: GetSettingsData,
@@ -57,7 +59,7 @@ internal class SettingsViewModel @Inject constructor(
 
     private val settingsData: Flow<SettingsData> = refreshTriggers.receiveAsFlow()
         .onStart { emit(Unit) }
-        .map { getSettingsData() }
+        .flatMapLatest { getSettingsData() }
 
     private val profile: StateFlow<ProfileData?> = profileRepository.observeProfile()
         .stateIn(
@@ -137,6 +139,12 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
+    private fun copyBuildVersion() {
+        val buildVersion = uiState.value.buildVersion ?: return
+
+        emitEffect(Effect.CopyBuildVersion(buildVersion))
+    }
+
     private fun openProfile() {
         val contactId = profile.value
             ?.takeIf { it.hasProfile }
@@ -153,21 +161,18 @@ internal class SettingsViewModel @Inject constructor(
     private fun selectSortOrder(sortOrder: SortOrder) {
         viewModelScope.launch {
             displaySettingsRepository.setSortOrder(sortOrder)
-            refreshState()
         }
     }
 
     private fun selectDisplayOrder(displayOrder: DisplayOrder) {
         viewModelScope.launch {
             displaySettingsRepository.setDisplayOrder(displayOrder)
-            refreshState()
         }
     }
 
     private fun selectPhoneticNameDisplay(phoneticNameDisplay: PhoneticNameDisplay) {
         viewModelScope.launch {
             displaySettingsRepository.setPhoneticNameDisplay(phoneticNameDisplay)
-            refreshState()
         }
     }
 

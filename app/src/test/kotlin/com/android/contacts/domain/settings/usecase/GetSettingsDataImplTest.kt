@@ -1,5 +1,6 @@
 package com.android.contacts.domain.settings.usecase
 
+import app.cash.turbine.test
 import com.android.contacts.data.accounts.repository.AccountsRepository
 import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.contactsfilter.model.ContactsFilter
@@ -15,10 +16,14 @@ import com.android.contacts.data.settings.repository.SettingsAvailabilityReposit
 import com.android.contacts.domain.settings.model.SettingsData
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -48,7 +53,8 @@ class GetSettingsDataImplTest {
     @Before
     fun setUp() {
         coEvery { settingsAvailabilityRepository.getSettingsAvailability() } returns AVAILABILITY
-        coEvery { displaySettingsRepository.getDisplaySettings() } returns DISPLAY_SETTINGS
+        every { displaySettingsRepository.observeDisplaySettings() } returns
+            flowOf(DISPLAY_SETTINGS)
         coEvery { accountsRepository.getDefaultAccountLabel() } returns "Device"
         coEvery { contactsFilterRepository.getContactsFilter() } returns ContactsFilter.CUSTOM
         coEvery { appInfoRepository.getBuildVersion() } returns BUILD_VERSION
@@ -57,19 +63,20 @@ class GetSettingsDataImplTest {
 
     @Test
     fun invoke_collectsEverySource() = runTest {
-        val settingsData = useCase()
-
-        assertEquals(
-            SettingsData(
-                availability = AVAILABILITY,
-                displaySettings = DISPLAY_SETTINGS,
-                defaultAccountLabel = "Device",
-                contactsFilter = ContactsFilter.CUSTOM,
-                buildVersion = BUILD_VERSION,
-                isCallLogPermissionGranted = true,
-            ),
-            settingsData,
-        )
+        useCase().test {
+            assertEquals(
+                SettingsData(
+                    availability = AVAILABILITY,
+                    displaySettings = DISPLAY_SETTINGS,
+                    defaultAccountLabel = "Device",
+                    contactsFilter = ContactsFilter.CUSTOM,
+                    buildVersion = BUILD_VERSION,
+                    isCallLogPermissionGranted = true,
+                ),
+                awaitItem(),
+            )
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -77,10 +84,13 @@ class GetSettingsDataImplTest {
         coEvery { accountsRepository.getDefaultAccountLabel() } returns null
         coEvery { contactsFilterRepository.getContactsFilter() } returns null
 
-        val settingsData = useCase()
+        useCase().test {
+            val settingsData = awaitItem()
 
-        assertNull(settingsData.defaultAccountLabel)
-        assertNull(settingsData.contactsFilter)
+            assertNull(settingsData.defaultAccountLabel)
+            assertNull(settingsData.contactsFilter)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -90,15 +100,33 @@ class GetSettingsDataImplTest {
             slowAvailability.await()
         }
 
-        val settingsData = async { useCase() }
+        val settingsData = async { useCase().first() }
         runCurrent()
 
-        coVerify(exactly = 1) { displaySettingsRepository.getDisplaySettings() }
         coVerify(exactly = 1) { accountsRepository.getDefaultAccountLabel() }
         coVerify(exactly = 1) { contactsFilterRepository.getContactsFilter() }
+        coVerify(exactly = 1) { appInfoRepository.getBuildVersion() }
 
         slowAvailability.complete(AVAILABILITY)
         assertEquals(AVAILABILITY, settingsData.await().availability)
+    }
+
+    @Test
+    fun invoke_whenDisplaySettingsChange_emitsTheDataAgain() = runTest {
+        val displaySettings = MutableSharedFlow<DisplaySettings>(extraBufferCapacity = 1)
+        every { displaySettingsRepository.observeDisplaySettings() } returns displaySettings
+
+        useCase().test {
+            displaySettings.emit(DISPLAY_SETTINGS)
+
+            assertEquals(DISPLAY_SETTINGS, awaitItem().displaySettings)
+
+            val alternative = DISPLAY_SETTINGS.copy(sortOrder = SortOrder.FAMILY_NAME_FIRST)
+            displaySettings.emit(alternative)
+
+            assertEquals(alternative, awaitItem().displaySettings)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     private companion object {

@@ -3,9 +3,10 @@ package com.android.contacts.ui.settings.screen.settingsviewmodel
 import app.cash.turbine.test
 import com.android.contacts.data.profile.model.ProfileData
 import com.android.contacts.ui.settings.screen.model.SettingsUiState
-import io.mockk.coEvery
 import io.mockk.every
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -32,13 +33,31 @@ internal class SettingsViewModelStateTest : BaseSettingsViewModelTest() {
             every {
                 settingsUiStateMapper.map(settingsData = settingsData, profile = profile)
             } returns reloadedState
-            val viewModel = createViewModel()
 
+            val viewModel = createViewModel()
             viewModel.uiState.test {
                 assertEquals(SettingsUiState(), awaitItem())
                 assertEquals(mappedState, awaitItem())
 
                 profiles.value = profile
+
+                assertEquals(reloadedState, awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun uiState_whenSettingsDataEmitsAgain_isRemapped() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val settingsDataEmissions = MutableStateFlow(settingsData)
+            settingsDataSource = settingsDataEmissions
+
+            val viewModel = createViewModel()
+            viewModel.uiState.test {
+                assertEquals(SettingsUiState(), awaitItem())
+                assertEquals(mappedState, awaitItem())
+
+                settingsDataEmissions.value = reloadedSettingsData
 
                 assertEquals(reloadedState, awaitItem())
                 cancelAndIgnoreRemainingEvents()
@@ -54,7 +73,7 @@ internal class SettingsViewModelStateTest : BaseSettingsViewModelTest() {
                 assertEquals(SettingsUiState(), awaitItem())
                 assertEquals(mappedState, awaitItem())
 
-                coEvery { getSettingsData() } returns reloadedSettingsData
+                settingsDataSource = flowOf(reloadedSettingsData)
                 viewModel.refreshState()
 
                 assertEquals(reloadedState, awaitItem())

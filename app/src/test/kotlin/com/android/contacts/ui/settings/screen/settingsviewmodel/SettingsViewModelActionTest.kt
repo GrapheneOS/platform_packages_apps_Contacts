@@ -8,9 +8,11 @@ import com.android.contacts.data.settings.model.SortOrder
 import com.android.contacts.ui.settings.screen.model.SettingsAction as Action
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import com.android.contacts.ui.settings.screen.model.SettingsItemId
-import io.mockk.coEvery
+import com.android.contacts.ui.settings.screen.model.SettingsUiState
 import io.mockk.coVerify
+import io.mockk.every
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -96,6 +98,7 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
     fun onAction_whenMyInfoClickedWithProfile_opensIt() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             profiles.value = ProfileData(hasProfile = true, contactId = 7L)
+
             val viewModel = createViewModel()
             advanceUntilIdle()
 
@@ -111,6 +114,7 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
     fun onAction_whenMyInfoClickedWithoutProfile_offersToCreateIt() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             profiles.value = ProfileData(hasProfile = false, contactId = 7L)
+
             val viewModel = createViewModel()
             advanceUntilIdle()
 
@@ -139,21 +143,15 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
         }
 
     @Test
-    fun onAction_whenSortOrderSelected_storesItAndReloads() =
+    fun onAction_whenSortOrderSelected_storesIt() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             val viewModel = createViewModel()
-            viewModel.uiState.test {
-                advanceUntilIdle()
 
-                coEvery { getSettingsData() } returns reloadedSettingsData
-                viewModel.onAction(Action.SortOrderSelected(SortOrder.FAMILY_NAME_FIRST))
-                advanceUntilIdle()
+            viewModel.onAction(Action.SortOrderSelected(SortOrder.FAMILY_NAME_FIRST))
+            advanceUntilIdle()
 
-                coVerify(exactly = 1) {
-                    displaySettingsRepository.setSortOrder(SortOrder.FAMILY_NAME_FIRST)
-                }
-                assertEquals(reloadedState, expectMostRecentItem())
-                cancelAndIgnoreRemainingEvents()
+            coVerify(exactly = 1) {
+                displaySettingsRepository.setSortOrder(SortOrder.FAMILY_NAME_FIRST)
             }
         }
 
@@ -197,5 +195,9 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
             assertEquals(expected, awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    private companion object {
+        const val BUILD_VERSION = "1.7.40"
     }
 }

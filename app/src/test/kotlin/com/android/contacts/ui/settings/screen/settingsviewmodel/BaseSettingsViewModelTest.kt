@@ -12,12 +12,13 @@ import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.ui.settings.screen.SettingsViewModel
 import com.android.contacts.ui.settings.screen.mapper.SettingsUiStateMapper
 import com.android.contacts.ui.settings.screen.model.SettingsUiState
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Rule
 
@@ -36,6 +37,7 @@ internal abstract class BaseSettingsViewModelTest {
 
     protected val settingsData = mockk<SettingsData>()
     protected val reloadedSettingsData = mockk<SettingsData>()
+    protected var settingsDataSource: Flow<SettingsData> = flowOf(settingsData)
     protected val mappedState = SettingsUiState(sortOrder = SortOrder.GIVEN_NAME_FIRST)
     protected val reloadedState = SettingsUiState(sortOrder = SortOrder.FAMILY_NAME_FIRST)
 
@@ -44,7 +46,7 @@ internal abstract class BaseSettingsViewModelTest {
 
     @Before
     fun setUpDefaultStubs() {
-        coEvery { getSettingsData() } returns settingsData
+        every { getSettingsData() } answers { settingsDataSource }
         every { profileRepository.observeProfile() } returns profiles
         every { simImportResultRepository.observeSimImportResults() } returns simImportResults
         every { settingsUiStateMapper.map(settingsData = settingsData, profile = any()) } returns
