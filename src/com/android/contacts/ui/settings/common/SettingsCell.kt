@@ -1,6 +1,11 @@
 package com.android.contacts.ui.settings.common
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,16 +14,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.onLongClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.android.contacts.ui.core.ContactsPreviewColumn
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SettingsCell(
     title: String,
@@ -27,19 +37,42 @@ internal fun SettingsCell(
     modifier: Modifier = Modifier,
     summary: String? = null,
     onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
+    onLongClickLabel: String? = null,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     val shape = cellShape(
         isFirst = isFirst,
         isLast = isLast,
     )
 
+    val interactionModifier = when {
+        onClick != null -> {
+            Modifier
+                .clip(shape)
+                .combinedClickable(
+                    onLongClick = onLongClick,
+                    onLongClickLabel = onLongClickLabel,
+                    onClick = onClick,
+                )
+        }
+
+        onLongClick != null -> {
+            Modifier.longPressable(
+                shape = shape,
+                label = onLongClickLabel,
+                interactionSource = interactionSource,
+                onLongClick = onLongClick,
+            )
+        }
+
+        else -> Modifier.semantics(mergeDescendants = true) {}
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = shape,
-        modifier = when (onClick) {
-            null -> modifier.semantics(mergeDescendants = true) {}
-            else -> modifier.clip(shape).clickable(onClick = onClick)
-        },
+        modifier = modifier.then(interactionModifier),
     ) {
         Column(
             Modifier
@@ -65,6 +98,40 @@ internal fun SettingsCell(
             }
         }
     }
+}
+
+private fun Modifier.longPressable(
+    shape: Shape,
+    label: String?,
+    interactionSource: MutableInteractionSource,
+    onLongClick: () -> Unit,
+): Modifier {
+    return this
+        .clip(shape)
+        .indication(interactionSource, ripple())
+        .pointerInput(onLongClick) {
+            detectTapGestures(
+                onPress = { offset ->
+                    val press = PressInteraction.Press(offset)
+                    interactionSource.emit(press)
+
+                    val isReleased = tryAwaitRelease()
+                    interactionSource.emit(
+                        when {
+                            isReleased -> PressInteraction.Release(press)
+                            else -> PressInteraction.Cancel(press)
+                        },
+                    )
+                },
+                onLongPress = { onLongClick() },
+            )
+        }
+        .semantics(mergeDescendants = true) {
+            onLongClick(label = label) {
+                onLongClick()
+                true
+            }
+        }
 }
 
 @Composable

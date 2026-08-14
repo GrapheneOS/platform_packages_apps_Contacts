@@ -5,10 +5,12 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasScrollToIndexAction
+import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.ui.settings.screen.model.ABOUT_BUILD_VERSION_TEST_TAG
 import com.android.contacts.ui.settings.screen.model.ABOUT_LICENSES_TEST_TAG
@@ -71,16 +73,16 @@ internal class SettingsNavHostTest {
     }
 
     @Test
-    fun whenBuildVersionIsClickedOnAbout_reportsTheAction() = runComposeUiTest {
+    fun whenBuildVersionIsLongPressedOnAbout_reportsTheAction() = runComposeUiTest {
         val actions = mutableListOf<Action>()
         setContent {
             Content(onAction = actions::add)
         }
         openAbout()
 
-        onNodeWithTag(ABOUT_BUILD_VERSION_TEST_TAG).performClick()
+        onNodeWithTag(ABOUT_BUILD_VERSION_TEST_TAG).performTouchInput { longClick() }
 
-        assertEquals(listOf(Action.BuildVersionClicked), actions)
+        assertEquals(listOf(Action.BuildVersionLongClicked), actions)
     }
 
     @Test

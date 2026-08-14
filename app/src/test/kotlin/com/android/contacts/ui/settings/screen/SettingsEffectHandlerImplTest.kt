@@ -2,6 +2,8 @@ package com.android.contacts.ui.settings.screen
 
 import android.app.Activity
 import android.app.FragmentManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ContentUris
 import android.content.Intent
 import android.provider.ContactsContract.Contacts
@@ -37,6 +39,7 @@ internal class SettingsEffectHandlerImplTest {
 
     private val activity = mockk<Activity>(relaxed = true)
     private val telecomManager = mockk<TelecomManager>()
+    private val clipboardManager = mockk<ClipboardManager>(relaxed = true)
     private val contactsFilterLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val fragmentManager = mockk<FragmentManager>(relaxed = true)
 
@@ -44,6 +47,7 @@ internal class SettingsEffectHandlerImplTest {
         activity = activity,
         newLocalProfileExtra = NEW_LOCAL_PROFILE_EXTRA,
         telecomManager = telecomManager,
+        clipboardManager = clipboardManager,
         contactsFilterLauncher = contactsFilterLauncher,
     )
 
@@ -72,6 +76,16 @@ internal class SettingsEffectHandlerImplTest {
                 ScreenType.ME_CONTACT,
             )
         }
+    }
+
+    @Test
+    fun copyBuildVersion_putsTheVersionOnTheClipboard() {
+        val clipSlot = slot<ClipData>()
+
+        effectHandler.handle(Effect.CopyBuildVersion(BUILD_VERSION))
+
+        verify { clipboardManager.setPrimaryClip(capture(clipSlot)) }
+        assertEquals(BUILD_VERSION, clipSlot.captured.getItemAt(0).text)
     }
 
     @Test
@@ -187,5 +201,6 @@ internal class SettingsEffectHandlerImplTest {
 
     private companion object {
         const val NEW_LOCAL_PROFILE_EXTRA = "newLocalProfile"
+        const val BUILD_VERSION = "1.7.40"
     }
 }

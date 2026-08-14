@@ -56,7 +56,7 @@ internal fun SettingsNavHost(
                 SettingsNavRoute.About -> {
                     AboutScreen(
                         buildVersion = uiState.buildVersion,
-                        onBuildVersionClick = { onAction(Action.BuildVersionClicked) },
+                        onBuildVersionLongClick = { onAction(Action.BuildVersionLongClicked) },
                         onLicensesClick = { onAction(Action.LicensesClicked) },
                         onNavigateBack = { route = SettingsNavRoute.Main },
                     )

@@ -20,6 +20,10 @@ internal sealed interface SettingsEffect {
         val contactId: Long,
     ) : Host
 
+    data class CopyBuildVersion(
+        val buildVersion: String,
+    ) : Host
+
     data class ShowSimImportSuccess(
         val importedCount: Int,
     ) : Message

@@ -61,6 +61,38 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
         }
 
     @Test
+    fun onAction_whenBuildVersionLongClicked_copiesIt() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            every {
+                settingsUiStateMapper.map(settingsData = settingsData, profile = any())
+            } returns SettingsUiState(buildVersion = BUILD_VERSION)
+
+            val viewModel = createViewModel()
+            backgroundScope.launch { viewModel.uiState.collect { } }
+            advanceUntilIdle()
+
+            viewModel.effects.test {
+                viewModel.onAction(Action.BuildVersionLongClicked)
+
+                assertEquals(Effect.CopyBuildVersion(BUILD_VERSION), awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun onAction_whenBuildVersionIsUnknown_emitsNoEffect() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val viewModel = createViewModel()
+
+            viewModel.effects.test {
+                viewModel.onAction(Action.BuildVersionLongClicked)
+                advanceUntilIdle()
+
+                expectNoEvents()
+            }
+        }
+
+    @Test
     fun onAction_whenMyInfoClickedWithProfile_opensIt() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             profiles.value = ProfileData(hasProfile = true, contactId = 7L)
