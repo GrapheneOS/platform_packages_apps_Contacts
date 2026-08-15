@@ -32,11 +32,20 @@ detekt {
     source.setFrom(files("../src"))
 }
 
-tasks.withType<Detekt>().configureEach {
-    setSource(files("../src"))
-    include("**/*.kt")
-    include("**/*.kts")
-    exclude("**/build/**")
+afterEvaluate {
+    tasks.withType<Detekt>().configureEach {
+        include("**/*.kt")
+        include("**/*.kts")
+        exclude("**/build/**")
+    }
+
+    tasks.named<Detekt>("detektDebugSourceSet") {
+        setSource(files("../src"))
+    }
+
+    tasks.named<Detekt>("detektDebugUnitTestSourceSet") {
+        setSource(files("src/test/kotlin"))
+    }
 }
 
 android {

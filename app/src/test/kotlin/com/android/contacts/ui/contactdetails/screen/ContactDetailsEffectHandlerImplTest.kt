@@ -1,17 +1,16 @@
 package com.android.contacts.ui.contactdetails.screen
 
 import android.app.Activity
-import android.app.SearchManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Intents
 import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.ContactSelectionActivity
+import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.list.UiIntentActions
@@ -37,6 +36,7 @@ internal class ContactDetailsEffectHandlerImplTest {
 
     private val activity = mockk<Activity>(relaxed = true)
     private val clipboardManager = mockk<ClipboardManager>(relaxed = true)
+    private val contactEntryIntentFactory = mockk<ContactEntryIntentFactory>()
     private val joinTargetLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val ringtoneLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val editorLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
@@ -45,6 +45,7 @@ internal class ContactDetailsEffectHandlerImplTest {
     private val handler = ContactDetailsEffectHandlerImpl(
         activity = activity,
         clipboardManager = clipboardManager,
+        contactEntryIntentFactory = contactEntryIntentFactory,
         joinTargetLauncher = joinTargetLauncher,
         ringtoneLauncher = ringtoneLauncher,
         editorLauncher = editorLauncher,
@@ -144,123 +145,20 @@ internal class ContactDetailsEffectHandlerImplTest {
     }
 
     @Test
-    fun callAction_startsACallIntent() {
-        handler.handle(entryEffect(ContactEntryAction.Call(number = "555 0001")))
-
-        val intent = startedInAppIntent()
-
-        assertEquals("tel", intent.data?.scheme)
-    }
-
-    @Test
-    fun smsAction_startsASendToIntent() {
-        handler.handle(entryEffect(ContactEntryAction.Sms(number = "555 0001")))
-
-        val intent = startedInAppIntent()
-
-        assertEquals(Intent.ACTION_SENDTO, intent.action)
-        assertEquals("smsto", intent.data?.scheme)
-    }
-
-    @Test
-    fun emailAction_startsAMailToIntent() {
-        handler.handle(entryEffect(ContactEntryAction.SendEmail(address = "anna@example.com")))
-
-        val intent = startedInAppIntent()
-
-        assertEquals(Intent.ACTION_SENDTO, intent.action)
-        assertEquals("mailto", intent.data?.scheme)
-        assertEquals("anna@example.com", intent.data?.schemeSpecificPart)
-    }
-
-    @Test
-    fun googleTalkChatAction_startsAnXmppIntent() {
-        val action = ContactEntryAction.OpenChat(
-            data = "anna@example.com",
-            protocol = Im.PROTOCOL_GOOGLE_TALK,
-            customProtocol = null,
-        )
+    fun performEntryAction_startsTheIntentTheFactoryBuilt() {
+        val action = ContactEntryAction.Call(number = "555 0001")
+        val built = Intent(Intent.ACTION_VIEW)
+        every { contactEntryIntentFactory.create(action) } returns built
 
         handler.handle(entryEffect(action))
 
-        val intent = startedInAppIntent()
-
-        assertEquals("xmpp:anna@example.com?message", intent.data.toString())
+        assertEquals(built, startedInAppIntent())
     }
 
     @Test
-    fun customChatAction_startsAnImToIntent() {
-        val action = ContactEntryAction.OpenChat(
-            data = "anna",
-            protocol = Im.PROTOCOL_CUSTOM,
-            customProtocol = "ExampleChat",
-        )
-
-        handler.handle(entryEffect(action))
-
-        val intent = startedInAppIntent()
-
-        assertEquals("imto", intent.data?.scheme)
-        assertEquals("examplechat", intent.data?.authority)
-    }
-
-    @Test
-    fun customChatAction_withoutAProtocol_startsNothing() {
-        val action = ContactEntryAction.OpenChat(
-            data = "anna",
-            protocol = Im.PROTOCOL_CUSTOM,
-            customProtocol = null,
-        )
-
-        handler.handle(entryEffect(action))
-
-        verify(exactly = 0) { ImplicitIntentsUtil.startActivityInAppIfPossible(any(), any()) }
-    }
-
-    @Test
-    fun relationAction_startsAContactSearch() {
-        handler.handle(entryEffect(ContactEntryAction.SearchContacts(query = "Alex")))
-
-        val intent = startedInAppIntent()
-
-        assertEquals(Intent.ACTION_SEARCH, intent.action)
-        assertEquals("Alex", intent.getStringExtra(SearchManager.QUERY))
-        assertEquals(Contacts.CONTENT_TYPE, intent.type)
-    }
-
-    @Test
-    fun thirdPartyAction_startsAViewIntentForTheDataRow() {
-        val action = ContactEntryAction.ViewDataItem(
-            dataId = 21L,
-            mimeType = "vnd.example/thing",
-        )
-
-        handler.handle(entryEffect(action))
-
-        val intent = startedInAppIntent()
-
-        assertEquals(Intent.ACTION_VIEW, intent.action)
-        assertEquals("vnd.example/thing", intent.type)
-        assertTrue(intent.data.toString().endsWith("/21"))
-    }
-
-    @Test
-    fun websiteAction_startsAViewIntentForTheParsedAddress() {
-        handler.handle(entryEffect(ContactEntryAction.OpenUrl(url = "example.com/anna")))
-
-        val intent = startedInAppIntent()
-
-        assertEquals(Intent.ACTION_VIEW, intent.action)
-        assertEquals("http://example.com/anna", intent.data.toString())
-    }
-
-    @Test
-    fun callWithNoteAction_startsNothingOnItsOwn() {
-        val action = ContactEntryAction.CallWithNote(
-            number = "555 0001",
-            formattedNumber = null,
-            numberLabel = null,
-        )
+    fun performEntryAction_withoutAnIntent_startsNothing() {
+        val action = ContactEntryAction.Call(number = "555 0001")
+        every { contactEntryIntentFactory.create(action) } returns null
 
         handler.handle(entryEffect(action))
 

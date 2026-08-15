@@ -601,5 +601,4 @@ class BuildContactDetailsCardsImplTest {
     private fun mimeTypesOf(card: List<ContactEntryGroup>): List<String?> {
         return card.map { group -> group.mimeType }
     }
-
 }
