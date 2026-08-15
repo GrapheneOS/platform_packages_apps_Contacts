@@ -2,7 +2,6 @@ package com.android.contacts.di.core
 
 import android.content.ClipboardManager
 import android.content.ContentResolver
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager

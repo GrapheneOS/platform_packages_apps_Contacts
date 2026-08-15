@@ -19,6 +19,7 @@ import androidx.core.content.IntentCompat
 import com.android.contacts.R
 import com.android.contacts.activities.ContactEditorActivity
 import com.android.contacts.activities.RequestPermissionsActivity
+import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.editor.EditorUiUtils
 import com.android.contacts.interactions.ContactDeletionInteraction
 import com.android.contacts.ui.contactdetails.screen.ContactDetailsEffectHandlerImpl
@@ -34,6 +35,9 @@ class ContactDetailsActivity : ComponentActivity() {
 
     @Inject
     internal lateinit var clipboardManager: ClipboardManager
+
+    @Inject
+    internal lateinit var contactEntryIntentFactory: ContactEntryIntentFactory
 
     private val viewModel by viewModels<ContactDetailsViewModel>()
 
@@ -73,6 +77,7 @@ class ContactDetailsActivity : ComponentActivity() {
         val effectHandler = ContactDetailsEffectHandlerImpl(
             activity = this,
             clipboardManager = clipboardManager,
+            contactEntryIntentFactory = contactEntryIntentFactory,
             joinTargetLauncher = joinTargetLauncher,
             ringtoneLauncher = ringtoneLauncher,
             editorLauncher = editorLauncher,
@@ -107,11 +112,16 @@ class ContactDetailsActivity : ComponentActivity() {
             setResult(ContactEditorActivity.RESULT_CODE_EDITED)
         }
 
-        val lookupUri = intent.data
-        if (lookupUri == null) {
+        val isBound = bindContact(intent)
+        if (!isBound) {
             finish()
-            return false
         }
+
+        return isBound
+    }
+
+    private fun bindContact(intent: Intent): Boolean {
+        val lookupUri = intent.data ?: return false
 
         viewModel.bind(
             lookupUri = lookupUri,
@@ -132,8 +142,9 @@ class ContactDetailsActivity : ComponentActivity() {
     private fun applyEditorResult(result: ActivityResult) {
         setResult(result.resultCode)
 
-        val isDeletedOrSplit = result.resultCode == ContactDeletionInteraction.RESULT_CODE_DELETED ||
-            result.resultCode == ContactEditorActivity.RESULT_CODE_SPLIT
+        val isDeletedOrSplit =
+            result.resultCode == ContactDeletionInteraction.RESULT_CODE_DELETED ||
+                result.resultCode == ContactEditorActivity.RESULT_CODE_SPLIT
 
         if (isDeletedOrSplit) {
             finish()

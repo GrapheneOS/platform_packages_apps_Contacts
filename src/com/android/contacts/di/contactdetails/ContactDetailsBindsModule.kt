@@ -1,5 +1,7 @@
 package com.android.contacts.di.contactdetails
 
+import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
+import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactoryImpl
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapperImpl
 import com.android.contacts.data.contactdetails.mapper.DataItemCollapseMatcher
@@ -18,6 +20,8 @@ import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCar
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCardsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
+import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
+import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailableImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapperImpl
 import dagger.Binds
@@ -48,6 +52,12 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindContactDetailsMapper(
         impl: ContactDetailsMapperImpl,
     ): ContactDetailsMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindContactEntryIntentFactory(
+        impl: ContactEntryIntentFactoryImpl,
+    ): ContactEntryIntentFactory
 
     @Binds
     @Reusable
@@ -90,4 +100,10 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindGetContactDetailsMenu(
         impl: GetContactDetailsMenuImpl,
     ): GetContactDetailsMenu
+
+    @Binds
+    @Reusable
+    abstract fun bindIsEntryActionAvailable(
+        impl: IsEntryActionAvailableImpl,
+    ): IsEntryActionAvailable
 }

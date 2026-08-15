@@ -32,7 +32,10 @@ internal fun ContactEntryActionsMenu(
         if (entry.copyText != null) {
             ContactEntryActionsMenuItem(
                 labelResource = R.string.copy_text,
-                onClick = onCopyClick,
+                onClick = {
+                    onCopyClick()
+                    onDismissRequest()
+                },
             )
         }
 
@@ -41,12 +44,18 @@ internal fun ContactEntryActionsMenu(
 
             entry.isSuperPrimary -> ContactEntryActionsMenuItem(
                 labelResource = R.string.clear_default,
-                onClick = onClearDefaultClick,
+                onClick = {
+                    onClearDefaultClick()
+                    onDismissRequest()
+                },
             )
 
             else -> ContactEntryActionsMenuItem(
                 labelResource = R.string.set_default,
-                onClick = onSetDefaultClick,
+                onClick = {
+                    onSetDefaultClick()
+                    onDismissRequest()
+                },
             )
         }
     }

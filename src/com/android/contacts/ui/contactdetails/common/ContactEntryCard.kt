@@ -134,6 +134,7 @@ private fun previewEntry(
         id = id,
         icon = icon,
         header = header,
+        isHeaderLtr = true,
         subHeader = null,
         text = text,
         isSuperPrimary = false,

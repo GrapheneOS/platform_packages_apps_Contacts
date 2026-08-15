@@ -1,6 +1,9 @@
 package com.android.contacts.ui.contactdetails.common
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -11,13 +14,17 @@ import androidx.compose.material.icons.rounded.StarBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
@@ -27,12 +34,15 @@ import com.android.contacts.ui.common.components.OverflowMenuItem
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EDIT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
-import com.android.contacts.ui.core.ContactsPreviewTheme
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_TITLE_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
+import com.android.contacts.ui.core.ContactsPreviewTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ContactDetailsTopAppBar(
+    title: String,
+    isTitleVisible: Boolean,
     menu: ContactDetailsMenu?,
     isStarred: Boolean,
     onAction: (Action) -> Unit,
@@ -40,7 +50,20 @@ internal fun ContactDetailsTopAppBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = {},
+        title = {
+            AnimatedVisibility(
+                visible = isTitleVisible,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.testTag(CONTACT_DETAILS_TITLE_TEST_TAG),
+                )
+            }
+        },
         navigationIcon = {
             IconButton(onClick = { onAction(Action.BackClick) }) {
                 Icon(
@@ -88,8 +111,9 @@ private fun StarAction(
         else -> R.string.menu_addStar
     }
 
-    IconButton(
-        onClick = onClick,
+    IconToggleButton(
+        checked = isStarred,
+        onCheckedChange = { onClick() },
         modifier = Modifier.testTag(CONTACT_DETAILS_STAR_TEST_TAG),
     ) {
         Icon(
@@ -136,9 +160,11 @@ private fun ContactDetailsOverflowMenu(
     menu: ContactDetailsMenu,
     onAction: (Action) -> Unit,
 ) {
+    val items = remember(menu) { overflowItems(menu) }
+
     Box(modifier = Modifier.testTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG)) {
         OverflowMenu { dismiss ->
-            overflowItems(menu).forEach { item ->
+            items.forEach { item ->
                 OverflowMenuItem(
                     labelResId = item.labelResId,
                     onClick = {
@@ -173,10 +199,6 @@ private fun overflowItems(menu: ContactDetailsMenu): List<OverflowItem> {
             R.string.menu_create_contact_shortcut,
             Action.ShortcutClick,
         ).takeIf { menu.isShortcutVisible },
-        OverflowItem(
-            R.string.menu_set_ring_tone,
-            Action.RingtoneClick,
-        ).takeIf { menu.isRingtoneVisible },
     )
 }
 
@@ -191,6 +213,8 @@ private data class OverflowItem(
 private fun ContactDetailsTopAppBarPreview() {
     ContactsPreviewTheme {
         ContactDetailsTopAppBar(
+            title = "Anna Smith",
+            isTitleVisible = true,
             menu = ContactDetailsMenu(
                 isStarVisible = true,
                 editAction = ContactDetailsEditAction.EDIT,

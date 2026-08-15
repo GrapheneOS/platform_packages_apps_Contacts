@@ -21,6 +21,7 @@ import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_HEADER_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RINGTONE_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
@@ -150,9 +151,40 @@ internal class ContactDetailsContentTest {
         )
 
         onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).performClick()
-        onNodeWithText("Set ringtone").performClick()
+        onNodeWithText("Share").performClick()
+
+        assertEquals(listOf(Action.ShareClick), actions)
+    }
+
+    @Test
+    fun whenTheRingtoneRowIsClicked_reportsIt() = runComposeUiTest {
+        val actions = mutableListOf<Action>()
+        setContentWith(
+            state = State(content = loadedContent()),
+            onAction = { action -> actions += action },
+        )
+
+        onNodeWithTag(CONTACT_DETAILS_RINGTONE_TEST_TAG).performClick()
 
         assertEquals(listOf(Action.RingtoneClick), actions)
+    }
+
+    @Test
+    fun forAContactWithoutARingtoneOption_hidesTheRingtoneRow() = runComposeUiTest {
+        val menu = contactDetailsMenu(isRingtoneVisible = false)
+
+        setContentWith(state = State(content = loadedContent(menu = menu)))
+
+        onNodeWithTag(CONTACT_DETAILS_RINGTONE_TEST_TAG).assertDoesNotExist()
+    }
+
+    @Test
+    fun theRingtoneIsNotInTheOverflowMenu() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent()))
+
+        onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).performClick()
+
+        onNodeWithText("Set ringtone").assertDoesNotExist()
     }
 
     @Test

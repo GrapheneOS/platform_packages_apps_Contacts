@@ -4,39 +4,45 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 
 internal sealed interface ContactDetailsAction {
 
-    data object BackClick : ContactDetailsAction
-    data object StarClick : ContactDetailsAction
-    data object EditClick : ContactDetailsAction
-    data object DeleteClick : ContactDetailsAction
-    data object ShareClick : ContactDetailsAction
-    data object ShortcutClick : ContactDetailsAction
-    data object RingtoneClick : ContactDetailsAction
-    data object JoinClick : ContactDetailsAction
-    data object LinkedContactsClick : ContactDetailsAction
-    data object AddDetailsClick : ContactDetailsAction
+    sealed interface Menu : ContactDetailsAction
+
+    sealed interface Entry : ContactDetailsAction
+
+    sealed interface PickerResult : ContactDetailsAction
+
+    data object BackClick : Menu
+    data object StarClick : Menu
+    data object EditClick : Menu
+    data object DeleteClick : Menu
+    data object ShareClick : Menu
+    data object ShortcutClick : Menu
+    data object RingtoneClick : Menu
+    data object JoinClick : Menu
+    data object LinkedContactsClick : Menu
+    data object AddDetailsClick : Menu
 
     data class EntryClick(
         val action: ContactEntryAction,
-    ) : ContactDetailsAction
+    ) : Entry
 
     data class CopyClick(
         val label: String?,
         val text: String,
-    ) : ContactDetailsAction
+    ) : Entry
 
     data class SetDefaultClick(
         val dataId: Long,
-    ) : ContactDetailsAction
+    ) : Entry
 
     data class ClearDefaultClick(
         val dataId: Long,
-    ) : ContactDetailsAction
+    ) : Entry
 
     data class RingtonePicked(
         val ringtone: String?,
-    ) : ContactDetailsAction
+    ) : PickerResult
 
     data class JoinTargetPicked(
         val contactId: Long,
-    ) : ContactDetailsAction
+    ) : PickerResult
 }

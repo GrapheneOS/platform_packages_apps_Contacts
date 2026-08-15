@@ -4,11 +4,13 @@ import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Organization
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import android.provider.ContactsContract.CommonDataKinds.SipAddress
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import com.android.contacts.R
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
+import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntry
@@ -17,6 +19,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryActions
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.tests.factory.contactCapabilities
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.contactDetailsMenu
@@ -24,10 +27,13 @@ import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -38,7 +44,17 @@ class ContactDetailsUiStateMapperImplTest {
 
     private val context: Context = RuntimeEnvironment.getApplication()
 
-    private val mapper = ContactDetailsUiStateMapperImpl(context = context)
+    private val isEntryActionAvailable = mockk<IsEntryActionAvailable>()
+
+    private val mapper = ContactDetailsUiStateMapperImpl(
+        context = context,
+        isEntryActionAvailable = isEntryActionAvailable,
+    )
+
+    @Before
+    fun setUp() {
+        every { isEntryActionAvailable(any()) } returns true
+    }
 
     @Test
     fun map_withADisplayName_showsIt() {
@@ -59,6 +75,44 @@ class ContactDetailsUiStateMapperImplTest {
         val state = mapOf(contactDetails(displayName = "  "))
 
         assertEquals(context.getString(R.string.missing_name), state.header.displayName)
+    }
+
+    @Test
+    fun map_withTheFamilyNameFirstDisplayOrder_showsTheAlternativeName() {
+        val details = contactDetails(
+            displayName = "Alex Doe",
+            alternativeDisplayName = "Doe, Alex",
+        )
+
+        val state = mapOf(details, displayOrder = DisplayOrder.FAMILY_NAME_FIRST)
+
+        assertEquals("Doe, Alex", state.header.displayName)
+    }
+
+    @Test
+    fun map_withTheFamilyNameFirstOrderAndNoAlternativeName_fallsBackToMissingName() {
+        val details = contactDetails(
+            displayName = "Alex Doe",
+            alternativeDisplayName = null,
+        )
+
+        val state = mapOf(details, displayOrder = DisplayOrder.FAMILY_NAME_FIRST)
+
+        assertEquals(context.getString(R.string.missing_name), state.header.displayName)
+    }
+
+    @Test
+    fun map_forAPhoneNumberName_marksTheDisplayNameAsLeftToRight() {
+        val details = contactDetails(displayNameSource = ContactDisplayNameSource.PHONE)
+
+        assertTrue(mapOf(details).header.isDisplayNameLtr)
+    }
+
+    @Test
+    fun map_forAStructuredName_leavesTheDisplayNameDirectionAlone() {
+        val details = contactDetails(displayNameSource = ContactDisplayNameSource.STRUCTURED_NAME)
+
+        assertFalse(mapOf(details).header.isDisplayNameLtr)
     }
 
     @Test
@@ -159,6 +213,44 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
+    fun map_forAnEmailGroup_picksTheEmailIcon() {
+        val state = mapOf(
+            cards = cardsOf(contactCard = groupOf(entry(), Email.CONTENT_ITEM_TYPE)),
+        )
+
+        assertEquals(ContactEntryIcon.EMAIL, firstContactEntry(state).icon)
+    }
+
+    @Test
+    fun map_forASipGroup_picksTheSipIcon() {
+        val state = mapOf(
+            cards = cardsOf(contactCard = groupOf(entry(), SipAddress.CONTENT_ITEM_TYPE)),
+        )
+
+        assertEquals(ContactEntryIcon.SIP_CALL, firstContactEntry(state).icon)
+    }
+
+    @Test
+    fun map_forASipGroup_marksTheHeaderAsLeftToRight() {
+        val state = mapOf(
+            cards = cardsOf(contactCard = groupOf(entry(), SipAddress.CONTENT_ITEM_TYPE)),
+        )
+
+        assertTrue(firstContactEntry(state).isHeaderLtr)
+    }
+
+    @Test
+    fun map_forAnActionWithoutAnIcon_buildsNoAlternateAction() {
+        val entry = entry(
+            actions = ContactEntryActions(alternate = ContactEntryAction.Call("4155551212")),
+        )
+
+        val state = mapOf(cards = cardsOf(contactCard = groupOf(entry, Phone.CONTENT_ITEM_TYPE)))
+
+        assertNull(firstContactEntry(state).alternateAction)
+    }
+
+    @Test
     fun map_forAnAboutCardGroup_picksNoIcon() {
         val state = mapOf(
             cards = cardsOf(aboutCard = groupOf(entry(), Organization.CONTENT_ITEM_TYPE)),
@@ -221,6 +313,55 @@ class ContactDetailsUiStateMapperImplTest {
         val state = mapOf(cards = cardsOf(contactCard = groupOf(entry, Phone.CONTENT_ITEM_TYPE)))
 
         assertEquals(action, firstContactEntry(state).action)
+    }
+
+    @Test
+    fun map_forAPhoneGroup_marksTheHeaderAsLeftToRight() {
+        val state = mapOf(
+            cards = cardsOf(contactCard = groupOf(entry(), Phone.CONTENT_ITEM_TYPE)),
+        )
+
+        assertTrue(firstContactEntry(state).isHeaderLtr)
+    }
+
+    @Test
+    fun map_forAnAboutCardGroup_leavesTheHeaderDirectionAlone() {
+        val state = mapOf(cards = cardsOf(aboutCard = groupOf(entry())))
+
+        assertFalse(firstAboutEntry(state).isHeaderLtr)
+    }
+
+    @Test
+    fun map_whenNothingResolvesThePrimaryAction_dropsIt() {
+        val action = ContactEntryAction.Call("4155551212")
+        every { isEntryActionAvailable(action) } returns false
+        val entry = entry(actions = ContactEntryActions(primary = action))
+
+        val state = mapOf(cards = cardsOf(contactCard = groupOf(entry, Phone.CONTENT_ITEM_TYPE)))
+
+        assertNull(firstContactEntry(state).action)
+    }
+
+    @Test
+    fun map_whenNothingResolvesTheAlternateAction_dropsIt() {
+        val action = ContactEntryAction.Sms("4155551212")
+        every { isEntryActionAvailable(action) } returns false
+        val entry = entry(actions = ContactEntryActions(alternate = action))
+
+        val state = mapOf(cards = cardsOf(contactCard = groupOf(entry, Phone.CONTENT_ITEM_TYPE)))
+
+        assertNull(firstContactEntry(state).alternateAction)
+    }
+
+    @Test
+    fun map_whenNothingResolvesTheThirdAction_keepsIt() {
+        val action = ContactEntryAction.VideoCall("4155551212")
+        every { isEntryActionAvailable(action) } returns false
+        val entry = entry(actions = ContactEntryActions(third = action))
+
+        val state = mapOf(cards = cardsOf(contactCard = groupOf(entry, Phone.CONTENT_ITEM_TYPE)))
+
+        assertEquals(ContactEntryIcon.VIDEO_CALL, firstContactEntry(state).thirdAction?.icon)
     }
 
     @Test
@@ -327,8 +468,9 @@ class ContactDetailsUiStateMapperImplTest {
         details: ContactDetails = contactDetails(),
         cards: ContactDetailsCards = cardsOf(),
         menu: ContactDetailsMenu = contactDetailsMenu(),
+        displayOrder: DisplayOrder = DisplayOrder.GIVEN_NAME_FIRST,
     ): ContactDetailsContent.Loaded {
-        return mapper.map(details, cards, menu) as ContactDetailsContent.Loaded
+        return mapper.map(details, cards, menu, displayOrder) as ContactDetailsContent.Loaded
     }
 
     private fun cardsOf(

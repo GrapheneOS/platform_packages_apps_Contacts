@@ -8,6 +8,11 @@ import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.data.settings.model.DisplayOrder
+import com.android.contacts.data.settings.model.DisplaySettings
+import com.android.contacts.data.settings.model.PhoneticNameDisplay
+import com.android.contacts.data.settings.model.SortOrder
+import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
@@ -23,8 +28,9 @@ import io.mockk.mockk
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
@@ -44,6 +50,7 @@ internal abstract class BaseContactDetailsViewModelTest {
     protected val contactShortcutRepository = mockk<ContactShortcutRepository>(relaxed = true)
     protected val buildContactDetailsCards = mockk<BuildContactDetailsCards>()
     protected val getContactDetailsMenu = mockk<GetContactDetailsMenu>()
+    protected val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
 
     protected val results = MutableSharedFlow<ContactDetailsResult>(replay = 1)
@@ -59,7 +66,10 @@ internal abstract class BaseContactDetailsViewModelTest {
         every { contactActionsRepository.getPendingLinkOperation() } returns null
         every { buildContactDetailsCards(any(), any()) } returns EMPTY_CARDS
         every { getContactDetailsMenu(any()) } returns contactDetailsMenu()
-        every { contactDetailsUiStateMapper.map(any(), any(), any()) } answers { loadedState.value }
+        every { displaySettingsRepository.observeDisplaySettings() } returns flowOf(DISPLAY_SETTINGS)
+        every {
+            contactDetailsUiStateMapper.map(any(), any(), any(), any())
+        } answers { loadedState.value }
     }
 
     protected fun createViewModel(): ContactDetailsViewModel {
@@ -71,6 +81,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             getContactDetailsMenu = getContactDetailsMenu,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
             contactShortcutRepository = contactShortcutRepository,
+            displaySettingsRepository = displaySettingsRepository,
         )
     }
 
@@ -103,6 +114,15 @@ internal abstract class BaseContactDetailsViewModelTest {
 
     protected companion object {
         val LOOKUP_URI: Uri = Uri.parse("content://com.android.contacts/contacts/lookup/key/7")
+
+        val DISPLAY_SETTINGS = DisplaySettings(
+            sortOrder = SortOrder.GIVEN_NAME_FIRST,
+            isSortOrderChangeable = true,
+            displayOrder = DisplayOrder.GIVEN_NAME_FIRST,
+            isDisplayOrderChangeable = true,
+            phoneticNameDisplay = PhoneticNameDisplay.SHOW_ALWAYS,
+            isPhoneticNameDisplayChangeable = true,
+        )
 
         val EMPTY_CARDS = ContactDetailsCards(
             contactCard = emptyList(),

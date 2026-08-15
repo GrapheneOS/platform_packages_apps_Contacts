@@ -31,6 +31,8 @@ internal fun ContactDetailsHeader(
     header: ContactHeaderUiModel,
     modifier: Modifier = Modifier,
 ) {
+    val displayName = header.displayNameText()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -58,7 +60,7 @@ internal fun ContactDetailsHeader(
         Spacer(modifier = Modifier.height(ContactDetailsTokens.headerNameSpacing))
 
         Text(
-            text = header.displayName.asLtrText(),
+            text = displayName,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center,
@@ -81,6 +83,14 @@ internal fun ContactDetailsHeader(
     }
 }
 
+@Composable
+private fun ContactHeaderUiModel.displayNameText(): String {
+    return when {
+        isDisplayNameLtr -> displayName.asLtrText()
+        else -> displayName
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun ContactDetailsHeaderPreview() {
@@ -92,6 +102,7 @@ private fun ContactDetailsHeaderPreview() {
                 photo = null,
                 avatarSeed = "anna-smith",
                 isBusiness = false,
+                isDisplayNameLtr = false,
             ),
         )
         ContactDetailsHeader(
@@ -101,6 +112,7 @@ private fun ContactDetailsHeaderPreview() {
                 photo = null,
                 avatarSeed = "student-administration",
                 isBusiness = true,
+                isDisplayNameLtr = false,
             ),
         )
     }

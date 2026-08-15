@@ -12,18 +12,20 @@ import androidx.lifecycle.viewModelScope
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
-import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.model.ContactPhoto
+import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.data.settings.model.DisplayOrder
+import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent as NavEvent
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,8 +36,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -68,6 +73,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val buildContactDetailsCards: BuildContactDetailsCards,
     private val getContactDetailsMenu: GetContactDetailsMenu,
     private val contactShortcutRepository: ContactShortcutRepository,
+    private val displaySettingsRepository: DisplaySettingsRepository,
     private val contactDetailsUiStateMapper: ContactDetailsUiStateMapper,
 ) : ViewModel(),
     ContactDetailsScreenModel {
@@ -82,7 +88,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val _navigationEvents = Channel<NavEvent>(Channel.BUFFERED)
     override val navigationEvents: Flow<NavEvent> = _navigationEvents.receiveAsFlow()
 
-    private val _linkProgress = MutableStateFlow(contactActionsRepository.getPendingLinkOperation())
+    private val linkProgress = MutableStateFlow(contactActionsRepository.getPendingLinkOperation())
 
     private val content: Flow<Content> = savedStateHandle
         .getStateFlow<Bundle?>(KEY_ARGUMENTS, null)
@@ -94,13 +100,13 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     override val uiState: StateFlow<State> = combine(
         content,
-        _linkProgress,
-    ) { content, linkProgress ->
-        State(content = content, linkProgress = linkProgress)
+        linkProgress,
+    ) { loadedContent, pendingLinkOperation ->
+        State(content = loadedContent, linkProgress = pendingLinkOperation)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STATE_TIMEOUT_MILLIS),
-        initialValue = State(linkProgress = _linkProgress.value),
+        initialValue = State(linkProgress = linkProgress.value),
     )
 
     init {
@@ -127,6 +133,14 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     override fun onAction(action: Action) {
         when (action) {
+            is Action.Menu -> onMenuAction(action)
+            is Action.Entry -> onEntryAction(action)
+            is Action.PickerResult -> onPickerResult(action)
+        }
+    }
+
+    private fun onMenuAction(action: Action.Menu) {
+        when (action) {
             is Action.BackClick -> sendNavigationEvent(NavEvent.Close)
             is Action.StarClick -> toggleStarred()
             is Action.EditClick -> editContact()
@@ -137,10 +151,13 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.RingtoneClick -> pickRingtone()
             is Action.JoinClick -> pickJoinTarget()
             is Action.LinkedContactsClick -> viewLinkedContacts()
+        }
+    }
+
+    private fun onEntryAction(action: Action.Entry) {
+        when (action) {
             is Action.SetDefaultClick -> setDefault(action.dataId)
             is Action.ClearDefaultClick -> clearDefault(action.dataId)
-            is Action.RingtonePicked -> setRingtone(action.ringtone)
-            is Action.JoinTargetPicked -> joinContact(action.contactId)
             is Action.EntryClick -> performEntryAction(action.action)
 
             is Action.CopyClick -> {
@@ -149,39 +166,61 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun onPickerResult(action: Action.PickerResult) {
+        when (action) {
+            is Action.RingtonePicked -> setRingtone(action.ringtone)
+            is Action.JoinTargetPicked -> joinContact(action.contactId)
+        }
+    }
+
     private fun observeContent(arguments: Bundle): Flow<Content> {
         val lookupUri = lookupUri(arguments) ?: return flowOf(Content.Loading)
 
-        return contactDetailsRepository
-            .observeContactDetails(lookupUri, excludedMimeTypes(arguments))
-            .onEach { result -> retainLoadedContact(result) }
-            .map { result -> toContent(result, arguments) }
+        return flow {
+            val displayOrder = displaySettingsRepository
+                .observeDisplaySettings()
+                .first()
+                .displayOrder
+
+            emitAll(
+                contactDetailsRepository
+                    .observeContactDetails(lookupUri, excludedMimeTypes(arguments))
+                    .onEach { result -> retainLoadedContact(result) }
+                    .map { result -> toContent(result, arguments, displayOrder) },
+            )
+        }
     }
 
     private fun toContent(
         result: ContactDetailsResult,
         arguments: Bundle,
+        displayOrder: DisplayOrder,
     ): Content {
         return when (result) {
             is ContactDetailsResult.NotFound -> Content.NotFound
             is ContactDetailsResult.Error -> Content.Error
-            is ContactDetailsResult.Loaded -> toLoadedContent(result.details, arguments)
+
+            is ContactDetailsResult.Loaded -> {
+                toLoadedContent(result.details, arguments, displayOrder)
+            }
         }
     }
 
     private fun toLoadedContent(
         details: ContactDetails,
         arguments: Bundle,
+        displayOrder: DisplayOrder,
     ): Content {
         return contactDetailsUiStateMapper.map(
             details = details,
             cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
             menu = getContactDetailsMenu(details.capabilities),
+            displayOrder = displayOrder,
         )
     }
 
     private fun onLinkOperation(operation: ContactLinkOperation) {
-        _linkProgress.value = null
+        linkProgress.value = null
 
         if (operation == ContactLinkOperation.UNLINK) {
             sendNavigationEvent(NavEvent.Close)
@@ -328,7 +367,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         val details = loadedDetails ?: return
         val callbackActivity = callbackActivity() ?: return
 
-        _linkProgress.value = ContactLinkOperation.LINK
+        linkProgress.value = ContactLinkOperation.LINK
 
         viewModelScope.launch {
             contactActionsRepository.joinContacts(

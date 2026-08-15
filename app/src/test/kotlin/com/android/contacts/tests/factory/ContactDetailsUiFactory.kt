@@ -15,6 +15,7 @@ internal fun contactHeaderUiModel(
     photo: ContactAvatarImage? = null,
     avatarSeed: String? = "lookup-key",
     isBusiness: Boolean = false,
+    isDisplayNameLtr: Boolean = false,
 ): ContactHeaderUiModel {
     return ContactHeaderUiModel(
         displayName = displayName,
@@ -22,6 +23,7 @@ internal fun contactHeaderUiModel(
         photo = photo,
         avatarSeed = avatarSeed,
         isBusiness = isBusiness,
+        isDisplayNameLtr = isDisplayNameLtr,
     )
 }
 
@@ -33,6 +35,7 @@ internal fun contactEntryUiModel(
     header: String? = "555 0001",
     subHeader: String? = null,
     text: String? = "Mobile",
+    isHeaderLtr: Boolean = false,
     action: ContactEntryAction? = null,
     alternateAction: ContactEntryActionUiModel? = null,
     thirdAction: ContactEntryActionUiModel? = null,
@@ -45,6 +48,7 @@ internal fun contactEntryUiModel(
         isDefaultChangeable = isDefaultChangeable,
         icon = icon,
         header = header,
+        isHeaderLtr = isHeaderLtr,
         subHeader = subHeader,
         text = text,
         action = action,

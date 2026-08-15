@@ -3,6 +3,7 @@ package com.android.contacts.ui.contactdetails.common
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
@@ -57,37 +57,25 @@ internal fun ContactEntryRow(
     onThirdActionClick: (ContactEntryAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val actionsMenuLabel = stringResource(R.string.more_options)
     var isActionsMenuExpanded by remember { mutableStateOf(false) }
-    val hasActionsMenu = entry.copyText != null || entry.isDefaultChangeable
+    val actions = entryRowActions(
+        entry = entry,
+        onCopyClick = onCopyClick,
+        onOpenActionsMenu = { isActionsMenuExpanded = true },
+    )
     val hasTrailingAction = entry.thirdAction != null || entry.alternateAction != null
-    val openActionsMenu: () -> Unit = { isActionsMenuExpanded = true }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .testTag(CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX + entry.id)
             .combinedClickable(
-                enabled = onClick != null || hasActionsMenu,
-                onLongClick = when {
-                    hasActionsMenu -> openActionsMenu
-                    else -> null
-                },
-                onLongClickLabel = when {
-                    hasActionsMenu -> actionsMenuLabel
-                    else -> null
-                },
-                onClick = onClick ?: openActionsMenu,
+                enabled = onClick != null || actions.onLongClick != null,
+                onLongClick = actions.onLongClick,
+                onLongClickLabel = actions.longClickLabel,
+                onClick = onClick ?: actions.onTap ?: {},
             )
-            .padding(
-                start = ContactDetailsTokens.rowHorizontalPadding,
-                end = when {
-                    hasTrailingAction -> ContactDetailsTokens.rowActionEndPadding
-                    else -> ContactDetailsTokens.rowHorizontalPadding
-                },
-                top = ContactDetailsTokens.rowVerticalPadding,
-                bottom = ContactDetailsTokens.rowVerticalPadding,
-            ),
+            .padding(entryPadding(hasTrailingAction)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val icon = entry.icon
@@ -105,40 +93,90 @@ internal fun ContactEntryRow(
             modifier = Modifier.weight(1f),
         )
 
-        val thirdAction = entry.thirdAction
-        if (thirdAction != null) {
-            EntryActionButton(
-                action = thirdAction,
-                testTag = CONTACT_DETAILS_THIRD_ACTION_TEST_TAG_PREFIX + entry.id,
-                onClick = { onThirdActionClick(thirdAction.action) },
-            )
-        }
-
-        val alternateAction = entry.alternateAction
-        if (alternateAction != null) {
-            EntryActionButton(
-                action = alternateAction,
-                testTag = CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX + entry.id,
-                onClick = { onAlternateActionClick(alternateAction.action) },
-            )
-        }
-
-        ContactEntryActionsMenu(
+        EntryTrailingActions(
             entry = entry,
-            isExpanded = isActionsMenuExpanded,
-            onDismissRequest = { isActionsMenuExpanded = false },
-            onCopyClick = {
-                isActionsMenuExpanded = false
-                onCopyClick()
-            },
-            onSetDefaultClick = {
-                isActionsMenuExpanded = false
-                onSetDefaultClick()
-            },
-            onClearDefaultClick = {
-                isActionsMenuExpanded = false
-                onClearDefaultClick()
-            },
+            onAlternateActionClick = onAlternateActionClick,
+            onThirdActionClick = onThirdActionClick,
+        )
+
+        if (actions.hasMenu) {
+            ContactEntryActionsMenu(
+                entry = entry,
+                isExpanded = isActionsMenuExpanded,
+                onDismissRequest = { isActionsMenuExpanded = false },
+                onCopyClick = onCopyClick,
+                onSetDefaultClick = onSetDefaultClick,
+                onClearDefaultClick = onClearDefaultClick,
+            )
+        }
+    }
+}
+
+private class EntryRowActions(
+    val onLongClick: (() -> Unit)?,
+    val longClickLabel: String?,
+    val onTap: (() -> Unit)?,
+    val hasMenu: Boolean,
+)
+
+@Composable
+private fun entryRowActions(
+    entry: ContactEntryUiModel,
+    onCopyClick: () -> Unit,
+    onOpenActionsMenu: () -> Unit,
+): EntryRowActions {
+    val isCopyOnly = entry.copyText != null && !entry.isDefaultChangeable
+    val hasMenu = !isCopyOnly && (entry.copyText != null || entry.isDefaultChangeable)
+
+    return EntryRowActions(
+        onLongClick = when {
+            isCopyOnly -> onCopyClick
+            hasMenu -> onOpenActionsMenu
+            else -> null
+        },
+        longClickLabel = when {
+            isCopyOnly -> stringResource(R.string.copy_text)
+            hasMenu -> stringResource(R.string.more_options)
+            else -> null
+        },
+        onTap = onOpenActionsMenu.takeIf { hasMenu },
+        hasMenu = hasMenu,
+    )
+}
+
+private fun entryPadding(hasTrailingAction: Boolean): PaddingValues {
+    return PaddingValues(
+        start = ContactDetailsTokens.rowHorizontalPadding,
+        end = when {
+            hasTrailingAction -> ContactDetailsTokens.rowActionEndPadding
+            else -> ContactDetailsTokens.rowHorizontalPadding
+        },
+        top = ContactDetailsTokens.rowVerticalPadding,
+        bottom = ContactDetailsTokens.rowVerticalPadding,
+    )
+}
+
+@Composable
+private fun EntryTrailingActions(
+    entry: ContactEntryUiModel,
+    onAlternateActionClick: (ContactEntryAction) -> Unit,
+    onThirdActionClick: (ContactEntryAction) -> Unit,
+) {
+    val thirdAction = entry.thirdAction
+    if (thirdAction != null) {
+        EntryActionButton(
+            action = thirdAction,
+            testTag = CONTACT_DETAILS_THIRD_ACTION_TEST_TAG_PREFIX + entry.id,
+            onClick = { onThirdActionClick(thirdAction.action) },
+        )
+    }
+
+    val alternateAction = entry.alternateAction
+    if (alternateAction != null) {
+        EntryActionButton(
+            action = alternateAction,
+            testTag = CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX + entry.id,
+            onClick = { onAlternateActionClick(alternateAction.action) },
         )
     }
 }
@@ -165,14 +203,12 @@ private fun EntryText(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        val header = entry.header
+        val header = entry.headerText()
         if (header != null) {
             Text(
-                text = header.asLtrText(),
+                text = header,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 2,
             )
         }
 
@@ -203,8 +239,6 @@ private fun EntrySecondaryText(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 2,
         modifier = when {
             isFirst -> Modifier
             else -> Modifier.padding(top = ContactDetailsTokens.rowTextSpacing)
@@ -229,6 +263,16 @@ private fun EntryActionButton(
             contentDescription = action.contentDescription,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun ContactEntryUiModel.headerText(): String? {
+    val header = header ?: return null
+
+    return when {
+        isHeaderLtr -> header.asLtrText()
+        else -> header
     }
 }
 
@@ -286,6 +330,7 @@ private fun previewPhoneEntry(
         isDefaultChangeable = true,
         icon = ContactEntryIcon.CALL,
         header = number,
+        isHeaderLtr = true,
         subHeader = null,
         text = label,
         action = ContactEntryAction.Call(number = number),
@@ -307,6 +352,7 @@ private fun previewNoteEntry(id: Long): ContactEntryUiModel {
         isDefaultChangeable = false,
         icon = null,
         header = "Note",
+        isHeaderLtr = false,
         subHeader = null,
         text = "Met at the conference",
         action = null,

@@ -83,12 +83,9 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
     }
 
     override fun getDirectoryContactPrefill(): DirectoryContactPrefill? {
-        val contact = loadedContact
-        if (contact == null || !contact.isLoaded) {
-            return null
-        }
-
+        val contact = loadedContact ?: return null
         val values = contact.contentValues.toMutableList()
+
         if (contact.displayNameSource == DisplayNameSources.ORGANIZATION) {
             values.add(organizationValues(contact.displayName))
         }
@@ -99,14 +96,8 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         return DirectoryContactPrefill(
             name = prefillName(contact),
             values = values,
-            account = when {
-                sameAccountOnly -> directoryAccount(contact)
-                else -> null
-            },
-            dataSet = when {
-                sameAccountOnly -> contact.rawContacts.firstOrNull()?.dataSet
-                else -> null
-            },
+            account = directoryAccount(contact).takeIf { sameAccountOnly },
+            dataSet = contact.rawContacts.firstOrNull()?.dataSet.takeIf { sameAccountOnly },
         )
     }
 
@@ -121,14 +112,14 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         val intent = ContactSaveService.createSaveContactIntent(
             context,
             deltas,
-            /* saveModeExtraKey = */ "",
-            /* saveMode = */ 0,
-            /* isProfile = */ false,
+            NO_SAVE_MODE_EXTRA_KEY,
+            SAVE_MODE_CLOSE,
+            false,
             callbackActivity,
-            /* callbackAction = */ Intent.ACTION_VIEW,
-            /* updatedPhotos = */ null,
-            /* joinContactIdExtraKey = */ null,
-            /* joinContactId = */ null,
+            Intent.ACTION_VIEW,
+            null,
+            null,
+            null,
         )
 
         ContactSaveService.startService(context, intent)
@@ -142,7 +133,7 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         return callbackFlow {
             val loader = contactLoaderSource.create(lookupUri)
             val listener = Loader.OnLoadCompleteListener { _, contact ->
-                loadedContact = contact
+                retainLoadedContact(contact)
                 trySend(contact)
             }
 
@@ -155,6 +146,14 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
                 loadedContact = null
             }
         }.flowOn(mainDispatcher)
+    }
+
+    private fun retainLoadedContact(contact: Contact) {
+        if (!contact.isLoaded) {
+            return
+        }
+
+        loadedContact = contact
     }
 
     private fun startLoading(
@@ -175,7 +174,7 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
     }
 
     private fun toContactLookupUri(lookupUri: Uri): Uri? {
-        if (lookupUri.authority != LEGACY_AUTHORITY) {
+        if (lookupUri.authority != LegacyContacts.AUTHORITY) {
             return lookupUri
         }
 
@@ -219,6 +218,7 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
 
     private companion object {
         const val LOADER_ID = 1
-        const val LEGACY_AUTHORITY = LegacyContacts.AUTHORITY
+        const val NO_SAVE_MODE_EXTRA_KEY = ""
+        const val SAVE_MODE_CLOSE = 0
     }
 }
