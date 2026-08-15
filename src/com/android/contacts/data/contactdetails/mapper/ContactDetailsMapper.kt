@@ -158,20 +158,29 @@ internal class ContactDetailsMapperImpl @Inject constructor(
     ): Boolean {
         val dataKind = dataItem.dataKind ?: return false
 
-        if (dataItem.mimeType in excludedMimeTypes) {
-            return false
-        }
-
-        return !dataItem.buildDataString(context, dataKind).isNullOrEmpty()
+        return dataItem.mimeType !in excludedMimeTypes &&
+            !dataItem.buildDataString(context, dataKind).isNullOrEmpty()
     }
 
     private fun mapDataItem(dataItem: DataItem): ContactDataItem {
+        return mapCommunicationItem(dataItem)
+            ?: mapAboutItem(dataItem)
+            ?: mapGeneric(dataItem)
+    }
+
+    private fun mapCommunicationItem(dataItem: DataItem): ContactDataItem? {
         return when (dataItem) {
             is PhoneDataItem -> mapPhone(dataItem)
             is SipAddressDataItem -> mapSipAddress(dataItem)
             is EmailDataItem -> mapEmail(dataItem)
             is StructuredPostalDataItem -> mapPostal(dataItem)
             is ImDataItem -> mapIm(dataItem)
+            else -> null
+        }
+    }
+
+    private fun mapAboutItem(dataItem: DataItem): ContactDataItem? {
+        return when (dataItem) {
             is OrganizationDataItem -> mapOrganization(dataItem)
             is NicknameDataItem -> mapNickname(dataItem)
             is NoteDataItem -> mapNote(dataItem)
@@ -180,7 +189,7 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             is RelationDataItem -> mapRelation(dataItem)
             is CustomDataItem -> mapCustom(dataItem)
             is StructuredNameDataItem -> mapStructuredName(dataItem)
-            else -> mapGeneric(dataItem)
+            else -> null
         }
     }
 
@@ -415,11 +424,11 @@ internal class ContactDetailsMapperImpl @Inject constructor(
 
         val type = dataItem.getKindTypeColumn(dataKind)
         val label = dataItem.label
-        if (type == Phone.TYPE_CUSTOM && label.isNullOrEmpty()) {
-            return ""
-        }
 
-        return Phone.getTypeLabel(context.resources, type, label).toString()
+        return when {
+            type == Phone.TYPE_CUSTOM && label.isNullOrEmpty() -> ""
+            else -> Phone.getTypeLabel(context.resources, type, label).toString()
+        }
     }
 
     private fun typeLabel(

@@ -2,8 +2,6 @@ package com.android.contacts.di.util
 
 import com.android.contacts.domain.util.CanVideoCall
 import com.android.contacts.domain.util.CanVideoCallImpl
-import com.android.contacts.domain.util.GetIntentLabel
-import com.android.contacts.domain.util.GetIntentLabelImpl
 import com.android.contacts.domain.util.IsCallWithNoteSupported
 import com.android.contacts.domain.util.IsCallWithNoteSupportedImpl
 import com.android.contacts.domain.util.IsDeviceVoiceCapable
@@ -27,12 +25,6 @@ internal abstract class DomainUtilBindsModule {
     abstract fun bindCanVideoCall(
         impl: CanVideoCallImpl,
     ): CanVideoCall
-
-    @Binds
-    @Reusable
-    abstract fun bindGetIntentLabel(
-        impl: GetIntentLabelImpl,
-    ): GetIntentLabel
 
     @Binds
     @Reusable
