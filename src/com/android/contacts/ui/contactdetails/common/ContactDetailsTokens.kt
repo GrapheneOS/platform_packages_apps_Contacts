@@ -18,6 +18,7 @@ internal object ContactDetailsTokens {
     val rowIconSpacing = 16.dp
     val rowActionSize = 48.dp
     val rowActionEndPadding = 4.dp
+    val actionRowVerticalPadding = 18.dp
 
     val screenHorizontalPadding = 16.dp
     val screenBottomPadding = 32.dp

@@ -8,6 +8,7 @@ internal data class ContactEntryUiModel(
     val id: Long,
     val icon: ContactEntryIcon?,
     val header: String?,
+    val isHeaderLtr: Boolean,
     val subHeader: String?,
     val text: String?,
     val isSuperPrimary: Boolean,

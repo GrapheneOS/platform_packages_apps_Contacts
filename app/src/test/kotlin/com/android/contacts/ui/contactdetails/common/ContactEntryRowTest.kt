@@ -1,5 +1,7 @@
 package com.android.contacts.ui.contactdetails.common
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -10,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.compose.ui.unit.LayoutDirection
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.tests.factory.contactEntryActionUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
@@ -78,15 +81,6 @@ internal class ContactEntryRowTest {
     }
 
     @Test
-    fun whenLongClicked_offersCopying() = runComposeUiTest {
-        setRowContent(entry = contactEntryUiModel(copyText = "555 0001"))
-
-        longClickTheRow()
-
-        onNodeWithText("Copy to clipboard").assertIsDisplayed()
-    }
-
-    @Test
     fun whenLongClickedOnAChangeableEntry_offersSettingTheDefault() = runComposeUiTest {
         setRowContent(entry = contactEntryUiModel(isDefaultChangeable = true))
 
@@ -110,9 +104,24 @@ internal class ContactEntryRowTest {
     }
 
     @Test
-    fun withoutAPrimaryAction_opensTheActionsMenuOnTap() = runComposeUiTest {
+    fun withoutAPrimaryActionAndWithCopyOnly_doesNothingOnTap() = runComposeUiTest {
+        var copyClicks = 0
         setRowContent(
             entry = contactEntryUiModel(copyText = "555 0001"),
+            onClick = null,
+            onCopyClick = { copyClicks++ },
+        )
+
+        onNodeWithTag(CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX + 1L).performClick()
+
+        assertEquals(0, copyClicks)
+        onNodeWithText("Copy to clipboard").assertDoesNotExist()
+    }
+
+    @Test
+    fun withoutAPrimaryActionAndWithSeveralActions_opensTheActionsMenuOnTap() = runComposeUiTest {
+        setRowContent(
+            entry = contactEntryUiModel(copyText = "555 0001", isDefaultChangeable = true),
             onClick = null,
         )
 
@@ -122,17 +131,7 @@ internal class ContactEntryRowTest {
     }
 
     @Test
-    fun whenLongClickedOnANonChangeableEntry_offersNoDefaultActions() = runComposeUiTest {
-        setRowContent(entry = contactEntryUiModel(copyText = "555 0001"))
-
-        longClickTheRow()
-
-        onNodeWithText("Set default").assertDoesNotExist()
-        onNodeWithText("Clear default").assertDoesNotExist()
-    }
-
-    @Test
-    fun whenCopyingIsChosen_reportsIt() = runComposeUiTest {
+    fun whenLongClickedWithCopyAsTheOnlyAction_copiesWithoutAMenu() = runComposeUiTest {
         var copyClicks = 0
         setRowContent(
             entry = contactEntryUiModel(copyText = "555 0001"),
@@ -140,9 +139,64 @@ internal class ContactEntryRowTest {
         )
 
         longClickTheRow()
+
+        assertEquals(1, copyClicks)
+        onNodeWithText("Copy to clipboard").assertDoesNotExist()
+    }
+
+    @Test
+    fun whenCopyingIsChosenFromTheMenu_reportsIt() = runComposeUiTest {
+        var copyClicks = 0
+        setRowContent(
+            entry = contactEntryUiModel(copyText = "555 0001", isDefaultChangeable = true),
+            onCopyClick = { copyClicks++ },
+        )
+
+        longClickTheRow()
         onNodeWithText("Copy to clipboard").performClick()
 
         assertEquals(1, copyClicks)
+    }
+
+    @Test
+    fun inARightToLeftLayoutForADialableHeader_wrapsItAsLeftToRight() = runComposeUiTest {
+        setContent {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                ContactEntryRow(
+                    entry = contactEntryUiModel(header = "+1 555 0001", isHeaderLtr = true),
+                    isIconVisible = true,
+                    onClick = {},
+                    onCopyClick = {},
+                    onSetDefaultClick = {},
+                    onClearDefaultClick = {},
+                    onAlternateActionClick = {},
+                    onThirdActionClick = {},
+                )
+            }
+        }
+
+        onNodeWithText("+1 555 0001").assertDoesNotExist()
+        onNodeWithText("+1 555 0001", substring = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun inARightToLeftLayoutForAnOrdinaryHeader_leavesItAlone() = runComposeUiTest {
+        setContent {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                ContactEntryRow(
+                    entry = contactEntryUiModel(header = "Met at the conference"),
+                    isIconVisible = true,
+                    onClick = {},
+                    onCopyClick = {},
+                    onSetDefaultClick = {},
+                    onClearDefaultClick = {},
+                    onAlternateActionClick = {},
+                    onThirdActionClick = {},
+                )
+            }
+        }
+
+        onNodeWithText("Met at the conference").assertIsDisplayed()
     }
 
     private fun ComposeUiTest.longClickTheRow() {

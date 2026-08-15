@@ -10,6 +10,7 @@ import com.android.contacts.R
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
+import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntry
@@ -17,9 +18,10 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.common.components.ContactAvatarImage
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
@@ -36,24 +38,27 @@ internal interface ContactDetailsUiStateMapper {
         details: ContactDetails,
         cards: ContactDetailsCards,
         menu: ContactDetailsMenu,
+        displayOrder: DisplayOrder,
     ): ContactDetailsContent
 }
 
 internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
+    private val isEntryActionAvailable: IsEntryActionAvailable,
 ) : ContactDetailsUiStateMapper {
 
     override fun map(
         details: ContactDetails,
         cards: ContactDetailsCards,
         menu: ContactDetailsMenu,
+        displayOrder: DisplayOrder,
     ): ContactDetailsContent {
         val isEditable = !details.capabilities.isDirectoryEntry
         val contactCard = mapGroups(cards.contactCard, isEditable)
         val aboutCard = mapGroups(cards.aboutCard, isEditable)
 
         return ContactDetailsContent.Loaded(
-            header = mapHeader(details),
+            header = mapHeader(details, displayOrder),
             contactCard = contactCard,
             aboutCard = aboutCard,
             aboutCardTitle = aboutCardTitle(cards.aboutCardGivenName),
@@ -63,8 +68,15 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         )
     }
 
-    private fun mapHeader(details: ContactDetails): ContactHeaderUiModel {
-        val displayName = details.displayName
+    private fun mapHeader(
+        details: ContactDetails,
+        displayOrder: DisplayOrder,
+    ): ContactHeaderUiModel {
+        val orderedName = when (displayOrder) {
+            DisplayOrder.GIVEN_NAME_FIRST -> details.displayName
+            DisplayOrder.FAMILY_NAME_FIRST -> details.alternativeDisplayName
+        }
+        val displayName = orderedName
             ?.takeIf { name -> name.isNotBlank() }
             ?: context.getString(R.string.missing_name)
 
@@ -74,6 +86,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             photo = avatarImage(details.photo),
             avatarSeed = details.lookupKey,
             isBusiness = details.displayNameSource == ContactDisplayNameSource.ORGANIZATION,
+            isDisplayNameLtr = details.displayNameSource == ContactDisplayNameSource.PHONE,
         )
     }
 
@@ -148,14 +161,23 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             isDefaultChangeable = isDefaultChangeable,
             icon = entryIcon(mimeType),
             header = text(entry.header),
+            isHeaderLtr = isDialable(mimeType),
             subHeader = entry.subHeader,
             text = entry.text,
-            action = entry.actions.primary,
-            alternateAction = actionUiModel(entry.actions.alternate),
+            action = registeredAction(entry.actions.primary),
+            alternateAction = actionUiModel(registeredAction(entry.actions.alternate)),
             thirdAction = actionUiModel(entry.actions.third),
             copyText = entry.copyText,
             copyLabel = text(entry.copyLabel),
         )
+    }
+
+    private fun isDialable(mimeType: String?): Boolean {
+        return mimeType == Phone.CONTENT_ITEM_TYPE || mimeType == SipAddress.CONTENT_ITEM_TYPE
+    }
+
+    private fun registeredAction(action: ContactEntryAction?): ContactEntryAction? {
+        return action?.takeIf { candidate -> isEntryActionAvailable(candidate) }
     }
 
     private fun entryIcon(mimeType: String?): ContactEntryIcon? {
@@ -235,6 +257,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             isDefaultChangeable = false,
             icon = icon,
             header = context.getString(headerResource),
+            isHeaderLtr = false,
             subHeader = null,
             text = null,
             action = null,

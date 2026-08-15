@@ -10,4 +10,5 @@ internal data class ContactHeaderUiModel(
     val photo: ContactAvatarImage?,
     val avatarSeed: String?,
     val isBusiness: Boolean,
+    val isDisplayNameLtr: Boolean,
 )
