@@ -3,13 +3,16 @@ package com.android.contacts.ui.contactdetails.screen.contactdetailsviewmodel
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
+import com.android.contacts.ui.contactdetails.screen.ContactDetailsViewModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
 import io.mockk.every
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -25,6 +28,30 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
 
         viewModel.uiState.test {
             assertEquals(ContactDetailsContent.Loading, awaitItem().content)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun uiState_whenTheArgumentsSurviveProcessDeath_loadsWithoutRebinding() = runTest {
+        createViewModel().bindContact()
+        val restored = ContactDetailsViewModel(
+            savedStateHandle = savedStateHandle,
+            contactDetailsRepository = contactDetailsRepository,
+            contactActionsRepository = contactActionsRepository,
+            buildContactDetailsCards = buildContactDetailsCards,
+            getContactDetailsMenu = getContactDetailsMenu,
+            contactDetailsUiStateMapper = contactDetailsUiStateMapper,
+            contactShortcutRepository = contactShortcutRepository,
+            displaySettingsRepository = displaySettingsRepository,
+        )
+
+        restored.uiState.test {
+            awaitItem()
+            emitLoaded()
+
+            assertEquals(LOADED_CONTENT, awaitItem().content)
+            verify { contactDetailsRepository.observeContactDetails(LOOKUP_URI, emptySet()) }
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -96,6 +123,46 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
     }
 
     @Test
+    fun uiState_whenTheContactLoads_mapsItWithTheDisplayOrderPreference() = runTest {
+        every { displaySettingsRepository.observeDisplaySettings() } returns
+            flowOf(DISPLAY_SETTINGS.copy(displayOrder = DisplayOrder.FAMILY_NAME_FIRST))
+        val viewModel = createViewModel().bindContact()
+        val details = contactDetails()
+
+        viewModel.uiState.test {
+            awaitItem()
+            emitLoaded(details)
+            awaitItem()
+
+            verify {
+                contactDetailsUiStateMapper.map(
+                    details = details,
+                    cards = EMPTY_CARDS,
+                    menu = any(),
+                    displayOrder = DisplayOrder.FAMILY_NAME_FIRST,
+                )
+            }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun uiState_whenTheContactLoadsAgain_readsTheDisplayOrderOnce() = runTest {
+        val viewModel = createViewModel().bindContact()
+
+        viewModel.uiState.test {
+            awaitItem()
+            emitLoaded()
+            awaitItem()
+            emitLoaded(contactDetails(displayName = "Reloaded"))
+            awaitItem()
+
+            verify(exactly = 1) { displaySettingsRepository.observeDisplaySettings() }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun linkProgress_withoutAPendingOperation_isEmpty() = runTest {
         val viewModel = createViewModel()
 
@@ -159,6 +226,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
             cancelAndIgnoreRemainingEvents()
         }
     }
+
     @Test
     fun uiState_whenTheContactLoads_reportsTheShortcutUsageOnce() = runTest {
         val viewModel = createViewModel().bindContact()
@@ -174,5 +242,4 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
 
         verify(exactly = 1) { contactShortcutRepository.reportShortcutUsed("lookup-key") }
     }
-
 }

@@ -5,11 +5,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +24,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -30,6 +39,7 @@ import com.android.contacts.R
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.ui.common.components.cellShape
+import com.android.contacts.ui.contactdetails.common.ContactDetailsActionRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
 import com.android.contacts.ui.contactdetails.common.ContactDetailsProgressDialog
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens
@@ -39,6 +49,7 @@ import com.android.contacts.ui.contactdetails.common.ContactEntryRow
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ABOUT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RINGTONE_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
@@ -61,16 +72,23 @@ internal fun ContactDetailsContent(
     val content = uiState.content
     val loaded = content as? Content.Loaded
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val listState = rememberLazyListState()
+    val isHeaderScrolledAway by remember {
+        derivedStateOf { listState.firstVisibleItemIndex > 0 }
+    }
 
     Scaffold(
         topBar = {
             ContactDetailsTopAppBar(
+                title = loaded?.header?.displayName.orEmpty(),
+                isTitleVisible = loaded != null && isHeaderScrolledAway,
                 menu = loaded?.menu,
                 isStarred = loaded?.isStarred == true,
                 onAction = onAction,
                 scrollBehavior = scrollBehavior,
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->
         when (content) {
@@ -91,6 +109,7 @@ internal fun ContactDetailsContent(
                     content = content,
                     onAction = onAction,
                     contentPadding = contentPadding,
+                    listState = listState,
                 )
             }
         }
@@ -135,9 +154,11 @@ private fun ContactDetailsCards(
     content: Content.Loaded,
     onAction: (Action) -> Unit,
     contentPadding: PaddingValues,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
+        state = listState,
         contentPadding = screenContentPadding(contentPadding),
         verticalArrangement = Arrangement.spacedBy(ContactDetailsTokens.cardGroupSpacing),
         modifier = modifier.fillMaxSize(),
@@ -172,6 +193,17 @@ private fun ContactDetailsCards(
                 ContactDetailsEmptyPrompt(
                     prompt = emptyPrompt,
                     onEntryClick = { onAction(Action.AddDetailsClick) },
+                )
+            }
+        }
+
+        if (content.menu.isRingtoneVisible) {
+            item(key = "ringtone") {
+                ContactDetailsActionRow(
+                    icon = Icons.Rounded.Notifications,
+                    title = stringResource(R.string.menu_set_ring_tone),
+                    onClick = { onAction(Action.RingtoneClick) },
+                    modifier = Modifier.testTag(CONTACT_DETAILS_RINGTONE_TEST_TAG),
                 )
             }
         }
@@ -313,6 +345,7 @@ private fun previewContent(): Content.Loaded {
             photo = null,
             avatarSeed = "anna-smith",
             isBusiness = false,
+            isDisplayNameLtr = false,
         ),
         contactCard = persistentListOf(
             ContactEntryGroupUiModel(
@@ -359,6 +392,7 @@ private fun previewEntry(
         id = id,
         icon = icon,
         header = header,
+        isHeaderLtr = false,
         subHeader = null,
         text = text,
         isSuperPrimary = false,

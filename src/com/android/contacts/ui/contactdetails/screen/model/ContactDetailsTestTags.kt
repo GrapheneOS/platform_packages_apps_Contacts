@@ -1,9 +1,11 @@
 package com.android.contacts.ui.contactdetails.screen.model
 
 internal const val CONTACT_DETAILS_HEADER_TEST_TAG = "contact_details_header"
+internal const val CONTACT_DETAILS_TITLE_TEST_TAG = "contact_details_title"
 internal const val CONTACT_DETAILS_CONTACT_CARD_TEST_TAG = "contact_details_contact_card"
 internal const val CONTACT_DETAILS_ABOUT_CARD_TEST_TAG = "contact_details_about_card"
 internal const val CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG = "contact_details_empty_prompt"
+internal const val CONTACT_DETAILS_RINGTONE_TEST_TAG = "contact_details_ringtone"
 internal const val CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX = "contact_details_entry_"
 internal const val CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX = "contact_details_alternate_"
 internal const val CONTACT_DETAILS_THIRD_ACTION_TEST_TAG_PREFIX = "contact_details_third_"
@@ -11,4 +13,3 @@ internal const val CONTACT_DETAILS_STAR_TEST_TAG = "contact_details_star"
 internal const val CONTACT_DETAILS_EDIT_TEST_TAG = "contact_details_edit"
 internal const val CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG = "contact_details_overflow_menu"
 internal const val CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG = "contact_details_progress_dialog"
-internal const val CONTACT_DETAILS_SNACKBAR_TEST_TAG = "contact_details_snackbar"

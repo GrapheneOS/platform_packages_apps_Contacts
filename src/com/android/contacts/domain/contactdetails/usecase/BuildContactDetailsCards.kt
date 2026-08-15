@@ -18,9 +18,9 @@ import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
+import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryActions
-import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
@@ -160,10 +160,9 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         dataItem: ContactDataItem,
         details: ContactDetails,
     ): ContactEntry? {
-        val content = toContent(dataItem, details) ?: return null
-        if (content.isEmpty()) {
-            return null
-        }
+        val content = toContent(dataItem, details)?.takeIf { entry ->
+            !entry.isEmpty()
+        } ?: return null
 
         return ContactEntry(
             id = dataItem.id,
@@ -192,6 +191,15 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             is ContactDataItem.Postal -> postalContent(dataItem)
             is ContactDataItem.SipAddress -> sipAddressContent(dataItem)
             is ContactDataItem.Im -> imContent(dataItem)
+            else -> aboutContent(dataItem, details)
+        }
+    }
+
+    private fun aboutContent(
+        dataItem: ContactDataItem,
+        details: ContactDetails,
+    ): EntryContent? {
+        return when (dataItem) {
             is ContactDataItem.Organization -> organizationContent(dataItem)
             is ContactDataItem.Nickname -> nicknameContent(dataItem, details)
             is ContactDataItem.Note -> noteContent(dataItem)
@@ -201,6 +209,13 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             is ContactDataItem.Custom -> customContent(dataItem)
             is ContactDataItem.Generic -> genericContent(dataItem)
             is ContactDataItem.StructuredName -> null
+
+            is ContactDataItem.Phone,
+            is ContactDataItem.Email,
+            is ContactDataItem.Postal,
+            is ContactDataItem.SipAddress,
+            is ContactDataItem.Im,
+            -> null
         }
     }
 

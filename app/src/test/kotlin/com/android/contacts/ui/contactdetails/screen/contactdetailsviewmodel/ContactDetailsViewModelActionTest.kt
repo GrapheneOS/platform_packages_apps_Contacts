@@ -181,7 +181,9 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         advanceUntilIdle()
 
         verify {
-            contactDetailsRepository.addLoadedContactToDefaultGroup(ContactDetailsActivity::class.java)
+            contactDetailsRepository.addLoadedContactToDefaultGroup(
+                ContactDetailsActivity::class.java
+            )
         }
     }
 
