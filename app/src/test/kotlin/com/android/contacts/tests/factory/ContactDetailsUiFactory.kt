@@ -7,11 +7,14 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiMo
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 internal fun contactHeaderUiModel(
     displayName: String = "Alex Doe",
-    phoneticName: String? = null,
+    subtitles: ImmutableList<String> = persistentListOf(),
     photo: ContactAvatarImage? = null,
     avatarSeed: String? = "lookup-key",
     isBusiness: Boolean = false,
@@ -19,7 +22,7 @@ internal fun contactHeaderUiModel(
 ): ContactHeaderUiModel {
     return ContactHeaderUiModel(
         displayName = displayName,
-        phoneticName = phoneticName,
+        subtitles = subtitles,
         photo = photo,
         avatarSeed = avatarSeed,
         isBusiness = isBusiness,
@@ -75,4 +78,16 @@ internal fun contactEntryGroupUiModel(
     entries: List<ContactEntryUiModel>,
 ): ContactEntryGroupUiModel {
     return ContactEntryGroupUiModel(entries = entries.toImmutableList())
+}
+
+internal fun contactQuickActionUiModel(
+    icon: ContactEntryIcon = ContactEntryIcon.CALL,
+    label: String = "Call",
+    action: ContactEntryAction? = ContactEntryAction.Call(number = "555 0001"),
+): ContactQuickActionUiModel {
+    return ContactQuickActionUiModel(
+        icon = icon,
+        label = label,
+        action = action,
+    )
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.window.DialogProperties
 import com.android.contacts.R
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG
 import com.android.contacts.ui.core.ContactsPreviewTheme
 
@@ -48,10 +49,8 @@ internal fun ContactDetailsProgressDialog(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(
-                    ContactDetailsTokens.progressDialogSpacing,
-                ),
-                modifier = Modifier.padding(all = ContactDetailsTokens.progressDialogPadding),
+                horizontalArrangement = Arrangement.spacedBy(Tokens.progressDialogSpacing),
+                modifier = Modifier.padding(all = Tokens.progressDialogPadding),
             ) {
                 CircularProgressIndicator()
 

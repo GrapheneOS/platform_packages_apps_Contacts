@@ -21,6 +21,7 @@ import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
+import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
@@ -72,6 +73,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val contactActionsRepository: ContactActionsRepository,
     private val buildContactDetailsCards: BuildContactDetailsCards,
     private val getContactDetailsMenu: GetContactDetailsMenu,
+    private val getContactQuickActions: GetContactQuickActions,
     private val contactShortcutRepository: ContactShortcutRepository,
     private val displaySettingsRepository: DisplaySettingsRepository,
     private val contactDetailsUiStateMapper: ContactDetailsUiStateMapper,
@@ -214,6 +216,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         return contactDetailsUiStateMapper.map(
             details = details,
             cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
+            quickActions = getContactQuickActions(details),
             menu = getContactDetailsMenu(details.capabilities),
             displayOrder = displayOrder,
         )

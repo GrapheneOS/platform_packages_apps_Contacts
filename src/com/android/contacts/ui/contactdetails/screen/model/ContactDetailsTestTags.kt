@@ -2,6 +2,8 @@ package com.android.contacts.ui.contactdetails.screen.model
 
 internal const val CONTACT_DETAILS_HEADER_TEST_TAG = "contact_details_header"
 internal const val CONTACT_DETAILS_TITLE_TEST_TAG = "contact_details_title"
+internal const val CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG = "contact_details_quick_actions"
+internal const val CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX = "contact_details_quick_action_"
 internal const val CONTACT_DETAILS_CONTACT_CARD_TEST_TAG = "contact_details_contact_card"
 internal const val CONTACT_DETAILS_ABOUT_CARD_TEST_TAG = "contact_details_about_card"
 internal const val CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG = "contact_details_empty_prompt"
