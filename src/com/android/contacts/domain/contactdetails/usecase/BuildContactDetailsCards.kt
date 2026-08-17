@@ -17,6 +17,7 @@ import android.provider.ContactsContract.CommonDataKinds.Website
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
+import com.android.contacts.domain.contactdetails.model.CONTACT_DATA_ITEM_PRIORITY
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
@@ -49,15 +50,38 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         details: ContactDetails,
         prioritizedMimeType: String?,
     ): ContactDetailsCards {
+        val headerNickname = headerNickname(details)
+        val headerOrganization = headerOrganization(details)
+        val headerDataIds = setOfNotNull(headerNickname?.id, headerOrganization?.id)
+
         val groups = details.dataItems
+            .filterNot { dataItem -> dataItem.id in headerDataIds }
             .groupBy { dataItem -> dataItem.mimeType }
-            .mapValues { group -> group.value.sortedWith(WITHIN_MIME_TYPE) }
+            .mapValues { group -> group.value.sortedWith(CONTACT_DATA_ITEM_PRIORITY) }
 
         return ContactDetailsCards(
             contactCard = buildContactCard(groups, details, prioritizedMimeType),
             aboutCard = withPhoneticName(buildAboutCard(groups, details), details.phoneticName),
             aboutCardGivenName = aboutCardGivenName(groups),
+            headerNickname = headerNickname?.name,
+            headerOrganization = headerOrganization?.formattedCompany,
         )
+    }
+
+    private fun headerNickname(details: ContactDetails): ContactDataItem.Nickname? {
+        return details.dataItems
+            .filterIsInstance<ContactDataItem.Nickname>()
+            .sortedWith(CONTACT_DATA_ITEM_PRIORITY)
+            .firstOrNull { dataItem ->
+                !dataItem.name.isNullOrBlank() && !duplicatesDisplayName(dataItem, details)
+            }
+    }
+
+    private fun headerOrganization(details: ContactDetails): ContactDataItem.Organization? {
+        return details.dataItems
+            .filterIsInstance<ContactDataItem.Organization>()
+            .sortedWith(CONTACT_DATA_ITEM_PRIORITY)
+            .firstOrNull { dataItem -> !dataItem.formattedCompany.isNullOrBlank() }
     }
 
     private fun buildContactCard(
@@ -489,12 +513,6 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         const val NOT_FOUND = -1
         const val NO_DATA_ID = -1L
         const val PRIORITIZED_RANK = -1
-
-        val WITHIN_MIME_TYPE = compareByDescending<ContactDataItem> { dataItem ->
-            dataItem.isSuperPrimary
-        }.thenByDescending { dataItem ->
-            dataItem.isPrimary
-        }
 
         val LEADING_MIME_TYPES = listOf(
             Phone.CONTENT_ITEM_TYPE,

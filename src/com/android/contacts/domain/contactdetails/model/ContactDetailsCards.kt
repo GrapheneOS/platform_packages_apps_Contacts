@@ -4,4 +4,6 @@ internal data class ContactDetailsCards(
     val contactCard: List<ContactEntryGroup>,
     val aboutCard: List<ContactEntryGroup>,
     val aboutCardGivenName: String?,
+    val headerNickname: String?,
+    val headerOrganization: String?,
 )

@@ -132,13 +132,15 @@ internal fun organization(
     id: Long = 1L,
     rawContactId: Long = 1L,
     formattedCompany: String? = "Acme",
+    isPrimary: Boolean = false,
+    isSuperPrimary: Boolean = false,
 ): ContactDataItem.Organization {
     return ContactDataItem.Organization(
         id = id,
         rawContactId = rawContactId,
         mimeType = Organization.CONTENT_ITEM_TYPE,
-        isPrimary = false,
-        isSuperPrimary = false,
+        isPrimary = isPrimary,
+        isSuperPrimary = isSuperPrimary,
         displayString = formattedCompany,
         formattedCompany = formattedCompany,
     )
@@ -148,13 +150,15 @@ internal fun nickname(
     id: Long = 1L,
     rawContactId: Long = 1L,
     name: String? = "Al",
+    isPrimary: Boolean = false,
+    isSuperPrimary: Boolean = false,
 ): ContactDataItem.Nickname {
     return ContactDataItem.Nickname(
         id = id,
         rawContactId = rawContactId,
         mimeType = Nickname.CONTENT_ITEM_TYPE,
-        isPrimary = false,
-        isSuperPrimary = false,
+        isPrimary = isPrimary,
+        isSuperPrimary = isSuperPrimary,
         displayString = name,
         name = name,
     )

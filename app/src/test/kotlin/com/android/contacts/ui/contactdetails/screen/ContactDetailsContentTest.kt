@@ -2,25 +2,39 @@ package com.android.contacts.ui.contactdetails.screen
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
+import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.compose.ui.unit.Dp
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.tests.factory.contactDetailsMenu
 import com.android.contacts.tests.factory.contactEntryGroupUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
 import com.android.contacts.tests.factory.contactHeaderUiModel
+import com.android.contacts.tests.factory.contactQuickActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ABOUT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_HEADER_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RINGTONE_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
@@ -28,15 +42,20 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
+@Config(qualifiers = "w411dp-h891dp")
 internal class ContactDetailsContentTest {
 
     @Test
@@ -184,7 +203,59 @@ internal class ContactDetailsContentTest {
 
         onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).performClick()
 
-        onNodeWithText("Set ringtone").assertDoesNotExist()
+        onAllNodesWithText("Set ringtone").assertCountEquals(1)
+        onNodeWithTag(CONTACT_DETAILS_RINGTONE_TEST_TAG).assertExists()
+    }
+
+    @Test
+    fun whenLoaded_showsTheQuickActions() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent()))
+
+        onNodeWithTag(CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG).assertIsDisplayed()
+        onNodeWithTag(CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX + "CALL").assertIsEnabled()
+        onNodeWithTag(CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX + "EMAIL").assertIsNotEnabled()
+    }
+
+    @Test
+    fun whenTheHeaderIsScrolledAway_keepsTheQuickActionsPinned() = runComposeUiTest {
+        val entries = (1L..20L).map { id -> contactEntryUiModel(id = id, header = "Row $id") }
+        val content = loadedContent(
+            contactCard = persistentListOf(contactEntryGroupUiModel(entries = entries)),
+        )
+
+        setContentWith(state = State(content = content))
+        val topBeforeScroll = quickActionsTop()
+        onNode(hasScrollAction()).performTouchInput { swipeUp() }
+
+        onNodeWithTag(CONTACT_DETAILS_HEADER_TEST_TAG).assertIsNotDisplayed()
+        onNodeWithTag(CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG).assertIsDisplayed()
+        assertTrue(quickActionsTop() < topBeforeScroll)
+    }
+
+    @Test
+    fun whenAQuickActionIsClicked_reportsIt() = runComposeUiTest {
+        val actions = mutableListOf<Action>()
+        setContentWith(
+            state = State(content = loadedContent()),
+            onAction = { action -> actions += action },
+        )
+
+        onNodeWithTag(CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX + "CALL").performClick()
+
+        assertEquals(listOf(Action.EntryClick(ContactEntryAction.Call("555 0001"))), actions)
+    }
+
+    @Test
+    fun whenADisabledQuickActionIsClicked_reportsNothing() = runComposeUiTest {
+        val actions = mutableListOf<Action>()
+        setContentWith(
+            state = State(content = loadedContent()),
+            onAction = { action -> actions += action },
+        )
+
+        onNodeWithTag(CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX + "EMAIL").performClick()
+
+        assertEquals(emptyList<Action>(), actions)
     }
 
     @Test
@@ -221,9 +292,11 @@ internal class ContactDetailsContentTest {
         emptyPrompt: ContactDetailsEmptyPromptUiModel? = null,
         menu: ContactDetailsMenu = contactDetailsMenu(),
         isStarred: Boolean = false,
+        quickActions: ImmutableList<ContactQuickActionUiModel> = QUICK_ACTIONS,
     ): Content.Loaded {
         return Content.Loaded(
             header = contactHeaderUiModel(displayName = "Anna Smith"),
+            quickActions = quickActions,
             contactCard = contactCard,
             aboutCard = aboutCard,
             aboutCardTitle = "About Anna",
@@ -231,6 +304,12 @@ internal class ContactDetailsContentTest {
             menu = menu,
             isStarred = isStarred,
         )
+    }
+
+    private fun ComposeUiTest.quickActionsTop(): Dp {
+        return onNodeWithTag(CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG)
+            .getUnclippedBoundsInRoot()
+            .top
     }
 
     private fun ComposeUiTest.setContentWith(
@@ -243,5 +322,16 @@ internal class ContactDetailsContentTest {
                 onAction = onAction,
             )
         }
+    }
+
+    private companion object {
+        val QUICK_ACTIONS = persistentListOf(
+            contactQuickActionUiModel(icon = ContactEntryIcon.CALL, label = "Call"),
+            contactQuickActionUiModel(
+                icon = ContactEntryIcon.EMAIL,
+                label = "Email",
+                action = null,
+            ),
+        )
     }
 }

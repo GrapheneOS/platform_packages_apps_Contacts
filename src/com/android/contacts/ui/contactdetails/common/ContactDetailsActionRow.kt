@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 
 @Composable
 internal fun ContactDetailsActionRow(
@@ -37,18 +38,18 @@ internal fun ContactDetailsActionRow(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(
-                horizontal = ContactDetailsTokens.rowHorizontalPadding,
-                vertical = ContactDetailsTokens.actionRowVerticalPadding,
+                horizontal = Tokens.rowHorizontalPadding,
+                vertical = Tokens.actionRowVerticalPadding,
             ),
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(ContactDetailsTokens.rowIconSize),
+                modifier = Modifier.size(Tokens.rowIconSize),
             )
 
-            Spacer(modifier = Modifier.width(ContactDetailsTokens.rowIconSpacing))
+            Spacer(modifier = Modifier.width(Tokens.rowIconSpacing))
 
             Text(
                 text = title,
