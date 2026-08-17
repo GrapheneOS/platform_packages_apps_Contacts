@@ -41,6 +41,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
             contactActionsRepository = contactActionsRepository,
             buildContactDetailsCards = buildContactDetailsCards,
             getContactDetailsMenu = getContactDetailsMenu,
+            getContactQuickActions = getContactQuickActions,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
             contactShortcutRepository = contactShortcutRepository,
             displaySettingsRepository = displaySettingsRepository,
@@ -138,6 +139,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
                 contactDetailsUiStateMapper.map(
                     details = details,
                     cards = EMPTY_CARDS,
+                    quickActions = any(),
                     menu = any(),
                     displayOrder = DisplayOrder.FAMILY_NAME_FIRST,
                 )
@@ -155,7 +157,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
             emitLoaded()
             awaitItem()
             emitLoaded(contactDetails(displayName = "Reloaded"))
-            awaitItem()
+            advanceUntilIdle()
 
             verify(exactly = 1) { displaySettingsRepository.observeDisplaySettings() }
             cancelAndIgnoreRemainingEvents()

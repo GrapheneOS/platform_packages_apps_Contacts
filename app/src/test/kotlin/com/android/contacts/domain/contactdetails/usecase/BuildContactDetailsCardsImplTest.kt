@@ -140,8 +140,7 @@ class BuildContactDetailsCardsImplTest {
     fun invoke_ordersTheAboutCardByItsOwnMimeTypeOrder() {
         val details = detailsOf(
             note(note = "Met at the airport"),
-            organization(formattedCompany = "Acme"),
-            nickname(name = "Al"),
+            event(formattedDate = "May 20, 1980"),
             website(url = "example.org"),
         )
 
@@ -149,9 +148,8 @@ class BuildContactDetailsCardsImplTest {
 
         assertEquals(
             listOf(
-                ContactEntryText.Label(ContactEntryLabel.NICKNAME),
                 ContactEntryText.Label(ContactEntryLabel.WEBSITE),
-                ContactEntryText.Label(ContactEntryLabel.ORGANIZATION),
+                ContactEntryText.Label(ContactEntryLabel.EVENT),
                 ContactEntryText.Label(ContactEntryLabel.NOTE),
             ),
             cards.aboutCard.map { group -> group.entries.first().header },
@@ -160,9 +158,82 @@ class BuildContactDetailsCardsImplTest {
     }
 
     @Test
-    fun invoke_withAPhoneticName_putsItAfterTheNickname() {
-        val details = detailsOf(nickname(name = "Al"), website(url = "example.org"))
-            .copy(phoneticName = "Alek")
+    fun invoke_reportsTheNicknameAndTheOrganizationForTheHeader() {
+        val details = detailsOf(
+            nickname(name = "Al"),
+            organization(formattedCompany = "Acme, Engineer"),
+        )
+
+        val cards = buildContactDetailsCards(details, null)
+
+        assertEquals("Al", cards.headerNickname)
+        assertEquals("Acme, Engineer", cards.headerOrganization)
+    }
+
+    @Test
+    fun invoke_forTheHeaderNicknameAndOrganization_buildsNoCardEntries() {
+        val details = detailsOf(
+            nickname(name = "Al"),
+            organization(formattedCompany = "Acme"),
+        )
+
+        assertTrue(buildContactDetailsCards(details, null).aboutCard.isEmpty())
+    }
+
+    @Test
+    fun invoke_withSeveralNicknames_promotesTheSuperPrimaryOneAndKeepsTheRest() {
+        val details = detailsOf(
+            nickname(id = 1L, name = "Al"),
+            nickname(id = 2L, name = "Ally", isSuperPrimary = true),
+        )
+
+        val cards = buildContactDetailsCards(details, null)
+
+        assertEquals("Ally", cards.headerNickname)
+        assertEquals(
+            listOf("Al"),
+            cards.aboutCard.single().entries.map(ContactEntry::subHeader),
+        )
+    }
+
+    @Test
+    fun invoke_withSeveralOrganizations_promotesThePrimaryOneAndKeepsTheRest() {
+        val details = detailsOf(
+            organization(id = 1L, formattedCompany = "Acme"),
+            organization(id = 2L, formattedCompany = "Globex", isPrimary = true),
+        )
+
+        val cards = buildContactDetailsCards(details, null)
+
+        assertEquals("Globex", cards.headerOrganization)
+        assertEquals(
+            listOf("Acme"),
+            cards.aboutCard.single().entries.map(ContactEntry::text),
+        )
+    }
+
+    @Test
+    fun invoke_withANicknameThatIsTheDisplayName_leavesTheHeaderNicknameEmpty() {
+        val details = detailsOf(nickname(name = "Al", rawContactId = 7L))
+            .copy(nameRawContactId = 7L, displayNameSource = ContactDisplayNameSource.NICKNAME)
+
+        assertNull(buildContactDetailsCards(details, null).headerNickname)
+    }
+
+    @Test
+    fun invoke_withABlankNickname_leavesTheHeaderNicknameEmpty() {
+        val details = detailsOf(nickname(name = " "))
+
+        assertNull(buildContactDetailsCards(details, null).headerNickname)
+    }
+
+    @Test
+    fun invoke_withAPhoneticName_putsItAfterANicknameThatStayedInTheCard() {
+        val details = detailsOf(
+            nickname(id = 1L, name = "Al"),
+            nickname(id = 2L, name = "Ally", isSuperPrimary = true),
+            website(url = "example.org"),
+        ).copy(phoneticName = "Alek")
 
         val cards = buildContactDetailsCards(details, null)
 
@@ -246,19 +317,11 @@ class BuildContactDetailsCardsImplTest {
     }
 
     @Test
-    fun invoke_withANicknameThatIsTheDisplayName_dropsTheEntry() {
-        val details = detailsOf(nickname(name = "Al", rawContactId = 7L))
-            .copy(nameRawContactId = 7L, displayNameSource = ContactDisplayNameSource.NICKNAME)
-
-        assertTrue(buildContactDetailsCards(details, null).aboutCard.isEmpty())
-    }
-
-    @Test
-    fun invoke_withANicknameFromAnotherRawContact_keepsTheEntry() {
+    fun invoke_withANicknameFromAnotherRawContact_promotesItToTheHeader() {
         val details = detailsOf(nickname(name = "Al", rawContactId = 11L))
             .copy(nameRawContactId = 7L, displayNameSource = ContactDisplayNameSource.NICKNAME)
 
-        assertEquals(1, buildContactDetailsCards(details, null).aboutCard.size)
+        assertEquals("Al", buildContactDetailsCards(details, null).headerNickname)
     }
 
     @Test
@@ -341,14 +404,17 @@ class BuildContactDetailsCardsImplTest {
     }
 
     @Test
-    fun invoke_forAnOrganization_copiesTheFormattedCompany() {
-        val details = detailsOf(organization(formattedCompany = "Acme, Engineer"))
+    fun invoke_forASecondOrganization_copiesTheFormattedCompany() {
+        val details = detailsOf(
+            organization(id = 1L, formattedCompany = "Acme", isSuperPrimary = true),
+            organization(id = 2L, formattedCompany = "Globex, Engineer"),
+        )
 
         val entry = buildContactDetailsCards(details, null).aboutCard.first().entries.first()
 
         assertEquals(ContactEntryText.Label(ContactEntryLabel.ORGANIZATION), entry.header)
-        assertEquals("Acme, Engineer", entry.text)
-        assertEquals("Acme, Engineer", entry.copyText)
+        assertEquals("Globex, Engineer", entry.text)
+        assertEquals("Globex, Engineer", entry.copyText)
     }
 
     @Test
@@ -417,6 +483,8 @@ class BuildContactDetailsCardsImplTest {
         assertTrue(cards.contactCard.isEmpty())
         assertTrue(cards.aboutCard.isEmpty())
         assertNull(cards.aboutCardGivenName)
+        assertNull(cards.headerNickname)
+        assertNull(cards.headerOrganization)
     }
 
     @Test

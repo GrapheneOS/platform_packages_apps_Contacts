@@ -16,6 +16,7 @@ import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
+import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.contactDetailsMenu
@@ -50,6 +51,7 @@ internal abstract class BaseContactDetailsViewModelTest {
     protected val contactShortcutRepository = mockk<ContactShortcutRepository>(relaxed = true)
     protected val buildContactDetailsCards = mockk<BuildContactDetailsCards>()
     protected val getContactDetailsMenu = mockk<GetContactDetailsMenu>()
+    protected val getContactQuickActions = mockk<GetContactQuickActions>()
     protected val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
 
@@ -66,9 +68,10 @@ internal abstract class BaseContactDetailsViewModelTest {
         every { contactActionsRepository.getPendingLinkOperation() } returns null
         every { buildContactDetailsCards(any(), any()) } returns EMPTY_CARDS
         every { getContactDetailsMenu(any()) } returns contactDetailsMenu()
+        every { getContactQuickActions(any()) } returns emptyList()
         every { displaySettingsRepository.observeDisplaySettings() } returns flowOf(DISPLAY_SETTINGS)
         every {
-            contactDetailsUiStateMapper.map(any(), any(), any(), any())
+            contactDetailsUiStateMapper.map(any(), any(), any(), any(), any())
         } answers { loadedState.value }
     }
 
@@ -79,6 +82,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             contactActionsRepository = contactActionsRepository,
             buildContactDetailsCards = buildContactDetailsCards,
             getContactDetailsMenu = getContactDetailsMenu,
+            getContactQuickActions = getContactQuickActions,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
             contactShortcutRepository = contactShortcutRepository,
             displaySettingsRepository = displaySettingsRepository,
@@ -128,10 +132,13 @@ internal abstract class BaseContactDetailsViewModelTest {
             contactCard = emptyList(),
             aboutCard = emptyList(),
             aboutCardGivenName = null,
+            headerNickname = null,
+            headerOrganization = null,
         )
 
         val LOADED_CONTENT = ContactDetailsContent.Loaded(
             header = mockk(relaxed = true),
+            quickActions = persistentListOf(),
             contactCard = persistentListOf(),
             aboutCard = persistentListOf(),
             aboutCardTitle = "About",

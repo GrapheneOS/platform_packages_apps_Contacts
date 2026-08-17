@@ -10,15 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Message
-import androidx.compose.material.icons.automirrored.rounded.SpeakerNotes
-import androidx.compose.material.icons.rounded.Call
-import androidx.compose.material.icons.rounded.DialerSip
-import androidx.compose.material.icons.rounded.Directions
-import androidx.compose.material.icons.rounded.Email
-import androidx.compose.material.icons.rounded.Place
-import androidx.compose.material.icons.rounded.Videocam
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,12 +21,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
-import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.ui.common.text.asLtrText
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX
@@ -44,6 +33,8 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiM
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction as Action
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 
 @Composable
 internal fun ContactEntryRow(
@@ -53,8 +44,8 @@ internal fun ContactEntryRow(
     onCopyClick: () -> Unit,
     onSetDefaultClick: () -> Unit,
     onClearDefaultClick: () -> Unit,
-    onAlternateActionClick: (ContactEntryAction) -> Unit,
-    onThirdActionClick: (ContactEntryAction) -> Unit,
+    onAlternateActionClick: (Action) -> Unit,
+    onThirdActionClick: (Action) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isActionsMenuExpanded by remember { mutableStateOf(false) }
@@ -85,7 +76,7 @@ internal fun ContactEntryRow(
                 isVisible = isIconVisible,
             )
 
-            Spacer(modifier = Modifier.width(ContactDetailsTokens.rowIconSpacing))
+            Spacer(modifier = Modifier.width(Tokens.rowIconSpacing))
         }
 
         EntryText(
@@ -146,21 +137,21 @@ private fun entryRowActions(
 
 private fun entryPadding(hasTrailingAction: Boolean): PaddingValues {
     return PaddingValues(
-        start = ContactDetailsTokens.rowHorizontalPadding,
+        start = Tokens.rowHorizontalPadding,
         end = when {
-            hasTrailingAction -> ContactDetailsTokens.rowActionEndPadding
-            else -> ContactDetailsTokens.rowHorizontalPadding
+            hasTrailingAction -> Tokens.rowActionEndPadding
+            else -> Tokens.rowHorizontalPadding
         },
-        top = ContactDetailsTokens.rowVerticalPadding,
-        bottom = ContactDetailsTokens.rowVerticalPadding,
+        top = Tokens.rowVerticalPadding,
+        bottom = Tokens.rowVerticalPadding,
     )
 }
 
 @Composable
 private fun EntryTrailingActions(
     entry: ContactEntryUiModel,
-    onAlternateActionClick: (ContactEntryAction) -> Unit,
-    onThirdActionClick: (ContactEntryAction) -> Unit,
+    onAlternateActionClick: (Action) -> Unit,
+    onThirdActionClick: (Action) -> Unit,
 ) {
     val thirdAction = entry.thirdAction
     if (thirdAction != null) {
@@ -186,7 +177,7 @@ private fun EntryLeadingIcon(
     icon: ContactEntryIcon,
     isVisible: Boolean,
 ) {
-    Box(modifier = Modifier.size(ContactDetailsTokens.rowIconSize)) {
+    Box(modifier = Modifier.size(Tokens.rowIconSize)) {
         if (isVisible) {
             Icon(
                 imageVector = icon.imageVector(),
@@ -241,7 +232,7 @@ private fun EntrySecondaryText(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = when {
             isFirst -> Modifier
-            else -> Modifier.padding(top = ContactDetailsTokens.rowTextSpacing)
+            else -> Modifier.padding(top = Tokens.rowTextSpacing)
         },
     )
 }
@@ -255,7 +246,7 @@ private fun EntryActionButton(
     IconButton(
         onClick = onClick,
         modifier = Modifier
-            .size(ContactDetailsTokens.rowActionSize)
+            .size(Tokens.rowActionSize)
             .testTag(testTag),
     ) {
         Icon(
@@ -273,19 +264,6 @@ private fun ContactEntryUiModel.headerText(): String? {
     return when {
         isHeaderLtr -> header.asLtrText()
         else -> header
-    }
-}
-
-private fun ContactEntryIcon.imageVector(): ImageVector {
-    return when (this) {
-        ContactEntryIcon.CALL -> Icons.Rounded.Call
-        ContactEntryIcon.MESSAGE -> Icons.AutoMirrored.Rounded.Message
-        ContactEntryIcon.VIDEO_CALL -> Icons.Rounded.Videocam
-        ContactEntryIcon.CALL_WITH_NOTE -> Icons.AutoMirrored.Rounded.SpeakerNotes
-        ContactEntryIcon.EMAIL -> Icons.Rounded.Email
-        ContactEntryIcon.PLACE -> Icons.Rounded.Place
-        ContactEntryIcon.DIRECTIONS -> Icons.Rounded.Directions
-        ContactEntryIcon.SIP_CALL -> Icons.Rounded.DialerSip
     }
 }
 
@@ -322,7 +300,7 @@ private fun previewPhoneEntry(
     label: String = "Mobile",
     isSuperPrimary: Boolean = false,
 ): ContactEntryUiModel {
-    val action = ContactEntryAction.Sms(number = number)
+    val action = Action.Sms(number = number)
 
     return ContactEntryUiModel(
         id = id,
@@ -333,7 +311,7 @@ private fun previewPhoneEntry(
         isHeaderLtr = true,
         subHeader = null,
         text = label,
-        action = ContactEntryAction.Call(number = number),
+        action = Action.Call(number = number),
         alternateAction = ContactEntryActionUiModel(
             action = action,
             icon = ContactEntryIcon.MESSAGE,

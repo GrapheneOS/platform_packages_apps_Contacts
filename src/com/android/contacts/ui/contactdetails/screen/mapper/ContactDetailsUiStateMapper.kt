@@ -18,6 +18,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.domain.contactdetails.model.ContactQuickAction
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
@@ -37,6 +38,7 @@ internal interface ContactDetailsUiStateMapper {
     fun map(
         details: ContactDetails,
         cards: ContactDetailsCards,
+        quickActions: List<ContactQuickAction>,
         menu: ContactDetailsMenu,
         displayOrder: DisplayOrder,
     ): ContactDetailsContent
@@ -45,11 +47,13 @@ internal interface ContactDetailsUiStateMapper {
 internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val isEntryActionAvailable: IsEntryActionAvailable,
+    private val contactQuickActionsMapper: ContactQuickActionsMapper,
 ) : ContactDetailsUiStateMapper {
 
     override fun map(
         details: ContactDetails,
         cards: ContactDetailsCards,
+        quickActions: List<ContactQuickAction>,
         menu: ContactDetailsMenu,
         displayOrder: DisplayOrder,
     ): ContactDetailsContent {
@@ -58,7 +62,8 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         val aboutCard = mapGroups(cards.aboutCard, isEditable)
 
         return ContactDetailsContent.Loaded(
-            header = mapHeader(details, displayOrder),
+            header = mapHeader(details, cards, displayOrder),
+            quickActions = contactQuickActionsMapper.map(quickActions),
             contactCard = contactCard,
             aboutCard = aboutCard,
             aboutCardTitle = aboutCardTitle(cards.aboutCardGivenName),
@@ -70,6 +75,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
 
     private fun mapHeader(
         details: ContactDetails,
+        cards: ContactDetailsCards,
         displayOrder: DisplayOrder,
     ): ContactHeaderUiModel {
         val orderedName = when (displayOrder) {
@@ -82,12 +88,24 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
 
         return ContactHeaderUiModel(
             displayName = displayName,
-            phoneticName = phoneticName(details, displayName),
+            subtitles = subtitles(details, cards, displayName),
             photo = avatarImage(details.photo),
             avatarSeed = details.lookupKey,
             isBusiness = details.displayNameSource == ContactDisplayNameSource.ORGANIZATION,
             isDisplayNameLtr = details.displayNameSource == ContactDisplayNameSource.PHONE,
         )
+    }
+
+    private fun subtitles(
+        details: ContactDetails,
+        cards: ContactDetailsCards,
+        displayName: String,
+    ): ImmutableList<String> {
+        return listOfNotNull(
+            phoneticName(details, displayName),
+            cards.headerNickname,
+            cards.headerOrganization,
+        ).toImmutableList()
     }
 
     private fun avatarImage(photo: ContactPhoto?): ContactAvatarImage? {
