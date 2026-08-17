@@ -23,12 +23,14 @@ import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.tests.factory.contactCapabilities
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.contactDetailsMenu
+import com.android.contacts.tests.factory.contactQuickActionUiModel
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.collections.immutable.persistentListOf
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -46,14 +48,18 @@ class ContactDetailsUiStateMapperImplTest {
 
     private val isEntryActionAvailable = mockk<IsEntryActionAvailable>()
 
+    private val contactQuickActionsMapper = mockk<ContactQuickActionsMapper>()
+
     private val mapper = ContactDetailsUiStateMapperImpl(
         context = context,
         isEntryActionAvailable = isEntryActionAvailable,
+        contactQuickActionsMapper = contactQuickActionsMapper,
     )
 
     @Before
     fun setUp() {
         every { isEntryActionAvailable(any()) } returns true
+        every { contactQuickActionsMapper.map(any()) } returns QUICK_ACTIONS
     }
 
     @Test
@@ -119,14 +125,38 @@ class ContactDetailsUiStateMapperImplTest {
     fun map_withAPhoneticNameThatDiffers_showsIt() {
         val state = mapOf(contactDetails(displayName = "Alex Doe", phoneticName = "Alek Dou"))
 
-        assertEquals("Alek Dou", state.header.phoneticName)
+        assertEquals(listOf("Alek Dou"), state.header.subtitles)
     }
 
     @Test
     fun map_withAPhoneticNameEqualToTheDisplayName_hidesIt() {
         val state = mapOf(contactDetails(displayName = "Alex Doe", phoneticName = "Alex Doe"))
 
-        assertNull(state.header.phoneticName)
+        assertEquals(emptyList<String>(), state.header.subtitles)
+    }
+
+    @Test
+    fun map_ordersTheSubtitlesAfterThePhoneticName() {
+        val details = contactDetails(displayName = "Alex Doe", phoneticName = "Alek Dou")
+        val cards = cardsOf(headerNickname = "Al", headerOrganization = "Acme")
+
+        val header = mapOf(details, cards).header
+
+        assertEquals(listOf("Alek Dou", "Al", "Acme"), header.subtitles)
+    }
+
+    @Test
+    fun map_withoutAnySubtitleSources_leavesTheSubtitlesEmpty() {
+        val header = mapOf(cards = cardsOf()).header
+
+        assertEquals(emptyList<String>(), header.subtitles)
+    }
+
+    @Test
+    fun map_passesTheQuickActionsThrough() {
+        val state = mapOf(contactDetails())
+
+        assertEquals(QUICK_ACTIONS, state.quickActions)
     }
 
     @Test
@@ -470,18 +500,23 @@ class ContactDetailsUiStateMapperImplTest {
         menu: ContactDetailsMenu = contactDetailsMenu(),
         displayOrder: DisplayOrder = DisplayOrder.GIVEN_NAME_FIRST,
     ): ContactDetailsContent.Loaded {
-        return mapper.map(details, cards, menu, displayOrder) as ContactDetailsContent.Loaded
+        return mapper.map(details, cards, emptyList(), menu, displayOrder)
+            as ContactDetailsContent.Loaded
     }
 
     private fun cardsOf(
         contactCard: List<ContactEntryGroup> = emptyList(),
         aboutCard: List<ContactEntryGroup> = emptyList(),
         aboutCardGivenName: String? = null,
+        headerNickname: String? = null,
+        headerOrganization: String? = null,
     ): ContactDetailsCards {
         return ContactDetailsCards(
             contactCard = contactCard,
             aboutCard = aboutCard,
             aboutCardGivenName = aboutCardGivenName,
+            headerNickname = headerNickname,
+            headerOrganization = headerOrganization,
         )
     }
 
@@ -517,5 +552,9 @@ class ContactDetailsUiStateMapperImplTest {
 
     private fun firstAboutEntry(state: ContactDetailsContent.Loaded): ContactEntryUiModel {
         return state.aboutCard.first().entries.first()
+    }
+
+    private companion object {
+        val QUICK_ACTIONS = persistentListOf(contactQuickActionUiModel())
     }
 }

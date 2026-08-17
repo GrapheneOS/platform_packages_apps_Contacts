@@ -20,10 +20,14 @@ import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCar
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCardsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
+import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
+import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActionsImpl
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailableImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapperImpl
+import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapper
+import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -94,6 +98,17 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindContactDetailsUiStateMapper(
         impl: ContactDetailsUiStateMapperImpl,
     ): ContactDetailsUiStateMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindGetContactQuickActions(
+        impl: GetContactQuickActionsImpl,
+    ): GetContactQuickActions
+
+    @Binds
+    abstract fun bindContactQuickActionsMapper(
+        impl: ContactQuickActionsMapperImpl,
+    ): ContactQuickActionsMapper
 
     @Binds
     @Reusable

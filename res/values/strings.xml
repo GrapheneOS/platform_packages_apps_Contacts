@@ -351,6 +351,10 @@
     <string name="quickcontact_add_phone_number">Add phone number</string>
     <!-- When a contact has no data, we prompt the user to add an email for the contact. [CHAR LIMIT=40] -->
     <string name="quickcontact_add_email">Add email</string>
+    <!-- Label under the message button on the contact details screen. [CHAR LIMIT=12] -->
+    <string name="quickcontact_action_message">Message</string>
+    <!-- Label under the video call button on the contact details screen. [CHAR LIMIT=12] -->
+    <string name="quickcontact_action_video">Video</string>
 
     <!-- Shown as a toast when the user attempts an action (add contact, edit
          contact, etc) and no application was found that could perform that
