@@ -29,17 +29,20 @@ internal fun ContactEntryCard(
     onAlternateActionClick: (ContactEntryAction) -> Unit,
     onThirdActionClick: (ContactEntryAction) -> Unit,
     modifier: Modifier = Modifier,
+    isTopRounded: Boolean = true,
 ) {
+    val entries = groups.flatMap { group -> group.entries }
+
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(ContactDetailsTokens.cardSpacing),
     ) {
-        groups.forEachIndexed { index, group ->
-            ContactEntryGroup(
-                group = group,
+        entries.forEachIndexed { index, entry ->
+            ContactEntryCell(
+                entry = entry,
                 shape = cellShape(
-                    isFirst = index == 0,
-                    isLast = index == groups.lastIndex,
+                    isFirst = isTopRounded && index == 0,
+                    isLast = index == entries.lastIndex,
                 ),
                 onEntryClick = onEntryClick,
                 onEntryCopyClick = onEntryCopyClick,
@@ -53,8 +56,8 @@ internal fun ContactEntryCard(
 }
 
 @Composable
-private fun ContactEntryGroup(
-    group: ContactEntryGroupUiModel,
+private fun ContactEntryCell(
+    entry: ContactEntryUiModel,
     shape: Shape,
     onEntryClick: (ContactEntryUiModel) -> Unit,
     onEntryCopyClick: (ContactEntryUiModel) -> Unit,
@@ -63,29 +66,25 @@ private fun ContactEntryGroup(
     onAlternateActionClick: (ContactEntryAction) -> Unit,
     onThirdActionClick: (ContactEntryAction) -> Unit,
 ) {
+    val onClick = when (entry.action) {
+        null -> null
+        else -> ({ onEntryClick(entry) })
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = shape,
     ) {
-        Column {
-            group.entries.forEachIndexed { index, entry ->
-                val onClick = when (entry.action) {
-                    null -> null
-                    else -> ({ onEntryClick(entry) })
-                }
-
-                ContactEntryRow(
-                    entry = entry,
-                    isIconVisible = index == 0,
-                    onClick = onClick,
-                    onCopyClick = { onEntryCopyClick(entry) },
-                    onSetDefaultClick = { onEntrySetDefaultClick(entry) },
-                    onClearDefaultClick = { onEntryClearDefaultClick(entry) },
-                    onAlternateActionClick = onAlternateActionClick,
-                    onThirdActionClick = onThirdActionClick,
-                )
-            }
-        }
+        ContactEntryRow(
+            entry = entry,
+            isIconVisible = true,
+            onClick = onClick,
+            onCopyClick = { onEntryCopyClick(entry) },
+            onSetDefaultClick = { onEntrySetDefaultClick(entry) },
+            onClearDefaultClick = { onEntryClearDefaultClick(entry) },
+            onAlternateActionClick = onAlternateActionClick,
+            onThirdActionClick = onThirdActionClick,
+        )
     }
 }
 

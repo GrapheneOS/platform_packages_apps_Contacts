@@ -130,18 +130,19 @@ internal abstract class BaseContactDetailsViewModelTest {
 
         val EMPTY_CARDS = ContactDetailsCards(
             contactCard = emptyList(),
-            aboutCard = emptyList(),
-            aboutCardGivenName = null,
+            notes = emptyList(),
             headerNickname = null,
-            headerOrganization = null,
+            headerOrganizationParts = emptyList(),
+            groups = emptyList(),
         )
 
         val LOADED_CONTENT = ContactDetailsContent.Loaded(
+            groups = persistentListOf(),
             header = mockk(relaxed = true),
             quickActions = persistentListOf(),
             contactCard = persistentListOf(),
-            aboutCard = persistentListOf(),
-            aboutCardTitle = "About",
+            notes = persistentListOf(),
+            settings = persistentListOf(),
             emptyPrompt = null,
             menu = contactDetailsMenu(),
             isStarred = false,

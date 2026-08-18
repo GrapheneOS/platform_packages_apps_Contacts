@@ -15,6 +15,8 @@ internal data class ContactDetails(
     val photoId: Long,
     val photo: ContactPhoto?,
     val customRingtone: String?,
+    val customRingtoneTitle: String?,
+    val groups: List<String>,
     val dataItems: List<ContactDataItem>,
     val capabilities: ContactCapabilities,
 )

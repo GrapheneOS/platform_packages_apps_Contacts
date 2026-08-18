@@ -351,6 +351,14 @@
     <string name="quickcontact_add_phone_number">Add phone number</string>
     <!-- When a contact has no data, we prompt the user to add an email for the contact. [CHAR LIMIT=40] -->
     <string name="quickcontact_add_email">Add email</string>
+    <!-- Title of the settings section on the contact details screen. [CHAR LIMIT=40] -->
+    <string name="contact_details_settings_title">Contact settings</string>
+    <!-- Phonetic name shown next to the nickname under the contact name. [CHAR LIMIT=NONE] -->
+    <string name="header_phonetic_name_quoted">“<xliff:g id="name" example="Arekkusu">%1$s</xliff:g>”</string>
+    <!-- Marks the phone number or email used by default for this contact. [CHAR LIMIT=20] -->
+    <string name="contact_entry_default">Default</string>
+    <!-- Label of a contact field next to the default marker, example: Mobile · Default. [CHAR LIMIT=NONE] -->
+    <string name="contact_entry_default_type"><xliff:g id="type" example="Mobile">%1$s</xliff:g> · <xliff:g id="default" example="Default">%2$s</xliff:g></string>
     <!-- Label under the message button on the contact details screen. [CHAR LIMIT=12] -->
     <string name="quickcontact_action_message">Message</string>
     <!-- Label under the video call button on the contact details screen. [CHAR LIMIT=12] -->

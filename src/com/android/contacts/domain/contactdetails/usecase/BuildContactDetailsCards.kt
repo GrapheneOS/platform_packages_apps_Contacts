@@ -23,6 +23,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryActions
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
+import com.android.contacts.domain.contactdetails.model.ContactEntryKind
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
 import com.android.contacts.domain.util.CanVideoCall
@@ -52,7 +53,9 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
     ): ContactDetailsCards {
         val headerNickname = headerNickname(details)
         val headerOrganization = headerOrganization(details)
-        val headerDataIds = setOfNotNull(headerNickname?.id, headerOrganization?.id)
+        val groupMemberships = groupMemberships(details)
+        val headerDataIds = setOfNotNull(headerNickname?.id, headerOrganization?.id) +
+            groupMemberships.map { dataItem -> dataItem.id }
 
         val groups = details.dataItems
             .filterNot { dataItem -> dataItem.id in headerDataIds }
@@ -61,10 +64,10 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
 
         return ContactDetailsCards(
             contactCard = buildContactCard(groups, details, prioritizedMimeType),
-            aboutCard = withPhoneticName(buildAboutCard(groups, details), details.phoneticName),
-            aboutCardGivenName = aboutCardGivenName(groups),
+            notes = buildNotes(groups, details),
             headerNickname = headerNickname?.name,
-            headerOrganization = headerOrganization?.formattedCompany,
+            headerOrganizationParts = organizationParts(headerOrganization),
+            groups = details.groups,
         )
     }
 
@@ -75,6 +78,30 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             .firstOrNull { dataItem ->
                 !dataItem.name.isNullOrBlank() && !duplicatesDisplayName(dataItem, details)
             }
+    }
+
+    private fun groupMemberships(details: ContactDetails): List<ContactDataItem> {
+        return details.dataItems.filter { dataItem ->
+            dataItem.mimeType == GroupMembership.CONTENT_ITEM_TYPE
+        }
+    }
+
+    private fun organizationParts(
+        organization: ContactDataItem.Organization?,
+    ): List<String> {
+        if (organization == null) {
+            return emptyList()
+        }
+
+        return listOfNotNull(
+            organization.title,
+            organization.department,
+            organization.company,
+        ).mapNotNull { part -> part.trimmedOrNull() }
+    }
+
+    private fun String.trimmedOrNull(): String? {
+        return trim().takeIf { trimmed -> trimmed.isNotEmpty() }
     }
 
     private fun headerOrganization(details: ContactDetails): ContactDataItem.Organization? {
@@ -90,67 +117,20 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         prioritizedMimeType: String?,
     ): List<ContactEntryGroup> {
         return groups.keys
-            .filterNot { mimeType -> mimeType in ABOUT_CARD_MIME_TYPES }
+            .filterNot { mimeType -> mimeType == Note.CONTENT_ITEM_TYPE }
             .sortedBy { mimeType -> mimeTypeRank(mimeType, prioritizedMimeType) }
             .map { mimeType -> toGroup(mimeType, groups.getValue(mimeType), details) }
             .filterNot { group -> group.entries.isEmpty() }
     }
 
-    private fun buildAboutCard(
+    private fun buildNotes(
         groups: Map<String, List<ContactDataItem>>,
         details: ContactDetails,
     ): List<ContactEntryGroup> {
-        return ABOUT_CARD_MIME_TYPES
-            .filter { mimeType -> groups.containsKey(mimeType) }
-            .map { mimeType -> toGroup(mimeType, groups.getValue(mimeType), details) }
+        val notes = groups[Note.CONTENT_ITEM_TYPE] ?: return emptyList()
+
+        return listOf(toGroup(Note.CONTENT_ITEM_TYPE, notes, details))
             .filterNot { group -> group.entries.isEmpty() }
-    }
-
-    private fun withPhoneticName(
-        aboutCard: List<ContactEntryGroup>,
-        phoneticName: String?,
-    ): List<ContactEntryGroup> {
-        if (phoneticName.isNullOrEmpty()) {
-            return aboutCard
-        }
-
-        val group = ContactEntryGroup(
-            mimeType = null,
-            entries = listOf(phoneticEntry(phoneticName)),
-        )
-
-        return aboutCard.toMutableList().apply {
-            add(phoneticNameIndex(aboutCard), group)
-        }
-    }
-
-    private fun phoneticNameIndex(aboutCard: List<ContactEntryGroup>): Int {
-        return when (aboutCard.firstOrNull()?.mimeType) {
-            Nickname.CONTENT_ITEM_TYPE -> 1
-            else -> 0
-        }
-    }
-
-    private fun phoneticEntry(phoneticName: String): ContactEntry {
-        return ContactEntry(
-            id = NO_DATA_ID,
-            mimeType = null,
-            isSuperPrimary = false,
-            header = ContactEntryText.Label(ContactEntryLabel.PHONETIC_NAME),
-            subHeader = phoneticName,
-            text = null,
-            copyText = phoneticName,
-            copyLabel = ContactEntryText.Label(ContactEntryLabel.PHONETIC_NAME),
-            actions = ContactEntryActions(),
-        )
-    }
-
-    private fun aboutCardGivenName(groups: Map<String, List<ContactDataItem>>): String? {
-        return groups[StructuredName.CONTENT_ITEM_TYPE]
-            .orEmpty()
-            .filterIsInstance<ContactDataItem.StructuredName>()
-            .firstOrNull()
-            ?.givenName
     }
 
     private fun mimeTypeRank(
@@ -191,6 +171,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         return ContactEntry(
             id = dataItem.id,
             mimeType = dataItem.mimeType,
+            kind = dataItem.kind(),
             isSuperPrimary = dataItem.isSuperPrimary,
             header = content.header,
             subHeader = content.subHeader,
@@ -203,6 +184,34 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
                 third = content.thirdAction,
             ),
         )
+    }
+
+    private fun ContactDataItem.kind(): ContactEntryKind {
+        return when (this) {
+            is ContactDataItem.Phone -> ContactEntryKind.PHONE
+            is ContactDataItem.SipAddress -> ContactEntryKind.SIP_ADDRESS
+            is ContactDataItem.Email -> ContactEntryKind.EMAIL
+            is ContactDataItem.Postal -> ContactEntryKind.POSTAL
+            is ContactDataItem.Im -> ContactEntryKind.IM
+            is ContactDataItem.Organization -> ContactEntryKind.ORGANIZATION
+            is ContactDataItem.Nickname -> ContactEntryKind.NICKNAME
+            is ContactDataItem.Note -> ContactEntryKind.NOTE
+            is ContactDataItem.Website -> ContactEntryKind.WEBSITE
+            is ContactDataItem.Relation -> ContactEntryKind.RELATION
+            is ContactDataItem.Custom -> ContactEntryKind.CUSTOM_FIELD
+            is ContactDataItem.StructuredName -> ContactEntryKind.OTHER
+
+            is ContactDataItem.Event -> when {
+                isBirthday -> ContactEntryKind.BIRTHDAY
+                else -> ContactEntryKind.EVENT
+            }
+
+            is ContactDataItem.Generic -> when (mimeType) {
+                GroupMembership.CONTENT_ITEM_TYPE -> ContactEntryKind.GROUP
+                Identity.CONTENT_ITEM_TYPE -> ContactEntryKind.IDENTITY
+                else -> ContactEntryKind.OTHER
+            }
+        }
     }
 
     private fun toContent(
@@ -341,24 +350,22 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
     }
 
     private fun imContent(dataItem: ContactDataItem.Im): EntryContent {
-        val action = chatAction(dataItem)
-
-        if (dataItem.isCustomProtocol) {
-            return EntryContent(
-                header = ContactEntryText.Label(ContactEntryLabel.IM),
-                subHeader = dataItem.protocolLabel,
-                text = dataItem.data,
-                copyText = dataItem.data,
-                primaryAction = action,
-            )
-        }
-
         return EntryContent(
-            header = ContactEntryText.Value(dataItem.protocolLabel.orEmpty()),
-            subHeader = dataItem.data,
+            header = ContactEntryText.Value(dataItem.data.orEmpty()),
+            subHeader = imLabel(dataItem),
             copyText = dataItem.data,
-            primaryAction = action,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.IM),
+            primaryAction = chatAction(dataItem),
         )
+    }
+
+    private fun imLabel(dataItem: ContactDataItem.Im): ContactEntryText {
+        val protocolLabel = dataItem.protocolLabel
+
+        return when {
+            protocolLabel.isNullOrEmpty() -> ContactEntryText.Label(ContactEntryLabel.IM)
+            else -> ContactEntryText.Value(protocolLabel)
+        }
     }
 
     private fun chatAction(dataItem: ContactDataItem.Im): ContactEntryAction? {
@@ -376,9 +383,10 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
 
     private fun organizationContent(dataItem: ContactDataItem.Organization): EntryContent {
         return EntryContent(
-            header = ContactEntryText.Label(ContactEntryLabel.ORGANIZATION),
-            text = dataItem.formattedCompany,
+            header = ContactEntryText.Value(dataItem.formattedCompany.orEmpty()),
+            subHeader = ContactEntryText.Label(ContactEntryLabel.ORGANIZATION),
             copyText = dataItem.formattedCompany,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.ORGANIZATION),
         )
     }
 
@@ -391,9 +399,10 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         }
 
         return EntryContent(
-            header = ContactEntryText.Label(ContactEntryLabel.NICKNAME),
-            subHeader = dataItem.name,
+            header = ContactEntryText.Value(dataItem.name.orEmpty()),
+            subHeader = ContactEntryText.Label(ContactEntryLabel.NICKNAME),
             copyText = dataItem.name,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.NICKNAME),
         )
     }
 
@@ -409,29 +418,39 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
 
     private fun noteContent(dataItem: ContactDataItem.Note): EntryContent {
         return EntryContent(
-            header = ContactEntryText.Label(ContactEntryLabel.NOTE),
-            subHeader = dataItem.note,
+            header = ContactEntryText.Value(dataItem.note.orEmpty()),
             copyText = dataItem.note,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.NOTE),
         )
     }
 
     private fun websiteContent(dataItem: ContactDataItem.Website): EntryContent {
         return EntryContent(
-            header = ContactEntryText.Label(ContactEntryLabel.WEBSITE),
-            subHeader = dataItem.url,
+            header = ContactEntryText.Value(dataItem.url.orEmpty()),
+            subHeader = ContactEntryText.Label(ContactEntryLabel.WEBSITE),
             copyText = dataItem.url,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.WEBSITE),
             primaryAction = dataItem.url?.let(ContactEntryAction::OpenUrl),
         )
     }
 
     private fun eventContent(dataItem: ContactDataItem.Event): EntryContent {
         return EntryContent(
-            header = ContactEntryText.Label(ContactEntryLabel.EVENT),
-            subHeader = dataItem.typeLabel,
-            text = dataItem.formattedDate,
+            header = ContactEntryText.Value(dataItem.formattedDate.orEmpty()),
+            subHeader = eventLabel(dataItem),
             copyText = dataItem.formattedDate,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.EVENT),
             primaryAction = eventDateAction(dataItem),
         )
+    }
+
+    private fun eventLabel(dataItem: ContactDataItem.Event): ContactEntryText {
+        val typeLabel = dataItem.typeLabel
+
+        return when {
+            typeLabel.isNullOrEmpty() -> ContactEntryText.Label(ContactEntryLabel.EVENT)
+            else -> ContactEntryText.Value(typeLabel)
+        }
     }
 
     private fun eventDateAction(dataItem: ContactDataItem.Event): ContactEntryAction? {
@@ -448,26 +467,36 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
 
     private fun relationContent(dataItem: ContactDataItem.Relation): EntryContent {
         return EntryContent(
-            header = ContactEntryText.Label(ContactEntryLabel.RELATION),
-            subHeader = dataItem.name,
-            text = dataItem.typeLabel,
+            header = ContactEntryText.Value(dataItem.name.orEmpty()),
+            subHeader = relationLabel(dataItem),
             copyText = dataItem.name,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.RELATION),
             primaryAction = dataItem.displayString
                 ?.takeIf { name -> name.isNotEmpty() }
                 ?.let(ContactEntryAction::SearchContacts),
         )
     }
 
+    private fun relationLabel(dataItem: ContactDataItem.Relation): ContactEntryText {
+        val typeLabel = dataItem.typeLabel
+
+        return when {
+            typeLabel.isNullOrEmpty() -> ContactEntryText.Label(ContactEntryLabel.RELATION)
+            else -> ContactEntryText.Value(typeLabel)
+        }
+    }
+
     private fun customContent(dataItem: ContactDataItem.Custom): EntryContent {
         val summary = dataItem.summary
 
         return EntryContent(
-            header = when {
+            header = ContactEntryText.Value(dataItem.content.orEmpty()),
+            subHeader = when {
                 summary.isNullOrEmpty() -> ContactEntryText.Label(ContactEntryLabel.CUSTOM_FIELD)
                 else -> ContactEntryText.Value(summary)
             },
-            subHeader = dataItem.content,
             copyText = dataItem.content,
+            copyLabel = ContactEntryText.Label(ContactEntryLabel.CUSTOM_FIELD),
         )
     }
 
@@ -488,7 +517,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
 
     private data class EntryContent(
         val header: ContactEntryText?,
-        val subHeader: String? = null,
+        val subHeader: ContactEntryText? = null,
         val text: String? = null,
         val copyText: String? = null,
         val copyLabel: ContactEntryText? = null,
@@ -497,21 +526,20 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         val thirdAction: ContactEntryAction? = null,
     ) {
         fun isEmpty(): Boolean {
-            return isHeaderEmpty() && subHeader.isNullOrEmpty() && text.isNullOrEmpty()
+            return isTextEmpty(header) && isTextEmpty(subHeader) && text.isNullOrEmpty()
         }
 
-        private fun isHeaderEmpty(): Boolean {
-            return when (header) {
+        private fun isTextEmpty(entryText: ContactEntryText?): Boolean {
+            return when (entryText) {
                 null -> true
                 is ContactEntryText.Label -> false
-                is ContactEntryText.Value -> header.text.isEmpty()
+                is ContactEntryText.Value -> entryText.text.isEmpty()
             }
         }
     }
 
     private companion object {
         const val NOT_FOUND = -1
-        const val NO_DATA_ID = -1L
         const val PRIORITIZED_RANK = -1
 
         val LEADING_MIME_TYPES = listOf(
@@ -519,19 +547,12 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             SipAddress.CONTENT_ITEM_TYPE,
             Email.CONTENT_ITEM_TYPE,
             StructuredPostal.CONTENT_ITEM_TYPE,
-        )
-
-        val ABOUT_CARD_MIME_TYPES = listOf(
-            Nickname.CONTENT_ITEM_TYPE,
-            Website.CONTENT_ITEM_TYPE,
-            Organization.CONTENT_ITEM_TYPE,
             Event.CONTENT_ITEM_TYPE,
+            Website.CONTENT_ITEM_TYPE,
             Relation.CONTENT_ITEM_TYPE,
             Im.CONTENT_ITEM_TYPE,
-            GroupMembership.CONTENT_ITEM_TYPE,
             Identity.CONTENT_ITEM_TYPE,
             CustomDataItem.MIMETYPE_CUSTOM_FIELD,
-            Note.CONTENT_ITEM_TYPE,
         )
     }
 }

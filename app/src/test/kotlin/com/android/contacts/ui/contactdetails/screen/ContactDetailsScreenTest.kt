@@ -82,11 +82,12 @@ internal class ContactDetailsScreenTest {
 
     private fun loadedContent(): Content.Loaded {
         return Content.Loaded(
+            groups = persistentListOf(),
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = persistentListOf(),
             contactCard = persistentListOf(),
-            aboutCard = persistentListOf(),
-            aboutCardTitle = "About Anna",
+            notes = persistentListOf(),
+            settings = persistentListOf(),
             emptyPrompt = null,
             menu = contactDetailsMenu(),
             isStarred = false,
