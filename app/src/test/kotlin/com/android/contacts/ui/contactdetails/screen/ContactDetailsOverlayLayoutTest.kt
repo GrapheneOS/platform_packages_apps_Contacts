@@ -69,6 +69,7 @@ class ContactDetailsOverlayLayoutTest {
 
     private fun loadedContent(header: ContactHeaderUiModel): Content.Loaded {
         return Content.Loaded(
+            groups = persistentListOf(),
             header = header,
             quickActions = persistentListOf(
                 contactQuickActionUiModel(icon = ContactEntryIcon.CALL, label = "Call"),
@@ -79,8 +80,8 @@ class ContactDetailsOverlayLayoutTest {
             contactCard = persistentListOf(
                 contactEntryGroupUiModel(entries = persistentListOf(contactEntryUiModel())),
             ),
-            aboutCard = persistentListOf(),
-            aboutCardTitle = "About Alex",
+            notes = persistentListOf(),
+            settings = persistentListOf(),
             emptyPrompt = null,
             menu = contactDetailsMenu(),
             isStarred = false,

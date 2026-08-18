@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -18,8 +19,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -30,12 +29,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -49,24 +51,29 @@ import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsActionRow
+import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
 import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
 import com.android.contacts.ui.contactdetails.common.ContactDetailsProgressDialog
 import com.android.contacts.ui.contactdetails.common.ContactDetailsQuickActions
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTopAppBar
+import com.android.contacts.ui.contactdetails.common.imageVector
 import com.android.contacts.ui.contactdetails.common.measuredInto
 import com.android.contacts.ui.contactdetails.common.rememberOverlayHeight
 import com.android.contacts.ui.contactdetails.common.ContactEntryCard
 import com.android.contacts.ui.contactdetails.common.ContactEntryRow
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ABOUT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RINGTONE_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -91,15 +98,13 @@ internal fun ContactDetailsContent(
     val loaded = content as? Content.Loaded
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val listState = rememberLazyListState()
-    val isHeaderScrolledAway by remember(listState) {
-        derivedStateOf { listState.firstVisibleItemIndex > 0 }
-    }
+    var isNameHidden by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             ContactDetailsTopAppBar(
                 title = loaded?.header?.displayName.orEmpty(),
-                isTitleVisible = loaded != null && isHeaderScrolledAway,
+                isTitleVisible = loaded != null && isNameHidden,
                 menu = loaded?.menu,
                 isStarred = loaded?.isStarred == true,
                 onAction = onAction,
@@ -128,6 +133,8 @@ internal fun ContactDetailsContent(
                     onAction = onAction,
                     contentPadding = contentPadding,
                     listState = listState,
+                    isNameHidden = isNameHidden,
+                    onNameHiddenChanged = { hidden -> isNameHidden = hidden },
                 )
             }
         }
@@ -173,8 +180,13 @@ private fun ContactDetailsCards(
     onAction: (Action) -> Unit,
     contentPadding: PaddingValues,
     listState: LazyListState,
+    isNameHidden: Boolean,
+    onNameHiddenChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val contentTop = with(LocalDensity.current) {
+        contentPadding.calculateTopPadding().toPx()
+    }
     val headerHeight = rememberOverlayHeight()
     val quickActionsHeight = rememberOverlayHeight()
     val isListLaidOut by remember(listState) {
@@ -202,8 +214,20 @@ private fun ContactDetailsCards(
             )
         }
 
+        val nameLabel = stringResource(R.string.nameLabelsGroup)
+
         ContactDetailsHeader(
             header = content.header,
+            onNameLongClick = {
+                onAction(Action.CopyClick(nameLabel, content.header.displayName))
+            },
+            onNameBottomChanged = { bottom ->
+                val hidden = bottom <= contentTop
+
+                if (hidden != isNameHidden) {
+                    onNameHiddenChanged(hidden)
+                }
+            },
             modifier = Modifier
                 .alpha(overlayAlpha)
                 .offset {
@@ -245,18 +269,29 @@ private fun ContactDetailsList(
     headerHeight: Dp,
     quickActionsHeight: Dp,
 ) {
+    val itemPadding = horizontalContentPadding(contentPadding)
+
     LazyColumn(
         state = listState,
         contentPadding = screenContentPadding(contentPadding),
-        verticalArrangement = Arrangement.spacedBy(Tokens.cardGroupSpacing),
         modifier = Modifier.fillMaxSize(),
     ) {
         item(key = HEADER_KEY) {
-            Spacer(modifier = Modifier.height(headerHeight))
+            Spacer(modifier = Modifier.height(headerHeight + Tokens.cardGroupSpacing))
         }
 
         item(key = QUICK_ACTIONS_KEY) {
-            Spacer(modifier = Modifier.height(quickActionsHeight))
+            Spacer(modifier = Modifier.height(quickActionsHeight + groupsSpacing(content)))
+        }
+
+        if (content.groups.isNotEmpty()) {
+            item(key = "groups") {
+                ContactDetailsGroups(
+                    groups = content.groups,
+                    contentPadding = itemPadding,
+                    modifier = Modifier.padding(bottom = Tokens.groupChipSectionSpacing),
+                )
+            }
         }
 
         if (content.contactCard.isNotEmpty()) {
@@ -264,18 +299,29 @@ private fun ContactDetailsList(
                 ContactDetailsEntryCard(
                     groups = content.contactCard,
                     onAction = onAction,
-                    modifier = Modifier.testTag(CONTACT_DETAILS_CONTACT_CARD_TEST_TAG),
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .testTag(CONTACT_DETAILS_CONTACT_CARD_TEST_TAG)
+                        .padding(bottom = Tokens.cardGroupSpacing),
                 )
             }
         }
 
-        if (content.aboutCard.isNotEmpty()) {
-            item(key = "about_card") {
-                ContactDetailsAboutCard(
-                    title = content.aboutCardTitle,
-                    groups = content.aboutCard,
-                    onAction = onAction,
-                )
+        if (content.notes.isNotEmpty()) {
+            item(key = "notes") {
+                ContactDetailsSection(
+                    title = stringResource(R.string.label_notes),
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .testTag(CONTACT_DETAILS_NOTES_TEST_TAG)
+                        .padding(bottom = Tokens.cardGroupSpacing),
+                ) {
+                    ContactDetailsEntryCard(
+                        groups = content.notes,
+                        onAction = onAction,
+                        isTopRounded = false,
+                    )
+                }
             }
         }
 
@@ -285,23 +331,38 @@ private fun ContactDetailsList(
                 ContactDetailsEmptyPrompt(
                     prompt = emptyPrompt,
                     onEntryClick = { onAction(Action.AddDetailsClick) },
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .padding(bottom = Tokens.cardGroupSpacing),
                 )
             }
         }
 
-        if (content.menu.isRingtoneVisible) {
-            item(key = "ringtone") {
-                ContactDetailsActionRow(
-                    icon = Icons.Rounded.Notifications,
-                    title = stringResource(R.string.menu_set_ring_tone),
-                    onClick = { onAction(Action.RingtoneClick) },
-                    modifier = Modifier.testTag(CONTACT_DETAILS_RINGTONE_TEST_TAG),
-                )
+        if (content.settings.isNotEmpty()) {
+            item(key = "settings") {
+                ContactDetailsSection(
+                    title = stringResource(R.string.contact_details_settings_title),
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .testTag(CONTACT_DETAILS_SETTINGS_TEST_TAG)
+                        .padding(bottom = Tokens.cardGroupSpacing),
+                ) {
+                    ContactDetailsSettings(
+                        settings = content.settings,
+                        onAction = onAction,
+                    )
+                }
             }
         }
     }
 }
 
+private fun groupsSpacing(content: Content.Loaded): Dp {
+    return when {
+        content.groups.isEmpty() -> Tokens.cardGroupSpacing
+        else -> Tokens.groupChipSectionSpacing
+    }
+}
 
 private fun LazyListState.headerOffset(headerHeight: Int): Int {
     return itemOffset(key = HEADER_KEY, index = 0, scrolledPastOffset = -headerHeight)
@@ -339,21 +400,51 @@ private fun horizontalContentPadding(contentPadding: PaddingValues): PaddingValu
 }
 
 @Composable
-private fun ContactDetailsAboutCard(
+private fun ContactDetailsSection(
     title: String,
-    groups: ImmutableList<ContactEntryGroupUiModel>,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Tokens.cardSpacing),
+        modifier = modifier,
+    ) {
+        ContactDetailsSectionHeader(title = title)
+
+        content()
+    }
+}
+
+@Composable
+private fun ContactDetailsSettings(
+    settings: ImmutableList<ContactSettingUiModel>,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        ContactDetailsSectionHeader(title = title)
-
-        ContactDetailsEntryCard(
-            groups = groups,
-            onAction = onAction,
-            modifier = Modifier.testTag(CONTACT_DETAILS_ABOUT_CARD_TEST_TAG),
-        )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Tokens.cardSpacing),
+        modifier = modifier,
+    ) {
+        settings.forEachIndexed { index, setting ->
+            ContactDetailsActionRow(
+                icon = setting.icon.imageVector(),
+                title = setting.title,
+                subtitle = setting.subtitle,
+                contentColor = when {
+                    setting.isDestructive -> MaterialTheme.colorScheme.error
+                    else -> MaterialTheme.colorScheme.onSurface
+                },
+                isFirst = false,
+                isLast = index == settings.lastIndex,
+                onClick = { onAction(setting.action) },
+                modifier = Modifier.testTag(settingTestTag(setting)),
+            )
+        }
     }
+}
+
+private fun settingTestTag(setting: ContactSettingUiModel): String {
+    return CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + setting.icon.name
 }
 
 @Composable
@@ -361,9 +452,11 @@ private fun ContactDetailsEntryCard(
     groups: ImmutableList<ContactEntryGroupUiModel>,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
+    isTopRounded: Boolean = true,
 ) {
     ContactEntryCard(
         groups = groups,
+        isTopRounded = isTopRounded,
         onEntryClick = { entry ->
             entry.action?.let { action -> onAction(Action.EntryClick(action)) }
         },
@@ -416,29 +509,30 @@ private fun ContactDetailsSectionHeader(
     title: String,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier.padding(
-            start = Tokens.sectionHeaderPadding,
-            end = Tokens.sectionHeaderPadding,
-            bottom = Tokens.sectionHeaderPadding,
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        shape = cellShape(
+            isFirst = true,
+            isLast = false,
         ),
-    )
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(
+                horizontal = Tokens.rowHorizontalPadding,
+                vertical = Tokens.sectionHeaderPadding,
+            ),
+        )
+    }
 }
 
 @Composable
 private fun screenContentPadding(contentPadding: PaddingValues): PaddingValues {
-    val layoutDirection = LocalLayoutDirection.current
-
     return PaddingValues(
-        start = Tokens.screenHorizontalPadding +
-            contentPadding.calculateStartPadding(layoutDirection),
-        end = Tokens.screenHorizontalPadding +
-            contentPadding.calculateEndPadding(layoutDirection),
-        bottom = Tokens.screenBottomPadding +
-            contentPadding.calculateBottomPadding(),
+        bottom = Tokens.screenBottomPadding + contentPadding.calculateBottomPadding(),
     )
 }
 
@@ -466,6 +560,7 @@ private fun ContactDetailsContentLoadingPreview() {
 
 private fun previewContent(): Content.Loaded {
     return Content.Loaded(
+        groups = persistentListOf("Coworkers", "Family"),
         header = ContactHeaderUiModel(
             displayName = "Anna Smith",
             subtitles = persistentListOf("Annie", "Acme"),
@@ -487,19 +582,23 @@ private fun previewContent(): Content.Loaded {
                 ),
             ),
         ),
-        aboutCard = persistentListOf(
+        notes = persistentListOf(
             ContactEntryGroupUiModel(
                 entries = persistentListOf(
                     previewEntry(
                         id = 2L,
                         header = "Met at the conference",
-                        text = "Note",
+                        text = null,
                         icon = null,
                     ),
                 ),
             ),
         ),
-        aboutCardTitle = "About Anna",
+        settings = persistentListOf(
+            previewSetting(ContactSettingIcon.RINGTONE, "Set ringtone", "Bright Morning"),
+            previewSetting(ContactSettingIcon.SHARE, "Share"),
+            previewSetting(ContactSettingIcon.DELETE, "Delete", isDestructive = true),
+        ),
         emptyPrompt = null,
         menu = ContactDetailsMenu(
             isStarVisible = true,
@@ -512,6 +611,21 @@ private fun previewContent(): Content.Loaded {
             isRingtoneVisible = true,
         ),
         isStarred = false,
+    )
+}
+
+private fun previewSetting(
+    icon: ContactSettingIcon,
+    title: String,
+    subtitle: String? = null,
+    isDestructive: Boolean = false,
+): ContactSettingUiModel {
+    return ContactSettingUiModel(
+        icon = icon,
+        title = title,
+        subtitle = subtitle,
+        action = Action.RingtoneClick,
+        isDestructive = isDestructive,
     )
 }
 
@@ -530,7 +644,7 @@ private fun previewQuickAction(
 private fun previewEntry(
     id: Long,
     header: String,
-    text: String,
+    text: String?,
     icon: ContactEntryIcon? = ContactEntryIcon.CALL,
 ): ContactEntryUiModel {
     return ContactEntryUiModel(
