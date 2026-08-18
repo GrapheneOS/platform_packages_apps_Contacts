@@ -9,16 +9,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Business
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ripple
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.onLongClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.android.contacts.R
 import com.android.contacts.ui.common.components.ContactAvatar
 import com.android.contacts.ui.common.components.contactAvatarColorSeed
 import com.android.contacts.ui.common.components.contactAvatarLabel
@@ -33,14 +46,23 @@ import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tok
 internal fun ContactDetailsHeader(
     header: ContactHeaderUiModel,
     modifier: Modifier = Modifier,
+    onNameLongClick: () -> Unit = {},
+    onNameBottomChanged: (Float) -> Unit = {},
 ) {
     val displayName = header.displayNameText()
+    val copyLabel = stringResource(R.string.copy_text)
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .testTag(CONTACT_DETAILS_HEADER_TEST_TAG)
-            .semantics(mergeDescendants = true) {}
+            .semantics(mergeDescendants = true) {
+                onLongClick(label = copyLabel) {
+                    onNameLongClick()
+                    true
+                }
+            }
             .padding(
                 start = Tokens.headerHorizontalPadding,
                 end = Tokens.headerHorizontalPadding,
@@ -70,6 +92,27 @@ internal fun ContactDetailsHeader(
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
             maxLines = 2,
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.small)
+                .indication(interactionSource, ripple())
+                .pointerInput(onNameLongClick) {
+                    detectTapGestures(
+                        onPress = { offset ->
+                            val press = PressInteraction.Press(offset)
+                            interactionSource.emit(press)
+                            tryAwaitRelease()
+                            interactionSource.emit(PressInteraction.Release(press))
+                        },
+                        onLongPress = { onNameLongClick() },
+                    )
+                }
+                .padding(
+                    horizontal = Tokens.headerNameHorizontalPadding,
+                    vertical = Tokens.headerNameVerticalPadding,
+                )
+                .onGloballyPositioned { coordinates ->
+                    onNameBottomChanged(coordinates.positionInRoot().y + coordinates.size.height)
+                },
         )
 
         if (header.subtitles.isNotEmpty()) {

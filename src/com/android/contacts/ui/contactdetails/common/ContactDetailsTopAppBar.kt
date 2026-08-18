@@ -1,10 +1,8 @@
 package com.android.contacts.ui.contactdetails.common
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
@@ -21,7 +19,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -30,10 +27,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
-import com.android.contacts.ui.common.components.OverflowMenu
-import com.android.contacts.ui.common.components.OverflowMenuItem
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EDIT_TEST_TAG
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_TITLE_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
@@ -87,11 +81,6 @@ internal fun ContactDetailsTopAppBar(
                 EditAction(
                     editAction = menu.editAction,
                     onClick = { onAction(Action.EditClick) },
-                )
-
-                ContactDetailsOverflowMenu(
-                    menu = menu,
-                    onAction = onAction,
                 )
             }
         },
@@ -158,58 +147,6 @@ private fun EditAction(
         )
     }
 }
-
-@Composable
-private fun ContactDetailsOverflowMenu(
-    menu: ContactDetailsMenu,
-    onAction: (Action) -> Unit,
-) {
-    val items = remember(menu) { overflowItems(menu) }
-
-    Box(modifier = Modifier.testTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG)) {
-        OverflowMenu { dismiss ->
-            items.forEach { item ->
-                OverflowMenuItem(
-                    labelResId = item.labelResId,
-                    onClick = {
-                        dismiss()
-                        onAction(item.action)
-                    },
-                )
-            }
-        }
-    }
-}
-
-private fun overflowItems(menu: ContactDetailsMenu): List<OverflowItem> {
-    return listOfNotNull(
-        OverflowItem(
-            R.string.menu_joinAggregate,
-            Action.JoinClick,
-        ).takeIf { menu.isJoinVisible },
-        OverflowItem(
-            R.string.menu_linkedContacts,
-            Action.LinkedContactsClick,
-        ).takeIf { menu.isLinkedContactsVisible },
-        OverflowItem(
-            R.string.menu_deleteContact,
-            Action.DeleteClick,
-        ).takeIf { menu.isDeleteVisible },
-        OverflowItem(
-            R.string.menu_share,
-            Action.ShareClick,
-        ).takeIf { menu.isShareVisible },
-        OverflowItem(
-            R.string.menu_create_contact_shortcut,
-            Action.ShortcutClick,
-        ).takeIf { menu.isShortcutVisible },
-    )
-}
-
-private data class OverflowItem(
-    @param:StringRes val labelResId: Int,
-    val action: Action,
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark

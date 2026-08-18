@@ -7,7 +7,6 @@ internal enum class ContactEntryLabel {
     IM,
     ORGANIZATION,
     NICKNAME,
-    PHONETIC_NAME,
     NOTE,
     WEBSITE,
     EVENT,

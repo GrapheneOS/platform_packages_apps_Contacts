@@ -70,11 +70,8 @@ internal fun ContactEntryRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val icon = entry.icon
-        if (icon != null) {
-            EntryLeadingIcon(
-                icon = icon,
-                isVisible = isIconVisible,
-            )
+        if (icon != null && isIconVisible) {
+            EntryLeadingIcon(icon = icon)
 
             Spacer(modifier = Modifier.width(Tokens.rowIconSpacing))
         }
@@ -173,19 +170,13 @@ private fun EntryTrailingActions(
 }
 
 @Composable
-private fun EntryLeadingIcon(
-    icon: ContactEntryIcon,
-    isVisible: Boolean,
-) {
-    Box(modifier = Modifier.size(Tokens.rowIconSize)) {
-        if (isVisible) {
-            Icon(
-                imageVector = icon.imageVector(),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
+private fun EntryLeadingIcon(icon: ContactEntryIcon) {
+    Icon(
+        imageVector = icon.imageVector(),
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.size(Tokens.rowIconSize),
+    )
 }
 
 @Composable
