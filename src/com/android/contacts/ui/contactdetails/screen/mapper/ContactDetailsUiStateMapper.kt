@@ -16,11 +16,13 @@ import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
+import com.android.contacts.domain.contactdetails.model.ContactEntryKind
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
 import com.android.contacts.domain.contactdetails.model.ContactQuickAction
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.common.components.ContactAvatarImage
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
@@ -28,6 +30,8 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiMo
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
@@ -59,15 +63,16 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     ): ContactDetailsContent {
         val isEditable = !details.capabilities.isDirectoryEntry
         val contactCard = mapGroups(cards.contactCard, isEditable)
-        val aboutCard = mapGroups(cards.aboutCard, isEditable)
+        val notes = mapGroups(cards.notes, isEditable)
 
         return ContactDetailsContent.Loaded(
             header = mapHeader(details, cards, displayOrder),
             quickActions = contactQuickActionsMapper.map(quickActions),
+            groups = cards.groups.toImmutableList(),
             contactCard = contactCard,
-            aboutCard = aboutCard,
-            aboutCardTitle = aboutCardTitle(cards.aboutCardGivenName),
-            emptyPrompt = emptyPrompt(details, contactCard, aboutCard),
+            notes = notes,
+            settings = settings(details, menu),
+            emptyPrompt = emptyPrompt(details, contactCard, notes),
             menu = menu,
             isStarred = details.isStarred,
         )
@@ -101,10 +106,18 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         cards: ContactDetailsCards,
         displayName: String,
     ): ImmutableList<String> {
+        val phoneticName = phoneticName(details, displayName)
+        val quotedPhoneticName = phoneticName?.let { name ->
+            context.getString(R.string.header_phonetic_name_quoted, name)
+        }
+        val nameLine = listOfNotNull(cards.headerNickname, quotedPhoneticName)
+            .joinToString(SUBTITLE_SEPARATOR)
+
         return listOfNotNull(
-            phoneticName(details, displayName),
-            cards.headerNickname,
-            cards.headerOrganization,
+            nameLine.takeIf { line -> line.isNotEmpty() },
+            cards.headerOrganizationParts
+                .joinToString(SUBTITLE_SEPARATOR)
+                .takeIf { line -> line.isNotEmpty() },
         ).toImmutableList()
     }
 
@@ -125,13 +138,60 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         }
     }
 
-    private fun aboutCardTitle(givenName: String?): String {
-        val title = context.getString(R.string.about_card_title)
+    private fun settings(
+        details: ContactDetails,
+        menu: ContactDetailsMenu,
+    ): ImmutableList<ContactSettingUiModel> {
+        return listOfNotNull(
+            setting(
+                icon = ContactSettingIcon.RINGTONE,
+                titleResource = R.string.menu_set_ring_tone,
+                action = ContactDetailsAction.RingtoneClick,
+                subtitle = details.customRingtoneTitle,
+            ).takeIf { menu.isRingtoneVisible },
+            setting(
+                icon = ContactSettingIcon.SHARE,
+                titleResource = R.string.menu_share,
+                action = ContactDetailsAction.ShareClick,
+            ).takeIf { menu.isShareVisible },
+            setting(
+                icon = ContactSettingIcon.SHORTCUT,
+                titleResource = R.string.menu_create_contact_shortcut,
+                action = ContactDetailsAction.ShortcutClick,
+            ).takeIf { menu.isShortcutVisible },
+            setting(
+                icon = ContactSettingIcon.LINK,
+                titleResource = R.string.menu_joinAggregate,
+                action = ContactDetailsAction.JoinClick,
+            ).takeIf { menu.isJoinVisible },
+            setting(
+                icon = ContactSettingIcon.LINKED_CONTACTS,
+                titleResource = R.string.menu_linkedContacts,
+                action = ContactDetailsAction.LinkedContactsClick,
+            ).takeIf { menu.isLinkedContactsVisible },
+            setting(
+                icon = ContactSettingIcon.DELETE,
+                titleResource = R.string.menu_deleteContact,
+                action = ContactDetailsAction.DeleteClick,
+                isDestructive = true,
+            ).takeIf { menu.isDeleteVisible },
+        ).toImmutableList()
+    }
 
-        return when {
-            givenName.isNullOrEmpty() -> title
-            else -> "$title $givenName"
-        }
+    private fun setting(
+        icon: ContactSettingIcon,
+        @StringRes titleResource: Int,
+        action: ContactDetailsAction,
+        subtitle: String? = null,
+        isDestructive: Boolean = false,
+    ): ContactSettingUiModel {
+        return ContactSettingUiModel(
+            icon = icon,
+            title = context.getString(titleResource),
+            subtitle = subtitle,
+            action = action,
+            isDestructive = isDestructive,
+        )
     }
 
     private fun mapGroups(
@@ -177,17 +237,35 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             id = entry.id,
             isSuperPrimary = entry.isSuperPrimary,
             isDefaultChangeable = isDefaultChangeable,
-            icon = entryIcon(mimeType),
+            icon = entryIcon(entry.kind),
             header = text(entry.header),
             isHeaderLtr = isDialable(mimeType),
-            subHeader = entry.subHeader,
-            text = entry.text,
+            subHeader = text(entry.subHeader),
+            text = entryText(entry),
             action = registeredAction(entry.actions.primary),
             alternateAction = actionUiModel(registeredAction(entry.actions.alternate)),
             thirdAction = actionUiModel(entry.actions.third),
             copyText = entry.copyText,
             copyLabel = text(entry.copyLabel),
         )
+    }
+
+    private fun entryText(entry: ContactEntry): String? {
+        if (!entry.isSuperPrimary || !isDefaultMarked(entry.kind)) {
+            return entry.text
+        }
+
+        val default = context.getString(R.string.contact_entry_default)
+        val type = entry.text
+
+        return when {
+            type.isNullOrEmpty() -> default
+            else -> context.getString(R.string.contact_entry_default_type, type, default)
+        }
+    }
+
+    private fun isDefaultMarked(kind: ContactEntryKind): Boolean {
+        return kind == ContactEntryKind.PHONE || kind == ContactEntryKind.EMAIL
     }
 
     private fun isDialable(mimeType: String?): Boolean {
@@ -198,13 +276,24 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         return action?.takeIf { candidate -> isEntryActionAvailable(candidate) }
     }
 
-    private fun entryIcon(mimeType: String?): ContactEntryIcon? {
-        return when (mimeType) {
-            Phone.CONTENT_ITEM_TYPE -> ContactEntryIcon.CALL
-            Email.CONTENT_ITEM_TYPE -> ContactEntryIcon.EMAIL
-            StructuredPostal.CONTENT_ITEM_TYPE -> ContactEntryIcon.PLACE
-            SipAddress.CONTENT_ITEM_TYPE -> ContactEntryIcon.SIP_CALL
-            else -> null
+    private fun entryIcon(kind: ContactEntryKind): ContactEntryIcon? {
+        return when (kind) {
+            ContactEntryKind.PHONE -> ContactEntryIcon.CALL
+            ContactEntryKind.SIP_ADDRESS -> ContactEntryIcon.SIP_CALL
+            ContactEntryKind.EMAIL -> ContactEntryIcon.EMAIL
+            ContactEntryKind.POSTAL -> ContactEntryIcon.PLACE
+            ContactEntryKind.IM -> ContactEntryIcon.CHAT
+            ContactEntryKind.ORGANIZATION -> ContactEntryIcon.ORGANIZATION
+            ContactEntryKind.NICKNAME -> ContactEntryIcon.NICKNAME
+            ContactEntryKind.WEBSITE -> ContactEntryIcon.WEBSITE
+            ContactEntryKind.BIRTHDAY -> ContactEntryIcon.BIRTHDAY
+            ContactEntryKind.EVENT -> ContactEntryIcon.EVENT
+            ContactEntryKind.GROUP -> ContactEntryIcon.GROUP
+            ContactEntryKind.IDENTITY -> ContactEntryIcon.IDENTITY
+            ContactEntryKind.NOTE -> null
+            ContactEntryKind.RELATION -> null
+            ContactEntryKind.CUSTOM_FIELD -> null
+            ContactEntryKind.OTHER -> null
         }
     }
 
@@ -241,9 +330,9 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     private fun emptyPrompt(
         details: ContactDetails,
         contactCard: ImmutableList<ContactEntryGroupUiModel>,
-        aboutCard: ImmutableList<ContactEntryGroupUiModel>,
+        notes: ImmutableList<ContactEntryGroupUiModel>,
     ): ContactDetailsEmptyPromptUiModel? {
-        if (contactCard.isNotEmpty() || aboutCard.isNotEmpty()) {
+        if (contactCard.isNotEmpty() || notes.isNotEmpty()) {
             return null
         }
 
@@ -303,7 +392,6 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             ContactEntryLabel.IM -> R.string.header_im_entry
             ContactEntryLabel.ORGANIZATION -> R.string.header_organization_entry
             ContactEntryLabel.NICKNAME -> R.string.header_nickname_entry
-            ContactEntryLabel.PHONETIC_NAME -> R.string.name_phonetic
             ContactEntryLabel.NOTE -> R.string.header_note_entry
             ContactEntryLabel.WEBSITE -> R.string.header_website_entry
             ContactEntryLabel.EVENT -> R.string.header_event_entry
@@ -314,5 +402,6 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
 
     private companion object {
         const val NO_DATA_ID = -1L
+        const val SUBTITLE_SEPARATOR = " • "
     }
 }

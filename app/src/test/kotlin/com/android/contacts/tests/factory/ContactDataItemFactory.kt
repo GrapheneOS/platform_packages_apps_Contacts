@@ -132,6 +132,9 @@ internal fun organization(
     id: Long = 1L,
     rawContactId: Long = 1L,
     formattedCompany: String? = "Acme",
+    company: String? = "Acme",
+    department: String? = null,
+    title: String? = null,
     isPrimary: Boolean = false,
     isSuperPrimary: Boolean = false,
 ): ContactDataItem.Organization {
@@ -143,6 +146,9 @@ internal fun organization(
         isSuperPrimary = isSuperPrimary,
         displayString = formattedCompany,
         formattedCompany = formattedCompany,
+        company = company,
+        department = department,
+        title = title,
     )
 }
 
@@ -197,6 +203,7 @@ internal fun website(
 }
 
 internal fun event(
+    isBirthday: Boolean = false,
     id: Long = 1L,
     rawContactId: Long = 1L,
     formattedDate: String? = "May 20, 1980",
@@ -213,6 +220,7 @@ internal fun event(
         formattedDate = formattedDate,
         typeLabel = typeLabel,
         isRecurringAnnually = isRecurringAnnually,
+        isBirthday = isBirthday,
     )
 }
 

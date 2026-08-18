@@ -9,4 +9,12 @@ internal enum class ContactEntryIcon {
     PLACE,
     DIRECTIONS,
     SIP_CALL,
+    CHAT,
+    ORGANIZATION,
+    NICKNAME,
+    WEBSITE,
+    BIRTHDAY,
+    EVENT,
+    GROUP,
+    IDENTITY,
 }

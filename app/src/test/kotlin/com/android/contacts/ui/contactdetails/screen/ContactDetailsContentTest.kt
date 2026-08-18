@@ -9,11 +9,13 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.hasScrollAction
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
 import androidx.compose.ui.test.v2.runComposeUiTest
@@ -27,15 +29,15 @@ import com.android.contacts.tests.factory.contactEntryGroupUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
 import com.android.contacts.tests.factory.contactHeaderUiModel
 import com.android.contacts.tests.factory.contactQuickActionUiModel
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ABOUT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_HEADER_TEST_TAG
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RINGTONE_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
@@ -44,6 +46,8 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Assert.assertEquals
@@ -59,13 +63,25 @@ import org.robolectric.annotation.Config
 internal class ContactDetailsContentTest {
 
     @Test
-    fun whenLoaded_showsTheHeaderAndBothCards() = runComposeUiTest {
+    fun whenLoaded_showsTheHeaderTheCardAndTheSections() = runComposeUiTest {
         setContentWith(state = State(content = loadedContent()))
 
         onNodeWithTag(CONTACT_DETAILS_HEADER_TEST_TAG).assertIsDisplayed()
         onNodeWithTag(CONTACT_DETAILS_CONTACT_CARD_TEST_TAG).assertIsDisplayed()
-        onNodeWithTag(CONTACT_DETAILS_ABOUT_CARD_TEST_TAG).assertExists()
-        onNodeWithText("About Anna").assertExists()
+        onNodeWithTag(CONTACT_DETAILS_NOTES_TEST_TAG).assertExists()
+        onNodeWithTag(CONTACT_DETAILS_SETTINGS_TEST_TAG).assertExists()
+        onNodeWithText("Notes").assertExists()
+        onNodeWithText("Contact settings").assertExists()
+    }
+
+    @Test
+    fun theTopBarHasNoOverflowMenu() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent()))
+
+        onNodeWithContentDescription("More options").assertDoesNotExist()
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "SHARE").assertExists()
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "SHORTCUT").assertExists()
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "DELETE").assertExists()
     }
 
     @Test
@@ -77,7 +93,7 @@ internal class ContactDetailsContentTest {
         )
         val content = loadedContent(
             contactCard = persistentListOf(),
-            aboutCard = persistentListOf(),
+            notes = persistentListOf(),
             emptyPrompt = prompt,
         )
 
@@ -99,7 +115,7 @@ internal class ContactDetailsContentTest {
             state = State(
                 content = loadedContent(
                     contactCard = persistentListOf(),
-                    aboutCard = persistentListOf(),
+                    notes = persistentListOf(),
                     emptyPrompt = prompt,
                 ),
             ),
@@ -123,7 +139,6 @@ internal class ContactDetailsContentTest {
         setContentWith(state = State(content = Content.Loading))
 
         onNodeWithTag(CONTACT_DETAILS_STAR_TEST_TAG).assertDoesNotExist()
-        onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).assertDoesNotExist()
     }
 
     @Test
@@ -154,11 +169,17 @@ internal class ContactDetailsContentTest {
             isDeleteVisible = false,
         )
 
-        setContentWith(state = State(content = loadedContent(menu = menu)))
+        setContentWith(
+            state = State(
+                content = loadedContent(
+                    menu = menu,
+                    settings = persistentListOf(SHARE_SETTING),
+                ),
+            ),
+        )
 
         onNodeWithTag(CONTACT_DETAILS_STAR_TEST_TAG).assertDoesNotExist()
-        onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).performClick()
-        onNodeWithText("Delete").assertDoesNotExist()
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "DELETE").assertDoesNotExist()
     }
 
     @Test
@@ -169,8 +190,8 @@ internal class ContactDetailsContentTest {
             onAction = { action -> actions += action },
         )
 
-        onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).performClick()
-        onNodeWithText("Share").performClick()
+        scrollToSetting("SHARE")
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "SHARE").performClick()
 
         assertEquals(listOf(Action.ShareClick), actions)
     }
@@ -183,28 +204,33 @@ internal class ContactDetailsContentTest {
             onAction = { action -> actions += action },
         )
 
-        onNodeWithTag(CONTACT_DETAILS_RINGTONE_TEST_TAG).performClick()
+        scrollToSetting("RINGTONE")
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "RINGTONE").performClick()
 
         assertEquals(listOf(Action.RingtoneClick), actions)
     }
 
     @Test
-    fun forAContactWithoutARingtoneOption_hidesTheRingtoneRow() = runComposeUiTest {
-        val menu = contactDetailsMenu(isRingtoneVisible = false)
+    fun withoutTheRingtoneSetting_hidesTheRow() = runComposeUiTest {
+        val settings = persistentListOf(SHARE_SETTING)
 
-        setContentWith(state = State(content = loadedContent(menu = menu)))
+        setContentWith(state = State(content = loadedContent(settings = settings)))
 
-        onNodeWithTag(CONTACT_DETAILS_RINGTONE_TEST_TAG).assertDoesNotExist()
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "RINGTONE").assertDoesNotExist()
     }
 
     @Test
-    fun theRingtoneIsNotInTheOverflowMenu() = runComposeUiTest {
+    fun forTheRingtoneSetting_showsTheCurrentRingtone() = runComposeUiTest {
         setContentWith(state = State(content = loadedContent()))
 
-        onNodeWithTag(CONTACT_DETAILS_OVERFLOW_MENU_TEST_TAG).performClick()
+        onNodeWithText("Bright Morning").assertExists()
+    }
 
-        onAllNodesWithText("Set ringtone").assertCountEquals(1)
-        onNodeWithTag(CONTACT_DETAILS_RINGTONE_TEST_TAG).assertExists()
+    @Test
+    fun withoutAnySettings_hidesTheSection() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent(settings = persistentListOf())))
+
+        onNodeWithTag(CONTACT_DETAILS_SETTINGS_TEST_TAG).assertDoesNotExist()
     }
 
     @Test
@@ -284,25 +310,33 @@ internal class ContactDetailsContentTest {
                 entries = listOf(contactEntryUiModel(id = 1L, header = "088 525 7470")),
             ),
         ),
-        aboutCard: ImmutableList<ContactEntryGroupUiModel> = persistentListOf(
+        notes: ImmutableList<ContactEntryGroupUiModel> = persistentListOf(
             contactEntryGroupUiModel(
-                entries = listOf(contactEntryUiModel(id = 2L, header = "Note", icon = null)),
+                entries = listOf(contactEntryUiModel(id = 2L, header = "Met at the airport")),
             ),
         ),
+        settings: ImmutableList<ContactSettingUiModel> = SETTINGS,
         emptyPrompt: ContactDetailsEmptyPromptUiModel? = null,
         menu: ContactDetailsMenu = contactDetailsMenu(),
         isStarred: Boolean = false,
         quickActions: ImmutableList<ContactQuickActionUiModel> = QUICK_ACTIONS,
     ): Content.Loaded {
         return Content.Loaded(
+            groups = persistentListOf(),
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = quickActions,
             contactCard = contactCard,
-            aboutCard = aboutCard,
-            aboutCardTitle = "About Anna",
+            notes = notes,
+            settings = settings,
             emptyPrompt = emptyPrompt,
             menu = menu,
             isStarred = isStarred,
+        )
+    }
+
+    private fun ComposeUiTest.scrollToSetting(name: String) {
+        onNode(hasScrollAction()).performScrollToNode(
+            hasTestTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + name),
         )
     }
 
@@ -325,6 +359,39 @@ internal class ContactDetailsContentTest {
     }
 
     private companion object {
+        val SHARE_SETTING = ContactSettingUiModel(
+            icon = ContactSettingIcon.SHARE,
+            title = "Share",
+            subtitle = null,
+            action = Action.ShareClick,
+            isDestructive = false,
+        )
+
+        val SETTINGS = persistentListOf(
+            ContactSettingUiModel(
+                icon = ContactSettingIcon.RINGTONE,
+                title = "Set ringtone",
+                subtitle = "Bright Morning",
+                action = Action.RingtoneClick,
+                isDestructive = false,
+            ),
+            SHARE_SETTING,
+            ContactSettingUiModel(
+                icon = ContactSettingIcon.SHORTCUT,
+                title = "Create shortcut",
+                subtitle = null,
+                action = Action.ShortcutClick,
+                isDestructive = false,
+            ),
+            ContactSettingUiModel(
+                icon = ContactSettingIcon.DELETE,
+                title = "Delete",
+                subtitle = null,
+                action = Action.DeleteClick,
+                isDestructive = true,
+            ),
+        )
+
         val QUICK_ACTIONS = persistentListOf(
             contactQuickActionUiModel(icon = ContactEntryIcon.CALL, label = "Call"),
             contactQuickActionUiModel(
