@@ -78,6 +78,9 @@ internal sealed interface ContactDataItem {
         override val isSuperPrimary: Boolean,
         override val displayString: String?,
         val formattedCompany: String?,
+        val company: String?,
+        val department: String?,
+        val title: String?,
     ) : ContactDataItem
 
     data class Nickname(
@@ -120,6 +123,7 @@ internal sealed interface ContactDataItem {
         val formattedDate: String?,
         val typeLabel: String?,
         val isRecurringAnnually: Boolean,
+        val isBirthday: Boolean,
     ) : ContactDataItem
 
     data class Relation(

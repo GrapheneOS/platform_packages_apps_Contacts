@@ -45,8 +45,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -92,13 +92,16 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private val linkProgress = MutableStateFlow(contactActionsRepository.getPendingLinkOperation())
 
+    private val retainedContent = MutableStateFlow<Content>(Content.Loading)
+
     private val content: Flow<Content> = savedStateHandle
         .getStateFlow<Bundle?>(KEY_ARGUMENTS, null)
         .filterNotNull()
         .flatMapLatest { arguments ->
             observeContent(arguments)
         }
-        .onStart { emit(Content.Loading) }
+        .onEach { loadedContent -> retainedContent.value = loadedContent }
+        .onStart { emit(retainedContent.value) }
 
     override val uiState: StateFlow<State> = combine(
         content,
@@ -423,11 +426,11 @@ internal class ContactDetailsViewModel @Inject constructor(
     }
 
     private companion object {
+        const val STATE_TIMEOUT_MILLIS = 5_000L
         const val KEY_ARGUMENTS = "contact_details_arguments"
         const val KEY_LOOKUP_URI = "contact_details_lookup_uri"
         const val KEY_EXCLUDED_MIME_TYPES = "contact_details_excluded_mime_types"
         const val KEY_PRIORITIZED_MIME_TYPE = "contact_details_prioritized_mime_type"
         const val KEY_CALLBACK_ACTIVITY = "contact_details_callback_activity"
-        const val STATE_TIMEOUT_MILLIS = 5_000L
     }
 }

@@ -9,6 +9,7 @@ import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.C
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.EMAIL
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.MESSAGE
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.VIDEO_CALL
+import com.android.contacts.domain.util.CanVideoCall
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.tests.factory.email
 import com.android.contacts.tests.factory.phone
@@ -22,14 +23,27 @@ import org.junit.Test
 class GetContactQuickActionsImplTest {
 
     private val isEntryActionAvailable = mockk<IsEntryActionAvailable>()
+    private val canVideoCall = mockk<CanVideoCall>()
 
     private val getContactQuickActions = GetContactQuickActionsImpl(
         isEntryActionAvailable = isEntryActionAvailable,
+        canVideoCall = canVideoCall,
     )
 
     @Before
     fun setUp() {
         every { isEntryActionAvailable(any()) } returns true
+        every { canVideoCall(any()) } returns true
+    }
+
+    @Test
+    fun invoke_whenTheCarrierDoesNotSupportVideo_disablesTheVideoAction() {
+        every { canVideoCall(any()) } returns false
+
+        val quickActions = getContactQuickActions(detailsOf(phone(number = "4155551212")))
+
+        assertNull(quickActions.actionOf(VIDEO_CALL))
+        assertEquals(ContactEntryAction.Call("4155551212"), quickActions.actionOf(CALL))
     }
 
     @Test

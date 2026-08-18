@@ -6,6 +6,7 @@ import com.android.contacts.domain.contactdetails.model.CONTACT_DATA_ITEM_PRIORI
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactQuickAction
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType
+import com.android.contacts.domain.util.CanVideoCall
 import javax.inject.Inject
 
 internal fun interface GetContactQuickActions {
@@ -14,10 +15,12 @@ internal fun interface GetContactQuickActions {
 
 internal class GetContactQuickActionsImpl @Inject constructor(
     private val isEntryActionAvailable: IsEntryActionAvailable,
+    private val canVideoCall: CanVideoCall,
 ) : GetContactQuickActions {
 
     override operator fun invoke(details: ContactDetails): List<ContactQuickAction> {
-        val number = primaryPhoneNumber(details)
+        val phone = primaryPhone(details)
+        val number = phone?.number
         val address = primaryEmailAddress(details)
 
         return listOf(
@@ -31,7 +34,7 @@ internal class GetContactQuickActionsImpl @Inject constructor(
             ),
             quickAction(
                 type = ContactQuickActionType.VIDEO_CALL,
-                action = number?.let(ContactEntryAction::VideoCall),
+                action = videoCallAction(phone, number),
             ),
             quickAction(
                 type = ContactQuickActionType.EMAIL,
@@ -50,13 +53,11 @@ internal class GetContactQuickActionsImpl @Inject constructor(
         )
     }
 
-    private fun primaryPhoneNumber(details: ContactDetails): String? {
+    private fun primaryPhone(details: ContactDetails): ContactDataItem.Phone? {
         return details.dataItems
             .filterIsInstance<ContactDataItem.Phone>()
             .sortedWith(CONTACT_DATA_ITEM_PRIORITY)
-            .firstNotNullOfOrNull { dataItem ->
-                dataItem.number?.takeIf { number -> number.isNotBlank() }
-            }
+            .firstOrNull { dataItem -> !dataItem.number.isNullOrBlank() }
     }
 
     private fun primaryEmailAddress(details: ContactDetails): String? {
@@ -66,5 +67,16 @@ internal class GetContactQuickActionsImpl @Inject constructor(
             .firstNotNullOfOrNull { dataItem ->
                 dataItem.address?.takeIf { address -> address.isNotBlank() }
             }
+    }
+
+    private fun videoCallAction(
+        phone: ContactDataItem.Phone?,
+        number: String?,
+    ): ContactEntryAction? {
+        if (phone == null || number == null || !canVideoCall(phone.isCarrierVideoCallCapable)) {
+            return null
+        }
+
+        return ContactEntryAction.VideoCall(number)
     }
 }

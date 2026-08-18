@@ -17,6 +17,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryActions
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
+import com.android.contacts.domain.contactdetails.model.ContactEntryKind
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
@@ -122,10 +123,10 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
-    fun map_withAPhoneticNameThatDiffers_showsIt() {
+    fun map_withAPhoneticNameThatDiffers_showsItQuoted() {
         val state = mapOf(contactDetails(displayName = "Alex Doe", phoneticName = "Alek Dou"))
 
-        assertEquals(listOf("Alek Dou"), state.header.subtitles)
+        assertEquals(listOf("“Alek Dou”"), state.header.subtitles)
     }
 
     @Test
@@ -136,13 +137,23 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
-    fun map_ordersTheSubtitlesAfterThePhoneticName() {
+    fun map_joinsTheNicknameAndTheQuotedPhoneticNameIntoTheFirstSubtitle() {
         val details = contactDetails(displayName = "Alex Doe", phoneticName = "Alek Dou")
-        val cards = cardsOf(headerNickname = "Al", headerOrganization = "Acme")
+        val cards = cardsOf(
+            headerNickname = "Al",
+            headerOrganizationParts = listOf("Engineer", "R&D", "Acme"),
+        )
 
         val header = mapOf(details, cards).header
 
-        assertEquals(listOf("Alek Dou", "Al", "Acme"), header.subtitles)
+        assertEquals(listOf("Al • “Alek Dou”", "Engineer • R&D • Acme"), header.subtitles)
+    }
+
+    @Test
+    fun map_withoutANickname_stillQuotesThePhoneticName() {
+        val details = contactDetails(displayName = "Alex Doe", phoneticName = "Alek Dou")
+
+        assertEquals(listOf("“Alek Dou”"), mapOf(details).header.subtitles)
     }
 
     @Test
@@ -178,36 +189,22 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
-    fun map_withAnAboutCardName_buildsTheAboutCardTitle() {
-        val state = mapOf(cards = cardsOf(aboutCardGivenName = "Alex"))
-
-        assertEquals("${context.getString(R.string.about_card_title)} Alex", state.aboutCardTitle)
-    }
-
-    @Test
-    fun map_withoutAnAboutCardName_usesThePlainAboutCardTitle() {
-        val state = mapOf(cards = cardsOf(aboutCardGivenName = null))
-
-        assertEquals(context.getString(R.string.about_card_title), state.aboutCardTitle)
-    }
-
-    @Test
     fun map_forALabelledHeader_resolvesTheLabel() {
         val entry = entry(header = ContactEntryText.Label(ContactEntryLabel.WEBSITE))
-        val state = mapOf(cards = cardsOf(aboutCard = groupOf(entry)))
+        val state = mapOf(cards = cardsOf(notes = groupOf(entry)))
 
         assertEquals(
             context.getString(R.string.header_website_entry),
-            firstAboutEntry(state).header,
+            firstNoteEntry(state).header,
         )
     }
 
     @Test
     fun map_forAValueHeader_keepsTheValue() {
         val entry = entry(header = ContactEntryText.Value("example.org"))
-        val state = mapOf(cards = cardsOf(aboutCard = groupOf(entry)))
+        val state = mapOf(cards = cardsOf(notes = groupOf(entry)))
 
-        assertEquals("example.org", firstAboutEntry(state).header)
+        assertEquals("example.org", firstNoteEntry(state).header)
     }
 
     @Test
@@ -225,36 +222,56 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
-    fun map_forAPhoneGroup_picksTheCallIcon() {
+    fun map_forAPhoneEntry_picksTheCallIcon() {
         val state = mapOf(
-            cards = cardsOf(contactCard = groupOf(entry(), Phone.CONTENT_ITEM_TYPE)),
+            cards = cardsOf(
+                contactCard = groupOf(
+                    entry(kind = ContactEntryKind.PHONE),
+                    Phone.CONTENT_ITEM_TYPE,
+                ),
+            ),
         )
 
         assertEquals(ContactEntryIcon.CALL, firstContactEntry(state).icon)
     }
 
     @Test
-    fun map_forAPostalGroup_picksThePlaceIcon() {
+    fun map_forAPostalEntry_picksThePlaceIcon() {
         val state = mapOf(
-            cards = cardsOf(contactCard = groupOf(entry(), StructuredPostal.CONTENT_ITEM_TYPE)),
+            cards = cardsOf(
+                contactCard = groupOf(
+                    entry(kind = ContactEntryKind.POSTAL),
+                    StructuredPostal.CONTENT_ITEM_TYPE,
+                ),
+            ),
         )
 
         assertEquals(ContactEntryIcon.PLACE, firstContactEntry(state).icon)
     }
 
     @Test
-    fun map_forAnEmailGroup_picksTheEmailIcon() {
+    fun map_forAnEmailEntry_picksTheEmailIcon() {
         val state = mapOf(
-            cards = cardsOf(contactCard = groupOf(entry(), Email.CONTENT_ITEM_TYPE)),
+            cards = cardsOf(
+                contactCard = groupOf(
+                    entry(kind = ContactEntryKind.EMAIL),
+                    Email.CONTENT_ITEM_TYPE,
+                ),
+            ),
         )
 
         assertEquals(ContactEntryIcon.EMAIL, firstContactEntry(state).icon)
     }
 
     @Test
-    fun map_forASipGroup_picksTheSipIcon() {
+    fun map_forASipEntry_picksTheSipIcon() {
         val state = mapOf(
-            cards = cardsOf(contactCard = groupOf(entry(), SipAddress.CONTENT_ITEM_TYPE)),
+            cards = cardsOf(
+                contactCard = groupOf(
+                    entry(kind = ContactEntryKind.SIP_ADDRESS),
+                    SipAddress.CONTENT_ITEM_TYPE,
+                ),
+            ),
         )
 
         assertEquals(ContactEntryIcon.SIP_CALL, firstContactEntry(state).icon)
@@ -281,12 +298,30 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
-    fun map_forAnAboutCardGroup_picksNoIcon() {
+    fun map_forABirthdayEntry_picksTheCakeIcon() {
         val state = mapOf(
-            cards = cardsOf(aboutCard = groupOf(entry(), Organization.CONTENT_ITEM_TYPE)),
+            cards = cardsOf(contactCard = groupOf(entry(kind = ContactEntryKind.BIRTHDAY))),
         )
 
-        assertNull(firstAboutEntry(state).icon)
+        assertEquals(ContactEntryIcon.BIRTHDAY, firstContactEntry(state).icon)
+    }
+
+    @Test
+    fun map_forACustomFieldEntry_picksNoIcon() {
+        val state = mapOf(
+            cards = cardsOf(contactCard = groupOf(entry(kind = ContactEntryKind.CUSTOM_FIELD))),
+        )
+
+        assertNull(firstContactEntry(state).icon)
+    }
+
+    @Test
+    fun map_forAnUnknownEntry_picksNoIcon() {
+        val state = mapOf(
+            cards = cardsOf(contactCard = groupOf(entry(kind = ContactEntryKind.OTHER))),
+        )
+
+        assertNull(firstContactEntry(state).icon)
     }
 
     @Test
@@ -356,9 +391,9 @@ class ContactDetailsUiStateMapperImplTest {
 
     @Test
     fun map_forAnAboutCardGroup_leavesTheHeaderDirectionAlone() {
-        val state = mapOf(cards = cardsOf(aboutCard = groupOf(entry())))
+        val state = mapOf(cards = cardsOf(notes = groupOf(entry())))
 
-        assertFalse(firstAboutEntry(state).isHeaderLtr)
+        assertFalse(firstNoteEntry(state).isHeaderLtr)
     }
 
     @Test
@@ -423,7 +458,7 @@ class ContactDetailsUiStateMapperImplTest {
 
     @Test
     fun map_withEntries_offersNoPrompt() {
-        val state = mapOf(cards = cardsOf(aboutCard = groupOf(entry())))
+        val state = mapOf(cards = cardsOf(notes = groupOf(entry())))
 
         assertNull(state.emptyPrompt)
     }
@@ -506,17 +541,17 @@ class ContactDetailsUiStateMapperImplTest {
 
     private fun cardsOf(
         contactCard: List<ContactEntryGroup> = emptyList(),
-        aboutCard: List<ContactEntryGroup> = emptyList(),
-        aboutCardGivenName: String? = null,
+        notes: List<ContactEntryGroup> = emptyList(),
         headerNickname: String? = null,
-        headerOrganization: String? = null,
+        headerOrganizationParts: List<String> = emptyList(),
+        groups: List<String> = emptyList(),
     ): ContactDetailsCards {
         return ContactDetailsCards(
             contactCard = contactCard,
-            aboutCard = aboutCard,
-            aboutCardGivenName = aboutCardGivenName,
+            notes = notes,
             headerNickname = headerNickname,
-            headerOrganization = headerOrganization,
+            headerOrganizationParts = headerOrganizationParts,
+            groups = groups,
         )
     }
 
@@ -532,10 +567,12 @@ class ContactDetailsUiStateMapperImplTest {
         copyLabel: ContactEntryText? = null,
         actions: ContactEntryActions = ContactEntryActions(),
         isSuperPrimary: Boolean = false,
+        kind: ContactEntryKind = ContactEntryKind.OTHER,
     ): ContactEntry {
         return ContactEntry(
             id = 1L,
             mimeType = null,
+            kind = kind,
             isSuperPrimary = isSuperPrimary,
             header = header,
             subHeader = null,
@@ -550,8 +587,8 @@ class ContactDetailsUiStateMapperImplTest {
         return state.contactCard.first().entries.first()
     }
 
-    private fun firstAboutEntry(state: ContactDetailsContent.Loaded): ContactEntryUiModel {
-        return state.aboutCard.first().entries.first()
+    private fun firstNoteEntry(state: ContactDetailsContent.Loaded): ContactEntryUiModel {
+        return state.notes.first().entries.first()
     }
 
     private companion object {

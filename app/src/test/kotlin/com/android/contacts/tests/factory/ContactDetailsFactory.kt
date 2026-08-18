@@ -40,6 +40,8 @@ internal fun contactDetails(
     photoId: Long = 0L,
     photo: ContactPhoto? = null,
     customRingtone: String? = null,
+    customRingtoneTitle: String? = null,
+    groups: List<String> = emptyList(),
     dataItems: List<ContactDataItem> = emptyList(),
     capabilities: ContactCapabilities = contactCapabilities(),
 ): ContactDetails {
@@ -56,6 +58,8 @@ internal fun contactDetails(
         photoId = photoId,
         photo = photo,
         customRingtone = customRingtone,
+        customRingtoneTitle = customRingtoneTitle,
+        groups = groups,
         dataItems = dataItems,
         capabilities = capabilities,
     )
