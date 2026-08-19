@@ -59,6 +59,7 @@ internal fun SettingsNavHost(
                         onBuildVersionLongClick = { onAction(Action.BuildVersionLongClicked) },
                         onLicensesClick = { onAction(Action.LicensesClicked) },
                         onNavigateBack = { route = SettingsNavRoute.Main },
+                        snackbarHostState = snackbarHostState,
                     )
                 }
             }

@@ -29,17 +29,6 @@
         errorLine1="    public void onBackPressed() {"
         errorLine2="                ~~~~~~~~~~~~~">
         <location
-            file="packages/apps/Contacts/src/com/android/contacts/preference/ContactsPreferenceActivity.java"
-            line="189"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="GestureBackNavigation"
-        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX's backward compatible `OnBackPressedDispatcher`"
-        errorLine1="    public void onBackPressed() {"
-        errorLine2="                ~~~~~~~~~~~~~">
-        <location
             file="packages/apps/Contacts/src/com/android/contacts/list/CustomContactListFilterActivity.java"
             line="957"
             column="17"/>

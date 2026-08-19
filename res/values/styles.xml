@@ -16,7 +16,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
            xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Compose" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Compose" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="alertDialogTheme">@style/ContactsAlertDialogThemeAppCompat</item>
+    </style>
 
     <style name="EditorActivityTheme" parent="@style/PeopleActivityTheme">
         <item name="actionBarStyle">@style/EditorActionBarStyle</item>

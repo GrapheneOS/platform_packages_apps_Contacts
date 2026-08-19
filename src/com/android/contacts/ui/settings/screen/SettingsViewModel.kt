@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -64,7 +66,7 @@ internal class SettingsViewModel @Inject constructor(
     private val profile: StateFlow<ProfileData?> = profileRepository.observeProfile()
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(STATE_STOP_TIMEOUT_MILLIS),
             initialValue = null,
         )
 
@@ -146,16 +148,18 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     private fun openProfile() {
-        val contactId = profile.value
-            ?.takeIf { it.hasProfile }
-            ?.contactId
+        viewModelScope.launch {
+            val contactId = profile.filterNotNull().first()
+                .takeIf { it.hasProfile }
+                ?.contactId
 
-        val effect = when (contactId) {
-            null -> Effect.CreateProfile
-            else -> Effect.OpenProfile(contactId)
+            val effect = when (contactId) {
+                null -> Effect.CreateProfile
+                else -> Effect.OpenProfile(contactId)
+            }
+
+            emitEffect(effect)
         }
-
-        emitEffect(effect)
     }
 
     private fun selectSortOrder(sortOrder: SortOrder) {

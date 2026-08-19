@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
 }
 
@@ -92,7 +91,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.accompanist.drawablepainter)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
