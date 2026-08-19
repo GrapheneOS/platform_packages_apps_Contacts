@@ -2,7 +2,6 @@ package com.android.contacts.ui.settings.about
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -65,14 +64,12 @@ internal fun AboutScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    PaddingValues(
-                        start = SETTINGS_HORIZONTAL_PADDING +
-                            contentPadding.calculateStartPadding(layoutDirection),
-                        end = SETTINGS_HORIZONTAL_PADDING +
-                            contentPadding.calculateEndPadding(layoutDirection),
-                        top = SETTINGS_TOP_PADDING + contentPadding.calculateTopPadding(),
-                        bottom = contentPadding.calculateBottomPadding(),
-                    ),
+                    start = SETTINGS_HORIZONTAL_PADDING +
+                        contentPadding.calculateStartPadding(layoutDirection),
+                    end = SETTINGS_HORIZONTAL_PADDING +
+                        contentPadding.calculateEndPadding(layoutDirection),
+                    top = SETTINGS_TOP_PADDING + contentPadding.calculateTopPadding(),
+                    bottom = contentPadding.calculateBottomPadding(),
                 ),
         ) {
             SettingsCell(

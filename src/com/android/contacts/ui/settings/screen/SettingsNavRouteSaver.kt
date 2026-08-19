@@ -8,6 +8,7 @@ internal val SettingsNavRouteSaver: Saver<SettingsNavRoute, String> = Saver(
     restore = { savedRoute ->
         when (savedRoute) {
             SettingsNavRoute.About.key -> SettingsNavRoute.About
+            SettingsNavRoute.Licenses.key -> SettingsNavRoute.Licenses
             else -> SettingsNavRoute.Main
         }
     },

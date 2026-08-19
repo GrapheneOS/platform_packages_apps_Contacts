@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.ui.settings.screen.model.ABOUT_BUILD_VERSION_TEST_TAG
+import com.android.contacts.ui.settings.screen.model.ABOUT_LICENSES_SCREEN_TEST_TAG
 import com.android.contacts.ui.settings.screen.model.ABOUT_LICENSES_TEST_TAG
 import com.android.contacts.ui.settings.screen.model.SETTINGS_ITEM_TEST_TAG_PREFIX
 import com.android.contacts.ui.settings.screen.model.SettingsAction as Action
@@ -60,7 +61,7 @@ internal class SettingsNavHostTest {
     }
 
     @Test
-    fun whenLicensesIsClickedOnAbout_reportsTheAction() = runComposeUiTest {
+    fun whenLicensesIsClicked_showLicenses() = runComposeUiTest {
         val actions = mutableListOf<Action>()
         setContent {
             Content(onAction = actions::add)
@@ -69,7 +70,7 @@ internal class SettingsNavHostTest {
 
         onNodeWithTag(ABOUT_LICENSES_TEST_TAG).performClick()
 
-        assertEquals(listOf(Action.LicensesClicked), actions)
+        onNodeWithTag(ABOUT_LICENSES_SCREEN_TEST_TAG).assertIsDisplayed()
     }
 
     @Test

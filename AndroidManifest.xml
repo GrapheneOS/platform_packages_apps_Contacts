@@ -260,12 +260,6 @@
             android:theme="@style/Theme.Compose"/>
 
         <activity
-            android:name=".activities.LicenseActivity"
-            android:exported="true"
-            android:label="@string/activity_title_licenses"
-            android:theme="@style/ContactsPreferencesTheme"/>
-
-        <activity
             android:name=".activities.RequestPermissionsActivity"
             android:exported="false"
             android:theme="@style/PeopleActivityTheme"/>

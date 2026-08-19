@@ -10,6 +10,7 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Settings as ContactsContractSettings
 import android.provider.Settings
 import android.telecom.TelecomManager
+import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.LicenseActivity
 import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.interactions.ImportDialogFragment
@@ -161,16 +162,6 @@ internal class SettingsEffectHandlerImplTest {
         val intent = startedIntent()
         assertEquals(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, intent.action)
         assertEquals("package:com.android.contacts", intent.data.toString())
-    }
-
-    @Test
-    fun openLicenses_startsTheLicenseScreen() {
-        effectHandler.handle(Effect.OpenLicenses)
-
-        assertEquals(
-            LicenseActivity::class.java.name,
-            startedIntent().component?.className,
-        )
     }
 
     private fun startedIntent(): Intent {
