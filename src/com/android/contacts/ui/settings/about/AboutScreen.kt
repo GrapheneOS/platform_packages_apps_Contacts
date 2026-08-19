@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -26,6 +29,7 @@ import com.android.contacts.ui.settings.common.SettingsCell
 import com.android.contacts.ui.settings.common.SettingsTopAppBar
 import com.android.contacts.ui.settings.screen.model.ABOUT_BUILD_VERSION_TEST_TAG
 import com.android.contacts.ui.settings.screen.model.ABOUT_LICENSES_TEST_TAG
+import com.android.contacts.ui.settings.screen.model.SETTINGS_SNACKBAR_TEST_TAG
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +39,7 @@ internal fun AboutScreen(
     onLicensesClick: () -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -45,6 +50,12 @@ internal fun AboutScreen(
                 title = stringResource(R.string.setting_about),
                 onNavigateBack = onNavigateBack,
                 scrollBehavior = scrollBehavior,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.testTag(SETTINGS_SNACKBAR_TEST_TAG),
             )
         },
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
