@@ -259,12 +259,6 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.Compose"/>
 
-        <activity
-            android:name=".activities.LicenseActivity"
-            android:exported="true"
-            android:label="@string/activity_title_licenses"
-            android:theme="@style/ContactsPreferencesTheme"/>
-
         <!-- Used to filter contacts list by account -->
         <activity
             android:name=".list.AccountFilterActivity"

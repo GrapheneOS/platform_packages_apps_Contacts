@@ -17,4 +17,9 @@ internal sealed interface SettingsNavRoute {
         override val key: String = "about"
         override val depth: Int = 1
     }
+
+    data object Licenses : SettingsNavRoute {
+        override val key: String = "licenses"
+        override val depth: Int = 2
+    }
 }

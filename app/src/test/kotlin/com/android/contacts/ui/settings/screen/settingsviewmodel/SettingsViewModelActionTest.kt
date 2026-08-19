@@ -50,19 +50,6 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
         assertItemClickEmits(SettingsItemId.CALL_LOG_PERMISSION, Effect.OpenAppPermissions)
 
     @Test
-    fun onAction_whenLicensesClicked_opensLicenses() =
-        runTest(context = mainDispatcherRule.testDispatcher) {
-            val viewModel = createViewModel()
-
-            viewModel.effects.test {
-                viewModel.onAction(Action.LicensesClicked)
-
-                assertEquals(Effect.OpenLicenses, awaitItem())
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-    @Test
     fun onAction_whenBuildVersionLongClicked_copiesIt() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             every {
