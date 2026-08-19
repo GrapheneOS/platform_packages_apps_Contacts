@@ -1,8 +1,10 @@
 package com.android.contacts.ui.simimport.screen
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -107,7 +109,7 @@ internal fun SimImportContent(
                 end = contentPadding.calculateEndPadding(layoutDirection),
             ),
         ) {
-            if (uiState is State.Ready) {
+            if (uiState is State.WithAccounts) {
                 SimImportAccountPicker(
                     list = uiState.accounts,
                     current = uiState.currentAccount,
@@ -116,56 +118,14 @@ internal fun SimImportContent(
             }
 
             Box(Modifier.fillMaxSize()) {
-                when (uiState) {
-                    State.Loading -> {
-                        CircularProgressIndicator(
-                            Modifier
-                                .align(Alignment.Center)
-                                .size(64.dp),
-                        )
-                    }
-
-                    is State.Empty -> {
-                        EmptyState(
-                            uiState = uiState,
-                            modifier = Modifier.align(Alignment.Center),
-                        )
-                    }
-
-                    is State.Ready -> {
-                        ContactsList(
-                            contentPadding = contentPadding,
-                            contactsToImport = uiState.contactsToImport,
-                            contactsAlreadyImported = uiState.contactsAlreadyImported,
-                            onContactSelectionChange = { contact, isSelected ->
-                                onAction(Action.ContactSelectionChanged(contact, isSelected))
-                            },
-                        )
-                    }
-                }
+                SimImportBody(
+                    uiState = uiState,
+                    onAction = onAction,
+                    contentPadding = contentPadding,
+                )
             }
         }
     }
-}
-
-@Composable
-private fun EmptyState(
-    uiState: State.Empty,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = stringResource(
-            when (uiState) {
-                State.Empty.NoAccounts -> R.string.sim_import_empty_accounts_message
-                State.Empty.NoContacts -> R.string.sim_import_empty_message
-            },
-        ),
-        style = MaterialTheme.typography.labelLarge,
-        textAlign = TextAlign.Center,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(36.dp),
-    )
 }
 
 @Composable
@@ -195,7 +155,7 @@ private fun SimImportTopAppBar(
                     Icon(
                         imageVector = Icons.Default.SelectAll,
                         contentDescription = stringResource(
-                            R.string.sim_import_select_all_contacts
+                            R.string.sim_import_select_all_contacts,
                         ),
                     )
                 }
@@ -238,6 +198,63 @@ private fun SimImportTitle(uiState: State) {
         },
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
+    )
+}
+
+@Composable
+private fun BoxScope.SimImportBody(
+    uiState: State,
+    onAction: (Action) -> Unit,
+    contentPadding: PaddingValues,
+) {
+    when (uiState) {
+        State.Loading -> {
+            CircularProgressIndicator(
+                Modifier
+                    .align(Alignment.Center)
+                    .size(64.dp),
+            )
+        }
+
+        State.NoAccounts -> {
+            EmptyState(
+                messageRes = R.string.sim_import_empty_accounts_message,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+
+        is State.NoContacts -> {
+            EmptyState(
+                messageRes = R.string.sim_import_empty_message,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+
+        is State.Ready -> {
+            ContactsList(
+                contentPadding = contentPadding,
+                contactsToImport = uiState.contactsToImport,
+                contactsAlreadyImported = uiState.contactsAlreadyImported,
+                onContactSelectionChange = { contact, isSelected ->
+                    onAction(Action.ContactSelectionChanged(contact, isSelected))
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyState(
+    @StringRes messageRes: Int,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(messageRes),
+        style = MaterialTheme.typography.labelLarge,
+        textAlign = TextAlign.Center,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(36.dp),
     )
 }
 
@@ -357,7 +374,7 @@ private fun SimImportScreenLoadingPreview() {
 private fun SimImportScreenNoAccountsPreview() {
     ContactsPreviewTheme {
         SimImportContent(
-            uiState = State.Empty.NoAccounts,
+            uiState = State.NoAccounts,
             onAction = {},
         )
     }
@@ -366,9 +383,18 @@ private fun SimImportScreenNoAccountsPreview() {
 @PreviewLightDark
 @Composable
 private fun SimImportScreenNoContactsPreview() {
+    val icon = ResourcesCompat.getDrawable(
+        LocalResources.current,
+        R.drawable.logo_quick_contacts_color_44in48dp,
+        LocalContext.current.theme,
+    )
+    val account = AccountUiModel(name = "user@example.org", icon = icon)
     ContactsPreviewTheme {
         SimImportContent(
-            uiState = State.Empty.NoContacts,
+            uiState = State.NoContacts(
+                accounts = persistentListOf(account),
+                currentAccount = account,
+            ),
             onAction = {},
         )
     }

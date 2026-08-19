@@ -7,7 +7,6 @@ import com.android.contacts.model.SimContact
 import com.android.contacts.model.account.AccountWithDataSet
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import kotlinx.collections.immutable.ImmutableList
 
 internal fun interface StartSimImport {
     operator fun invoke(

@@ -12,21 +12,27 @@ internal sealed interface SimImportUiState {
     data object Loading : SimImportUiState
 
     @Immutable
-    sealed interface Empty : SimImportUiState {
-        @Immutable
-        data object NoAccounts : Empty
+    data object NoAccounts : SimImportUiState
 
-        @Immutable
-        data object NoContacts : Empty
+    @Immutable
+    sealed interface WithAccounts : SimImportUiState {
+        val accounts: ImmutableList<AccountUiModel>
+        val currentAccount: AccountUiModel
     }
 
     @Immutable
+    data class NoContacts(
+        override val accounts: ImmutableList<AccountUiModel> = persistentListOf(),
+        override val currentAccount: AccountUiModel,
+    ) : WithAccounts
+
+    @Immutable
     data class Ready(
-        val accounts: ImmutableList<AccountUiModel> = persistentListOf(),
-        val currentAccount: AccountUiModel,
+        override val accounts: ImmutableList<AccountUiModel> = persistentListOf(),
+        override val currentAccount: AccountUiModel,
         val contactsToImport: ImmutableList<SelectableItem<SimContactUiModel>> = persistentListOf(),
         val contactsAlreadyImported: ImmutableList<SimContactUiModel> = persistentListOf(),
-    ) : SimImportUiState {
+    ) : WithAccounts {
 
         val selectedContactsCount = contactsToImport.count { it.isSelected }
 

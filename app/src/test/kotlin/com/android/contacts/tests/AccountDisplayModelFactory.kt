@@ -2,8 +2,6 @@ package com.android.contacts.tests
 
 import android.graphics.drawable.Drawable
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
-import com.android.contacts.domain.accounts.model.AccountModel
-import kotlin.random.Random
 
 internal object AccountDisplayModelFactory {
     fun build(

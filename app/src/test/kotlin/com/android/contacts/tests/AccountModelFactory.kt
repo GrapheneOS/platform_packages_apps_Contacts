@@ -1,7 +1,6 @@
 package com.android.contacts.tests
 
 import com.android.contacts.domain.accounts.model.AccountModel
-import kotlin.random.Random
 
 internal object AccountModelFactory {
     fun build(

@@ -94,7 +94,7 @@ class SimImportViewModelTest {
 
             subject.uiState.test {
                 advanceUntilIdle()
-                assertEquals(State.Empty.NoAccounts, expectMostRecentItem())
+                assertEquals(State.NoAccounts, expectMostRecentItem())
             }
         }
 
@@ -109,7 +109,13 @@ class SimImportViewModelTest {
 
             subject.uiState.test {
                 advanceUntilIdle()
-                assertEquals(State.Empty.NoContacts, expectMostRecentItem())
+                assertEquals(
+                    State.NoContacts(
+                        accounts = persistentListOf(account.toUiModel()),
+                        currentAccount = account.toUiModel(),
+                    ),
+                    expectMostRecentItem(),
+                )
             }
         }
 

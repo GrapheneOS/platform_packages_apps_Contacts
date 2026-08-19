@@ -3,7 +3,6 @@ package com.android.contacts.tests
 import android.graphics.drawable.Drawable
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
-import kotlin.random.Random
 
 internal object AccountUiModelFactory {
     fun build(

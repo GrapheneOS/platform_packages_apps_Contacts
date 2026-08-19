@@ -25,9 +25,7 @@ import com.android.contacts.ui.simimport.screen.model.SimImportEffect as Effect
 import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -169,7 +167,6 @@ internal class SimImportViewModel @Inject constructor(
         }
     }
 
-    @Suppress("detekt:ReturnCount")
     private fun buildState(
         accounts: List<AccountDisplayModel>,
         currentAccount: AccountDisplayModel?,
@@ -177,26 +174,47 @@ internal class SimImportViewModel @Inject constructor(
         existingContacts: Map<AccountModel, Set<Int>>,
         selectedContacts: Map<AccountModel, Set<Int>>,
     ): State {
-        if (accounts.isEmpty() || currentAccount == null) {
-            return State.Empty.NoAccounts
+        return when {
+            accounts.isEmpty() || currentAccount == null -> State.NoAccounts
+            else -> buildStateWithAccounts(
+                accounts = accounts,
+                currentAccount = currentAccount,
+                simContacts = simContacts,
+                existingContacts = existingContacts,
+                selectedContacts = selectedContacts,
+            )
         }
+    }
+
+    private fun buildStateWithAccounts(
+        accounts: List<AccountDisplayModel>,
+        currentAccount: AccountDisplayModel,
+        simContacts: List<SimContact>,
+        existingContacts: Map<AccountModel, Set<Int>>,
+        selectedContacts: Map<AccountModel, Set<Int>>,
+    ): State.WithAccounts {
+        val accountsUi = accounts.map(accountUiModelMapper::map).toImmutableList()
+        val currentAccountUi = accountUiModelMapper.map(currentAccount)
+
         if (simContacts.isEmpty()) {
-            return State.Empty.NoContacts
+            return State.NoContacts(
+                accounts = accountsUi,
+                currentAccount = currentAccountUi,
+            )
         }
 
         val (contactsAlreadyImported, contactsToImport) = simContacts.partition { contact ->
             existingContacts.contains(currentAccount, contact)
         }
         return State.Ready(
-            accounts = accounts.map(accountUiModelMapper::map).toImmutableList(),
-            currentAccount = accountUiModelMapper.map(currentAccount),
-            contactsToImport = contactsToImport
-                .map {
-                    SelectableItem(
-                        item = simContactUiModelMapper.map(it),
-                        isSelected = selectedContacts.contains(currentAccount, it),
-                    )
-                }.toImmutableList(),
+            accounts = accountsUi,
+            currentAccount = currentAccountUi,
+            contactsToImport = contactsToImport.map {
+                SelectableItem(
+                    item = simContactUiModelMapper.map(it),
+                    isSelected = selectedContacts.contains(currentAccount, it),
+                )
+            }.toImmutableList(),
             contactsAlreadyImported = contactsAlreadyImported
                 .map(simContactUiModelMapper::map)
                 .toImmutableList(),
@@ -205,10 +223,7 @@ internal class SimImportViewModel @Inject constructor(
 
     private fun restoreSelectedContacts(): Map<AccountModel, Set<Int>> {
         val entries = savedStateHandle.get<List<AccountContactsEntry>>(KEY_SELECTED_CONTACTS)
-        return entries
-            ?.associate { it.account to it.contactNumbers.toImmutableSet() }
-            ?.toImmutableMap()
-            ?: persistentMapOf()
+        return entries?.associate { it.account to it.contactNumbers.toImmutableSet() }.orEmpty()
     }
 
     private fun findCurrentAccount(accounts: List<AccountDisplayModel>): AccountDisplayModel? {
@@ -258,24 +273,23 @@ internal class SimImportViewModel @Inject constructor(
     }
 
     private fun selectAll() {
-        val account = currentAccount.value ?: return
-        val state = (uiState.value as? State.Ready) ?: return
-        val allContacts = state.contactsToImport
+        val account = currentAccount.value?.account ?: return
+        val allContacts = getContactsToImport(account) ?: return
         selectedContacts.update { map ->
-            map + (account.account to allContacts.map { it.item.recordNumber }.toSet())
+            map + (account to allContacts.map { it.recordNumber }.toSet())
         }
     }
 
     private fun deselectAll() {
-        val account = currentAccount.value ?: return
+        val account = currentAccount.value?.account ?: return
         selectedContacts.update { map ->
-            map + (account.account to emptySet())
+            map + (account to emptySet())
         }
     }
 
     private fun startImport() {
         val account = currentAccount.value?.account ?: return
-        val selectedContacts = getSelectedContacts() ?: run {
+        val selectedContacts = getSelectedContacts(account) ?: run {
             Log.w(TAG, "No selected contacts to import")
             return
         }
@@ -284,15 +298,16 @@ internal class SimImportViewModel @Inject constructor(
         close(isSuccessful = true)
     }
 
-    private fun getSelectedContacts(): List<SimContact>? {
-        val allContacts = simContacts.value.orEmpty()
-        val state = (uiState.value as? State.Ready) ?: return null
-        val selectedContactsNumbers = state.contactsToImport
-            .filter { it.isSelected }
-            .map { it.item.recordNumber }
-        return allContacts
-            .filter { selectedContactsNumbers.contains(it.recordNumber) }
-            .ifEmpty { null }
+    private fun getContactsToImport(account: AccountModel): List<SimContact>? {
+        val existingContactsNumbers = existingContacts.value[account].orEmpty()
+        return simContacts.value?.filterNot { existingContactsNumbers.contains(it.recordNumber) }
+    }
+
+    private fun getSelectedContacts(account: AccountModel): List<SimContact>? {
+        val selectedContactsNumbers = selectedContacts.value[account] ?: return null
+        return getContactsToImport(account)
+            ?.filter { selectedContactsNumbers.contains(it.recordNumber) }
+            ?.ifEmpty { null }
     }
 
     private fun emitEffect(effect: Effect) {
