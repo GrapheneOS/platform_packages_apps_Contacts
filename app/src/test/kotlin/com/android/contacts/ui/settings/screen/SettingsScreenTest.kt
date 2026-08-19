@@ -65,10 +65,10 @@ internal class SettingsScreenTest {
     fun otherEffects_arePassedToTheEffectHandler() = runComposeUiTest {
         setScreenContent()
 
-        effects.tryEmit(Effect.OpenLicenses)
+        effects.tryEmit(Effect.OpenAddAccount)
         waitForIdle()
 
-        verify(exactly = 1) { effectHandler.handle(Effect.OpenLicenses) }
+        verify(exactly = 1) { effectHandler.handle(Effect.OpenAddAccount) }
     }
 
     @Test
@@ -77,10 +77,10 @@ internal class SettingsScreenTest {
 
         effects.tryEmit(Effect.ShowSimImportFailure)
         waitForIdle()
-        effects.tryEmit(Effect.OpenLicenses)
+        effects.tryEmit(Effect.OpenAddAccount)
         waitForIdle()
 
-        verify(exactly = 1) { effectHandler.handle(Effect.OpenLicenses) }
+        verify(exactly = 1) { effectHandler.handle(Effect.OpenAddAccount) }
     }
 
     @Test

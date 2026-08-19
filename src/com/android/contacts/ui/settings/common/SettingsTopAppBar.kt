@@ -22,8 +22,8 @@ import com.android.contacts.ui.core.ContactsPreviewTheme
 internal fun SettingsTopAppBar(
     title: String,
     onNavigateBack: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     TopAppBar(
         title = {

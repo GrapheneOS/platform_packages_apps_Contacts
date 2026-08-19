@@ -11,7 +11,6 @@ internal sealed interface SettingsEffect {
     data object ShowImportDialog : Host
     data object ShowExportDialog : Host
     data object OpenBlockedNumbers : Host
-    data object OpenLicenses : Host
     data object OpenAppPermissions : Host
     data object ShowSimImportFailure : Message
 
