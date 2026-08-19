@@ -70,7 +70,6 @@ import com.android.contacts.group.GroupListItem;
 import com.android.contacts.group.GroupMembersFragment;
 import com.android.contacts.group.GroupNameEditDialogFragment;
 import com.android.contacts.group.GroupUtil;
-import com.android.contacts.list.AccountFilterActivity;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.list.ContactListFilterController;
 import com.android.contacts.list.ContactListFilterController.ContactListFilterListener;
@@ -976,7 +975,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         switchToOrUpdateGroupView(GroupUtil.ACTION_SWITCH_GROUP);
     }
 
-    private void onFilterMenuItemClicked(Intent intent) {
+    private void onFilterMenuItemClicked(ContactListFilter filter) {
         // We must pop second level first to "restart" mContactsListFragment before changing filter.
         if (isInSecondLevel()) {
             popSecondLevel();
@@ -989,8 +988,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             mContactListFilterController.setContactListFilter(current, false);
         }
         mCurrentView = ContactsView.ACCOUNT_VIEW;
-        AccountFilterUtil.handleAccountFilterResult(mContactListFilterController,
-                AppCompatActivity.RESULT_OK, intent);
+        AccountFilterUtil.handleAccountFilterResult(mContactListFilterController, filter);
     }
 
     private void switchToOrUpdateGroupView(String action) {
@@ -1047,11 +1045,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     private void resetFilter() {
-        final Intent intent = new Intent();
         final ContactListFilter filter = AccountFilterUtil.createContactsFilter(this);
-        intent.putExtra(AccountFilterActivity.EXTRA_CONTACT_LIST_FILTER, filter);
-        AccountFilterUtil.handleAccountFilterResult(
-                mContactListFilterController, AppCompatActivity.RESULT_OK, intent);
+        AccountFilterUtil.handleAccountFilterResult(mContactListFilterController, filter);
     }
 
     // Reset toolbar and status bar color to Contacts theme color.
@@ -1223,9 +1218,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     @Override
     public void onAccountViewSelected(ContactListFilter filter) {
-        final Intent intent = new Intent();
-        intent.putExtra(AccountFilterActivity.EXTRA_CONTACT_LIST_FILTER, filter);
-        onFilterMenuItemClicked(intent);
+        onFilterMenuItemClicked(filter);
     }
 
     public boolean isGroupView() {

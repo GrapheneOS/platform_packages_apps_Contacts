@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"Kontaktlar"</string>
     <string name="contactsList" msgid="4456188358262700898">"Kontaktlar"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"Kontakt əlavə edin"</string>
@@ -169,7 +168,6 @@
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"Dəyişikliklər ləğv edilsin?"</string>
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"Ləğv edin"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"Ləğv edin"</string>
-    <string name="leave_customize_confirmation_dialog_message" msgid="5330853530872707231">"Fərdiləşmə ləğv edilsin?"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"Kontakt axtarın"</string>
     <string name="title_edit_group" msgid="4246193439931854759">"Kontaktları silin"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"Yerli profilim"</string>
@@ -350,17 +348,6 @@
     <string name="collapse_fields_description" msgid="3213872920491992960">"Yığcamlaşdırın"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"Genişləndirilib"</string>
     <string name="announce_collapsed_fields" msgid="7611318715383228182">"Yığcamlaşdırılıb"</string>
-    <string name="list_filter_all_accounts" msgid="6173785387972096770">"Bütün kontaktlar"</string>
-    <string name="list_filter_all_starred" msgid="2582865760150432568">"Ulduzlu"</string>
-    <string name="list_filter_customize" msgid="2368900508906139537">"Fərdiləşdirin"</string>
-    <string name="list_filter_single" msgid="6003845379327432129">"Kontakt"</string>
-    <string name="display_ungrouped" msgid="4823012484407759332">"Bütün digər kontaktlar"</string>
-    <string name="display_all_contacts" msgid="1281067776483704512">"Bütün kontaktlar"</string>
-    <string name="menu_sync_remove" msgid="7523335046562082188">"Sinxronizasiya qrupunu silin"</string>
-    <string name="dialog_sync_add" msgid="8012361965908515959">"Sinx qrup əlavə edin"</string>
-    <string name="display_more_groups" msgid="8398232980355188133">"Daha çox qrup..."</string>
-    <string name="display_warn_remove_ungrouped" msgid="522866344738506017">"\"<xliff:g id="GROUP">%s</xliff:g>\" qrupunun sinxronlaşmadan silinməsi istənilən qrupsuz kontaktı da sinxronlaşmadan siləcək."</string>
-    <string name="savingDisplayGroups" msgid="6779839417901711381">"Displey seçənəkləri yadda saxlanır..."</string>
     <string name="listCustomView" msgid="5782275477737032610">"Fərdiləşdirilmiş görünüş"</string>
     <string name="dialog_new_contact_account" msgid="5652018124788855057">"İmport olunan kontaktları yadda saxlayın:"</string>
     <string name="import_from_sim" msgid="7825280799813847991">"SİM kart"</string>
@@ -431,10 +418,6 @@
     <string name="dialog_import" msgid="4590232235052756593">"Kontaktları buradan import edin:"</string>
     <string name="share_error" msgid="4854612167186185739">"Bu kontakt paylaşıla bilməz."</string>
     <string name="no_contact_to_share" msgid="6285287228557175749">"Bölüşmək üçün kontakt yoxdur."</string>
-    <string name="menu_contacts_filter" msgid="5854584270038139275">"Göstərilməli kontaktlar"</string>
-    <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Göstəriləsi kontaktlar"</string>
-    <string name="custom_list_filter" msgid="2544327670202891979">"Görünüşü fərdiləşdirin"</string>
-    <string name="menu_custom_filter_save" msgid="2412959737200856930">"Yadda saxlayın"</string>
     <string name="hint_findContacts" msgid="5554298639062659655">"Kontakt axtarın"</string>
     <string name="contactsFavoritesLabel" msgid="8339645684721732714">"Favoritlər"</string>
     <string name="menu_import" msgid="2206768098740726906">"İmport edin"</string>
@@ -458,8 +441,6 @@
     <string name="about_terms_of_service" msgid="7419670771785057738">"Xidmət şərtləri"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"Açıq mənbə lisenziyaları"</string>
     <string name="url_open_error_toast" msgid="4885855620824048385">"Linki açmaq alınmadı."</string>
-    <string name="account_filter_view_checked" msgid="4740544238806346376">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> yoxlanılıb"</string>
-    <string name="account_filter_view_not_checked" msgid="5782705545786455847">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> yoxlanılmayıb"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"Video zəng edin"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"Silin"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"Ellips"</string>

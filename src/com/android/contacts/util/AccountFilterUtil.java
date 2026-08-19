@@ -17,8 +17,6 @@
 package com.android.contacts.util;
 
 import android.accounts.Account;
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -27,12 +25,10 @@ import android.graphics.drawable.Drawable;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.contacts.R;
 import com.android.contacts.activities.ContactEditorActivity;
-import com.android.contacts.list.AccountFilterActivity;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.list.ContactListFilterController;
 import com.android.contacts.model.AccountTypeManager;
@@ -43,7 +39,6 @@ import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.util.concurrent.ContactsExecutors;
 import com.android.contacts.util.concurrent.ListenableFutureLoader;
 import com.android.contactsbind.ObjectFactory;
-
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -57,44 +52,19 @@ import java.util.List;
 public class AccountFilterUtil {
     private static final String TAG = AccountFilterUtil.class.getSimpleName();
 
-     /**
-      * Launches account filter setting Activity using
-      * {@link Fragment#startActivityForResult(Intent, int)}.
-      *
-      * @param requestCode requestCode for {@link Activity#startActivityForResult(Intent, int)}
-      * @param currentFilter currently-selected filter, so that it can be displayed as activated.
-      */
-     public static void startAccountFilterActivityForResult(
-             Fragment fragment, int requestCode, ContactListFilter currentFilter) {
-         final Activity activity = fragment.getActivity();
-         if (activity != null) {
-             final Intent intent = new Intent(activity, AccountFilterActivity.class);
-             fragment.startActivityForResult(intent, requestCode);
-         } else {
-             Log.w(TAG, "getActivity() returned null. Ignored");
-         }
-     }
-
     /**
-     * Useful method to handle onActivityResult() for
-     * {@link #startAccountFilterActivityForResult(Fragment, int, ContactListFilter)}.
-     *
      * This will update filter via a given ContactListFilterController.
      */
     public static void handleAccountFilterResult(
-            ContactListFilterController filterController, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            final ContactListFilter filter = (ContactListFilter)
-                    data.getParcelableExtra(AccountFilterActivity.EXTRA_CONTACT_LIST_FILTER);
-            if (filter == null) {
-                return;
-            }
-            if (filter.filterType == ContactListFilter.FILTER_TYPE_CUSTOM) {
-                filterController.selectCustomFilter();
-            } else {
-                filterController.setContactListFilter(filter, /* persistent */
-                        filter.filterType == ContactListFilter.FILTER_TYPE_ALL_ACCOUNTS);
-            }
+        ContactListFilterController filterController, ContactListFilter filter) {
+        if (filter == null) {
+            return;
+        }
+        if (filter.filterType == ContactListFilter.FILTER_TYPE_CUSTOM) {
+            filterController.selectCustomFilter();
+        } else {
+            filterController.setContactListFilter(filter, /* persistent */
+                    filter.filterType == ContactListFilter.FILTER_TYPE_ALL_ACCOUNTS);
         }
     }
 

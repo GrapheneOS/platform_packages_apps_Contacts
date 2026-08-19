@@ -1,7 +1,6 @@
 package com.android.contacts.ui.settings.screen.mapper.settingsuistatemapper
 
 import android.content.Context
-import com.android.contacts.data.contactsfilter.model.ContactsFilter
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.DisplaySettings
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
@@ -31,7 +30,6 @@ internal abstract class BaseSettingsUiStateMapperTest {
         availability: SettingsAvailability = AVAILABILITY,
         displaySettings: DisplaySettings = DISPLAY_SETTINGS,
         defaultAccountLabel: String? = null,
-        contactsFilter: ContactsFilter? = null,
         buildVersion: String? = null,
         isCallLogPermissionGranted: Boolean = true,
     ): SettingsData {
@@ -39,7 +37,6 @@ internal abstract class BaseSettingsUiStateMapperTest {
             availability = availability,
             displaySettings = displaySettings,
             defaultAccountLabel = defaultAccountLabel,
-            contactsFilter = contactsFilter,
             buildVersion = buildVersion,
             isCallLogPermissionGranted = isCallLogPermissionGranted,
         )

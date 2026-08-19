@@ -1,7 +1,6 @@
 package com.android.contacts.ui.settings.screen.mapper.settingsuistatemapper
 
 import com.android.contacts.R
-import com.android.contacts.data.contactsfilter.model.ContactsFilter
 import com.android.contacts.data.profile.model.ProfileData
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
@@ -74,39 +73,6 @@ internal class SettingsUiStateMapperSummaryTest : BaseSettingsUiStateMapperTest(
         val summary = summaryOf(uiState, SettingsItemId.MY_INFO)
 
         assertTrue(summary.orEmpty().contains("+31 6 1234 5678"))
-    }
-
-    @Test
-    fun map_whenFilterIsAllAccounts_showsAllAccountsSummary() {
-        val uiState = mapper.map(
-            settingsData = settingsData(contactsFilter = ContactsFilter.ALL_ACCOUNTS),
-            profile = null,
-        )
-
-        assertEquals(
-            "string-${R.string.list_filter_all_accounts}",
-            summaryOf(uiState, SettingsItemId.CONTACTS_FILTER),
-        )
-    }
-
-    @Test
-    fun map_whenFilterIsCustom_showsCustomSummary() {
-        val uiState = mapper.map(
-            settingsData = settingsData(contactsFilter = ContactsFilter.CUSTOM),
-            profile = null,
-        )
-
-        assertEquals(
-            "string-${R.string.listCustomView}",
-            summaryOf(uiState, SettingsItemId.CONTACTS_FILTER),
-        )
-    }
-
-    @Test
-    fun map_whenThereIsNoFilter_leavesFilterWithoutSummary() {
-        val uiState = mapper.map(settingsData = settingsData(contactsFilter = null), profile = null)
-
-        assertNull(summaryOf(uiState, SettingsItemId.CONTACTS_FILTER))
     }
 
     @Test

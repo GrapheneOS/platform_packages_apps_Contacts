@@ -4,7 +4,6 @@ internal enum class SettingsItemId {
     MY_INFO,
     ACCOUNTS,
     DEFAULT_ACCOUNT,
-    CONTACTS_FILTER,
     SORT_ORDER,
     DISPLAY_ORDER,
     PHONETIC_NAME_DISPLAY,

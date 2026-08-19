@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"ಸಂಪರ್ಕಗಳು"</string>
     <string name="contactsList" msgid="4456188358262700898">"ಸಂಪರ್ಕಗಳು"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"ಸಂಪರ್ಕ ಸೇರಿಸಿ"</string>
@@ -169,7 +168,6 @@
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"ಬದಲಾವಣೆಗಳನ್ನು ತ್ಯಜಿಸಬೇಕೇ?"</string>
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"ತ್ಯಜಿಸು"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"ರದ್ದುಮಾಡಿ"</string>
-    <string name="leave_customize_confirmation_dialog_message" msgid="5330853530872707231">"ಕಸ್ಟಮೈಸೇಶನ್‌ಗಳನ್ನು ತ್ಯಜಿಸುವುದೇ?"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"ಸಂಪರ್ಕಗಳನ್ನು ಹುಡುಕಿ"</string>
     <string name="title_edit_group" msgid="4246193439931854759">"ಸಂಪರ್ಕಗಳನ್ನು ತೆಗೆದುಹಾಕಿ"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"ನನ್ನ ಸ್ಥಳೀಯ ಪ್ರೊಫೈಲ್"</string>
@@ -350,17 +348,6 @@
     <string name="collapse_fields_description" msgid="3213872920491992960">"ಸಂಕುಚಿಸು"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"ವಿಸ್ತರಿಸಲಾಗಿದೆ"</string>
     <string name="announce_collapsed_fields" msgid="7611318715383228182">"ಸಂಕುಚಿಸಲಾಗಿದೆ"</string>
-    <string name="list_filter_all_accounts" msgid="6173785387972096770">"ಎಲ್ಲಾ ಸಂಪರ್ಕಗಳು"</string>
-    <string name="list_filter_all_starred" msgid="2582865760150432568">"ನಕ್ಷತ್ರ ಹಾಕಿರುವುದು"</string>
-    <string name="list_filter_customize" msgid="2368900508906139537">"ಕಸ್ಟಮೈಸ್"</string>
-    <string name="list_filter_single" msgid="6003845379327432129">"ಸಂಪರ್ಕಿಸು"</string>
-    <string name="display_ungrouped" msgid="4823012484407759332">"ಇತರ ಎಲ್ಲ ಸಂಪರ್ಕಗಳು"</string>
-    <string name="display_all_contacts" msgid="1281067776483704512">"ಎಲ್ಲಾ ಸಂಪರ್ಕಗಳು"</string>
-    <string name="menu_sync_remove" msgid="7523335046562082188">"ಸಿಂಕ್‌ ಗುಂಪನ್ನು ತೆಗೆದುಹಾಕಿ"</string>
-    <string name="dialog_sync_add" msgid="8012361965908515959">"ಸಿಂಕ್‌ ಗುಂಪನ್ನು ಸೇರಿಸಿ"</string>
-    <string name="display_more_groups" msgid="8398232980355188133">"ಇನ್ನಷ್ಟು ಗುಂಪುಗಳು…"</string>
-    <string name="display_warn_remove_ungrouped" msgid="522866344738506017">"ಸಿಂಕ್‌ನಿಂದ \"<xliff:g id="GROUP">%s</xliff:g>\" ಅನ್ನು ತೆಗೆದುಹಾಕುವುದರಿಂದ ಸಿಂಕ್‌ನಿಂದ ಯಾವುದೇ ಗುಂಪು ಮಾಡದಿರುವ ಸಂಪರ್ಕಗಳನ್ನು ಸಹ ತೆಗೆದುಹಾಕುತ್ತದೆ."</string>
-    <string name="savingDisplayGroups" msgid="6779839417901711381">"ಪ್ರದರ್ಶನ ಆಯ್ಕೆಗಳನ್ನು ಸೇವ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."</string>
     <string name="listCustomView" msgid="5782275477737032610">"ಕಸ್ಟಮೈಸ್ ವೀಕ್ಷಣೆ"</string>
     <string name="dialog_new_contact_account" msgid="5652018124788855057">"ಆಮದಾದ ಸಂಪರ್ಕಗಳನ್ನು ಇಲ್ಲಿ ಸೇವ್ ಮಾಡಿ:"</string>
     <string name="import_from_sim" msgid="7825280799813847991">"ಸಿಮ್‌ ಕಾರ್ಡ್"</string>
@@ -431,10 +418,6 @@
     <string name="dialog_import" msgid="4590232235052756593">"ಇದರಿಂದ ಸಂಪರ್ಕಗಳನ್ನು ಆಮದು ಮಾಡಿ"</string>
     <string name="share_error" msgid="4854612167186185739">"ಈ ಸಂಪರ್ಕವನ್ನು ಹಂಚಿಕೊಳ್ಳಲು ಸಾಧ್ಯವಿಲ್ಲ."</string>
     <string name="no_contact_to_share" msgid="6285287228557175749">"ಹಂಚಿಕೊಳ್ಳಲು ಯಾವುದೇ ಸಂಪರ್ಕಗಳಿಲ್ಲ."</string>
-    <string name="menu_contacts_filter" msgid="5854584270038139275">"ಪ್ರದರ್ಶಿಸಲು ಸಂಪರ್ಕಗಳು"</string>
-    <string name="activity_title_contacts_filter" msgid="6340531582631006680">"ಪ್ರದರ್ಶಿಸಲು ಸಂಪರ್ಕಗಳು"</string>
-    <string name="custom_list_filter" msgid="2544327670202891979">"ವೀಕ್ಷಣೆಯನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಿ"</string>
-    <string name="menu_custom_filter_save" msgid="2412959737200856930">"ಸೇವ್ ಮಾಡಿ"</string>
     <string name="hint_findContacts" msgid="5554298639062659655">"ಸಂಪರ್ಕಗಳನ್ನು ಹುಡುಕಿ"</string>
     <string name="contactsFavoritesLabel" msgid="8339645684721732714">"ಮೆಚ್ಚಿನವುಗಳು"</string>
     <string name="menu_import" msgid="2206768098740726906">"ಆಮದು ಮಾಡಿ"</string>
@@ -458,8 +441,6 @@
     <string name="about_terms_of_service" msgid="7419670771785057738">"ಸೇವಾ ನಿಯಮಗಳು"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"ತೆರೆದ ಮೂಲ ಪರವಾನಗಿಗಳು"</string>
     <string name="url_open_error_toast" msgid="4885855620824048385">"url ತೆರೆಯಲು ವಿಫಲವಾಗಿದೆ."</string>
-    <string name="account_filter_view_checked" msgid="4740544238806346376">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> ಪರಿಶೀಲಿಸಲಾಗಿದೆ"</string>
-    <string name="account_filter_view_not_checked" msgid="5782705545786455847">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"ವೀಡಿಯೊ ಕರೆ ಮಾಡಿ"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"ಅಳಿಸಿ"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"ಎಲಿಪ್ಸಿಸ್"</string>

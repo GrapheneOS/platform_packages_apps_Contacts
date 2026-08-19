@@ -187,10 +187,6 @@ internal class SettingsNavHostTest {
                             id = SettingsItemId.DEFAULT_ACCOUNT,
                             title = "Default account for new contacts",
                         ),
-                        SettingsItemUiModel(
-                            id = SettingsItemId.CONTACTS_FILTER,
-                            title = "Contacts to display",
-                        ),
                     ),
                 ),
                 SettingsGroupUiModel(

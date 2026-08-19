@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"కాంటాక్ట్‌లు"</string>
     <string name="contactsList" msgid="4456188358262700898">"కాంటాక్ట్‌లు"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"కాంటాక్ట్‌ను జోడించండి"</string>
@@ -169,7 +168,6 @@
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"మార్పులను విస్మరించాలా?"</string>
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"విస్మరించు"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"రద్దు చేయండి"</string>
-    <string name="leave_customize_confirmation_dialog_message" msgid="5330853530872707231">"అనుకూలీకరణలను విస్మరించాలా?"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"కాంటాక్ట్‌లను సెర్చ్ చేయండి"</string>
     <string name="title_edit_group" msgid="4246193439931854759">"కాంటాక్ట్‌లను తీసివేయండి"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"నా స్థానిక ప్రొఫైల్"</string>
@@ -350,17 +348,6 @@
     <string name="collapse_fields_description" msgid="3213872920491992960">"కుదిస్తుంది"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"విస్తరింపజేయబడింది"</string>
     <string name="announce_collapsed_fields" msgid="7611318715383228182">"కుదించబడింది"</string>
-    <string name="list_filter_all_accounts" msgid="6173785387972096770">"అన్ని కాంటాక్ట్‌లు"</string>
-    <string name="list_filter_all_starred" msgid="2582865760150432568">"నక్షత్రం గుర్తు ఉన్నవి"</string>
-    <string name="list_filter_customize" msgid="2368900508906139537">"అనుకూలంగా మార్చండి"</string>
-    <string name="list_filter_single" msgid="6003845379327432129">"కాంటాక్ట్"</string>
-    <string name="display_ungrouped" msgid="4823012484407759332">"అన్ని ఇతర కాంటాక్ట్‌లు"</string>
-    <string name="display_all_contacts" msgid="1281067776483704512">"అన్ని కాంటాక్ట్‌లు"</string>
-    <string name="menu_sync_remove" msgid="7523335046562082188">"సింక్‌ గ్రూప్‌ను తీసివేయండి"</string>
-    <string name="dialog_sync_add" msgid="8012361965908515959">"సింక్‌ గ్రూప్‌ను జోడించండి"</string>
-    <string name="display_more_groups" msgid="8398232980355188133">"మరిన్ని గ్రూప్‌లు…"</string>
-    <string name="display_warn_remove_ungrouped" msgid="522866344738506017">"సింక్‌ నుండి \"<xliff:g id="GROUP">%s</xliff:g>\"ని తీసివేయడం వలన సింక్‌ నుండి గ్రూప్ చేయబడని కాంటాక్ట్‌లు కూడా తీసివేయబడతాయి."</string>
-    <string name="savingDisplayGroups" msgid="6779839417901711381">"ప్రదర్శన ఎంపికలను సేవ్ చేస్తోంది…"</string>
     <string name="listCustomView" msgid="5782275477737032610">"అనుకూలీకృత వీక్షణ"</string>
     <string name="dialog_new_contact_account" msgid="5652018124788855057">"దిగుమతి చేసిన కాంటాక్ట్‌లను దీనిలో సేవ్ చేయండి:"</string>
     <string name="import_from_sim" msgid="7825280799813847991">"SIM కార్డ్"</string>
@@ -431,10 +418,6 @@
     <string name="dialog_import" msgid="4590232235052756593">"దీని నుండి కాంటాక్ట్‌లు దిగుమతి చేయండి"</string>
     <string name="share_error" msgid="4854612167186185739">"ఈ కాంటాక్ట్‌ను షేర్ చేయడం సాధ్యపడదు."</string>
     <string name="no_contact_to_share" msgid="6285287228557175749">"షేర్ చేయడానికి కాంటాక్ట్‌లు ఏవీ లేవు."</string>
-    <string name="menu_contacts_filter" msgid="5854584270038139275">"డిస్‌ప్లే చేయాల్సిన కాంటాక్ట్‌లు"</string>
-    <string name="activity_title_contacts_filter" msgid="6340531582631006680">"డిస్‌ప్లే చేయాల్సిన కాంటాక్ట్‌లు"</string>
-    <string name="custom_list_filter" msgid="2544327670202891979">"అనుకూలంగా మార్చిన వీక్షణ"</string>
-    <string name="menu_custom_filter_save" msgid="2412959737200856930">"సేవ్ చేయండి"</string>
     <string name="hint_findContacts" msgid="5554298639062659655">"కాంటాక్ట్‌లను సెర్చ్ చేయండి"</string>
     <string name="contactsFavoritesLabel" msgid="8339645684721732714">"ఇష్టమైనవి"</string>
     <string name="menu_import" msgid="2206768098740726906">"దిగుమతి చేయండి"</string>
@@ -458,8 +441,6 @@
     <string name="about_terms_of_service" msgid="7419670771785057738">"సర్వీస్ నియమాలు"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"ఓపెన్ సోర్స్ లైసెన్స్‌లు"</string>
     <string name="url_open_error_toast" msgid="4885855620824048385">"urlని తెరవడంలో విఫలమైంది."</string>
-    <string name="account_filter_view_checked" msgid="4740544238806346376">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> ఎంచుకోబడింది"</string>
-    <string name="account_filter_view_not_checked" msgid="5782705545786455847">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> ఎంచుకోబడలేదు"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"వీడియో కాల్ చేస్తుంది"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"తొలగిస్తుంది"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"అధ్యాహారం"</string>

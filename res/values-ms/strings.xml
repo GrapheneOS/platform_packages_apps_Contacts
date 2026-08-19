@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"Kenalan"</string>
     <string name="contactsList" msgid="4456188358262700898">"Kenalan"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"Tambah kenalan"</string>
@@ -169,7 +168,6 @@
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"Buang perubahan?"</string>
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"Buang"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"Batal"</string>
-    <string name="leave_customize_confirmation_dialog_message" msgid="5330853530872707231">"Buang penyesuaian?"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"Cari dalam kenalan"</string>
     <string name="title_edit_group" msgid="4246193439931854759">"Alih keluar kenalan"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"Profil setempat saya"</string>
@@ -350,17 +348,6 @@
     <string name="collapse_fields_description" msgid="3213872920491992960">"Runtuhkan"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"Dikembangkan"</string>
     <string name="announce_collapsed_fields" msgid="7611318715383228182">"Diruntuhkan"</string>
-    <string name="list_filter_all_accounts" msgid="6173785387972096770">"Semua kenalan"</string>
-    <string name="list_filter_all_starred" msgid="2582865760150432568">"Dibintangkan"</string>
-    <string name="list_filter_customize" msgid="2368900508906139537">"Sesuaikan"</string>
-    <string name="list_filter_single" msgid="6003845379327432129">"Kenalan"</string>
-    <string name="display_ungrouped" msgid="4823012484407759332">"Semua kenalan lain"</string>
-    <string name="display_all_contacts" msgid="1281067776483704512">"Semua kenalan"</string>
-    <string name="menu_sync_remove" msgid="7523335046562082188">"Alih keluar kumpulan penyegerakan"</string>
-    <string name="dialog_sync_add" msgid="8012361965908515959">"Tambah kumpulan segerak"</string>
-    <string name="display_more_groups" msgid="8398232980355188133">"Lagi kumpulan..."</string>
-    <string name="display_warn_remove_ungrouped" msgid="522866344738506017">"Mengalih keluar \"<xliff:g id="GROUP">%s</xliff:g>\" daripada penyegerakan juga akan turut mengalih keluar sebarang kenalan tanpa kumpulan dari penyegerakan."</string>
-    <string name="savingDisplayGroups" msgid="6779839417901711381">"Menyimpan pilihan paparan..."</string>
     <string name="listCustomView" msgid="5782275477737032610">"Paparan yang disesuaikan"</string>
     <string name="dialog_new_contact_account" msgid="5652018124788855057">"Simpan kenalan yang diimport ke:"</string>
     <string name="import_from_sim" msgid="7825280799813847991">"Kad SIM"</string>
@@ -431,10 +418,6 @@
     <string name="dialog_import" msgid="4590232235052756593">"Import kenalan daripada"</string>
     <string name="share_error" msgid="4854612167186185739">"Kenalan ini tidak boleh dikongsi."</string>
     <string name="no_contact_to_share" msgid="6285287228557175749">"Tiada kenalan untuk dikongsi."</string>
-    <string name="menu_contacts_filter" msgid="5854584270038139275">"Kenalan untuk dipaparkan"</string>
-    <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Kenalan untuk dipaparkan"</string>
-    <string name="custom_list_filter" msgid="2544327670202891979">"Sesuaikan paparan"</string>
-    <string name="menu_custom_filter_save" msgid="2412959737200856930">"Simpan"</string>
     <string name="hint_findContacts" msgid="5554298639062659655">"Cari kenalan"</string>
     <string name="contactsFavoritesLabel" msgid="8339645684721732714">"Kegemaran"</string>
     <string name="menu_import" msgid="2206768098740726906">"Import"</string>
@@ -458,8 +441,6 @@
     <string name="about_terms_of_service" msgid="7419670771785057738">"Syarat perkhidmatan"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"Lesen sumber terbuka"</string>
     <string name="url_open_error_toast" msgid="4885855620824048385">"Gagal membuka url."</string>
-    <string name="account_filter_view_checked" msgid="4740544238806346376">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> disemak"</string>
-    <string name="account_filter_view_not_checked" msgid="5782705545786455847">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> tidak disemak"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"Buat panggilan video"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"Padam"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"Elipsis"</string>

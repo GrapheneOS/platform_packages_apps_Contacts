@@ -5,7 +5,6 @@ import android.text.BidiFormatter
 import android.text.TextDirectionHeuristics
 import androidx.annotation.StringRes
 import com.android.contacts.R
-import com.android.contacts.data.contactsfilter.model.ContactsFilter
 import com.android.contacts.data.profile.model.ProfileData
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.DisplaySettings
@@ -114,11 +113,6 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
                 id = SettingsItemId.DEFAULT_ACCOUNT,
                 titleResId = R.string.default_editor_account,
                 summary = settingsData.defaultAccountLabel,
-            ),
-            buildItem(
-                id = SettingsItemId.CONTACTS_FILTER,
-                titleResId = R.string.menu_contacts_filter,
-                summary = contactsFilterSummary(settingsData.contactsFilter),
             ),
         )
     }
@@ -241,14 +235,6 @@ internal class SettingsUiStateMapperImpl @Inject constructor(
             }
 
             else -> displayName
-        }
-    }
-
-    private fun contactsFilterSummary(contactsFilter: ContactsFilter?): String? {
-        return when (contactsFilter) {
-            ContactsFilter.ALL_ACCOUNTS -> context.getString(R.string.list_filter_all_accounts)
-            ContactsFilter.CUSTOM -> context.getString(R.string.listCustomView)
-            null -> null
         }
     }
 

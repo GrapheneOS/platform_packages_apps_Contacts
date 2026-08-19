@@ -8,7 +8,6 @@ internal sealed interface SettingsEffect {
     data object CreateProfile : Host
     data object OpenAddAccount : Host
     data object OpenDefaultAccountPicker : Host
-    data object OpenContactsFilter : Host
     data object ShowImportDialog : Host
     data object ShowExportDialog : Host
     data object OpenBlockedNumbers : Host
