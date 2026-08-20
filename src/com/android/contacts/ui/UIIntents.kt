@@ -3,7 +3,7 @@ package com.android.contacts.ui
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
-import com.android.contacts.model.AccountTypeManager
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.ui.interactions.account.SelectAccountActivity
 import com.android.contacts.ui.interactions.account.screen.SelectAccountViewModel
 import com.android.contacts.ui.interactions.importing.ImportActivity
@@ -19,7 +19,7 @@ internal object UIIntents {
     fun getSelectAccountDialogIntent(
         context: Context,
         @StringRes titleResId: Int? = null,
-        accountFilter: AccountTypeManager.AccountFilter? = null,
+        accountFilter: AccountFilter? = null,
     ): Intent {
         return Intent(context, SelectAccountActivity::class.java)
             .putExtra(SelectAccountViewModel.KEY_TITLE_RES_ID, titleResId)

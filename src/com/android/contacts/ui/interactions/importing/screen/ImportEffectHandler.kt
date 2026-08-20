@@ -3,7 +3,7 @@ package com.android.contacts.ui.interactions.importing.screen
 import android.app.Activity
 import com.android.contacts.R
 import com.android.contacts.domain.accounts.mapper.AccountModelMapper
-import com.android.contacts.model.AccountTypeManager
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.interactions.importing.screen.model.ImportEffect as Effect
@@ -35,7 +35,7 @@ internal class ImportEffectHandlerImpl(
                     UIIntents.getSelectAccountDialogIntent(
                         context = activity,
                         titleResId = R.string.dialog_new_contact_account,
-                        accountFilter = AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE,
+                        accountFilter = AccountFilter.CONTACTS_INSERTABLE,
                     ),
                     ImportActivity.REQUEST_SELECT_ACCOUNT,
                 )

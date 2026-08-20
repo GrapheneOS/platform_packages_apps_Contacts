@@ -1,18 +1,13 @@
 package com.android.contacts.tests.factory
 
 import com.android.contacts.domain.debug.model.TestContact
-import kotlin.random.Random
 
 internal object TestContactFactory {
     fun build(
         phones: List<TestContact.ValueWithType> = listOf(
-            TestContact.ValueWithType(
-                value = TestContact.PHONE_PREFIX +
-                    Random.nextInt(999_999).toString().padStart(6, '0'),
-                type = null,
-            ),
+            TestContact.ValueWithType(value = TestContact.PHONE_PREFIX + "123456"),
         ),
-        givenName: String = "Name${Random.nextInt(99_999)}",
+        givenName: String = "Name",
         familyName: String? = null,
         middleName: String? = null,
         displayName: String? = null,
@@ -21,9 +16,9 @@ internal object TestContactFactory {
         city: String? = null,
         country: String? = null,
         organization: String? = null,
-        relation: Int? = null,
+        relation: TestContact.ValueWithType? = null,
         website: TestContact.ValueWithType? = null,
-        photo: ByteArray? = null,
+        photo: TestContact.Photo? = null,
     ) = TestContact(
         phones = phones,
         givenName = givenName,
