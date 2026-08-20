@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"ထည့်သွင်းရန်"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"အဆက်အသွယ်များကို ရွေးပါ"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"ဆင်းမ်ကဒ်ထဲတွင် လိပ်စာ မရှိပါ"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"အဆက်အသွယ်က သင့်စာရင်းတွင် ရှိနှင့်နေပါပြီ"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{ဆင်းမ်ကတ်ထဲရှိ အဆက်အသွယ် # ခုကို ထည့်သွင်းလိုက်ပါပြီ}other{ဆင်းမ်ကတ်ထဲရှိ အဆက်အသွယ် # ခုကို ထည့်သွင်းလိုက်ပါပြီ}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"ဆင်းမ်အဆက်အသွယ်များကို တင်သွင်း၍မရပါ"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"ဆင်းမ်ကတ်မှ တင်သွင်းပါ"</string>

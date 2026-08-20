@@ -472,7 +472,6 @@
     <string name="sim_import_button_text" msgid="2845608246304396009">"संपर्क लेकर आएं"</string>
     <string name="sim_import_title_none_selected" msgid="3527680774575468781">"संपर्कों को चुनें"</string>
     <string name="sim_import_empty_message" msgid="7238368542566545854">"आपके सिम कार्ड पर कोई संपर्क नहीं है"</string>
-    <string name="sim_import_contact_exists_toast" msgid="8423212007841229749">"संपर्क पहले से ही आपकी सूची में मौजूद है"</string>
     <string name="sim_import_success_toast_fmt" msgid="7645974841482481503">"{count,plural, =1{सिम में सेव किया गया # संपर्क इंपोर्ट किया गया}one{सिम में सेव किया गया # संपर्क इंपोर्ट किया गया}other{सिम में सेव किए गए # संपर्क इंपोर्ट किए गए}}"</string>
     <string name="sim_import_failed_toast" msgid="358117391138073786">"सिम संपर्कों को आयात करने में विफल रहा"</string>
     <string name="sim_import_title" msgid="8202961146093040684">"सिम से आयात करें"</string>

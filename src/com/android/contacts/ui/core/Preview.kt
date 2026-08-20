@@ -32,7 +32,7 @@ internal fun ContactsPreviewColumn(
 ) {
     ContactsPreviewTheme(modifier = modifier) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(1.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(all = 16.dp),

@@ -23,7 +23,6 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.icu.text.MessageFormat;
 import android.os.Bundle;
@@ -39,16 +38,15 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.android.contacts.R;
-import com.android.contacts.activities.SimImportActivity;
 import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.compat.PhoneNumberUtilsCompat;
 import com.android.contacts.database.SimContactDao;
 import com.android.contacts.editor.SelectAccountDialogFragment;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.SimCard;
-import com.android.contacts.model.SimContact;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.ui.UIIntents;
 import com.android.contacts.util.AccountSelectionUtil;
 import com.google.common.util.concurrent.Futures;
 
@@ -250,8 +248,13 @@ public class ImportDialogFragment extends DialogFragment {
     }
 
     private void handleSimImportRequest(SimCard sim) {
-        startActivity(new Intent(getActivity(), SimImportActivity.class)
-                .putExtra(SimImportActivity.EXTRA_SUBSCRIPTION_ID, sim.getSubscriptionId()));
+        startActivity(
+                UIIntents.INSTANCE.getSimImportIntent(
+                        getActivity(),
+                        Integer.valueOf(sim.getSubscriptionId()
+                        )
+                )
+        );
     }
 
     /**
