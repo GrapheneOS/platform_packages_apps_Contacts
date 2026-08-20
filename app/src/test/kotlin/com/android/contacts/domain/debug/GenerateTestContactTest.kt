@@ -4,6 +4,7 @@ import com.android.contacts.domain.debug.model.TestContact
 import com.android.contacts.domain.debug.usecase.GenerateTestContact
 import com.android.contacts.domain.debug.usecase.GenerateTestContactImpl
 import junit.framework.TestCase.assertTrue
+import kotlin.random.Random
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -11,7 +12,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class GenerateTestContactTest {
 
-    private val subject: GenerateTestContact = GenerateTestContactImpl()
+    private val subject: GenerateTestContact = GenerateTestContactImpl(Random)
 
     @Test
     fun alwaysHaveAtLeastOnePhone() {
