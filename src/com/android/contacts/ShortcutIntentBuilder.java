@@ -46,6 +46,8 @@ import com.android.contacts.ContactPhotoManager.DefaultImageRequest;
 import com.android.contacts.lettertiles.LetterTileDrawable;
 import com.android.contacts.util.BitmapUtil;
 
+import javax.annotation.Nullable;
+
 /**
  * Constructs shortcut intents.
  */
@@ -113,7 +115,7 @@ public class ShortcutIntentBuilder {
          *            created.
          * @param shortcutIntent resulting shortcut intent.
          */
-        void onShortcutIntentCreated(Uri uri, Intent shortcutIntent);
+        void onShortcutIntentCreated(Uri uri, @Nullable Intent shortcutIntent);
     }
 
     public ShortcutIntentBuilder(Context context, OnShortcutIntentCreatedListener listener) {
@@ -274,7 +276,11 @@ public class ShortcutIntentBuilder {
         final DynamicShortcuts dynamicShortcuts = new DynamicShortcuts(mContext);
         final ShortcutInfo shortcutInfo = dynamicShortcuts.getQuickContactShortcutInfo(
                 contactId, lookupKey, displayName);
-        if (shortcutInfo == null) return;
+
+        if (shortcutInfo == null) {
+            mListener.onShortcutIntentCreated(contactUri, null);
+            return;
+        }
 
         final Intent intent = sm.createShortcutResultIntent(shortcutInfo);
         mListener.onShortcutIntentCreated(contactUri, intent);

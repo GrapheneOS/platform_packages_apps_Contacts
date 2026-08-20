@@ -19,6 +19,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 
+import javax.annotation.Nullable;
+
 /**
  * Action callbacks that can be sent by a phone number picker.
  */
@@ -39,7 +41,7 @@ public interface OnPhoneNumberPickerActionListener  {
     /**
      * Returns the selected number as a shortcut intent.
      */
-    void onShortcutIntentCreated(Intent intent);
+    void onShortcutIntentCreated(@Nullable Intent intent);
 
     /**
      * Called when home menu in {@link ActionBar} is clicked by the user.

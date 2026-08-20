@@ -31,6 +31,8 @@ import com.android.contacts.R;
 import com.android.contacts.ShortcutIntentBuilder;
 import com.android.contacts.ShortcutIntentBuilder.OnShortcutIntentCreatedListener;
 
+import javax.annotation.Nullable;
+
 /**
  * Fragment containing a phone number list for picking.
  */
@@ -257,7 +259,7 @@ public class PhoneNumberPickerFragment extends ContactEntryListFragment<ContactE
     }
 
     @Override
-    public void onShortcutIntentCreated(Uri uri, Intent shortcutIntent) {
+    public void onShortcutIntentCreated(Uri uri, @Nullable Intent shortcutIntent) {
         mListener.onShortcutIntentCreated(shortcutIntent);
     }
 

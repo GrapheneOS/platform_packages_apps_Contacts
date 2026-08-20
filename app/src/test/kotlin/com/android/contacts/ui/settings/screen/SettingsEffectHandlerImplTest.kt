@@ -12,7 +12,6 @@ import android.provider.Settings
 import android.telecom.TelecomManager
 import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.LicenseActivity
-import com.android.contacts.compat.TelecomManagerUtil
 import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.list.AccountFilterActivity
@@ -54,7 +53,6 @@ internal class SettingsEffectHandlerImplTest {
     @Before
     fun setUp() {
         mockkStatic(ImplicitIntentsUtil::class)
-        mockkStatic(TelecomManagerUtil::class)
         mockkStatic(ImportDialogFragment::class)
         mockkStatic(ExportDialogFragment::class)
         every { activity.fragmentManager } returns fragmentManager
@@ -153,7 +151,7 @@ internal class SettingsEffectHandlerImplTest {
     @Test
     fun openBlockedNumbers_startsTheTelecomScreen() {
         val blockedNumbersIntent = Intent("blocked_numbers")
-        every { TelecomManagerUtil.createManageBlockedNumbersIntent(telecomManager) }
+        every { telecomManager.createManageBlockedNumbersIntent() }
             .returns(blockedNumbersIntent)
 
         effectHandler.handle(Effect.OpenBlockedNumbers)
@@ -163,7 +161,7 @@ internal class SettingsEffectHandlerImplTest {
 
     @Test
     fun openBlockedNumbers_whenTelecomHasNoIntent_startsNothing() {
-        every { TelecomManagerUtil.createManageBlockedNumbersIntent(telecomManager) }
+        every { telecomManager.createManageBlockedNumbersIntent() }
             .returns(null)
 
         effectHandler.handle(Effect.OpenBlockedNumbers)

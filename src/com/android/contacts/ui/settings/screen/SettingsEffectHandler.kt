@@ -14,7 +14,6 @@ import android.telecom.TelecomManager
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.LicenseActivity
-import com.android.contacts.compat.TelecomManagerUtil
 import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.list.AccountFilterActivity
@@ -96,7 +95,7 @@ internal class SettingsEffectHandlerImpl(
     }
 
     private fun openBlockedNumbers() {
-        val intent = TelecomManagerUtil.createManageBlockedNumbersIntent(telecomManager) ?: return
+        val intent = telecomManager.createManageBlockedNumbersIntent() ?: return
 
         startActivity(intent)
     }
