@@ -72,12 +72,23 @@ public class AccountsLoader extends ListenableFutureLoader<List<AccountInfo>> {
      * boilerplate needed when implementing {@link android.app.LoaderManager.LoaderCallbacks}
      * in the simple case that the fragment wants to just load the accounts directly</p>
      * <p>Note that changing the filter between invocations in the same component will not work
-     * properly because the loader is cached.</p>
+     * properly because the loader is cached. Use {@link #reloadAccounts} when the filter depends
+     * on state that can change.</p>
      */
     public static <FragmentType extends Fragment & AccountsListener> void loadAccounts(
             final FragmentType fragment, int loaderId, final Predicate<AccountInfo> filter) {
-        loadAccounts(
-                fragment.getActivity(), fragment.getLoaderManager(), loaderId, filter, fragment);
+        loadAccounts(fragment.getActivity(), fragment.getLoaderManager(), loaderId, filter,
+                fragment, /* restart */ false);
+    }
+
+    /**
+     * Same as {@link #loadAccounts(Fragment, int, Predicate)} except that any cached loader is
+     * discarded so that the filter is evaluated again.
+     */
+    public static <FragmentType extends Fragment & AccountsListener> void reloadAccounts(
+            final FragmentType fragment, int loaderId, final Predicate<AccountInfo> filter) {
+        loadAccounts(fragment.getActivity(), fragment.getLoaderManager(), loaderId, filter,
+                fragment, /* restart */ true);
     }
 
     /**
@@ -85,12 +96,14 @@ public class AccountsLoader extends ListenableFutureLoader<List<AccountInfo>> {
      */
     public static <ActivityType extends Activity & AccountsListener> void loadAccounts(
             final ActivityType activity, int id, final Predicate<AccountInfo> filter) {
-        loadAccounts(activity, activity.getLoaderManager(), id, filter, activity);
+        loadAccounts(activity, activity.getLoaderManager(), id, filter, activity,
+                /* restart */ false);
     }
 
     private static void loadAccounts(final Context context, LoaderManager loaderManager, int id,
-            final Predicate<AccountInfo> filter, final AccountsListener listener) {
-        loaderManager.initLoader(id, null,
+            final Predicate<AccountInfo> filter, final AccountsListener listener,
+            boolean restart) {
+        final LoaderManager.LoaderCallbacks<List<AccountInfo>> callbacks =
                 new LoaderManager.LoaderCallbacks<List<AccountInfo>>() {
                     @Override
                     public Loader<List<AccountInfo>> onCreateLoader(int id, Bundle args) {
@@ -106,6 +119,11 @@ public class AccountsLoader extends ListenableFutureLoader<List<AccountInfo>> {
                     @Override
                     public void onLoaderReset(Loader<List<AccountInfo>> loader) {
                     }
-                });
+                };
+        if (restart) {
+            loaderManager.restartLoader(id, null, callbacks);
+        } else {
+            loaderManager.initLoader(id, null, callbacks);
+        }
     }
 }

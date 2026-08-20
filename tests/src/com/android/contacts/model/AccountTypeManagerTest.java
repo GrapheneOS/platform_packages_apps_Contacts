@@ -25,9 +25,11 @@ import android.test.AndroidTestCase;
 
 import androidx.test.filters.SmallTest;
 
+import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountTypeWithDataSet;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.model.account.DeviceLocalAccountType;
 import com.android.contacts.model.account.GoogleAccountType;
 
 import com.google.common.collect.Lists;
@@ -91,6 +93,30 @@ public class AccountTypeManagerTest extends AndroidTestCase {
             result.add(account);
         }
         return result;
+    }
+
+    public void testGroupInsertableFilter_excludesLocalAccountsForCloudDefault() {
+        final AccountInfo localGroupWritable =
+                wrapAccount(new DeviceLocalAccountType(getContext(), /* groupsEditable */ true));
+        final AccountInfo localNotGroupWritable =
+                wrapAccount(new DeviceLocalAccountType(getContext(), /* groupsEditable */ false));
+        final AccountInfo cloud = wrapAccount(new GoogleAccountType(getContext(), ""));
+
+        // A cloud default account is what makes CP2 reject inserts into local accounts.
+        assertFalse(AccountTypeManager.groupInsertableFilter(
+                /* canInsertIntoLocalAccounts */ false).apply(localGroupWritable));
+        assertTrue(AccountTypeManager.groupInsertableFilter(
+                /* canInsertIntoLocalAccounts */ true).apply(localGroupWritable));
+
+        // Accounts CP2 accepts are still offered, and non group writable ones never are.
+        assertTrue(AccountTypeManager.groupInsertableFilter(
+                /* canInsertIntoLocalAccounts */ false).apply(cloud));
+        assertFalse(AccountTypeManager.groupInsertableFilter(
+                /* canInsertIntoLocalAccounts */ true).apply(localNotGroupWritable));
+    }
+
+    private AccountInfo wrapAccount(AccountType type) {
+        return type.wrapAccount(getContext(), createAccountWithDataSet("name", type));
     }
 
     public void testGetDefaultAccount_NoAccounts() {

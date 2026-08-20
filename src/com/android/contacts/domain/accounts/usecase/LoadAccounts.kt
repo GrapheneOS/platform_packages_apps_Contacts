@@ -58,6 +58,8 @@ internal class LoadAccountsImpl @Inject constructor(
                 AccountTypeManager.AccountFilter.ALL
             filter === AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE ->
                 AccountTypeManager.insertableFilter(context)
+            filter === AccountTypeManager.AccountFilter.GROUPS_INSERTABLE ->
+                AccountTypeManager.groupInsertableFilter(context)
             else ->
                 filter
         }
