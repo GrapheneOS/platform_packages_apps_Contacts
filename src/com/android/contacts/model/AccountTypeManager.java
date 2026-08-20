@@ -51,6 +51,7 @@ import com.android.contacts.model.dataitem.DataKind;
 import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.util.concurrent.ContactsExecutors;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -118,6 +119,14 @@ public abstract class AccountTypeManager {
             @Override
             public boolean apply(@Nullable AccountInfo input) {
                 return input != null && input.getType().isGroupMembershipEditable();
+            }
+        },
+        // This should never be used directly because the insertable filter is not implementable by this enum.
+        // Anything that is passed this should grab the actual implementation from the groupInsertableFilter function.
+        GROUPS_INSERTABLE {
+            @Override
+            public boolean apply(@Nullable AccountInfo input) {
+                return false;
             }
         };
     }
@@ -351,18 +360,29 @@ public abstract class AccountTypeManager {
             public boolean apply(@Nullable AccountInfo input) {
                 return input != null
                         && input.getType().areContactsWritable()
-                        && isContactInsertable(input);
-            }
-
-            private boolean isContactInsertable(AccountInfo input) {
-                return !isLocalAccountType(input) || canInsertIntoLocalAccounts;
-            }
-
-            private boolean isLocalAccountType(AccountInfo input) {
-                return input.getType() instanceof DeviceLocalAccountType
-                        || input.getType() instanceof SimAccountType;
+                        && (canInsertIntoLocalAccounts || !isLocalAccountType(input));
             }
         };
+    }
+
+    /**
+     * Same as {@link #groupWritableFilter()} except that local and SIM accounts are excluded while
+     * the default account is set to a cloud account, because CP2 rejects groups inserted into them
+     */
+    public static Predicate<AccountInfo> groupInsertableFilter(Context context) {
+        return groupInsertableFilter(new ContactsPreferences(context).canInsertIntoLocalAccounts());
+    }
+
+    @VisibleForTesting
+    static Predicate<AccountInfo> groupInsertableFilter(boolean canInsertIntoLocalAccounts) {
+        return input -> input != null
+                && input.getType().isGroupMembershipEditable()
+                && (canInsertIntoLocalAccounts || !isLocalAccountType(input));
+    }
+
+    private static boolean isLocalAccountType(AccountInfo input) {
+        return input.getType() instanceof DeviceLocalAccountType
+                || input.getType() instanceof SimAccountType;
     }
 
     public static Predicate<AccountInfo> drawerDisplayableFilter() {

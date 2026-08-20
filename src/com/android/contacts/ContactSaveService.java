@@ -793,6 +793,7 @@ public class ContactSaveService extends IntentService {
         // added if the group doesn't exist
         if (groupUri == null) {
             Log.e(TAG, "Couldn't create group with label " + label);
+            showToast(R.string.groupCreateFailedToast);
             return;
         }
 
@@ -1895,7 +1896,10 @@ public class ContactSaveService extends IntentService {
             if (groupData == null) {
                 return null;
             }
-            final Uri groupUri = contentResolver.insert(Groups.CONTENT_URI, groupData);
+            final Uri groupUri = insertGroup(groupData);
+            if (groupUri == null) {
+                return null;
+            }
             final long groupId = ContentUris.parseId(groupUri);
 
             final long[] memberIds = deletedGroupData.getLongArray(KEY_GROUP_MEMBERS);
@@ -1923,7 +1927,20 @@ public class ContactSaveService extends IntentService {
             values.put(Groups.ACCOUNT_NAME, account.name);
             values.put(Groups.ACCOUNT_TYPE, account.type);
             values.put(Groups.DATA_SET, account.dataSet);
-            return contentResolver.insert(Groups.CONTENT_URI, values);
+            return insertGroup(values);
+        }
+
+        /**
+         * CP2 rejects groups inserted into local and SIM accounts while the default account is
+         * set to a cloud account, so a rejection here is expected rather than fatal.
+         */
+        private Uri insertGroup(ContentValues values) {
+            try {
+                return contentResolver.insert(Groups.CONTENT_URI, values);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "Couldn't insert group", e);
+                return null;
+            }
         }
 
         public int delete(Uri groupUri) {
