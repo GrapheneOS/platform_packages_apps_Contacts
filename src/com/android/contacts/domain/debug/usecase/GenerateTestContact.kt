@@ -3,9 +3,11 @@ package com.android.contacts.domain.debug.usecase
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.provider.ContactsContract
+import android.provider.ContactsContract.CommonDataKinds.Relation
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.set
 import com.android.contacts.domain.debug.model.TestContact
+import com.android.contacts.domain.debug.model.TestContact.ValueWithType
 import java.io.ByteArrayOutputStream
 import java.util.Locale
 import javax.inject.Inject
@@ -16,14 +18,16 @@ internal fun interface GenerateTestContact {
     operator fun invoke(): TestContact
 }
 
-internal class GenerateTestContactImpl @Inject constructor() : GenerateTestContact {
+internal class GenerateTestContactImpl @Inject constructor(
+    private val random: Random,
+) : GenerateTestContact {
     override fun invoke(): TestContact {
-        val givenName = NAMES.random()
-        val middleName = if (shouldAddExtraProperty()) NAMES.random() else null
-        val familyName = if (shouldAddExtraProperty()) SURNAMES.random() else null
+        val givenName = NAMES.random(random)
+        val middleName = if (shouldAddExtraProperty()) NAMES.random(random) else null
+        val familyName = if (shouldAddExtraProperty()) SURNAMES.random(random) else null
         val displayName = if (shouldAddExtraProperty()) {
             listOfNotNull(
-                familyName,
+                givenName,
                 middleName,
                 familyName,
             ).joinToString(" ")
@@ -32,55 +36,59 @@ internal class GenerateTestContactImpl @Inject constructor() : GenerateTestConta
         }
 
         return TestContact(
-            phones = (1..3).map { randomPhone() },
+            phones = rangeUpTo(MAX_PHONES_COUNT).map { randomPhone() },
             givenName = givenName,
             middleName = middleName,
             familyName = familyName,
             displayName = displayName,
             nickname = if (shouldAddExtraProperty()) randomNickname() else null,
-            emails = (0..2).map { randomEmail(givenName) },
-            city = if (shouldAddExtraProperty()) CITIES.random() else null,
-            country = if (shouldAddExtraProperty()) COUNTRIES.random() else null,
-            organization = if (shouldAddExtraProperty()) SURNAMES.random() else null,
-            relation = if (shouldAddExtraProperty()) RELATIONS.random() else null,
+            emails = rangeUpTo(MAX_EMAILS_COUNT).map { randomEmail(givenName) },
+            city = if (shouldAddExtraProperty()) CITIES.random(random) else null,
+            country = if (shouldAddExtraProperty()) COUNTRIES.random(random) else null,
+            organization = if (shouldAddExtraProperty()) SURNAMES.random(random) else null,
+            relation = if (shouldAddExtraProperty()) RELATIONS.random(random) else null,
             website = if (shouldAddExtraProperty()) randomWebsite(givenName) else null,
             photo = if (shouldAddExtraProperty()) randomPhoto() else null,
         )
     }
 
+    private fun rangeUpTo(times: Int): IntRange {
+        return 1..random.nextInt(1..times)
+    }
+
     private fun shouldAddExtraProperty(): Boolean {
-        return Random.nextBoolean()
+        return random.nextBoolean()
     }
 
-    private fun randomPhone(): TestContact.ValueWithType {
+    private fun randomPhone(): ValueWithType {
         val number = TestContact.PHONE_PREFIX +
-            Random.nextInt(999_999).toString().padStart(6, '0')
-        val type = PHONE_TYPES.random()
-        return TestContact.ValueWithType(number, type)
+            random.nextInt(999_999).toString().padStart(6, '0')
+        val type = PHONE_TYPES.random(random)
+        return ValueWithType(number, type)
     }
 
-    private fun randomNickname(): TestContact.ValueWithType {
-        return TestContact.ValueWithType(
-            (NAMES + SURNAMES).random(),
-            NICKNAME_TYPES.random(),
+    private fun randomNickname(): ValueWithType {
+        return ValueWithType(
+            (NAMES + SURNAMES).random(random),
+            NICKNAME_TYPES.random(random),
         )
     }
 
-    private fun randomEmail(name: String): TestContact.ValueWithType {
-        return TestContact.ValueWithType(
-            "${name.lowercase()}@example.org",
-            EMAIL_TYPES.random(),
+    private fun randomEmail(name: String): ValueWithType {
+        return ValueWithType(
+            "${name.lowercase()}@${DOMAINS.random(random)}",
+            EMAIL_TYPES.random(random),
         )
     }
 
-    private fun randomWebsite(name: String): TestContact.ValueWithType {
-        return TestContact.ValueWithType(
-            "https://${name.lowercase()}.me",
-            WEBSITE_TYPES.random(),
+    private fun randomWebsite(name: String): ValueWithType {
+        return ValueWithType(
+            "https://${name.lowercase()}.${DOMAINS.random(random)}",
+            WEBSITE_TYPES.random(random),
         )
     }
 
-    private fun randomPhoto(): ByteArray? {
+    private fun randomPhoto(): TestContact.Photo {
         val bitmap = createBitmap(PHOTO_SIZE, PHOTO_SIZE, Bitmap.Config.ARGB_8888)
         for (x in 0 until PHOTO_SIZE) {
             for (y in 0 until PHOTO_SIZE) {
@@ -92,20 +100,20 @@ internal class GenerateTestContactImpl @Inject constructor() : GenerateTestConta
             bitmap.compress(Bitmap.CompressFormat.PNG, BITMAP_COMPRESS_QUALITY, outputStream)
         }
         bitmap.recycle()
-        return bos.toByteArray()
+        return TestContact.Photo(bos.toByteArray())
     }
 
     private fun randomColor(): Int {
-        return Color.rgb(
-            Random.nextInt(COLOR_RANGE),
-            Random.nextInt(COLOR_RANGE),
-            Random.nextInt(COLOR_RANGE),
+        return Color.HSVToColor(
+            arrayOf(random.nextInt(COLOR_RANGE).toFloat(), 1f, 1f).toFloatArray(),
         )
     }
 
     companion object {
-        private const val PHOTO_SIZE = 16
-        private val COLOR_RANGE = 0..255
+        private const val MAX_PHONES_COUNT = 3
+        private const val MAX_EMAILS_COUNT = 3
+        private const val PHOTO_SIZE = 3
+        private val COLOR_RANGE = 0..355
         private const val BITMAP_COMPRESS_QUALITY = 100 // percentage
 
         private val NAMES = listOf(
@@ -157,6 +165,11 @@ internal class GenerateTestContactImpl @Inject constructor() : GenerateTestConta
             ContactsContract.CommonDataKinds.Phone.TYPE_MMS,
             null,
         )
+        private val DOMAINS = listOf(
+            "example.com", "example.org", "example.net", "example.edu", "altostrat.com",
+            "examplepetstore.com", "example-pet-store.com", "myownpersonaldomain.com",
+            "my-own-personal-domain.com", "cymbalgroup.com",
+        )
         private val EMAIL_TYPES = listOf(
             ContactsContract.CommonDataKinds.Email.TYPE_HOME,
             ContactsContract.CommonDataKinds.Email.TYPE_WORK,
@@ -183,22 +196,26 @@ internal class GenerateTestContactImpl @Inject constructor() : GenerateTestConta
             "Tehran", "Tijuana", "Tokyo", "Tongatapu", "Ulaanbaatar", "Urumqi", "Vienna",
             "Vilnius", "Vladivostok", "Warsaw", "Yakutsk", "Yekaterinburg", "Yerevan", "Zagreb",
         )
-        private val COUNTRIES = Locale.availableLocales().map { it.displayCountry }.toList()
+        private val COUNTRIES = Locale.availableLocales()
+            .map { it.displayCountry }
+            .filter { it.isNotBlank() }
+            .distinct()
+            .toList()
         private val RELATIONS = listOf(
-            ContactsContract.CommonDataKinds.Relation.TYPE_ASSISTANT,
-            ContactsContract.CommonDataKinds.Relation.TYPE_BROTHER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_CHILD,
-            ContactsContract.CommonDataKinds.Relation.TYPE_DOMESTIC_PARTNER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_FATHER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_FRIEND,
-            ContactsContract.CommonDataKinds.Relation.TYPE_MANAGER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_MOTHER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_PARENT,
-            ContactsContract.CommonDataKinds.Relation.TYPE_PARTNER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_REFERRED_BY,
-            ContactsContract.CommonDataKinds.Relation.TYPE_RELATIVE,
-            ContactsContract.CommonDataKinds.Relation.TYPE_SISTER,
-            ContactsContract.CommonDataKinds.Relation.TYPE_SPOUSE,
+            ValueWithType("Assistant", Relation.TYPE_ASSISTANT),
+            ValueWithType("Brother", Relation.TYPE_BROTHER),
+            ValueWithType("Child", Relation.TYPE_CHILD),
+            ValueWithType("Domestic partner", Relation.TYPE_DOMESTIC_PARTNER),
+            ValueWithType("Father", Relation.TYPE_FATHER),
+            ValueWithType("Friend", Relation.TYPE_FRIEND),
+            ValueWithType("Manager", Relation.TYPE_MANAGER),
+            ValueWithType("Mother", Relation.TYPE_MOTHER),
+            ValueWithType("Parent", Relation.TYPE_PARENT),
+            ValueWithType("Partner", Relation.TYPE_PARTNER),
+            ValueWithType("Referred by", Relation.TYPE_REFERRED_BY),
+            ValueWithType("Relative", Relation.TYPE_RELATIVE),
+            ValueWithType("Sister", Relation.TYPE_SISTER),
+            ValueWithType("Spouse", Relation.TYPE_SPOUSE),
         )
         private val WEBSITE_TYPES = listOf(
             ContactsContract.CommonDataKinds.Website.TYPE_HOMEPAGE,

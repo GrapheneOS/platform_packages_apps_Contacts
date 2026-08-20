@@ -21,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import java.io.File
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -153,6 +154,12 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): PowerManager {
         return context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    }
+
+    @Provides
+    @Reusable
+    fun provideRandom(): Random {
+        return Random
     }
 
     @Provides
