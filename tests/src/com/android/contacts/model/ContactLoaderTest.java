@@ -30,7 +30,6 @@ import android.test.LoaderTestCase;
 
 import androidx.test.filters.LargeTest;
 
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.BaseAccountType;
@@ -40,12 +39,8 @@ import com.android.contacts.test.mocks.MockContentProvider;
 import com.android.contacts.testing.InjectedServices;
 import com.android.contacts.util.Constants;
 
-import com.google.common.collect.Lists;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 /**
  * Runs ContactLoader tests for the the contact-detail and editor view.
@@ -159,10 +154,7 @@ public class ContactLoaderTest extends LoaderTestCase {
         assertEquals(lookupUri, contact.getLookupUri());
         assertEquals(1, contact.getRawContacts().size());
         assertEquals(1, contact.getStatuses().size());
-        if (CompatUtils.isMarshmallowCompatible()) {
-            assertEquals(
-                    1, contact.getRawContacts().get(0).getDataItems().get(0).getCarrierPresence());
-        }
+        assertEquals(1, contact.getRawContacts().get(0).getDataItems().get(0).getCarrierPresence());
         mContactsProvider.verify();
     }
 
@@ -310,7 +302,7 @@ public class ContactLoaderTest extends LoaderTestCase {
     class ContactQueries {
         public void fetchAllData(
                 Uri baseUri, long contactId, long rawContactId, long dataId, String encodedLookup) {
-            final String[] COLUMNS_INTERNAL = new String[] {
+            final String[] COLUMNS = new String[] {
                     Contacts.NAME_RAW_CONTACT_ID, Contacts.DISPLAY_NAME_SOURCE,
                     Contacts.LOOKUP_KEY, Contacts.DISPLAY_NAME,
                     Contacts.DISPLAY_NAME_ALTERNATIVE, Contacts.PHONETIC_NAME,
@@ -347,15 +339,11 @@ public class ContactLoaderTest extends LoaderTestCase {
                     Contacts.SEND_TO_VOICEMAIL,
                     Contacts.CUSTOM_RINGTONE,
                     Contacts.IS_USER_PROFILE,
+
+                    Data.CARRIER_PRESENCE,
             };
 
-            List<String> projectionList = Lists.newArrayList(COLUMNS_INTERNAL);
-            if (CompatUtils.isMarshmallowCompatible()) {
-                projectionList.add(Data.CARRIER_PRESENCE);
-            }
-            final String[] COLUMNS = projectionList.toArray(new String[projectionList.size()]);
-
-            final Object[] ROWS_INTERNAL = new Object[] {
+            final Object[] ROWS = new Object[] {
                     rawContactId, 40,
                     "aa%12%@!", "John Doe", "Doe, John", "jdo",
                     0, 0, StatusUpdates.AVAILABLE,
@@ -391,13 +379,9 @@ public class ContactLoaderTest extends LoaderTestCase {
                     0,
                     null,
                     0,
-            };
 
-            List<Object> rowsList = Lists.newArrayList(ROWS_INTERNAL);
-            if (CompatUtils.isMarshmallowCompatible()) {
-                rowsList.add(Data.CARRIER_PRESENCE_VT_CAPABLE);
-            }
-            final Object[] ROWS = rowsList.toArray(new Object[rowsList.size()]);
+                    Data.CARRIER_PRESENCE_VT_CAPABLE,
+            };
 
             mContactsProvider.expectQuery(baseUri)
                     .withProjection(COLUMNS)

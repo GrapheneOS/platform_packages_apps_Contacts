@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -38,9 +37,9 @@ import android.provider.ContactsContract.Groups;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.android.contacts.GeoUtil;
 import com.android.contacts.GroupMetaDataLoader;
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.group.GroupMetaData;
 import com.android.contacts.model.account.AccountType;
 import com.android.contacts.model.account.GoogleAccountType;
@@ -53,8 +52,12 @@ import com.android.contacts.util.DataStatus;
 import com.android.contacts.util.UriUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,9 +68,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Loads a single Contact and all it constituent RawContacts.
@@ -114,7 +114,7 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
      * social stream items).
      */
     private static class ContactQuery {
-        static final String[] COLUMNS_INTERNAL = new String[] {
+        static final String[] COLUMNS = new String[] {
                 Contacts.NAME_RAW_CONTACT_ID,
                 Contacts.DISPLAY_NAME_SOURCE,
                 Contacts.LOOKUP_KEY,
@@ -182,17 +182,9 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
                 Contacts.SEND_TO_VOICEMAIL,
                 Contacts.CUSTOM_RINGTONE,
                 Contacts.IS_USER_PROFILE,
+
+                Data.CARRIER_PRESENCE,
         };
-
-        static final String[] COLUMNS;
-
-        static {
-            List<String> projectionList = Lists.newArrayList(COLUMNS_INTERNAL);
-            if (CompatUtils.isMarshmallowCompatible()) {
-                projectionList.add(Data.CARRIER_PRESENCE);
-            }
-            COLUMNS = projectionList.toArray(new String[projectionList.size()]);
-        }
 
         public static final int NAME_RAW_CONTACT_ID = 0;
         public static final int DISPLAY_NAME_SOURCE = 1;
@@ -671,9 +663,7 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
         cursorColumnToContentValues(cursor, cv, ContactQuery.MIMETYPE);
         cursorColumnToContentValues(cursor, cv, ContactQuery.GROUP_SOURCE_ID);
         cursorColumnToContentValues(cursor, cv, ContactQuery.CHAT_CAPABILITY);
-        if (CompatUtils.isMarshmallowCompatible()) {
-            cursorColumnToContentValues(cursor, cv, ContactQuery.CARRIER_PRESENCE);
-        }
+        cursorColumnToContentValues(cursor, cv, ContactQuery.CARRIER_PRESENCE);
 
         return cv;
     }

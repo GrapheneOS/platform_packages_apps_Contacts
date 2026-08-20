@@ -17,10 +17,9 @@ package com.android.contacts.compat.telecom;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.annotation.Nullable;
 import android.telecom.TelecomManager;
 
-import com.android.contacts.compat.CompatUtils;
+import androidx.annotation.Nullable;
 
 /**
  * Compatibility class for {@link android.telecom.TelecomManager}.
@@ -39,10 +38,6 @@ public class TelecomManagerCompat {
         if (activity == null || telecomManager == null || intent == null) {
             return;
         }
-        if (CompatUtils.isMarshmallowCompatible()) {
-            telecomManager.placeCall(intent.getData(), intent.getExtras());
-            return;
-        }
-        activity.startActivityForResult(intent, 0);
+        telecomManager.placeCall(intent.getData(), intent.getExtras());
     }
 }

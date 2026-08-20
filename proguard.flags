@@ -15,7 +15,6 @@
 }
 
 # Needed for tests
--keep class com.android.contacts.compat.CompatUtils { *; }
 -keep class com.android.contacts.Collapser { *; }
 -keep class com.android.contacts.ContactPhotoManager { *; }
 -keep class com.android.contacts.ContactsApplication { *; }
@@ -54,10 +53,8 @@
 -keep class com.android.contacts.model.account.SimAccountType { *; }
 -keep class com.android.contacts.model.AccountTypeManager { *; }
 -keep class com.android.contacts.model.AccountTypeManagerImpl { *; }
--keep class com.android.contacts.model.BuilderWrapper { *; }
 -keep class com.android.contacts.model.Contact { *; }
 -keep class com.android.contacts.model.ContactLoader { *; }
--keep class com.android.contacts.model.CPOWrapper { *; }
 -keep class com.android.contacts.model.dataitem.DataItem { *; }
 -keep class com.android.contacts.model.dataitem.DataKind { *; }
 -keep class com.android.contacts.model.dataitem.EmailDataItem { *; }

@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"এই পরিচিতিটি মুছবেন?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"মুছুন"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"এই পরিচিতিটি বিদ্যমান নয়৷"</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"হোম স্ক্রীনে পরিচিতি যোগ করা হযেছে৷"</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"হোম স্ক্রীনে <xliff:g id="NAME">%s</xliff:g> যোগ করা হয়েছে৷"</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"ডিভাইসে কোনো ছবি নেই৷"</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"পরিচিতির ফটো"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"কাস্টম লেবেল নাম"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"অফিসের পেজার নম্বরে কল করুন"</string>
     <string name="call_assistant" msgid="8556909944379826616">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> নম্বরে কল করুন"</string>
     <string name="call_mms" msgid="1760746475672950386">"MMS নম্বরে কল করুন"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (কল)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> নম্বরে পাঠ্য বার্তা পাঠান"</string>
     <string name="sms_home" msgid="6132392861245316613">"ঘরের ফোন নম্বরে পাঠ্য বার্তা পাঠান"</string>
     <string name="sms_mobile" msgid="433949735070334192">"মোবাইল নম্বরে পাঠ্য বার্তা পাঠান"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"কর্মক্ষেত্রের পেজারে পাঠ্য বার্তা পাঠান"</string>
     <string name="sms_assistant" msgid="245045451580096547">"<xliff:g id="ASSISTANT">%s</xliff:g> নম্বরে পাঠ্য বার্তা পাঠান"</string>
     <string name="sms_mms" msgid="7395133080765833725">"MMS ফোন নম্বরে পাঠ্য বার্তা পাঠান"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (বার্তা)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"ভিডিও কল করুন"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"ঘন ঘন যোগাযোগ করা হয়েছে এমন পরিচিতিগুলিকে সাফ করবেন?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"পরিচিতি এবং ফোন অ্যাপ্লিকেশানগুলি থেকে আপনি ঘন ঘন যোগাযোগ করা পরিচিতির তালিকা সাফ করবেন, এবং ইমেল অ্যাপ্লিকেশানগুলিকে আবার শুরু থেকে আপনার ঠিকানা অভিরুচি জানতে বাধ্য করবেন৷"</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google পরিচিতিগুলি ছাড়াও, সমস্ত অ্যাপ এবং অ্যাকাউন্টে আপনার করা পরিবর্তনগুলি, ওয়েব এবং আপনার ডিভাইসগুলির মধ্যে আপ টু ডেট রাখা হবে।"</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"চালু করুন"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"কোনও কানেকশন নেই"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"সিম"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"আরও দেখান"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"সিম কার্ড আমদানি করা সমাপ্ত হয়েছে"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"আমদানি ব্যর্থ হয়েছে"</string>

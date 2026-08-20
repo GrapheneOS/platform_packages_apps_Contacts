@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"यह संपर्क मिटाएं?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"मिटाएं"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"संपर्क मौजूद नहीं है."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"संपर्कों को होम स्क्रीन में जोड़ा गया."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> को होम स्क्रीन में जोड़ा गया."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"डिवाइस पर कोई चित्र उपलब्ध नहीं है."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"संपर्क की फ़ोटो"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"कस्टम लेबल नाम"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"दफ़्तर पेजर पर कॉल करें"</string>
     <string name="call_assistant" msgid="8556909944379826616">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> पर कॉल करें"</string>
     <string name="call_mms" msgid="1760746475672950386">"MMS फ़ोन नंबर पर कॉल करें"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (कॉल करें)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> लिखित संदेश भेजें"</string>
     <string name="sms_home" msgid="6132392861245316613">"घर के फ़ोन पर SMS भेजें"</string>
     <string name="sms_mobile" msgid="433949735070334192">"मोबाइल पर SMS भेजें"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"दफ़्तर पेजर पर SMS भेजें"</string>
     <string name="sms_assistant" msgid="245045451580096547">"<xliff:g id="ASSISTANT">%s</xliff:g> को SMS भेजें"</string>
     <string name="sms_mms" msgid="7395133080765833725">"MMS भेजें"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (संदेश भेजें)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"वीडियो कॉल करें"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"अक्‍सर किए जाने वाले संपर्क साफ करें?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"आपको संपर्क और फ़ोन ऐप्लिकेशन से अक्सर संपर्क की जाने वाली सूची साफ़ करनी होगी, और अपने ईमेल ऐप्लिकेशन को आपकी पता प्राथमिकताओं को प्रारंभ से जानने के लिए बाध्य करना होगा."</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google संपर्क सहित सभी ऐप्लिकेशन और खातों में किए जाने वाले आपके बदलाव, वेब और आपके डिवाइस के बीच अप-टू-डेट रखे जाएंगे."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"चालू करें"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"कोई कनेक्शन नहीं"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"सिम"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"और दिखाएं"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM कार्ड का इंपोर्ट पूरा हुआ"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"आयात करना विफल रहा"</string>

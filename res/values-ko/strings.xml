@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"이 연락처를 삭제하시겠습니까?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"삭제"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"연락처가 없습니다."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"연락처가 홈 화면에 추가되었습니다."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g>님이 홈 화면에 추가되었습니다."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"기기에 사진이 없습니다."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"연락처 사진"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"라벨 이름 맞춤 설정"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"직장 호출기로 전화 걸기"</string>
     <string name="call_assistant" msgid="8556909944379826616">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g>에 전화 걸기"</string>
     <string name="call_mms" msgid="1760746475672950386">"MMS로 전화걸기"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g>(전화)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g>에 문자 메시지 보내기"</string>
     <string name="sms_home" msgid="6132392861245316613">"집으로 문자 보내기"</string>
     <string name="sms_mobile" msgid="433949735070334192">"휴대전화로 문자 보내기"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"직장 호출기로 문자 보내기"</string>
     <string name="sms_assistant" msgid="245045451580096547">"<xliff:g id="ASSISTANT">%s</xliff:g>(으)로 문자 보내기"</string>
     <string name="sms_mms" msgid="7395133080765833725">"MMS로 문자 보내기"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g>(메시지)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"화상 통화하기"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"자주 연락하는 사람들 목록을 삭제하시겠습니까?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"주소록 및 휴대전화 앱에서 자주 연락하는 사람의 목록을 삭제하고 이메일 앱이 주소록 환경설정을 처음부터 다시 반영하도록 합니다."</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Google 주소록뿐만 아니라 모든 앱과 계정의 변경사항이 웹 및 기기 간에 최신 상태로 유지됩니다."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"사용"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"연결되지 않음"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"더보기"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"SIM 카드 가져오기 완료"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"가져오기 실패"</string>

@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"Желите ли да избришете овај контакт?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Избриши"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"Контакт не постоји."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Контакт је додат на почетни екран."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"Контакт <xliff:g id="NAME">%s</xliff:g> је додат на почетни екран."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"На уређају није пронађена ниједна слика."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Слика контакта"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Назив прилагођене ознаке"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Позови пословни пејџер"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Позови <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Позови MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (позови)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Пошаљи SMS на <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Пошаљи SMS на кућни телефон"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Пошаљи SMS на мобилни телефон"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Пошаљи SMS на пејџер"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Пошаљи SMS на <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Пошаљи SMS на MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (пошаљи SMS)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Упутите видео позив"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Брисање често контактираних?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Обрисаћете листу често контактираних у апликацијама Контакти и Телефон, па ће имејл апликације морати из почетка да прикупе информације о адресирању."</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"На вебу и уређајима ће се редовно ажурирати промене које уносите у свим апликацијама и на свим налозима, а не само у Google контактима."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"Укључи"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"Веза није успостављена"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"Прикажи више"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"Увоз са SIM картице је завршен"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"Увоз није успео"</string>

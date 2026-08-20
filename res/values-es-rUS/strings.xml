@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"¿Deseas borrar este contacto?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"Borrar"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"El contacto no existe."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"Se agregó el contacto a la pantalla principal."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> se agregó a la pantalla principal."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"No hay imágenes disponibles en el dispositivo."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"Foto de contacto"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"Nombre personalizado de etiqueta"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"Llamar al localizador del trabajo"</string>
     <string name="call_assistant" msgid="8556909944379826616">"Llamar a <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"Llamar a MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Llamar)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"Enviar SMS a <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"Enviar texto al hogar"</string>
     <string name="sms_mobile" msgid="433949735070334192">"Enviar texto a celular"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"Enviar texto a localizador del trabajo"</string>
     <string name="sms_assistant" msgid="245045451580096547">"Enviar texto a <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Enviar texto MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (Enviar mensaje)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Realizar una videollamada"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"¿Borrar los contactos frecuentes?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Borrarás de las apps Contactos y Teléfono la lista de personas con las que te comunicas frecuentemente. Además, las apps de correo deberán volver a establecer tus preferencias."</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"Los cambios que hagas en todas las apps y cuentas, no solo en los Contactos de Google, se mantendrán actualizados entre la Web y tus dispositivos."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"Activar"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"Sin conexión"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"Mostrar más"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"Terminó la importación de la tarjeta SIM"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"Error al importar"</string>

@@ -24,7 +24,6 @@ import android.view.ViewOutlineProvider;
 import android.widget.ListView;
 
 import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
 
 /**
  * Provides static functions to work with views
@@ -57,33 +56,19 @@ public class ViewUtil {
         return view.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
     }
 
-    private static final ViewOutlineProvider OVAL_OUTLINE_PROVIDER;
-    static {
-        if (CompatUtils.isLollipopCompatible()) {
-            OVAL_OUTLINE_PROVIDER = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
-                }
-            };
-        } else {
-            OVAL_OUTLINE_PROVIDER = null;
+    private static final ViewOutlineProvider OVAL_OUTLINE_PROVIDER = new ViewOutlineProvider() {
+        @Override
+        public void getOutline(View view, Outline outline) {
+            outline.setOval(0, 0, view.getWidth(), view.getHeight());
         }
-    }
+    };
 
-    private static final ViewOutlineProvider RECT_OUTLINE_PROVIDER;
-    static {
-        if (CompatUtils.isLollipopCompatible()) {
-            RECT_OUTLINE_PROVIDER = new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setRect(0, 0, view.getWidth(), view.getHeight());
-                }
-            };
-        } else {
-            RECT_OUTLINE_PROVIDER = null;
+    private static final ViewOutlineProvider RECT_OUTLINE_PROVIDER = new ViewOutlineProvider() {
+        @Override
+        public void getOutline(View view, Outline outline) {
+            outline.setRect(0, 0, view.getWidth(), view.getHeight());
         }
-    }
+    };
 
     /**
      * Adds a rectangular outline to a view. This can be useful when you want to add a shadow
@@ -92,9 +77,7 @@ public class ViewUtil {
      * @param res The resources file.
      */
     public static void addRectangularOutlineProvider(View view, Resources res) {
-        if (CompatUtils.isLollipopCompatible()) {
-            view.setOutlineProvider(RECT_OUTLINE_PROVIDER);
-        }
+        view.setOutlineProvider(RECT_OUTLINE_PROVIDER);
     }
 
     /**
@@ -103,11 +86,9 @@ public class ViewUtil {
      * @param res The resources file.
      */
     public static void setupFloatingActionButton(View view, Resources res) {
-        if (CompatUtils.isLollipopCompatible()) {
-            view.setOutlineProvider(OVAL_OUTLINE_PROVIDER);
-            view.setTranslationZ(
-                    res.getDimensionPixelSize(R.dimen.floating_action_button_translation_z));
-        }
+        view.setOutlineProvider(OVAL_OUTLINE_PROVIDER);
+        view.setTranslationZ(
+                res.getDimensionPixelSize(R.dimen.floating_action_button_translation_z));
     }
 
     /**

@@ -21,7 +21,6 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -33,15 +32,12 @@ import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.AggregationSuggestions;
-import android.provider.ContactsContract.Contacts.AggregationSuggestions.Builder;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
 
-import com.android.contacts.compat.AggregationSuggestionsCompat;
 import com.android.contacts.model.ValuesDelta;
 import com.android.contacts.model.account.AccountWithDataSet;
-
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 
@@ -214,23 +210,7 @@ public class AggregationSuggestionEngine extends HandlerThread {
             return null;
         }
 
-        // AggregationSuggestions.Builder() became visible in API level 23, so use it if applicable.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            final AggregationSuggestions.Builder uriBuilder = new AggregationSuggestions.Builder()
-                    .setLimit(SUGGESTIONS_LIMIT)
-                    .setContactId(mContactId);
-            if (nameSb.length() != 0) {
-                uriBuilder.addNameParameter(nameSb.toString());
-            }
-            if (phoneticNameSb.length() != 0) {
-                uriBuilder.addNameParameter(phoneticNameSb.toString());
-            }
-            return uriBuilder.build();
-        }
-
-        // For previous SDKs, use the backup plan.
-        final AggregationSuggestionsCompat.Builder uriBuilder =
-                new AggregationSuggestionsCompat.Builder()
+        final AggregationSuggestions.Builder uriBuilder = new AggregationSuggestions.Builder()
                 .setLimit(SUGGESTIONS_LIMIT)
                 .setContactId(mContactId);
         if (nameSb.length() != 0) {

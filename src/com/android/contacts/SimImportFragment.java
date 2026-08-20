@@ -39,9 +39,7 @@ import androidx.collection.ArrayMap;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 
-import com.android.contacts.MoreContactUtils;
 import com.android.contacts.MoreContactUtils.EdgeToEdgeInsetHandler;
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.database.SimContactDao;
 import com.android.contacts.editor.AccountHeaderPresenter;
 import com.android.contacts.model.AccountTypeManager;
@@ -52,7 +50,6 @@ import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.ContactsPreferences;
 import com.android.contacts.util.concurrent.ContactsExecutors;
 import com.android.contacts.util.concurrent.ListenableFutureLoader;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.Futures;
@@ -319,13 +316,6 @@ public class SimImportFragment extends Fragment
         } else {
             updateToolbarWithCurrentSelections();
         }
-    }
-
-    public Context getContext() {
-        if (CompatUtils.isMarshmallowCompatible()) {
-            return super.getContext();
-        }
-        return getActivity();
     }
 
     @Override

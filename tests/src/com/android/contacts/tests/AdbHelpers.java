@@ -17,12 +17,10 @@ package com.android.contacts.tests;
 
 import android.content.Context;
 import android.content.OperationApplicationException;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import androidx.test.InstrumentationRegistry;
 
 import com.android.contacts.model.account.AccountWithDataSet;
@@ -47,7 +45,6 @@ public class AdbHelpers {
         new AccountsTestHelper(context).addTestAccount(accountName);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public static void removeTestAccount(Context context, Bundle args) {
         final String accountName = args.getString("name");
         if (accountName == null) {

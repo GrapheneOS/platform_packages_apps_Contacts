@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"האם למחוק את איש הקשר הזה?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"מחק"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"איש הקשר לא קיים."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"איש הקשר נוסף למסך דף הבית."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> נוסף למסך דף הבית."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"אין אף תמונה זמינה במכשיר."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"תמונה של איש קשר"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"שם תווית בהתאמה אישית"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"התקשר לזימונית של העבודה"</string>
     <string name="call_assistant" msgid="8556909944379826616">"התקשר אל <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="call_mms" msgid="1760746475672950386">"‏התקשר ל-MMS"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (שיחה)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"‏שלח SMS אל <xliff:g id="CUSTOM_LABEL">%s</xliff:g>"</string>
     <string name="sms_home" msgid="6132392861245316613">"שלח הודעת טקסט לבית"</string>
     <string name="sms_mobile" msgid="433949735070334192">"שלח הודעת טקסט לנייד"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"שלח הודעת טקסט לזימונית של העבודה"</string>
     <string name="sms_assistant" msgid="245045451580096547">"שלח הודעת טקסט אל <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"‏שלח הודעת טקסט ל-MMS"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (הודעה)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"התקשר בשיחת וידאו"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"האם למחוק אנשי קשר קבועים?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"הפעולה הזו תימחק מהאפליקציות \'אנשי קשר\' ו\'טלפון\' את הרשימה של אנשי הקשר השכיחים. אפליקציות האימייל יצטרכו ללמוד מחדש את הכתובות השכיחות שלך."</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"‏השינויים שתבצע בכל האפליקציות והחשבונות, לא רק באנשי הקשר מחשבון Google, יסונכרנו בין האינטרנט לבין המכשירים שלך."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"הפעלה"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"אין חיבור"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"‏כרטיס SIM"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"הצג עוד"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"‏הייבוא מכרטיס ה-SIM הסתיים"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"הייבוא נכשל"</string>

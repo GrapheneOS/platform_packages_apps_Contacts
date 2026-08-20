@@ -13,7 +13,8 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Application name used in Settings/Apps. Default label for activities
          that don't specify a label. -->
@@ -237,10 +238,8 @@
     <string name="invalidContactMessage">The contact doesn\'t exist.</string>
 
     <!-- Message without name displayed in a toast after you create a contact shortcut in the launcher [CHAR LIMIT=NONE]-->
-    <string name="createContactShortcutSuccessful_NoName">Contact added to Home screen.</string>
 
     <!-- Message with name displayed in a toast after you create a contact shortcut in the launcher [CHAR LIMIT=NONE]-->
-    <string name="createContactShortcutSuccessful"><xliff:g id="name">%s</xliff:g> added to Home screen.</string>
 
     <!-- The order of the items below is important, don't reorder without changing EditContactActivity.java -->
     <skip/>
@@ -755,7 +754,6 @@
     <!-- Action string for calling a MMS phone number -->
     <string name="call_mms">Call MMS</string>
     <!-- Action string for calling a contact by shortcut -->
-    <string name="call_by_shortcut"><xliff:g id="contact_name">%s</xliff:g> (Call)</string>
 
     <!-- Action string for sending an SMS to a custom phone number -->
     <string name="sms_custom">Text
@@ -804,7 +802,6 @@
     <!-- Action string for sending an SMS to a MMS phone number -->
     <string name="sms_mms">Text MMS</string>
     <!-- Action string for sending an SMS to a contact by shortcut -->
-    <string name="sms_by_shortcut"><xliff:g id="contact_name">%s</xliff:g> (Message)</string>
 
     <!-- Description string for an action button to initiate a video call. -->
     <string name="description_video_call">Make video call</string>
@@ -1540,9 +1537,6 @@
 
     <!-- No network connection error message [CHAR LIMIT=50] -->
     <string name="connection_error_message">No connection</string>
-
-    <!-- Generic label for the SIM card when there is only a single SIM in the device [CHAR LIMIT=10]-->
-    <string name="single_sim_display_label">SIM</string>
 
     <!-- Content description for dropdown arrow (https://material.io/icons/#ic_arrow_drop_down)
          This is used to indicate that a list of options can be opened by tapping on it.

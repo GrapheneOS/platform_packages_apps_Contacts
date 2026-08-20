@@ -22,7 +22,6 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.widget.TextView;
 
 import com.android.contacts.GeoUtil;
-import com.android.contacts.compat.PhoneNumberFormattingTextWatcherCompat;
 
 public final class PhoneNumberFormatter {
     private PhoneNumberFormatter() {}
@@ -45,7 +44,7 @@ public final class PhoneNumberFormatter {
 
         @Override
         protected PhoneNumberFormattingTextWatcher doInBackground(Void... params) {
-            return PhoneNumberFormattingTextWatcherCompat.newInstance(mCountryCode);
+            return new PhoneNumberFormattingTextWatcher(mCountryCode);
         }
 
         @Override

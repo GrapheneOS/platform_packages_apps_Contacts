@@ -18,6 +18,8 @@ package com.android.contacts.list;
 import android.content.Intent;
 import android.net.Uri;
 
+import javax.annotation.Nullable;
+
 /**
  * Action callbacks that can be sent by a contact picker.
  */
@@ -31,7 +33,7 @@ public interface OnContactPickerActionListener  {
     /**
      * Returns the selected contact as a shortcut intent.
      */
-    void onShortcutIntentCreated(Intent intent);
+    void onShortcutIntentCreated(@Nullable Intent intent);
 
     /**
      * Creates a new contact and then returns it to the caller.

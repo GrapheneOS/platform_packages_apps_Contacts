@@ -84,8 +84,6 @@
     <string name="deleteConfirmation" msgid="3727809366015979585">"ಈ ಸಂಪರ್ಕವನ್ನು ಅಳಿಸಬೇಕೆ?"</string>
     <string name="deleteConfirmation_positive_button" msgid="1604511403421785160">"ಅಳಿಸಿ"</string>
     <string name="invalidContactMessage" msgid="6204402264821083362">"ಸಂಪರ್ಕವು ಅಸ್ತಿತ್ವದಲ್ಲಿಲ್ಲ."</string>
-    <string name="createContactShortcutSuccessful_NoName" msgid="532242135930208299">"ಸಂಪರ್ಕವನ್ನು ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ."</string>
-    <string name="createContactShortcutSuccessful" msgid="6980032407920515698">"<xliff:g id="NAME">%s</xliff:g> ಅನ್ನು ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ."</string>
     <string name="photoPickerNotFoundText" msgid="6535222297923110991">"ಸಾಧನದಲ್ಲಿ ಯಾವುದೇ ಚಿತ್ರಗಳು ಲಭ್ಯವಿಲ್ಲ."</string>
     <string name="attach_photo_dialog_title" msgid="7948754072673745235">"ಸಂಪರ್ಕ ಫೋಟೋ"</string>
     <string name="customLabelPickerTitle" msgid="816694850254307154">"ಕಸ್ಟಮ್ ಲೇಬಲ್ ಹೆಸರು"</string>
@@ -251,7 +249,6 @@
     <string name="call_work_pager" msgid="615335008331933747">"ಕೆಲಸದ ಪೇಜರ್‌‌ಗೆ ಕರೆ ಮಾಡಿ"</string>
     <string name="call_assistant" msgid="8556909944379826616">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> ಕರೆ ಮಾಡಿ"</string>
     <string name="call_mms" msgid="1760746475672950386">"MMS ಕರೆ ಮಾಡಿ"</string>
-    <string name="call_by_shortcut" msgid="5707329943368933423">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (ಕರೆ ಮಾಡಿ)"</string>
     <string name="sms_custom" msgid="3684453744622817362">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> ಸಂದೇಶ ಕಳುಹಿಸಿ"</string>
     <string name="sms_home" msgid="6132392861245316613">"ನಿವಾಸಕ್ಕೆ ಸಂದೇಶ ಕಳುಹಿಸಿ"</string>
     <string name="sms_mobile" msgid="433949735070334192">"ಮೊಬೈಲ್‌‌ಗೆ ಸಂದೇಶ ಕಳುಹಿಸಿ"</string>
@@ -273,7 +270,6 @@
     <string name="sms_work_pager" msgid="8827367747655005608">"ಕೆಲಸದ ಪೇಜರ್‌‌ಗೆ ಸಂದೇಶ ಕಳುಹಿಸಿ"</string>
     <string name="sms_assistant" msgid="245045451580096547">"<xliff:g id="ASSISTANT">%s</xliff:g> ಗೆ ಸಂದೇಶ ಕಳುಹಿಸಿ"</string>
     <string name="sms_mms" msgid="7395133080765833725">"MMS ಸಂದೇಶ ಕಳುಹಿಸಿ"</string>
-    <string name="sms_by_shortcut" msgid="4682340916268521006">"<xliff:g id="CONTACT_NAME">%s</xliff:g> (ಸಂದೇಶ ಕಳುಹಿಸಿ)"</string>
     <string name="description_video_call" msgid="4956825008907720371">"ವೀಡಿಯೊ ಕರೆ ಮಾಡು"</string>
     <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"ಪದೇಪದೇ ಸಂಪರ್ಕಿಸಿರುವವರನ್ನು ತೆರವುಗೊ.?"</string>
     <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"ಸಂಪರ್ಕಗಳು ಮತ್ತು ಫೋನ್‌ ಅಪ್ಲಿಕೇಶನ್‌ಗಳಲ್ಲಿ ಪದೇ ಪದೇ ಸಂಪರ್ಕಪಡಿಸಿರುವ ಪಟ್ಟಿಯನ್ನು ನೀವು ತೆರವುಗೊಳಿಸುತ್ತೀರಿ ಮತ್ತು ಮೊದಲಿನಿಂದ ನಿಮ್ಮ ವಿಳಾಸ ಪ್ರಾಶಸ್ತ್ಯಗಳನ್ನು ತಿಳಿಯಲು ಇಮೇಲ್‌ ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಒತ್ತಾಯಿಸಿ."</string>
@@ -484,7 +480,6 @@
     <string name="turn_auto_sync_on_dialog_body" msgid="5386810641905184682">"ಎಲ್ಲಾ ಅಪ್ಲಿಕೇಶನ್‌ಗಳು ಮತ್ತು ಖಾತೆಗಳಿಗೆ ನೀವು ಮಾಡುವ ಬದಲಾವಣೆಗಳು Google ಸಂಪರ್ಕಗಳಿಗೆ ಮಾತ್ರವಲ್ಲದೇ, ವೆಬ್ ಮತ್ತು ನಿಮ್ಮ ಸಾಧನಗಳ ನಡುವೆ ನವೀಕೃತವಾಗಿ ಇರಿಸಲಾಗುತ್ತದೆ."</string>
     <string name="turn_auto_sync_on_dialog_confirm_btn" msgid="5575717918836806519">"ಆನ್ ಮಾಡಿ"</string>
     <string name="connection_error_message" msgid="7446131881946138093">"ಯಾವುದೇ ಸಂಪರ್ಕವಿಲ್ಲ"</string>
-    <string name="single_sim_display_label" msgid="264062966309455515">"ಸಿಮ್"</string>
     <string name="show_more_content_description" msgid="6298277298495491712">"ಇನ್ನಷ್ಟು ತೋರಿಸಿ"</string>
     <string name="importing_sim_finished_title" msgid="6436721150882268416">"ಸಿಮ್ ಕಾರ್ಡ್ ಆಮದು ಮುಕ್ತಾಯಗೊಂಡಿದೆ"</string>
     <string name="importing_sim_failed_title" msgid="1046154274170241788">"ಆಮದು ವಿಫಲವಾಗಿದೆ"</string>

@@ -70,6 +70,8 @@ import com.android.contacts.util.ViewUtil;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nullable;
+
 /**
  * Displays a list of contacts (or phone numbers or postal addresses) for the purposes of selecting
  * one.
@@ -578,7 +580,7 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
         }
 
         @Override
-        public void onShortcutIntentCreated(Intent intent) {
+        public void onShortcutIntentCreated(@Nullable Intent intent) {
             returnPickerResult(intent);
         }
     }
@@ -597,7 +599,7 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
         }
 
         @Override
-        public void onShortcutIntentCreated(Intent intent) {
+        public void onShortcutIntentCreated(@Nullable Intent intent) {
             returnPickerResult(intent);
         }
 
@@ -616,7 +618,7 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
         }
 
         @Override
-        public void onShortcutIntentCreated(Intent intent) {}
+        public void onShortcutIntentCreated(@Nullable Intent intent) {}
 
         @Override
         public void onCreateNewContactAction() {}
@@ -695,9 +697,13 @@ public class ContactSelectionActivity extends AppCompatContactsActivity
         returnPickerResult(intent);
     }
 
-    public void returnPickerResult(Intent intent) {
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        setResult(RESULT_OK, intent);
+    public void returnPickerResult(@Nullable Intent intent) {
+        if (intent != null) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            setResult(RESULT_OK, intent);
+        } else {
+            setResult(RESULT_CANCELED);
+        }
         finish();
     }
 

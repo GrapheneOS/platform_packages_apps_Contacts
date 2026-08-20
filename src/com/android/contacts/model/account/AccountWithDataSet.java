@@ -21,7 +21,6 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
@@ -53,7 +52,7 @@ public class AccountWithDataSet implements Parcelable {
     public final String dataSet;
     private final AccountTypeWithDataSet mAccountTypeWithDataSet;
 
-    private static final String[] ID_PROJECTION = new String[] {BaseColumns._ID};
+    private static final String[] ID_PROJECTION = new String[]{BaseColumns._ID};
     private static final Uri RAW_CONTACTS_URI_LIMIT_1 = RawContacts.CONTENT_URI.buildUpon()
             .appendQueryParameter(ContactsContract.LIMIT_PARAM_KEY, "1").build();
 
@@ -88,12 +87,10 @@ public class AccountWithDataSet implements Parcelable {
     }
 
     public static AccountWithDataSet getLocalAccount(Context context) {
-        return android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.R
-                ? getNullAccount()
-                : new AccountWithDataSet(
-                      RawContacts.getLocalAccountName(context),
-                      RawContacts.getLocalAccountType(context),
-                      null);
+        return new AccountWithDataSet(
+                RawContacts.getLocalAccountName(context),
+                RawContacts.getLocalAccountType(context),
+                null);
     }
 
     public Account getAccountOrNull() {
@@ -142,10 +139,10 @@ public class AccountWithDataSet implements Parcelable {
                     RawContacts.ACCOUNT_TYPE + " = ?" + " AND " + RawContacts.ACCOUNT_NAME + " = ?";
             if (TextUtils.isEmpty(dataSet)) {
                 selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " IS NULL";
-                args = new String[] {type, name};
+                args = new String[]{type, name};
             } else {
                 selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " = ?";
-                args = new String[] {type, name, dataSet};
+                args = new String[]{type, name, dataSet};
             }
         }
         selection += " AND " + RawContacts.DELETED + "=0";

@@ -15,13 +15,10 @@
  */
 package com.android.contacts.database;
 
-import static android.os.Build.VERSION_CODES;
-
 import static com.android.contacts.tests.ContactsMatchers.DataCursor.hasEmail;
 import static com.android.contacts.tests.ContactsMatchers.DataCursor.hasName;
 import static com.android.contacts.tests.ContactsMatchers.DataCursor.hasPhone;
 import static com.android.contacts.tests.ContactsMatchers.isSimContactWithNameAndPhone;
-
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -53,7 +50,6 @@ import android.test.mock.MockContext;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
-import androidx.test.filters.SdkSuppress;
 import androidx.test.filters.SmallTest;
 import androidx.test.filters.Suppress;
 
@@ -65,7 +61,6 @@ import com.android.contacts.tests.AccountsTestHelper;
 import com.android.contacts.tests.ContactsMatchers;
 import com.android.contacts.tests.SimContactsTestHelper;
 import com.android.contacts.tests.StringableCursor;
-
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 

@@ -22,9 +22,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Im;
-import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Spannable;
@@ -43,15 +42,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.android.contacts.ClipboardUtils;
 import com.android.contacts.ContactsUtils;
 import com.android.contacts.R;
-import com.android.contacts.compat.PhoneNumberUtilsCompat;
 import com.android.contacts.model.RawContactDelta;
 import com.android.contacts.model.ValuesDelta;
 import com.android.contacts.model.account.AccountType.EditField;
 import com.android.contacts.model.dataitem.DataKind;
 import com.android.contacts.util.PhoneNumberFormatter;
-import com.android.contacts.ClipboardUtils;
 
 /**
  * Simple editor that handles labels and any {@link EditField} defined for the
@@ -340,7 +338,7 @@ public class TextFieldsEditorView extends LabeledEditorView {
             final String column = field.column;
             final String value = entry.getAsString(column);
             if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(kind.mimeType)) {
-                fieldView.setText(PhoneNumberUtilsCompat.createTtsSpannable(value));
+                fieldView.setText(PhoneNumberUtils.createTtsSpannable(value));
             } else {
                 fieldView.setText(value);
             }
@@ -398,7 +396,7 @@ public class TextFieldsEditorView extends LabeledEditorView {
                     for (int i = 0; i < spans.length; i++) {
                         spannable.removeSpan(spans[i]);
                     }
-                    PhoneNumberUtilsCompat.addTtsSpan(spannable, 0, s.length());
+                    PhoneNumberUtils.addTtsSpan(spannable, 0, s.length());
                 }
             });
 

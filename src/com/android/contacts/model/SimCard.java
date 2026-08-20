@@ -15,8 +15,6 @@
  */
 package com.android.contacts.model;
 
-import android.os.Build;
-import androidx.annotation.RequiresApi;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -232,7 +230,6 @@ public class SimCard {
                 '}';
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public static SimCard create(SubscriptionInfo info) {
         return new SimCard(info.getIccId(), info.getSubscriptionId(),
                 info.getCarrierName(), info.getDisplayName(), info.getNumber(),

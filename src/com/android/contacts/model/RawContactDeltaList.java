@@ -30,8 +30,6 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.RawContacts;
 import android.util.Log;
 
-import com.android.contacts.compat.CompatUtils;
-
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -120,37 +118,37 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
     }
 
     /**
-     * Build a list of {@link CPOWrapper} that will transform all
+     * Build a list of {@link ContentProviderOperation} that will transform all
      * the "before" {@link Entity} states into the modified state which all
      * {@link RawContactDelta} objects represent. This method specifically creates
      * any {@link AggregationExceptions} rules needed to groups edits together.
      */
-    public ArrayList<CPOWrapper> buildDiffWrapper() {
+    public ArrayList<ContentProviderOperation> buildDiff() {
         if (VERBOSE_LOGGING) {
-            Log.v(TAG, "buildDiffWrapper: list=" + toString());
+            Log.v(TAG, "buildDiff: list=" + toString());
         }
-        final ArrayList<CPOWrapper> diffWrapper = Lists.newArrayList();
+        final ArrayList<ContentProviderOperation> diff = Lists.newArrayList();
 
         final long rawContactId = this.findRawContactId();
         int firstInsertRow = -1;
 
         // First pass enforces versions remain consistent
         for (RawContactDelta delta : this) {
-            delta.buildAssertWrapper(diffWrapper);
+            delta.buildAssert(diff);
         }
 
-        final int assertMark = diffWrapper.size();
+        final int assertMark = diff.size();
         int backRefs[] = new int[size()];
 
         int rawContactIndex = 0;
 
         // Second pass builds actual operations
         for (RawContactDelta delta : this) {
-            final int firstBatch = diffWrapper.size();
+            final int firstBatch = diff.size();
             final boolean isInsert = delta.isContactInsert();
             backRefs[rawContactIndex++] = isInsert ? firstBatch : -1;
 
-            delta.buildDiffWrapper(diffWrapper);
+            delta.buildDiff(diff);
 
             // If the user chose to join with some other existing raw contact(s) at save time,
             // add aggregation exceptions for all those raw contacts.
@@ -164,7 +162,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
                         builder.withValueBackReference(
                                 AggregationExceptions.RAW_CONTACT_ID2, firstBatch);
                     }
-                    diffWrapper.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
+                    diff.add(builder.build());
                 }
             }
 
@@ -179,7 +177,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
                 final Builder builder = beginKeepTogether();
                 builder.withValue(AggregationExceptions.RAW_CONTACT_ID1, rawContactId);
                 builder.withValueBackReference(AggregationExceptions.RAW_CONTACT_ID2, firstBatch);
-                diffWrapper.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
+                diff.add(builder.build());
 
             } else if (firstInsertRow == -1) {
                 // First insert case, so record row
@@ -191,22 +189,22 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
                 builder.withValueBackReference(AggregationExceptions.RAW_CONTACT_ID1,
                         firstInsertRow);
                 builder.withValueBackReference(AggregationExceptions.RAW_CONTACT_ID2, firstBatch);
-                diffWrapper.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
+                diff.add(builder.build());
             }
         }
 
         if (mSplitRawContacts) {
-            buildSplitContactDiffWrapper(diffWrapper, backRefs);
+            buildSplitContactDiff(diff, backRefs);
         }
 
         // No real changes if only left with asserts
-        if (diffWrapper.size() == assertMark) {
-            diffWrapper.clear();
+        if (diff.size() == assertMark) {
+            diff.clear();
         }
         if (VERBOSE_LOGGING) {
-            Log.v(TAG, "buildDiff: ops=" + diffToStringWrapper(diffWrapper));
+            Log.v(TAG, "buildDiff: ops=" + diffToString(diff));
         }
-        return diffWrapper;
+        return diff;
     }
 
     private static String diffToString(ArrayList<ContentProviderOperation> ops) {
@@ -218,17 +216,6 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
         }
         sb.append("]\n");
         return sb.toString();
-    }
-
-    /**
-     * For compatibility purpose.
-     */
-    private static String diffToStringWrapper(ArrayList<CPOWrapper> cpoWrappers) {
-        ArrayList<ContentProviderOperation> ops = Lists.newArrayList();
-        for (CPOWrapper cpoWrapper : cpoWrappers) {
-            ops.add(cpoWrapper.getOperation());
-        }
-        return diffToString(ops);
     }
 
     /**
@@ -246,7 +233,8 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
      * Builds {@link AggregationExceptions} to split all constituent raw contacts into
      * separate contacts.
      */
-    private void buildSplitContactDiffWrapper(final ArrayList<CPOWrapper> diff, int[] backRefs) {
+    private void buildSplitContactDiff(
+            final ArrayList<ContentProviderOperation> diff, int[] backRefs) {
         final int count = size();
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
@@ -255,7 +243,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
                 }
                 final Builder builder = buildSplitContactDiffHelper(i, j, backRefs);
                 if (builder != null) {
-                    diff.add(new CPOWrapper(builder.build(), CompatUtils.TYPE_UPDATE));
+                    diff.add(builder.build());
                 }
             }
         }
