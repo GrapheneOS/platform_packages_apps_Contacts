@@ -1153,7 +1153,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         // This should never block because the DrawerFragment loads the accounts and the
         // "Create Label" item only exists when that loading finishes
         final List<AccountInfo> accounts = Futures.getUnchecked(AccountTypeManager.getInstance(this)
-                .filterAccountsAsync(AccountTypeManager.AccountFilter.GROUPS_WRITABLE));
+                .filterAccountsAsync(AccountTypeManager.groupInsertableFilter(this)));
         if (accounts.isEmpty()) {
             // We shouldn't present the add group button if there are no writable accounts
             // but check it since it's possible we are started with an Intent.
@@ -1166,7 +1166,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             return;
         }
         SelectAccountDialogFragment.show(getFragmentManager(), R.string.dialog_new_group_account,
-                AccountTypeManager.AccountFilter.GROUPS_WRITABLE, /* extraArgs */ null,
+                AccountTypeManager.AccountFilter.GROUPS_INSERTABLE, /* extraArgs */ null,
                 TAG_SELECT_ACCOUNT_DIALOG);
     }
 
