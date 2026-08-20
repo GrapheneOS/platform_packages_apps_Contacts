@@ -35,9 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -45,10 +43,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
+import com.android.contacts.domain.accounts.model.AccountIconData
+import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.simimport.common.SimContactCell
@@ -328,17 +327,14 @@ private fun ContactsList(
 @PreviewLightDark
 @Composable
 private fun SimImportScreenPreview() {
-    val icon = ResourcesCompat.getDrawable(
-        LocalResources.current,
-        R.drawable.logo_quick_contacts_color_44in48dp,
-        LocalContext.current.theme,
-    )
-    val account = AccountUiModel(name = "user@example.org", icon = icon)
+    val account = AccountModel(name = "user@example.org")
+    val iconData = AccountIconData(iconRes = R.drawable.logo_quick_contacts_color_44in48dp)
+    val accountUi = AccountUiModel(account = account, name = account.name, iconData = iconData)
     ContactsPreviewTheme {
         SimImportContent(
             uiState = State.Ready(
-                accounts = persistentListOf(account),
-                currentAccount = account,
+                accounts = persistentListOf(accountUi),
+                currentAccount = accountUi,
                 contactsToImport = persistentListOf(
                     SelectableItem(
                         item = SimContactUiModel(1, "Anna Smith"),
@@ -383,17 +379,14 @@ private fun SimImportScreenNoAccountsPreview() {
 @PreviewLightDark
 @Composable
 private fun SimImportScreenNoContactsPreview() {
-    val icon = ResourcesCompat.getDrawable(
-        LocalResources.current,
-        R.drawable.logo_quick_contacts_color_44in48dp,
-        LocalContext.current.theme,
-    )
-    val account = AccountUiModel(name = "user@example.org", icon = icon)
+    val account = AccountModel(name = "user@example.org")
+    val iconData = AccountIconData(iconRes = R.drawable.logo_quick_contacts_color_44in48dp)
+    val accountUi = AccountUiModel(account = account, name = account.name, iconData = iconData)
     ContactsPreviewTheme {
         SimImportContent(
             uiState = State.NoContacts(
-                accounts = persistentListOf(account),
-                currentAccount = account,
+                accounts = persistentListOf(accountUi),
+                currentAccount = accountUi,
             ),
             onAction = {},
         )

@@ -1,6 +1,6 @@
 package com.android.contacts.tests
 
-import android.graphics.drawable.Drawable
+import com.android.contacts.domain.accounts.model.AccountIconData
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 
@@ -9,13 +9,11 @@ internal object AccountUiModelFactory {
         account: AccountModel = AccountModelFactory.build(),
         name: String = account.name ?: "Account",
         type: String? = account.type,
-        icon: Drawable? = null,
+        iconData: AccountIconData? = null,
     ) = AccountUiModel(
+        account = account,
         name = name,
         type = type,
-        icon = icon,
-        accountName = account.name,
-        accountType = account.type,
-        accountDataSet = account.dataSet,
+        iconData = iconData,
     )
 }

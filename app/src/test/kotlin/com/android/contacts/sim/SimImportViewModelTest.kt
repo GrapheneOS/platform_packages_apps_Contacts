@@ -276,8 +276,8 @@ class SimImportViewModelTest {
     fun selectedContacts_onContactSelectionChanges_deselectsAndSelects() =
         runTest(mainDispatcherRule.testDispatcher) {
             val account = AccountDisplayModelFactory.build()
-            val contact1 = SimContactFactory.build()
-            val contact2 = SimContactFactory.build()
+            val contact1 = SimContactFactory.build(recordNumber = 1)
+            val contact2 = SimContactFactory.build(recordNumber = 2)
             val subject = createViewModel(
                 loadAccounts = { flowOf(listOf(account)) },
                 loadSimContacts = {
@@ -323,8 +323,8 @@ class SimImportViewModelTest {
     fun selectedContacts_onContactSelectionChange_arePersisted() =
         runTest(mainDispatcherRule.testDispatcher) {
             val account = AccountDisplayModelFactory.build()
-            val contact1 = SimContactFactory.build()
-            val contact2 = SimContactFactory.build()
+            val contact1 = SimContactFactory.build(recordNumber = 1)
+            val contact2 = SimContactFactory.build(recordNumber = 2)
             val savedStateHandle = SavedStateHandle()
             val subject1 = createViewModel(
                 savedStateHandle = savedStateHandle,
@@ -365,8 +365,8 @@ class SimImportViewModelTest {
     fun selectedContacts_onSelectAndDeselectAllClicks_areAllToggled() =
         runTest(mainDispatcherRule.testDispatcher) {
             val account = AccountDisplayModelFactory.build()
-            val contact1 = SimContactFactory.build()
-            val contact2 = SimContactFactory.build()
+            val contact1 = SimContactFactory.build(recordNumber = 1)
+            val contact2 = SimContactFactory.build(recordNumber = 2)
             val subject = createViewModel(
                 loadAccounts = { flowOf(listOf(account)) },
                 loadSimContacts = {

@@ -11,12 +11,10 @@ internal fun interface AccountUiModelMapper {
 internal class AccountUiModelMapperImpl @Inject constructor() : AccountUiModelMapper {
     override fun map(accountDisplayModel: AccountDisplayModel): AccountUiModel {
         return AccountUiModel(
+            account = accountDisplayModel.account,
             name = accountDisplayModel.name,
             type = accountDisplayModel.type,
-            icon = accountDisplayModel.icon,
-            accountName = accountDisplayModel.account.name,
-            accountType = accountDisplayModel.account.type,
-            accountDataSet = accountDisplayModel.account.dataSet,
+            iconData = accountDisplayModel.iconData,
         )
     }
 }

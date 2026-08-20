@@ -1,6 +1,5 @@
 package com.android.contacts.ui.simimport.common
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,18 +21,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.android.contacts.R
+import com.android.contacts.domain.accounts.model.AccountModel
+import com.android.contacts.ui.common.components.AccountIcon
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -127,27 +125,15 @@ private fun ExposedDropdownMenuBoxScope.AccountTextField(
     )
 }
 
-@Composable
-internal fun AccountIcon(account: AccountUiModel) {
-    Image(
-        painter = account.icon?.let { rememberDrawablePainter(it) }
-            ?: painterResource(R.drawable.accounts_empty),
-        // contentDescription set in parent
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(24.dp),
-    )
-}
-
 @PreviewLightDark
 @Composable
 private fun SimImportAccountPickerSinglePreview() {
-    val account = AccountUiModel("user@example.org")
+    val account = AccountModel(name = "user@example.org")
+    val accountUi = AccountUiModel(account = account, name = account.name)
     ContactsPreviewColumn {
         SimImportAccountPicker(
-            list = persistentListOf(account),
-            current = account,
+            list = persistentListOf(accountUi),
+            current = accountUi,
             onChange = {},
         )
     }
@@ -156,12 +142,14 @@ private fun SimImportAccountPickerSinglePreview() {
 @PreviewLightDark
 @Composable
 private fun SimImportAccountPickerMultiplePreview() {
-    val account1 = AccountUiModel("user@example.org")
-    val account2 = AccountUiModel("another@example.org")
+    val account1 = AccountModel(name = "user@example.org")
+    val accountUi1 = AccountUiModel(account = account1, name = account1.name)
+    val account2 = AccountModel(name = "another@example.org")
+    val accountUi2 = AccountUiModel(account = account2, name = account2.name)
     ContactsPreviewColumn {
         SimImportAccountPicker(
-            list = persistentListOf(account1, account2),
-            current = account1,
+            list = persistentListOf(accountUi1, accountUi2),
+            current = accountUi1,
             onChange = {},
         )
     }
