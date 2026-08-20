@@ -27,6 +27,8 @@ import com.android.contacts.R;
 import com.android.contacts.ShortcutIntentBuilder;
 import com.android.contacts.ShortcutIntentBuilder.OnShortcutIntentCreatedListener;
 
+import javax.annotation.Nullable;
+
 /**
  * Fragment for the contact list used for browsing contacts (as compared to
  * picking a contact with one of the PICK or SHORTCUT intents).
@@ -156,7 +158,7 @@ public class ContactPickerFragment extends ContactEntryListFragment<ContactEntry
     }
 
     @Override
-    public void onShortcutIntentCreated(Uri uri, Intent shortcutIntent) {
+    public void onShortcutIntentCreated(Uri uri, @Nullable Intent shortcutIntent) {
         if (mListener != null) {
             mListener.onShortcutIntentCreated(shortcutIntent);
         }
