@@ -7,9 +7,6 @@ import com.android.contacts.domain.debug.usecase.ExportDatabase
 import com.android.contacts.domain.debug.usecase.IsExportDatabaseAvailable
 import com.android.contacts.domain.debug.usecase.SeedTestData
 import com.android.contacts.ui.debug.model.DebugOption
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +22,7 @@ internal class DebugOptionsMenu @Inject constructor(
         val optionsLabels = getOptions().map { context.getString(it.titleId) }.toTypedArray()
         AlertDialog.Builder(context)
             .setItems(optionsLabels) { _, which ->
-                CoroutineScope(Dispatchers.Default).launch {
+                CoroutineScope(Dispatchers.Main).launch {
                     when (DebugOption.entries[which]) {
                         DebugOption.ExportDatabase -> exportDatabase()
                         DebugOption.SeedTestData -> seedTestData()
@@ -39,11 +36,5 @@ internal class DebugOptionsMenu @Inject constructor(
     private fun getOptions(): List<DebugOption> {
         return DebugOption.entries
             .filter { it != DebugOption.ExportDatabase || isExportDatabaseAvailable() }
-    }
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface Provider {
-        fun debugOptionsMenu(): DebugOptionsMenu
     }
 }

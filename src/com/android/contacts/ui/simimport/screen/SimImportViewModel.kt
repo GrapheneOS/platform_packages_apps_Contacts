@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
 import com.android.contacts.domain.sim.usecase.StartSimImport
-import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.model.SimCard
 import com.android.contacts.model.SimContact
 import com.android.contacts.ui.UIIntents.EXTRA_SUBSCRIPTION_ID
@@ -98,7 +98,7 @@ internal class SimImportViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        loadAccounts(AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE)
+        loadAccounts(AccountFilter.CONTACTS_INSERTABLE)
             .onEach { accounts ->
                 val uiAccounts = accounts.map(::AccountUiModel).toImmutableList()
                 _uiState.update { state ->

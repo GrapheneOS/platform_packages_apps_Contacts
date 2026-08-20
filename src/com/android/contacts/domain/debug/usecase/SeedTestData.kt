@@ -7,13 +7,13 @@ import android.content.OperationApplicationException
 import android.os.RemoteException
 import android.provider.ContactsContract
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import com.android.contacts.di.core.IoDispatcher
+import com.android.contacts.di.debug.SeedTestContactsCount
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.debug.model.TestContact
-import com.android.contacts.model.AccountTypeManager.AccountFilter
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
@@ -29,13 +29,14 @@ internal class SeedTestDataImpl @Inject constructor(
     private val clearSeededTestData: ClearSeededTestData,
     private val generateTestContact: GenerateTestContact,
     private val contentResolver: ContentResolver,
+    @param:SeedTestContactsCount val testContactsCount: Int,
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : SeedTestData {
     override suspend fun invoke() {
         withContext(coroutineDispatcher) {
             val account = getDeviceAccount() ?: return@withContext
             clearSeededTestData()
-            val contacts = (1..contactsCount).map { generateTestContact() }
+            val contacts = (1..testContactsCount).map { generateTestContact() }
             saveContacts(account, contacts)
         }
     }
@@ -47,7 +48,7 @@ internal class SeedTestDataImpl @Inject constructor(
      *  - First account from the accounts list
      */
     private suspend fun getDeviceAccount(): AccountModel? {
-        val accounts = loadAccounts(AccountFilter.ALL).first()
+        val accounts = loadAccounts(AccountFilter.CONTACTS_INSERTABLE).first()
         return accounts.firstOrNull { it.isDeviceAccount }?.account
             ?: getDefaultAccount()
             ?: accounts.firstOrNull()?.account
@@ -64,7 +65,7 @@ internal class SeedTestDataImpl @Inject constructor(
                 ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                     .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, account.name)
                     .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, account.type)
-                    .withValue(ContactsContract.RawContacts.DATA_SET, account.type)
+                    .withValue(ContactsContract.RawContacts.DATA_SET, account.dataSet)
                     .build(),
             )
 
@@ -79,6 +80,8 @@ internal class SeedTestDataImpl @Inject constructor(
 
             try {
                 contentResolver.applyBatch(ContactsContract.AUTHORITY, operations)
+            } catch (e: IllegalArgumentException) {
+                Log.w(TAG, "Failed to save test data", e)
             } catch (e: OperationApplicationException) {
                 Log.w(TAG, "Failed to save test data", e)
             } catch (e: RemoteException) {
@@ -157,7 +160,8 @@ internal class SeedTestDataImpl @Inject constructor(
         }
     }
 
-    private fun TestContact.postalContentValues(): List<ContentValues> {
+    private fun TestContact.postalContentValues(): List<ContentValues>? {
+        if (city == null && country == null) return null
         return listOf(
             ContentValues().apply {
                 put(
@@ -192,7 +196,8 @@ internal class SeedTestDataImpl @Inject constructor(
                         ContactsContract.Data.MIMETYPE,
                         ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
                     )
-                    put(ContactsContract.CommonDataKinds.Relation.TYPE, it)
+                    put(ContactsContract.CommonDataKinds.Relation.NAME, it.value)
+                    put(ContactsContract.CommonDataKinds.Relation.TYPE, it.type)
                 },
             )
         }
@@ -219,9 +224,9 @@ internal class SeedTestDataImpl @Inject constructor(
                 ContentValues().apply {
                     put(
                         ContactsContract.Data.MIMETYPE,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+                        ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE,
                     )
-                    put(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+                    put(ContactsContract.CommonDataKinds.Photo.PHOTO, photo.bytes)
                     put(ContactsContract.CommonDataKinds.Photo.IS_PRIMARY, 1)
                 },
             )
@@ -230,8 +235,5 @@ internal class SeedTestDataImpl @Inject constructor(
 
     companion object {
         private const val TAG = "SeedTestData"
-
-        @VisibleForTesting
-        var contactsCount = 100
     }
 }

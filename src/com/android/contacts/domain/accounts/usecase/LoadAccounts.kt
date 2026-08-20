@@ -5,17 +5,14 @@ import android.content.IntentFilter
 import android.util.Log
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
+import com.android.contacts.domain.accounts.mapper.AccountFilterMapper
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.util.BuildBroadcastReceiverFlow
 import com.android.contacts.model.AccountTypeManager
-import com.android.contacts.model.account.AccountInfo
-import com.google.common.base.Predicate
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -23,12 +20,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 internal fun interface LoadAccounts {
-    operator fun invoke(
-        filter: AccountTypeManager.AccountFilter?,
-    ): Flow<ImmutableList<AccountDisplayModel>>
+    operator fun invoke(filter: AccountFilter?): Flow<List<AccountDisplayModel>>
 }
 
 internal class LoadAccountsImpl @Inject constructor(
+    private val accountFilterMapper: AccountFilterMapper,
     private val buildBroadcastReceiverFlow: BuildBroadcastReceiverFlow,
     @param:ApplicationContext private val context: Context,
     private val accountTypeManager: AccountTypeManager,
@@ -37,37 +33,30 @@ internal class LoadAccountsImpl @Inject constructor(
 ) : LoadAccounts {
 
     override operator fun invoke(
-        filter: AccountTypeManager.AccountFilter?,
-    ): Flow<ImmutableList<AccountDisplayModel>> =
-        buildBroadcastReceiverFlow(IntentFilter(AccountTypeManager.BROADCAST_ACCOUNTS_CHANGED))
+        filter: AccountFilter?,
+    ): Flow<List<AccountDisplayModel>> {
+        return buildBroadcastReceiverFlow(
+            IntentFilter(AccountTypeManager.BROADCAST_ACCOUNTS_CHANGED),
+        )
             .onStart { emit(Unit) }
             .map { load(filter) }
             .flowOn(coroutineDispatcher)
+    }
 
-    private fun load(filter: AccountTypeManager.AccountFilter?) =
-        try {
+    private fun load(filter: AccountFilter?): List<AccountDisplayModel> {
+        val filterPredicate = accountFilterMapper.map(filter)
+        return try {
             accountTypeManager
-                .filterAccountsAsync(prepareFilter(filter))
+                .filterAccountsAsync(filterPredicate)
                 .get()
                 .orEmpty()
                 .map(accountDisplayModelMapper::map)
-                .toImmutableList()
         } catch (e: InterruptedException) {
             Log.w(TAG, "Could not load accounts", e)
-            persistentListOf()
+            emptyList()
         } catch (e: ExecutionException) {
             Log.w(TAG, "Could not load accounts", e)
-            persistentListOf()
-        }
-
-    private fun prepareFilter(filter: AccountTypeManager.AccountFilter?): Predicate<AccountInfo> {
-        return when {
-            filter == null ->
-                AccountTypeManager.AccountFilter.ALL
-            filter === AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE ->
-                AccountTypeManager.insertableFilter(context)
-            else ->
-                filter
+            emptyList()
         }
     }
 

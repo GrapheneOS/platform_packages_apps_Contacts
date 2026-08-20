@@ -64,6 +64,7 @@ import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
 import com.android.contacts.compat.CompatUtils;
+import com.android.contacts.domain.accounts.model.AccountFilter;
 import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.drawer.DrawerFragment;
 import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
@@ -113,6 +114,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
@@ -212,7 +214,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private final Handler mHandler = new Handler();
 
     @Inject
-    DebugOptionsMenu debugOptionsMenu;
+    Lazy<DebugOptionsMenu> debugOptionsMenu;
 
     private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
         public void onStatusChanged(int which) {
@@ -1187,7 +1189,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 UIIntents.INSTANCE.getSelectAccountDialogIntent(
                         this,
                         Integer.valueOf(R.string.dialog_new_group_account),
-                        AccountTypeManager.AccountFilter.GROUPS_WRITABLE
+                        AccountFilter.GROUPS_WRITABLE
                 ),
                 REQUEST_SELECT_ACCOUNT
         );
@@ -1261,7 +1263,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     @Override
     public void onShowDebugOptions() {
-        debugOptionsMenu.show(this);
+        debugOptionsMenu.get().show(this);
     }
 
     @Override
