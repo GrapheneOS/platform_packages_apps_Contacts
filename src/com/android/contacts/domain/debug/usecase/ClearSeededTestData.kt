@@ -24,7 +24,11 @@ internal class ClearSeededTestDataImpl @Inject constructor(
             contentResolver.query(
                 ContactsContract.Data.CONTENT_URI,
                 arrayOf(ContactsContract.Data.RAW_CONTACT_ID),
-                "${ContactsContract.CommonDataKinds.Phone.NUMBER} LIKE ?",
+                ContactsContract.Data.MIMETYPE +
+                    " = " +
+                    "\"${ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE}\"" +
+                    " AND " +
+                    "${ContactsContract.CommonDataKinds.Phone.NUMBER} LIKE ?",
                 arrayOf("${TestContact.PHONE_PREFIX}%"),
                 null,
             )?.use {
