@@ -89,6 +89,8 @@ public final class SelectAccountDialogFragment extends DialogFragment
             mFilter = AccountTypeManager.AccountFilter.ALL;
         } else if (filter == AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE) {
             mFilter = AccountTypeManager.insertableFilter(getActivity());
+        } else if (filter == AccountTypeManager.AccountFilter.GROUPS_INSERTABLE) {
+            mFilter = AccountTypeManager.groupInsertableFilter(getActivity());
         } else {
             mFilter = filter;
         }
