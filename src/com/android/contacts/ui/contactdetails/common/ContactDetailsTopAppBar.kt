@@ -165,6 +165,7 @@ private fun ContactDetailsTopAppBarPreview() {
                 isShareVisible = true,
                 isShortcutVisible = true,
                 isRingtoneVisible = true,
+                isSendToVoicemailVisible = true,
             ),
             isStarred = true,
             onAction = {},

@@ -27,7 +27,9 @@ import com.android.contacts.tests.factory.contactDetailsMenu
 import com.android.contacts.tests.factory.contactQuickActionUiModel
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import io.mockk.every
 import io.mockk.mockk
@@ -520,6 +522,27 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
+    fun map_forAContactSentToVoicemail_checksTheToggle() {
+        val details = contactDetails(isSendToVoicemail = true)
+
+        assertEquals(true, sendToVoicemailSetting(mapOf(details))?.isChecked)
+    }
+
+    @Test
+    fun map_forAContactNotSentToVoicemail_leavesTheToggleUnchecked() {
+        val details = contactDetails(isSendToVoicemail = false)
+
+        assertEquals(false, sendToVoicemailSetting(mapOf(details))?.isChecked)
+    }
+
+    @Test
+    fun map_whenSendToVoicemailIsHidden_dropsTheRow() {
+        val menu = contactDetailsMenu(isSendToVoicemailVisible = false)
+
+        assertNull(sendToVoicemailSetting(mapOf(menu = menu)))
+    }
+
+    @Test
     fun map_passesTheMenuAndTheStarredStateThrough() {
         val menu = contactDetailsMenu(isDeleteVisible = false)
 
@@ -581,6 +604,14 @@ class ContactDetailsUiStateMapperImplTest {
             copyLabel = copyLabel,
             actions = actions,
         )
+    }
+
+    private fun sendToVoicemailSetting(
+        state: ContactDetailsContent.Loaded,
+    ): ContactSettingUiModel? {
+        return state.settings.firstOrNull { setting ->
+            setting.action == ContactDetailsAction.SendToVoicemailClick
+        }
     }
 
     private fun firstContactEntry(state: ContactDetailsContent.Loaded): ContactEntryUiModel {

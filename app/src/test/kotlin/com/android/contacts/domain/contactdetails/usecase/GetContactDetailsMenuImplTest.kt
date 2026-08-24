@@ -43,6 +43,7 @@ class GetContactDetailsMenuImplTest {
                 isShareVisible = true,
                 isShortcutVisible = true,
                 isRingtoneVisible = true,
+                isSendToVoicemailVisible = true,
             ),
             menu,
         )
