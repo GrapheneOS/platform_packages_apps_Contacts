@@ -23,6 +23,7 @@ import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCar
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
+import com.android.contacts.ui.contactdetails.screen.model.PendingContactFlags
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
@@ -49,6 +50,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal interface ContactDetailsScreenModel {
@@ -91,6 +93,8 @@ internal class ContactDetailsViewModel @Inject constructor(
     override val navigationEvents: Flow<NavEvent> = _navigationEvents.receiveAsFlow()
 
     private val linkProgress = MutableStateFlow(contactActionsRepository.getPendingLinkOperation())
+
+    private val pendingFlags = MutableStateFlow(PendingContactFlags())
 
     private val retainedContent = MutableStateFlow<Content>(Content.Loading)
 
@@ -148,6 +152,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         when (action) {
             is Action.BackClick -> sendNavigationEvent(NavEvent.Close)
             is Action.StarClick -> toggleStarred()
+            is Action.SendToVoicemailClick -> toggleSendToVoicemail()
             is Action.EditClick -> editContact()
             is Action.AddDetailsClick -> editContact()
             is Action.DeleteClick -> deleteContact()
@@ -186,13 +191,19 @@ internal class ContactDetailsViewModel @Inject constructor(
                 .observeDisplaySettings()
                 .first()
                 .displayOrder
+            val results = contactDetailsRepository
+                .observeContactDetails(lookupUri, excludedMimeTypes(arguments))
+                .onEach { result -> retainLoadedContact(result) }
 
-            emitAll(
-                contactDetailsRepository
-                    .observeContactDetails(lookupUri, excludedMimeTypes(arguments))
-                    .onEach { result -> retainLoadedContact(result) }
-                    .map { result -> toContent(result, arguments, displayOrder) },
-            )
+            val contentUpdates = combine(
+                results,
+                pendingFlags,
+            ) { result, pending ->
+                clearAppliedFlags(result, pending)
+                toContent(result, arguments, displayOrder, pending)
+            }
+
+            emitAll(contentUpdates)
         }
     }
 
@@ -200,13 +211,18 @@ internal class ContactDetailsViewModel @Inject constructor(
         result: ContactDetailsResult,
         arguments: Bundle,
         displayOrder: DisplayOrder,
+        pending: PendingContactFlags,
     ): Content {
         return when (result) {
             is ContactDetailsResult.NotFound -> Content.NotFound
             is ContactDetailsResult.Error -> Content.Error
 
             is ContactDetailsResult.Loaded -> {
-                toLoadedContent(result.details, arguments, displayOrder)
+                toLoadedContent(
+                    details = pending.applyTo(result.details),
+                    arguments = arguments,
+                    displayOrder = displayOrder,
+                )
             }
         }
     }
@@ -233,12 +249,63 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun toggleSendToVoicemail() {
+        val lookupUri = lookupUri() ?: return
+        val details = effectiveDetails() ?: return
+
+        toggleFlag(
+            current = details.isSendToVoicemail,
+            updatePending = { pending ->
+                pendingFlags.update { flags ->
+                    flags.copy(isSendToVoicemail = pending)
+                }
+            },
+            write = { isEnabled ->
+                contactActionsRepository.setSendToVoicemail(lookupUri, isEnabled)
+            },
+        )
+    }
+
     private fun toggleStarred() {
         val lookupUri = lookupUri() ?: return
-        val loaded = uiState.value.content as? Content.Loaded ?: return
+        val details = effectiveDetails() ?: return
+
+        toggleFlag(
+            current = details.isStarred,
+            updatePending = { pending ->
+                pendingFlags.update { flags ->
+                    flags.copy(isStarred = pending)
+                }
+            },
+            write = { isEnabled ->
+                contactActionsRepository.setStarred(lookupUri, isEnabled)
+            },
+        )
+    }
+
+    private fun effectiveDetails(): ContactDetails? {
+        val details = loadedDetails ?: return null
+
+        return pendingFlags.value.applyTo(details)
+    }
+
+    private fun toggleFlag(
+        current: Boolean,
+        updatePending: (Boolean?) -> Unit,
+        write: suspend (Boolean) -> Unit,
+    ) {
+        val isEnabled = !current
+
+        updatePending(isEnabled)
 
         viewModelScope.launch {
-            contactActionsRepository.setStarred(lookupUri, !loaded.isStarred)
+            try {
+                write(isEnabled)
+            } catch (_: IllegalStateException) {
+                updatePending(null)
+            } catch (_: SecurityException) {
+                updatePending(null)
+            }
         }
     }
 
@@ -279,6 +346,18 @@ internal class ContactDetailsViewModel @Inject constructor(
         val lookupKey = loadedDetails?.lookupKey ?: return
 
         sendEffect(Effect.ShareContact(lookupKey))
+    }
+
+    private fun clearAppliedFlags(
+        result: ContactDetailsResult,
+        pending: PendingContactFlags,
+    ) {
+        val details = (result as? ContactDetailsResult.Loaded)?.details ?: return
+        val applied = pending.withoutApplied(details)
+
+        if (applied != pending) {
+            pendingFlags.value = applied
+        }
     }
 
     private fun retainLoadedContact(result: ContactDetailsResult) {
