@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -41,6 +42,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
@@ -415,6 +419,20 @@ private fun ContactDetailsSection(
     }
 }
 
+private fun settingToggle(setting: ContactSettingUiModel): (@Composable () -> Unit)? {
+    val isChecked = setting.isChecked ?: return null
+
+    return {
+        Switch(
+            checked = isChecked,
+            onCheckedChange = null,
+            modifier = Modifier.semantics {
+                toggleableState = ToggleableState(isChecked)
+            },
+        )
+    }
+}
+
 @Composable
 private fun ContactDetailsSettings(
     settings: ImmutableList<ContactSettingUiModel>,
@@ -437,6 +455,7 @@ private fun ContactDetailsSettings(
                 isFirst = false,
                 isLast = index == settings.lastIndex,
                 onClick = { onAction(setting.action) },
+                trailingContent = settingToggle(setting),
                 modifier = Modifier.testTag(settingTestTag(setting)),
             )
         }
@@ -609,6 +628,7 @@ private fun previewContent(): Content.Loaded {
             isShareVisible = true,
             isShortcutVisible = true,
             isRingtoneVisible = true,
+            isSendToVoicemailVisible = true,
         ),
         isStarred = false,
     )
@@ -619,6 +639,7 @@ private fun previewSetting(
     title: String,
     subtitle: String? = null,
     isDestructive: Boolean = false,
+    isChecked: Boolean? = null,
 ): ContactSettingUiModel {
     return ContactSettingUiModel(
         icon = icon,
@@ -626,6 +647,7 @@ private fun previewSetting(
         subtitle = subtitle,
         action = Action.RingtoneClick,
         isDestructive = isDestructive,
+        isChecked = isChecked,
     )
 }
 

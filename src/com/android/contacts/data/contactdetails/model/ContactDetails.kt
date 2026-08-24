@@ -14,6 +14,7 @@ internal data class ContactDetails(
     val isStarred: Boolean,
     val photoId: Long,
     val photo: ContactPhoto?,
+    val isSendToVoicemail: Boolean,
     val customRingtone: String?,
     val customRingtoneTitle: String?,
     val groups: List<String>,
