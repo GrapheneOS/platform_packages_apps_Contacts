@@ -359,6 +359,8 @@
     <string name="contact_entry_default">Default</string>
     <!-- Label of a contact field next to the default marker, example: Mobile · Default. [CHAR LIMIT=NONE] -->
     <string name="contact_entry_default_type"><xliff:g id="type" example="Mobile">%1$s</xliff:g> · <xliff:g id="default" example="Default">%2$s</xliff:g></string>
+    <!-- Toggle in the contact settings that routes this contact's calls to voicemail. [CHAR LIMIT=NONE] -->
+    <string name="contact_details_send_to_voicemail">Send to voicemail</string>
     <!-- Label under the message button on the contact details screen. [CHAR LIMIT=12] -->
     <string name="quickcontact_action_message">Message</string>
     <!-- Label under the video call button on the contact details screen. [CHAR LIMIT=12] -->

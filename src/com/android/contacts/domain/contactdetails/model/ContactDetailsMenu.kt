@@ -9,4 +9,5 @@ internal data class ContactDetailsMenu(
     val isShareVisible: Boolean,
     val isShortcutVisible: Boolean,
     val isRingtoneVisible: Boolean,
+    val isSendToVoicemailVisible: Boolean,
 )

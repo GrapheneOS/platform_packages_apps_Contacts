@@ -9,4 +9,5 @@ internal data class ContactSettingUiModel(
     val subtitle: String?,
     val action: ContactDetailsAction,
     val isDestructive: Boolean,
+    val isChecked: Boolean?,
 )

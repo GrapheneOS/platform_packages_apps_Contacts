@@ -4,6 +4,10 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.isToggleable
+import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -33,6 +37,7 @@ import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTA
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_HEADER_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
@@ -227,6 +232,35 @@ internal class ContactDetailsContentTest {
     }
 
     @Test
+    fun forAToggleSetting_showsItsState() = runComposeUiTest {
+        val settings = persistentListOf(
+            ContactSettingUiModel(
+                icon = ContactSettingIcon.SEND_TO_VOICEMAIL,
+                title = "Send to voicemail",
+                subtitle = null,
+                action = Action.SendToVoicemailClick,
+                isDestructive = false,
+                isChecked = true,
+            ),
+        )
+
+        setContentWith(state = State(content = loadedContent(settings = settings)))
+
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "SEND_TO_VOICEMAIL")
+            .onChild()
+            .assertIsOn()
+    }
+
+    @Test
+    fun forAPlainSetting_showsNoToggle() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent(settings = SETTINGS)))
+
+        onNodeWithTag(CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX + "SHARE")
+            .onChild()
+            .assert(isToggleable().not())
+    }
+
+    @Test
     fun withoutAnySettings_hidesTheSection() = runComposeUiTest {
         setContentWith(state = State(content = loadedContent(settings = persistentListOf())))
 
@@ -365,6 +399,7 @@ internal class ContactDetailsContentTest {
             subtitle = null,
             action = Action.ShareClick,
             isDestructive = false,
+            isChecked = null,
         )
 
         val SETTINGS = persistentListOf(
@@ -374,6 +409,7 @@ internal class ContactDetailsContentTest {
                 subtitle = "Bright Morning",
                 action = Action.RingtoneClick,
                 isDestructive = false,
+                isChecked = null,
             ),
             SHARE_SETTING,
             ContactSettingUiModel(
@@ -382,6 +418,7 @@ internal class ContactDetailsContentTest {
                 subtitle = null,
                 action = Action.ShortcutClick,
                 isDestructive = false,
+                isChecked = null,
             ),
             ContactSettingUiModel(
                 icon = ContactSettingIcon.DELETE,
@@ -389,6 +426,7 @@ internal class ContactDetailsContentTest {
                 subtitle = null,
                 action = Action.DeleteClick,
                 isDestructive = true,
+                isChecked = null,
             ),
         )
 

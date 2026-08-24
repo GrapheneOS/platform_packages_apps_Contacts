@@ -7,12 +7,14 @@ import androidx.compose.material.icons.rounded.Link
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.rounded.Voicemail
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
 
 internal fun ContactSettingIcon.imageVector(): ImageVector {
     return when (this) {
         ContactSettingIcon.RINGTONE -> Icons.Rounded.Notifications
+        ContactSettingIcon.SEND_TO_VOICEMAIL -> Icons.Rounded.Voicemail
         ContactSettingIcon.SHARE -> Icons.Rounded.Share
         ContactSettingIcon.SHORTCUT -> Icons.Rounded.AddToHomeScreen
         ContactSettingIcon.LINK -> Icons.Rounded.Link

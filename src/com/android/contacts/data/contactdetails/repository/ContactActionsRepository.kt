@@ -30,6 +30,11 @@ internal interface ContactActionsRepository {
         ringtone: String?,
     )
 
+    suspend fun setSendToVoicemail(
+        lookupUri: Uri,
+        isEnabled: Boolean,
+    )
+
     suspend fun setSuperPrimary(dataId: Long)
 
     suspend fun clearPrimary(dataId: Long)
@@ -63,6 +68,15 @@ internal class ContactActionsRepositoryImpl @Inject constructor(
         ringtone: String?,
     ) {
         startService(ContactSaveService.createSetRingtone(context, lookupUri, ringtone))
+    }
+
+    override suspend fun setSendToVoicemail(
+        lookupUri: Uri,
+        isEnabled: Boolean,
+    ) {
+        startService(
+            ContactSaveService.createSetSendToVoicemail(context, lookupUri, isEnabled),
+        )
     }
 
     override suspend fun setSuperPrimary(dataId: Long) {

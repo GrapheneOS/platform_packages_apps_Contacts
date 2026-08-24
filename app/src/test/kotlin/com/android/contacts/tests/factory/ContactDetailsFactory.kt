@@ -39,6 +39,7 @@ internal fun contactDetails(
     isStarred: Boolean = false,
     photoId: Long = 0L,
     photo: ContactPhoto? = null,
+    isSendToVoicemail: Boolean = false,
     customRingtone: String? = null,
     customRingtoneTitle: String? = null,
     groups: List<String> = emptyList(),
@@ -57,6 +58,7 @@ internal fun contactDetails(
         isStarred = isStarred,
         photoId = photoId,
         photo = photo,
+        isSendToVoicemail = isSendToVoicemail,
         customRingtone = customRingtone,
         customRingtoneTitle = customRingtoneTitle,
         groups = groups,
@@ -74,6 +76,7 @@ internal fun contactDetailsMenu(
     isShareVisible: Boolean = true,
     isShortcutVisible: Boolean = true,
     isRingtoneVisible: Boolean = true,
+    isSendToVoicemailVisible: Boolean = true,
 ): ContactDetailsMenu {
     return ContactDetailsMenu(
         isStarVisible = isStarVisible,
@@ -84,5 +87,6 @@ internal fun contactDetailsMenu(
         isShareVisible = isShareVisible,
         isShortcutVisible = isShortcutVisible,
         isRingtoneVisible = isRingtoneVisible,
+        isSendToVoicemailVisible = isSendToVoicemailVisible,
     )
 }

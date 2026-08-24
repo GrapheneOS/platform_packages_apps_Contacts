@@ -15,8 +15,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.ui.common.components.TwoLineListItem
 import com.android.contacts.ui.common.components.cellShape
-import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
+import com.android.contacts.ui.core.ContactsPreviewColumn
 
 @Composable
 internal fun ContactDetailsActionRow(
@@ -28,6 +28,7 @@ internal fun ContactDetailsActionRow(
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     isFirst: Boolean = true,
     isLast: Boolean = true,
+    trailingContent: (@Composable () -> Unit)? = null,
 ) {
     TwoLineListItem(
         onClick = onClick,
@@ -55,6 +56,7 @@ internal fun ContactDetailsActionRow(
             )
         },
         modifier = modifier,
+        trailingContent = trailingContent,
         shape = cellShape(
             isFirst = isFirst,
             isLast = isLast,
