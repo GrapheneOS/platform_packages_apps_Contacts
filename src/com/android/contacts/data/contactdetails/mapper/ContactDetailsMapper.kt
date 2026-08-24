@@ -74,6 +74,7 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             isStarred = contact.starred,
             photoId = contact.photoId,
             photo = mapPhoto(contact),
+            isSendToVoicemail = contact.isSendToVoicemail,
             customRingtone = contact.customRingtone,
             customRingtoneTitle = ringtoneTitle(contact.customRingtone),
             groups = mapGroups(contact),

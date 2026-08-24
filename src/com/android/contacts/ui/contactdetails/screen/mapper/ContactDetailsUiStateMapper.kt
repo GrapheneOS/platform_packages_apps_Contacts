@@ -150,6 +150,12 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
                 subtitle = details.customRingtoneTitle,
             ).takeIf { menu.isRingtoneVisible },
             setting(
+                icon = ContactSettingIcon.SEND_TO_VOICEMAIL,
+                titleResource = R.string.contact_details_send_to_voicemail,
+                action = ContactDetailsAction.SendToVoicemailClick,
+                isChecked = details.isSendToVoicemail,
+            ).takeIf { menu.isSendToVoicemailVisible },
+            setting(
                 icon = ContactSettingIcon.SHARE,
                 titleResource = R.string.menu_share,
                 action = ContactDetailsAction.ShareClick,
@@ -184,6 +190,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         action: ContactDetailsAction,
         subtitle: String? = null,
         isDestructive: Boolean = false,
+        isChecked: Boolean? = null,
     ): ContactSettingUiModel {
         return ContactSettingUiModel(
             icon = icon,
@@ -191,6 +198,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             subtitle = subtitle,
             action = action,
             isDestructive = isDestructive,
+            isChecked = isChecked,
         )
     }
 

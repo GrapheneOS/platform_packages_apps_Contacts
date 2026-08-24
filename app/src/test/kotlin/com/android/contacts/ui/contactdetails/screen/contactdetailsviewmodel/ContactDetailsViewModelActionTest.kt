@@ -11,6 +11,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,19 +53,12 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
 
     @Test
     fun onAction_withStarClickOnAStarredContact_removesTheStar() = runTest {
-        loadedState.value = LOADED_CONTENT.copy(isStarred = true)
-        val viewModel = createViewModel().bindContact()
-        viewModel.uiState.test {
-            awaitItem()
-            emitLoaded()
-            awaitItem()
+        val viewModel = loadedViewModel(contactDetails(isStarred = true))
 
-            viewModel.onAction(ContactDetailsAction.StarClick)
-            advanceUntilIdle()
+        viewModel.onAction(ContactDetailsAction.StarClick)
+        advanceUntilIdle()
 
-            coVerify { contactActionsRepository.setStarred(LOOKUP_URI, false) }
-            cancelAndIgnoreRemainingEvents()
-        }
+        coVerify { contactActionsRepository.setStarred(LOOKUP_URI, false) }
     }
 
     @Test
@@ -255,6 +249,54 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         advanceUntilIdle()
 
         coVerify(exactly = 0) { contactActionsRepository.setRingtone(any(), any()) }
+    }
+
+    @Test
+    fun onAction_withSendToVoicemailClick_togglesTheFlag() = runTest {
+        val viewModel = loadedViewModel(contactDetails(isSendToVoicemail = false))
+
+        viewModel.onAction(ContactDetailsAction.SendToVoicemailClick)
+        advanceUntilIdle()
+
+        coVerify { contactActionsRepository.setSendToVoicemail(LOOKUP_URI, true) }
+    }
+
+    @Test
+    fun onAction_withSendToVoicemailClickWhenEnabled_turnsTheFlagOff() = runTest {
+        val viewModel = loadedViewModel(contactDetails(isSendToVoicemail = true))
+
+        viewModel.onAction(ContactDetailsAction.SendToVoicemailClick)
+        advanceUntilIdle()
+
+        coVerify { contactActionsRepository.setSendToVoicemail(LOOKUP_URI, false) }
+    }
+
+    @Test
+    fun onAction_withRepeatedStarClicks_togglesFromThePendingValue() = runTest {
+        val viewModel = loadedViewModel(contactDetails(isStarred = false))
+
+        viewModel.onAction(ContactDetailsAction.StarClick)
+        viewModel.onAction(ContactDetailsAction.StarClick)
+        advanceUntilIdle()
+
+        coVerifyOrder {
+            contactActionsRepository.setStarred(LOOKUP_URI, true)
+            contactActionsRepository.setStarred(LOOKUP_URI, false)
+        }
+    }
+
+    @Test
+    fun onAction_withRepeatedSendToVoicemailClicks_togglesFromThePendingValue() = runTest {
+        val viewModel = loadedViewModel(contactDetails(isSendToVoicemail = false))
+
+        viewModel.onAction(ContactDetailsAction.SendToVoicemailClick)
+        viewModel.onAction(ContactDetailsAction.SendToVoicemailClick)
+        advanceUntilIdle()
+
+        coVerifyOrder {
+            contactActionsRepository.setSendToVoicemail(LOOKUP_URI, true)
+            contactActionsRepository.setSendToVoicemail(LOOKUP_URI, false)
+        }
     }
 
     @Test

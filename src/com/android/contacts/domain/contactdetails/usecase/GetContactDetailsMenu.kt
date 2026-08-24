@@ -34,6 +34,7 @@ internal class GetContactDetailsMenuImpl @Inject constructor(
             isShortcutVisible = isRegularContact &&
                 contactShortcutRepository.isPinShortcutSupported(),
             isRingtoneVisible = isRegularContact && isDeviceVoiceCapable(),
+            isSendToVoicemailVisible = isRegularContact && isDeviceVoiceCapable(),
         )
     }
 
