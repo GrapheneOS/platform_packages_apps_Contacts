@@ -69,6 +69,7 @@ class ContactDetailsOverlayLayoutTest {
 
     private fun loadedContent(header: ContactHeaderUiModel): Content.Loaded {
         return Content.Loaded(
+            recentCalls = persistentListOf(),
             groups = persistentListOf(),
             header = header,
             quickActions = persistentListOf(
