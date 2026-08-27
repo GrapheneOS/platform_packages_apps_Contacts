@@ -20,6 +20,10 @@ import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCar
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCardsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
+import com.android.contacts.data.calllog.repository.CallLogRepository
+import com.android.contacts.data.calllog.repository.CallLogRepositoryImpl
+import com.android.contacts.domain.calllog.usecase.GetRecentCalls
+import com.android.contacts.domain.calllog.usecase.GetRecentCallsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActionsImpl
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
@@ -27,6 +31,8 @@ import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapperImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapper
+import com.android.contacts.ui.contactdetails.screen.mapper.RecentCallsMapper
+import com.android.contacts.ui.contactdetails.screen.mapper.RecentCallsMapperImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapperImpl
 import dagger.Binds
 import dagger.Module
@@ -104,6 +110,24 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindGetContactQuickActions(
         impl: GetContactQuickActionsImpl,
     ): GetContactQuickActions
+
+    @Binds
+    @Reusable
+    abstract fun bindCallLogRepository(
+        impl: CallLogRepositoryImpl,
+    ): CallLogRepository
+
+    @Binds
+    @Reusable
+    abstract fun bindGetRecentCalls(
+        impl: GetRecentCallsImpl,
+    ): GetRecentCalls
+
+    @Binds
+    @Reusable
+    abstract fun bindRecentCallsMapper(
+        impl: RecentCallsMapperImpl,
+    ): RecentCallsMapper
 
     @Binds
     abstract fun bindContactQuickActionsMapper(

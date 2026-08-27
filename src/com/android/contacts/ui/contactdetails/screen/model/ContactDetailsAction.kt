@@ -16,6 +16,7 @@ internal sealed interface ContactDetailsAction {
     data object DeleteClick : Menu
     data object ShareClick : Menu
     data object ShortcutClick : Menu
+    data object RecentCallClick : Menu
     data object RingtoneClick : Menu
     data object SendToVoicemailClick : Menu
     data object JoinClick : Menu

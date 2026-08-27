@@ -58,6 +58,7 @@ import com.android.contacts.ui.contactdetails.common.ContactDetailsActionRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
 import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
 import com.android.contacts.ui.contactdetails.common.ContactDetailsProgressDialog
+import com.android.contacts.ui.contactdetails.common.ContactDetailsRecentCallRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsQuickActions
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTopAppBar
 import com.android.contacts.ui.contactdetails.common.imageVector
@@ -68,6 +69,7 @@ import com.android.contacts.ui.contactdetails.common.ContactEntryRow
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RECENT_CALLS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
@@ -78,6 +80,8 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
+import com.android.contacts.ui.contactdetails.screen.model.RecentCallDirection
+import com.android.contacts.ui.contactdetails.screen.model.RecentCallUiModel
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -342,6 +346,23 @@ private fun ContactDetailsList(
             }
         }
 
+        if (content.recentCalls.isNotEmpty()) {
+            item(key = "recent_calls") {
+                ContactDetailsSection(
+                    title = stringResource(R.string.contact_details_recent_activity),
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .testTag(CONTACT_DETAILS_RECENT_CALLS_TEST_TAG)
+                        .padding(bottom = Tokens.cardGroupSpacing),
+                ) {
+                    ContactDetailsRecentCalls(
+                        recentCalls = content.recentCalls,
+                        onRecentCallClick = { onAction(Action.RecentCallClick) },
+                    )
+                }
+            }
+        }
+
         if (content.settings.isNotEmpty()) {
             item(key = "settings") {
                 ContactDetailsSection(
@@ -416,6 +437,26 @@ private fun ContactDetailsSection(
         ContactDetailsSectionHeader(title = title)
 
         content()
+    }
+}
+
+@Composable
+private fun ContactDetailsRecentCalls(
+    recentCalls: ImmutableList<RecentCallUiModel>,
+    onRecentCallClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Tokens.cardSpacing),
+        modifier = modifier,
+    ) {
+        recentCalls.forEachIndexed { index, recentCall ->
+            ContactDetailsRecentCallRow(
+                recentCall = recentCall,
+                isLast = index == recentCalls.lastIndex,
+                onClick = onRecentCallClick,
+            )
+        }
     }
 }
 
@@ -611,6 +652,15 @@ private fun previewContent(): Content.Loaded {
                         icon = null,
                     ),
                 ),
+            ),
+        ),
+        recentCalls = persistentListOf(
+            RecentCallUiModel(
+                title = "Call time 01:20",
+                numberLabel = "Mobile",
+                date = "Jun 3",
+                direction = RecentCallDirection.INCOMING,
+                contentDescription = "Incoming call, 01:20, Jun 3",
             ),
         ),
         settings = persistentListOf(

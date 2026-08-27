@@ -6,6 +6,8 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 
 internal sealed interface ContactDetailsEffect {
 
+    data object ViewCallLog : ContactDetailsEffect
+
     data class AddDirectoryContact(
         val prefill: DirectoryContactPrefill,
     ) : ContactDetailsEffect

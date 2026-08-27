@@ -42,6 +42,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
             buildContactDetailsCards = buildContactDetailsCards,
             getContactDetailsMenu = getContactDetailsMenu,
             getContactQuickActions = getContactQuickActions,
+            getRecentCalls = getRecentCalls,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
             contactShortcutRepository = contactShortcutRepository,
             displaySettingsRepository = displaySettingsRepository,
@@ -140,6 +141,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
                     details = details,
                     cards = EMPTY_CARDS,
                     quickActions = any(),
+                    recentCalls = any(),
                     menu = any(),
                     displayOrder = DisplayOrder.FAMILY_NAME_FIRST,
                 )

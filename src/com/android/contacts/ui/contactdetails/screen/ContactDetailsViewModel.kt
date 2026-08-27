@@ -21,6 +21,7 @@ import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
+import com.android.contacts.domain.calllog.usecase.GetRecentCalls
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.model.PendingContactFlags
@@ -76,6 +77,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val buildContactDetailsCards: BuildContactDetailsCards,
     private val getContactDetailsMenu: GetContactDetailsMenu,
     private val getContactQuickActions: GetContactQuickActions,
+    private val getRecentCalls: GetRecentCalls,
     private val contactShortcutRepository: ContactShortcutRepository,
     private val displaySettingsRepository: DisplaySettingsRepository,
     private val contactDetailsUiStateMapper: ContactDetailsUiStateMapper,
@@ -158,6 +160,7 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.DeleteClick -> deleteContact()
             is Action.ShareClick -> shareContact()
             is Action.ShortcutClick -> createShortcut()
+            is Action.RecentCallClick -> sendEffect(Effect.ViewCallLog)
             is Action.RingtoneClick -> pickRingtone()
             is Action.JoinClick -> pickJoinTarget()
             is Action.LinkedContactsClick -> viewLinkedContacts()
@@ -207,7 +210,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun toContent(
+    private suspend fun toContent(
         result: ContactDetailsResult,
         arguments: Bundle,
         displayOrder: DisplayOrder,
@@ -227,7 +230,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun toLoadedContent(
+    private suspend fun toLoadedContent(
         details: ContactDetails,
         arguments: Bundle,
         displayOrder: DisplayOrder,
@@ -236,6 +239,7 @@ internal class ContactDetailsViewModel @Inject constructor(
             details = details,
             cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
             quickActions = getContactQuickActions(details),
+            recentCalls = getRecentCalls(details),
             menu = getContactDetailsMenu(details.capabilities),
             displayOrder = displayOrder,
         )

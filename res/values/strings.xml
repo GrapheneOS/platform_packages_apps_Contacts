@@ -358,7 +358,35 @@
     <!-- Marks the phone number or email used by default for this contact. [CHAR LIMIT=20] -->
     <string name="contact_entry_default">Default</string>
     <!-- Label of a contact field next to the default marker, example: Mobile · Default. [CHAR LIMIT=NONE] -->
-    <string name="contact_entry_default_type"><xliff:g id="type" example="Mobile">%1$s</xliff:g> · <xliff:g id="default" example="Default">%2$s</xliff:g></string>
+    <string name="contact_entry_default_type"><xliff:g example="Mobile" id="type">%1$s</xliff:g> · <xliff:g example="Default" id="default">%2$s</xliff:g></string>
+    <!-- Title of the section listing recent calls with this contact. [CHAR LIMIT=40] -->
+    <string name="contact_details_recent_activity">Recent activity</string>
+    <!-- Title of an incoming call in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_incoming">Incoming call</string>
+    <!-- Title of an outgoing call in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_outgoing">Outgoing call</string>
+    <!-- Title of a missed call in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_missed">Missed call</string>
+    <!-- Title of a call that went to voicemail, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_voicemail">Voicemail</string>
+    <!-- Title of a call the user declined, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_rejected">Declined call</string>
+    <!-- Title of a call that was blocked, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_blocked">Blocked call</string>
+    <!-- Title of a call answered on another device, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_answered_elsewhere">Answered on another device</string>
+    <!-- Title of an answered call, showing how long it lasted. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_duration">Call time <xliff:g example="1:20" id="duration">%1$s</xliff:g></string>
+    <!-- Call duration shorter than a minute, for example: 58s. [CHAR LIMIT=20] -->
+    <string name="contact_details_call_duration_seconds"><xliff:g example="58" id="seconds">%1$d</xliff:g>s</string>
+    <!-- Call duration shorter than an hour, for example: 1m 20s. [CHAR LIMIT=20] -->
+    <string name="contact_details_call_duration_minutes"><xliff:g example="1" id="minutes">%1$d</xliff:g>m <xliff:g example="20" id="seconds">%2$d</xliff:g>s</string>
+    <!-- Call duration of an hour or longer, for example: 1h 5m. [CHAR LIMIT=20] -->
+    <string name="contact_details_call_duration_hours"><xliff:g example="1" id="hours">%1$d</xliff:g>h <xliff:g example="5" id="minutes">%2$d</xliff:g>m</string>
+    <!-- Spoken description of a recent call, for example: Incoming, 1:20, Jun 3. [CHAR LIMIT=NONE] -->
+    <string name="contact_details_recent_call_description"><xliff:g example="Incoming" id="type">%1$s</xliff:g>, <xliff:g example="1:20" id="duration">%2$s</xliff:g>, <xliff:g example="Jun 3" id="date">%3$s</xliff:g></string>
+    <!-- Spoken description of a recent call without a duration, for example: Missed call, Jun 3. [CHAR LIMIT=NONE] -->
+    <string name="contact_details_recent_call_description_short"><xliff:g example="Missed call" id="type">%1$s</xliff:g>, <xliff:g example="Jun 3" id="date">%2$s</xliff:g></string>
     <!-- Toggle in the contact settings that routes this contact's calls to voicemail. [CHAR LIMIT=NONE] -->
     <string name="contact_details_send_to_voicemail">Send to voicemail</string>
     <!-- Label under the message button on the contact details screen. [CHAR LIMIT=12] -->
