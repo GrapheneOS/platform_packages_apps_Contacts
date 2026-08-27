@@ -356,6 +356,7 @@ internal class ContactDetailsContentTest {
         quickActions: ImmutableList<ContactQuickActionUiModel> = QUICK_ACTIONS,
     ): Content.Loaded {
         return Content.Loaded(
+            recentCalls = persistentListOf(),
             groups = persistentListOf(),
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = quickActions,
