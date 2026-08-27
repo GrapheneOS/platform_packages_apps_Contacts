@@ -16,6 +16,7 @@ import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
+import com.android.contacts.domain.calllog.usecase.GetRecentCalls
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.contactDetails
@@ -24,6 +25,7 @@ import com.android.contacts.ui.contactdetails.ContactDetailsActivity
 import com.android.contacts.ui.contactdetails.screen.ContactDetailsViewModel
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.collections.immutable.persistentListOf
@@ -52,6 +54,7 @@ internal abstract class BaseContactDetailsViewModelTest {
     protected val buildContactDetailsCards = mockk<BuildContactDetailsCards>()
     protected val getContactDetailsMenu = mockk<GetContactDetailsMenu>()
     protected val getContactQuickActions = mockk<GetContactQuickActions>()
+    protected val getRecentCalls = mockk<GetRecentCalls>()
     protected val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
 
@@ -69,9 +72,10 @@ internal abstract class BaseContactDetailsViewModelTest {
         every { buildContactDetailsCards(any(), any()) } returns EMPTY_CARDS
         every { getContactDetailsMenu(any()) } returns contactDetailsMenu()
         every { getContactQuickActions(any()) } returns emptyList()
+        coEvery { getRecentCalls(any()) } returns emptyList()
         every { displaySettingsRepository.observeDisplaySettings() } returns flowOf(DISPLAY_SETTINGS)
         every {
-            contactDetailsUiStateMapper.map(any(), any(), any(), any(), any())
+            contactDetailsUiStateMapper.map(any(), any(), any(), any(), any(), any())
         } answers { loadedState.value }
     }
 
@@ -83,6 +87,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             buildContactDetailsCards = buildContactDetailsCards,
             getContactDetailsMenu = getContactDetailsMenu,
             getContactQuickActions = getContactQuickActions,
+            getRecentCalls = getRecentCalls,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
             contactShortcutRepository = contactShortcutRepository,
             displaySettingsRepository = displaySettingsRepository,
@@ -137,6 +142,7 @@ internal abstract class BaseContactDetailsViewModelTest {
         )
 
         val LOADED_CONTENT = ContactDetailsContent.Loaded(
+            recentCalls = persistentListOf(),
             groups = persistentListOf(),
             header = mockk(relaxed = true),
             quickActions = persistentListOf(),

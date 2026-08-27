@@ -82,6 +82,7 @@ internal class ContactDetailsScreenTest {
 
     private fun loadedContent(): Content.Loaded {
         return Content.Loaded(
+            recentCalls = persistentListOf(),
             groups = persistentListOf(),
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = persistentListOf(),

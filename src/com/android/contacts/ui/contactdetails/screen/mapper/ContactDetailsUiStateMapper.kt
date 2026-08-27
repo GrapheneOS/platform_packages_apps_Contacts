@@ -19,6 +19,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
 import com.android.contacts.domain.contactdetails.model.ContactEntryKind
 import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
+import com.android.contacts.domain.calllog.model.RecentCall
 import com.android.contacts.domain.contactdetails.model.ContactQuickAction
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.common.components.ContactAvatarImage
@@ -43,6 +44,7 @@ internal interface ContactDetailsUiStateMapper {
         details: ContactDetails,
         cards: ContactDetailsCards,
         quickActions: List<ContactQuickAction>,
+        recentCalls: List<RecentCall>,
         menu: ContactDetailsMenu,
         displayOrder: DisplayOrder,
     ): ContactDetailsContent
@@ -52,12 +54,14 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val isEntryActionAvailable: IsEntryActionAvailable,
     private val contactQuickActionsMapper: ContactQuickActionsMapper,
+    private val recentCallsMapper: RecentCallsMapper,
 ) : ContactDetailsUiStateMapper {
 
     override fun map(
         details: ContactDetails,
         cards: ContactDetailsCards,
         quickActions: List<ContactQuickAction>,
+        recentCalls: List<RecentCall>,
         menu: ContactDetailsMenu,
         displayOrder: DisplayOrder,
     ): ContactDetailsContent {
@@ -68,6 +72,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         return ContactDetailsContent.Loaded(
             header = mapHeader(details, cards, displayOrder),
             quickActions = contactQuickActionsMapper.map(quickActions),
+            recentCalls = recentCallsMapper.map(recentCalls),
             groups = cards.groups.toImmutableList(),
             contactCard = contactCard,
             notes = notes,

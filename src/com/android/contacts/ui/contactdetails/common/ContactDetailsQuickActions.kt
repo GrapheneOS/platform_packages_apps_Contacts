@@ -21,7 +21,9 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction as Action
 import com.android.contacts.ui.common.components.MarqueeText
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
@@ -29,8 +31,6 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiM
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import com.android.contacts.domain.contactdetails.model.ContactEntryAction as Action
-import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 
 private const val DISABLED_CONTENT_ALPHA = 0.4f
 
@@ -105,7 +105,7 @@ private fun QuickAction(
 @Composable
 private fun quickActionColor(isEnabled: Boolean): Color {
     return when {
-        isEnabled -> MaterialTheme.colorScheme.secondaryContainer
+        isEnabled -> MaterialTheme.colorScheme.primaryContainer
         else -> MaterialTheme.colorScheme.surfaceContainerHigh
     }
 }
@@ -113,7 +113,7 @@ private fun quickActionColor(isEnabled: Boolean): Color {
 @Composable
 private fun quickActionContentColor(isEnabled: Boolean): Color {
     return when {
-        isEnabled -> MaterialTheme.colorScheme.onSecondaryContainer
+        isEnabled -> MaterialTheme.colorScheme.onPrimaryContainer
         else -> MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_CONTENT_ALPHA)
     }
 }
@@ -121,7 +121,7 @@ private fun quickActionContentColor(isEnabled: Boolean): Color {
 @Composable
 private fun quickActionLabelColor(isEnabled: Boolean): Color {
     return when {
-        isEnabled -> MaterialTheme.colorScheme.onSurfaceVariant
+        isEnabled -> MaterialTheme.colorScheme.onSurface
         else -> MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_CONTENT_ALPHA)
     }
 }

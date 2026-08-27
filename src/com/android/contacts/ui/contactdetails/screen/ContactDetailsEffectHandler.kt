@@ -7,6 +7,8 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.icu.text.MessageFormat
 import android.media.RingtoneManager
+import android.provider.CallLog.Calls
+import android.telecom.TelecomManager
 import android.net.Uri
 import android.provider.CalendarContract
 import android.provider.ContactsContract.CommonDataKinds.Im
@@ -50,6 +52,7 @@ internal class ContactDetailsEffectHandlerImpl(
             is Effect.AddDirectoryContact -> addDirectoryContact(effect.prefill)
             is Effect.ConfirmDelete -> confirmDelete(effect.lookupUri)
             is Effect.ShareContact -> shareContact(effect.lookupKey)
+            is Effect.ViewCallLog -> viewCallLog()
             is Effect.PickRingtone -> pickRingtone(effect.currentRingtone)
             is Effect.PickJoinTarget -> pickJoinTarget(effect.contactId)
             is Effect.ViewLinkedContacts -> viewLinkedContacts(effect.lookupUri)
@@ -143,6 +146,19 @@ internal class ContactDetailsEffectHandlerImpl(
             .putExtra(UiIntentActions.TARGET_CONTACT_ID_EXTRA_KEY, contactId)
 
         joinTargetLauncher.launch(intent)
+    }
+
+    private fun viewCallLog() {
+        val telecomManager = activity.getSystemService(TelecomManager::class.java)
+        val intent = Intent(Intent.ACTION_VIEW)
+            .setDataAndType(Calls.CONTENT_URI, Calls.CONTENT_TYPE)
+            .setPackage(telecomManager?.defaultDialerPackage)
+
+        try {
+            activity.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Log.w(TAG, "Could not open the call log", e)
+        }
     }
 
     private fun viewLinkedContacts(lookupUri: Uri) {
