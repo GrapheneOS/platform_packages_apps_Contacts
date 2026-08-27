@@ -57,6 +57,7 @@ class ContactDetailsUiStateMapperImplTest {
         context = context,
         isEntryActionAvailable = isEntryActionAvailable,
         contactQuickActionsMapper = contactQuickActionsMapper,
+        recentCallsMapper = RecentCallsMapperImpl(context = context),
     )
 
     @Before
@@ -558,7 +559,7 @@ class ContactDetailsUiStateMapperImplTest {
         menu: ContactDetailsMenu = contactDetailsMenu(),
         displayOrder: DisplayOrder = DisplayOrder.GIVEN_NAME_FIRST,
     ): ContactDetailsContent.Loaded {
-        return mapper.map(details, cards, emptyList(), menu, displayOrder)
+        return mapper.map(details, cards, emptyList(), emptyList(), menu, displayOrder)
             as ContactDetailsContent.Loaded
     }
 

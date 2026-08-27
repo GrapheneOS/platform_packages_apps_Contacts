@@ -7,6 +7,7 @@ internal const val CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG = "contact_details_qui
 internal const val CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX = "contact_details_quick_action_"
 internal const val CONTACT_DETAILS_CONTACT_CARD_TEST_TAG = "contact_details_contact_card"
 internal const val CONTACT_DETAILS_NOTES_TEST_TAG = "contact_details_notes"
+internal const val CONTACT_DETAILS_RECENT_CALLS_TEST_TAG = "contact_details_recent_calls"
 internal const val CONTACT_DETAILS_SETTINGS_TEST_TAG = "contact_details_settings"
 internal const val CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX = "contact_details_setting_"
 internal const val CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG = "contact_details_empty_prompt"
