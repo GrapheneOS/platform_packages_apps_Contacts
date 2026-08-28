@@ -559,7 +559,7 @@ class ContactDetailsUiStateMapperImplTest {
         menu: ContactDetailsMenu = contactDetailsMenu(),
         displayOrder: DisplayOrder = DisplayOrder.GIVEN_NAME_FIRST,
     ): ContactDetailsContent.Loaded {
-        return mapper.map(details, cards, emptyList(), emptyList(), menu, displayOrder)
+        return mapper.map(details, cards, emptyList(), emptyList(), null, menu, displayOrder)
             as ContactDetailsContent.Loaded
     }
 

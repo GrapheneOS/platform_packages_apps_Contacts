@@ -21,9 +21,13 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryLabel
 import com.android.contacts.domain.contactdetails.model.ContactEntryText
 import com.android.contacts.domain.calllog.model.RecentCall
 import com.android.contacts.domain.contactdetails.model.ContactQuickAction
+import com.android.contacts.domain.telecom.model.CallingSimOptions
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimAccountUiModel
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimNumberUiModel
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
@@ -45,6 +49,7 @@ internal interface ContactDetailsUiStateMapper {
         cards: ContactDetailsCards,
         quickActions: List<ContactQuickAction>,
         recentCalls: List<RecentCall>,
+        callingSimOptions: CallingSimOptions?,
         menu: ContactDetailsMenu,
         displayOrder: DisplayOrder,
     ): ContactDetailsContent
@@ -62,9 +67,11 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         cards: ContactDetailsCards,
         quickActions: List<ContactQuickAction>,
         recentCalls: List<RecentCall>,
+        callingSimOptions: CallingSimOptions?,
         menu: ContactDetailsMenu,
         displayOrder: DisplayOrder,
     ): ContactDetailsContent {
+        val callingSim = callingSim(callingSimOptions)
         val isEditable = !details.capabilities.isDirectoryEntry
         val contactCard = mapGroups(cards.contactCard, isEditable)
         val notes = mapGroups(cards.notes, isEditable)
@@ -73,10 +80,11 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             header = mapHeader(details, cards, displayOrder),
             quickActions = contactQuickActionsMapper.map(quickActions),
             recentCalls = recentCallsMapper.map(recentCalls),
+            callingSim = callingSim,
             groups = cards.groups.toImmutableList(),
             contactCard = contactCard,
             notes = notes,
-            settings = settings(details, menu),
+            settings = settings(details, menu, callingSim),
             emptyPrompt = emptyPrompt(details, contactCard, notes),
             menu = menu,
             isStarred = details.isStarred,
@@ -143,11 +151,44 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         }
     }
 
+    private fun callingSim(options: CallingSimOptions?): CallingSimUiModel? {
+        if (options == null) {
+            return null
+        }
+
+        return CallingSimUiModel(
+            accounts = options.sims
+                .map { sim ->
+                    CallingSimAccountUiModel(
+                        accountId = sim.accountId,
+                        label = sim.label,
+                    )
+                }
+                .toImmutableList(),
+            numbers = options.choices
+                .map { choice ->
+                    CallingSimNumberUiModel(
+                        dataId = choice.dataId,
+                        number = choice.number,
+                        numberLabel = choice.numberLabel,
+                        selectedAccountId = choice.selectedAccountId,
+                    )
+                }
+                .toImmutableList(),
+        )
+    }
+
     private fun settings(
         details: ContactDetails,
         menu: ContactDetailsMenu,
+        callingSim: CallingSimUiModel?,
     ): ImmutableList<ContactSettingUiModel> {
         return listOfNotNull(
+            setting(
+                icon = ContactSettingIcon.CALLING_SIM,
+                titleResource = R.string.contact_details_set_calling_sim,
+                action = ContactDetailsAction.CallingSimClick,
+            ).takeIf { callingSim != null },
             setting(
                 icon = ContactSettingIcon.RINGTONE,
                 titleResource = R.string.menu_set_ring_tone,

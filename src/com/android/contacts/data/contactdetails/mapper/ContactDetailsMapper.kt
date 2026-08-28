@@ -15,6 +15,7 @@ import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.detail.ContactDisplayUtils
 import com.android.contacts.model.AccountTypeManager
@@ -228,6 +229,7 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             typeLabel = phoneTypeLabel(dataItem),
             isCarrierVideoCallCapable =
                 dataItem.carrierPresence and Phone.CARRIER_PRESENCE_VT_CAPABLE != 0,
+            preferredPhoneAccount = preferredPhoneAccount(dataItem),
         )
     }
 
@@ -324,6 +326,16 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             company = dataItem.company,
             department = dataItem.department,
             title = dataItem.title,
+        )
+    }
+
+    private fun preferredPhoneAccount(dataItem: PhoneDataItem): PhoneAccountId? {
+        val componentName = dataItem.preferredPhoneAccountComponentName ?: return null
+        val id = dataItem.preferredPhoneAccountId ?: return null
+
+        return PhoneAccountId(
+            componentName = componentName,
+            id = id,
         )
     }
 
