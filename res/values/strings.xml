@@ -361,6 +361,10 @@
     <string name="contact_entry_default_type"><xliff:g example="Mobile" id="type">%1$s</xliff:g> · <xliff:g example="Default" id="default">%2$s</xliff:g></string>
     <!-- Title of the section listing recent calls with this contact. [CHAR LIMIT=40] -->
     <string name="contact_details_recent_activity">Recent activity</string>
+    <!-- Row and dialog title for choosing which SIM calls this contact. [CHAR LIMIT=40] -->
+    <string name="contact_details_set_calling_sim">Set calling SIM</string>
+    <!-- Button that clears the SIM chosen for every number of this contact. [CHAR LIMIT=20] -->
+    <string name="contact_details_calling_sim_reset">Reset</string>
     <!-- Title of an incoming call in the recent activity section. [CHAR LIMIT=40] -->
     <string name="contact_details_call_incoming">Incoming call</string>
     <!-- Title of an outgoing call in the recent activity section. [CHAR LIMIT=40] -->

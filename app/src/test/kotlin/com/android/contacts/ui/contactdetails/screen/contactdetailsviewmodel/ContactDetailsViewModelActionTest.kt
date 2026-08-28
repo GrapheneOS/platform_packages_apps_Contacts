@@ -2,6 +2,7 @@ package com.android.contacts.ui.contactdetails.screen.contactdetailsviewmodel
 
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.tests.factory.contactCapabilities
@@ -249,6 +250,34 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         advanceUntilIdle()
 
         coVerify(exactly = 0) { contactActionsRepository.setRingtone(any(), any()) }
+    }
+
+    @Test
+    fun onAction_withACallingSimPicked_writesEveryChoice() = runTest {
+        val viewModel = loadedViewModel()
+        val first = PhoneAccountId(componentName = "phone/Sim", id = "1")
+        val second = PhoneAccountId(componentName = "phone/Sim", id = "2")
+
+        viewModel.onAction(
+            ContactDetailsAction.CallingSimPicked(mapOf(1L to first, 2L to second)),
+        )
+        advanceUntilIdle()
+
+        coVerify { contactActionsRepository.setPreferredPhoneAccount(1L, first) }
+        coVerify { contactActionsRepository.setPreferredPhoneAccount(2L, second) }
+    }
+
+    @Test
+    fun onAction_withTheCallingSimPickerDismissed_writesNothing() = runTest {
+        val viewModel = loadedViewModel()
+
+        viewModel.onAction(ContactDetailsAction.CallingSimClick)
+        viewModel.onAction(ContactDetailsAction.CallingSimDismissed)
+        advanceUntilIdle()
+
+        coVerify(exactly = 0) {
+            contactActionsRepository.setPreferredPhoneAccount(any(), any())
+        }
     }
 
     @Test

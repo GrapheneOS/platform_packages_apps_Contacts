@@ -19,6 +19,7 @@ internal sealed interface ContactDetailsContent {
         val notes: ImmutableList<ContactEntryGroupUiModel>,
         val settings: ImmutableList<ContactSettingUiModel>,
         val recentCalls: ImmutableList<RecentCallUiModel>,
+        val callingSim: CallingSimUiModel?,
         val emptyPrompt: ContactDetailsEmptyPromptUiModel?,
         val menu: ContactDetailsMenu,
         val isStarred: Boolean,
