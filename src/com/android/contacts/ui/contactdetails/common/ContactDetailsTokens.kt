@@ -22,6 +22,11 @@ internal object ContactDetailsTokens {
     val recentCallDirectionSize = 16.dp
     val recentCallDirectionSpacing = 4.dp
 
+    val callingSimNumberSpacing = 12.dp
+    val callingSimAccountSpacing = 4.dp
+    val callingSimContentPadding = 24.dp
+    val callingSimTitleSpacing = 16.dp
+
     val groupChipSpacing = 8.dp
     val groupChipSectionSpacing = 12.dp
     val groupChipIconSize = 18.dp

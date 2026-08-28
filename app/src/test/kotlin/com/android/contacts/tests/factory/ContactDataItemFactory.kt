@@ -13,6 +13,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
 import com.android.contacts.data.contactdetails.model.ContactDataItem
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.model.dataitem.CustomDataItem
 
 internal fun phone(
@@ -25,6 +26,7 @@ internal fun phone(
     isPrimary: Boolean = false,
     isSuperPrimary: Boolean = false,
     isCarrierVideoCallCapable: Boolean = false,
+    preferredPhoneAccount: PhoneAccountId? = null,
 ): ContactDataItem.Phone {
     return ContactDataItem.Phone(
         id = id,
@@ -37,6 +39,7 @@ internal fun phone(
         formattedNumber = formattedNumber,
         typeLabel = typeLabel,
         isCarrierVideoCallCapable = isCarrierVideoCallCapable,
+        preferredPhoneAccount = preferredPhoneAccount,
     )
 }
 

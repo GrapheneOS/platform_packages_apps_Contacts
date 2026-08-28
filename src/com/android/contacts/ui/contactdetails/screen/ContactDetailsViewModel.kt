@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
@@ -22,6 +23,7 @@ import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.calllog.usecase.GetRecentCalls
+import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.model.PendingContactFlags
@@ -78,6 +80,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val getContactDetailsMenu: GetContactDetailsMenu,
     private val getContactQuickActions: GetContactQuickActions,
     private val getRecentCalls: GetRecentCalls,
+    private val getCallingSimOptions: GetCallingSimOptions,
     private val contactShortcutRepository: ContactShortcutRepository,
     private val displaySettingsRepository: DisplaySettingsRepository,
     private val contactDetailsUiStateMapper: ContactDetailsUiStateMapper,
@@ -98,6 +101,8 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private val pendingFlags = MutableStateFlow(PendingContactFlags())
 
+    private val callingSimPickerVisible = MutableStateFlow(false)
+
     private val retainedContent = MutableStateFlow<Content>(Content.Loading)
 
     private val content: Flow<Content> = savedStateHandle
@@ -112,8 +117,13 @@ internal class ContactDetailsViewModel @Inject constructor(
     override val uiState: StateFlow<State> = combine(
         content,
         linkProgress,
-    ) { loadedContent, pendingLinkOperation ->
-        State(content = loadedContent, linkProgress = pendingLinkOperation)
+        callingSimPickerVisible,
+    ) { loadedContent, pendingLinkOperation, isPickerVisible ->
+        State(
+            content = loadedContent,
+            linkProgress = pendingLinkOperation,
+            isCallingSimPickerVisible = isPickerVisible,
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STATE_TIMEOUT_MILLIS),
@@ -161,6 +171,7 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.ShareClick -> shareContact()
             is Action.ShortcutClick -> createShortcut()
             is Action.RecentCallClick -> sendEffect(Effect.ViewCallLog)
+            is Action.CallingSimClick -> showCallingSimPicker()
             is Action.RingtoneClick -> pickRingtone()
             is Action.JoinClick -> pickJoinTarget()
             is Action.LinkedContactsClick -> viewLinkedContacts()
@@ -181,6 +192,8 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private fun onPickerResult(action: Action.PickerResult) {
         when (action) {
+            is Action.CallingSimDismissed -> callingSimPickerVisible.value = false
+            is Action.CallingSimPicked -> setCallingSims(action.selections)
             is Action.RingtonePicked -> setRingtone(action.ringtone)
             is Action.JoinTargetPicked -> joinContact(action.contactId)
         }
@@ -240,6 +253,7 @@ internal class ContactDetailsViewModel @Inject constructor(
             cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
             quickActions = getContactQuickActions(details),
             recentCalls = getRecentCalls(details),
+            callingSimOptions = getCallingSimOptions(details),
             menu = getContactDetailsMenu(details.capabilities),
             displayOrder = displayOrder,
         )
@@ -250,6 +264,20 @@ internal class ContactDetailsViewModel @Inject constructor(
 
         if (operation == ContactLinkOperation.UNLINK) {
             sendNavigationEvent(NavEvent.Close)
+        }
+    }
+
+    private fun showCallingSimPicker() {
+        callingSimPickerVisible.value = true
+    }
+
+    private fun setCallingSims(selections: Map<Long, PhoneAccountId?>) {
+        callingSimPickerVisible.value = false
+
+        viewModelScope.launch {
+            for ((dataId, account) in selections) {
+                contactActionsRepository.setPreferredPhoneAccount(dataId, account)
+            }
         }
     }
 

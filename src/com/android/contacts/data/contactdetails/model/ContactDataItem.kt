@@ -1,5 +1,7 @@
 package com.android.contacts.data.contactdetails.model
 
+import com.android.contacts.data.telecom.model.PhoneAccountId
+
 internal sealed interface ContactDataItem {
     val id: Long
     val rawContactId: Long
@@ -19,6 +21,7 @@ internal sealed interface ContactDataItem {
         val formattedNumber: String?,
         val typeLabel: String?,
         val isCarrierVideoCallCapable: Boolean,
+        val preferredPhoneAccount: PhoneAccountId?,
     ) : ContactDataItem
 
     data class SipAddress(

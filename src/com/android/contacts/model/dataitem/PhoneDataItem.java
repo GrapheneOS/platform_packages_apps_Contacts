@@ -39,6 +39,14 @@ public class PhoneDataItem extends DataItem {
         super(values);
     }
 
+    public String getPreferredPhoneAccountComponentName() {
+        return getContentValues().getAsString(Phone.PREFERRED_PHONE_ACCOUNT_COMPONENT_NAME);
+    }
+
+    public String getPreferredPhoneAccountId() {
+        return getContentValues().getAsString(Phone.PREFERRED_PHONE_ACCOUNT_ID);
+    }
+
     public String getNumber() {
         return getContentValues().getAsString(Phone.NUMBER);
     }
