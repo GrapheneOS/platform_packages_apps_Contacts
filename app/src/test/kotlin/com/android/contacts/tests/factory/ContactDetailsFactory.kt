@@ -67,6 +67,10 @@ internal fun contactDetails(
     )
 }
 
+internal fun contactDetailsOf(vararg dataItems: ContactDataItem): ContactDetails {
+    return contactDetails(dataItems = dataItems.toList())
+}
+
 internal fun contactDetailsMenu(
     isStarVisible: Boolean = true,
     editAction: ContactDetailsEditAction = ContactDetailsEditAction.EDIT,

@@ -2,13 +2,17 @@ package com.android.contacts.data.contactdetails.repository
 
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.provider.ContactsContract.Data
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.android.contacts.ContactSaveService
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.di.core.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -45,6 +49,11 @@ internal interface ContactActionsRepository {
         callbackActivity: Class<out Activity>,
     )
 
+    suspend fun setPreferredPhoneAccount(
+        dataId: Long,
+        account: PhoneAccountId?,
+    )
+
     fun observeLinkOperations(): Flow<ContactLinkOperation>
 
     fun getPendingLinkOperation(): ContactLinkOperation?
@@ -60,31 +69,34 @@ internal class ContactActionsRepositoryImpl @Inject constructor(
         lookupUri: Uri,
         isStarred: Boolean,
     ) {
-        startService(ContactSaveService.createSetStarredIntent(context, lookupUri, isStarred))
+        val intent = ContactSaveService.createSetStarredIntent(context, lookupUri, isStarred)
+        startService(intent)
     }
 
     override suspend fun setRingtone(
         lookupUri: Uri,
         ringtone: String?,
     ) {
-        startService(ContactSaveService.createSetRingtone(context, lookupUri, ringtone))
+        val intent = ContactSaveService.createSetRingtone(context, lookupUri, ringtone)
+        startService(intent)
     }
 
     override suspend fun setSendToVoicemail(
         lookupUri: Uri,
         isEnabled: Boolean,
     ) {
-        startService(
-            ContactSaveService.createSetSendToVoicemail(context, lookupUri, isEnabled),
-        )
+        val intent = ContactSaveService.createSetSendToVoicemail(context, lookupUri, isEnabled)
+        startService(intent)
     }
 
     override suspend fun setSuperPrimary(dataId: Long) {
-        startService(ContactSaveService.createSetSuperPrimaryIntent(context, dataId))
+        val intent = ContactSaveService.createSetSuperPrimaryIntent(context, dataId)
+        startService(intent)
     }
 
     override suspend fun clearPrimary(dataId: Long) {
-        startService(ContactSaveService.createClearPrimaryIntent(context, dataId))
+        val intent = ContactSaveService.createClearPrimaryIntent(context, dataId)
+        startService(intent)
     }
 
     override suspend fun joinContacts(
@@ -92,15 +104,34 @@ internal class ContactActionsRepositoryImpl @Inject constructor(
         otherContactId: Long,
         callbackActivity: Class<out Activity>,
     ) {
-        startService(
-            ContactSaveService.createJoinContactsIntent(
-                context,
-                contactId,
-                otherContactId,
-                callbackActivity,
-                Intent.ACTION_VIEW,
-            ),
+        val intent = ContactSaveService.createJoinContactsIntent(
+            context,
+            contactId,
+            otherContactId,
+            callbackActivity,
+            Intent.ACTION_VIEW,
         )
+
+        startService(intent)
+    }
+
+    override suspend fun setPreferredPhoneAccount(
+        dataId: Long,
+        account: PhoneAccountId?,
+    ) {
+        val values = ContentValues().apply {
+            put(Data.PREFERRED_PHONE_ACCOUNT_COMPONENT_NAME, account?.componentName)
+            put(Data.PREFERRED_PHONE_ACCOUNT_ID, account?.id)
+        }
+
+        withContext(ioDispatcher) {
+            context.contentResolver.update(
+                ContentUris.withAppendedId(Data.CONTENT_URI, dataId),
+                values,
+                null,
+                null,
+            )
+        }
     }
 
     override fun observeLinkOperations(): Flow<ContactLinkOperation> {

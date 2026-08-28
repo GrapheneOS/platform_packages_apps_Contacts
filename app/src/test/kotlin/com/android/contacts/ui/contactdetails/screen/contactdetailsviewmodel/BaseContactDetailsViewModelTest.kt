@@ -17,6 +17,7 @@ import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.calllog.usecase.GetRecentCalls
+import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.contactDetails
@@ -55,6 +56,7 @@ internal abstract class BaseContactDetailsViewModelTest {
     protected val getContactDetailsMenu = mockk<GetContactDetailsMenu>()
     protected val getContactQuickActions = mockk<GetContactQuickActions>()
     protected val getRecentCalls = mockk<GetRecentCalls>()
+    protected val getCallingSimOptions = mockk<GetCallingSimOptions>()
     protected val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
 
@@ -73,9 +75,10 @@ internal abstract class BaseContactDetailsViewModelTest {
         every { getContactDetailsMenu(any()) } returns contactDetailsMenu()
         every { getContactQuickActions(any()) } returns emptyList()
         coEvery { getRecentCalls(any()) } returns emptyList()
+        coEvery { getCallingSimOptions(any()) } returns null
         every { displaySettingsRepository.observeDisplaySettings() } returns flowOf(DISPLAY_SETTINGS)
         every {
-            contactDetailsUiStateMapper.map(any(), any(), any(), any(), any(), any())
+            contactDetailsUiStateMapper.map(any(), any(), any(), any(), any(), any(), any())
         } answers { loadedState.value }
     }
 
@@ -88,6 +91,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             getContactDetailsMenu = getContactDetailsMenu,
             getContactQuickActions = getContactQuickActions,
             getRecentCalls = getRecentCalls,
+            getCallingSimOptions = getCallingSimOptions,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
             contactShortcutRepository = contactShortcutRepository,
             displaySettingsRepository = displaySettingsRepository,
@@ -142,6 +146,7 @@ internal abstract class BaseContactDetailsViewModelTest {
         )
 
         val LOADED_CONTENT = ContactDetailsContent.Loaded(
+            callingSim = null,
             recentCalls = persistentListOf(),
             groups = persistentListOf(),
             header = mockk(relaxed = true),
