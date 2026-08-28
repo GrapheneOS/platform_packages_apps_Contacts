@@ -1,5 +1,6 @@
 package com.android.contacts.ui.contactdetails.screen.model
 
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 
 internal sealed interface ContactDetailsAction {
@@ -17,6 +18,7 @@ internal sealed interface ContactDetailsAction {
     data object ShareClick : Menu
     data object ShortcutClick : Menu
     data object RecentCallClick : Menu
+    data object CallingSimClick : Menu
     data object RingtoneClick : Menu
     data object SendToVoicemailClick : Menu
     data object JoinClick : Menu
@@ -39,6 +41,12 @@ internal sealed interface ContactDetailsAction {
     data class ClearDefaultClick(
         val dataId: Long,
     ) : Entry
+
+    data object CallingSimDismissed : PickerResult
+
+    data class CallingSimPicked(
+        val selections: Map<Long, PhoneAccountId?>,
+    ) : PickerResult
 
     data class RingtonePicked(
         val ringtone: String?,

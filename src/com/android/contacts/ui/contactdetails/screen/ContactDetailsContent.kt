@@ -55,6 +55,7 @@ import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsActionRow
+import com.android.contacts.ui.contactdetails.common.ContactDetailsCallingSimDialog
 import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
 import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
 import com.android.contacts.ui.contactdetails.common.ContactDetailsProgressDialog
@@ -151,6 +152,15 @@ internal fun ContactDetailsContent(
     val linkProgress = uiState.linkProgress
     if (linkProgress != null) {
         ContactDetailsProgressDialog(operation = linkProgress)
+    }
+
+    val callingSim = loaded?.callingSim
+    if (callingSim != null && uiState.isCallingSimPickerVisible) {
+        ContactDetailsCallingSimDialog(
+            callingSim = callingSim,
+            onConfirm = { selections -> onAction(Action.CallingSimPicked(selections)) },
+            onDismiss = { onAction(Action.CallingSimDismissed) },
+        )
     }
 }
 
@@ -654,6 +664,7 @@ private fun previewContent(): Content.Loaded {
                 ),
             ),
         ),
+        callingSim = null,
         recentCalls = persistentListOf(
             RecentCallUiModel(
                 title = "Call time 01:20",
