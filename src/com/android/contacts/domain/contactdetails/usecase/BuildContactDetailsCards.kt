@@ -5,19 +5,19 @@ import android.provider.ContactsContract.CommonDataKinds.Event
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership
 import android.provider.ContactsContract.CommonDataKinds.Identity
 import android.provider.ContactsContract.CommonDataKinds.Im
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.provider.ContactsContract.CommonDataKinds.Note
-import android.provider.ContactsContract.CommonDataKinds.Organization
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.CommonDataKinds.SipAddress
-import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
+import com.android.contacts.data.connectedapps.model.ConnectedApp
+import com.android.contacts.data.connectedapps.repository.ConnectedAppsRepository
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.domain.contactdetails.model.CONTACT_DATA_ITEM_PRIORITY
+import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
@@ -45,6 +45,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
     private val isCallWithNoteSupported: IsCallWithNoteSupported,
     private val canVideoCall: CanVideoCall,
     private val isSipCallingSupported: IsSipCallingSupported,
+    private val connectedAppsRepository: ConnectedAppsRepository,
 ) : BuildContactDetailsCards {
 
     override operator fun invoke(
@@ -54,16 +55,25 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         val headerNickname = headerNickname(details)
         val headerOrganization = headerOrganization(details)
         val groupMemberships = groupMemberships(details)
-        val headerDataIds = setOfNotNull(headerNickname?.id, headerOrganization?.id) +
-            groupMemberships.map { dataItem -> dataItem.id }
+        val headerDataIds = setOfNotNull(
+            headerNickname?.id,
+            headerOrganization?.id
+        ) + groupMemberships.map { dataItem -> dataItem.id }
 
         val groups = details.dataItems
             .filterNot { dataItem -> dataItem.id in headerDataIds }
             .groupBy { dataItem -> dataItem.mimeType }
             .mapValues { group -> group.value.sortedWith(CONTACT_DATA_ITEM_PRIORITY) }
 
+        val groupsByApp = buildContactCard(
+            groups,
+            details,
+            prioritizedMimeType
+        ).groupBy(::connectedApp)
+
         return ContactDetailsCards(
-            contactCard = buildContactCard(groups, details, prioritizedMimeType),
+            contactCard = groupsByApp[NO_CONNECTED_APP].orEmpty(),
+            connectedApps = buildConnectedApps(groupsByApp),
             notes = buildNotes(groups, details),
             headerNickname = headerNickname?.name,
             headerOrganizationParts = organizationParts(headerOrganization),
@@ -121,6 +131,36 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             .sortedBy { mimeType -> mimeTypeRank(mimeType, prioritizedMimeType) }
             .map { mimeType -> toGroup(mimeType, groups.getValue(mimeType), details) }
             .filterNot { group -> group.entries.isEmpty() }
+    }
+
+    private fun buildConnectedApps(
+        groupsByApp: Map<ConnectedApp?, List<ContactEntryGroup>>,
+    ): List<ContactConnectedApp> {
+        return groupsByApp.mapNotNull { (app, appGroups) ->
+            app?.let {
+                ContactConnectedApp(
+                    app = app,
+                    entries = appGroups.flatMap(ContactEntryGroup::entries),
+                )
+            }
+        }
+    }
+
+    private fun connectedApp(group: ContactEntryGroup): ConnectedApp? {
+        val entry = group.entries.firstOrNull() ?: return null
+        if (entry.kind != ContactEntryKind.OTHER) {
+            return null
+        }
+
+        val action = entry.actions.primary
+        if (action !is ContactEntryAction.ViewDataItem) {
+            return null
+        }
+
+        return connectedAppsRepository.getConnectedApp(
+            dataId = action.dataId,
+            mimeType = action.mimeType,
+        )
     }
 
     private fun buildNotes(
@@ -539,6 +579,8 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
     }
 
     private companion object {
+        val NO_CONNECTED_APP: ConnectedApp? = null
+
         const val NOT_FOUND = -1
         const val PRIORITIZED_RANK = -1
 

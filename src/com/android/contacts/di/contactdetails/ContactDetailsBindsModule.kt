@@ -1,5 +1,7 @@
 package com.android.contacts.di.contactdetails
 
+import com.android.contacts.data.connectedapps.repository.ConnectedAppsRepository
+import com.android.contacts.data.connectedapps.repository.ConnectedAppsRepositoryImpl
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactoryImpl
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
@@ -155,6 +157,12 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindGetContactDetailsMenu(
         impl: GetContactDetailsMenuImpl,
     ): GetContactDetailsMenu
+
+    @Binds
+    @Reusable
+    abstract fun bindConnectedAppsRepository(
+        impl: ConnectedAppsRepositoryImpl,
+    ): ConnectedAppsRepository
 
     @Binds
     @Reusable

@@ -2,6 +2,7 @@ package com.android.contacts.domain.contactdetails.model
 
 internal data class ContactDetailsCards(
     val contactCard: List<ContactEntryGroup>,
+    val connectedApps: List<ContactConnectedApp>,
     val notes: List<ContactEntryGroup>,
     val headerNickname: String?,
     val headerOrganizationParts: List<String>,

@@ -82,6 +82,7 @@ class ContactDetailsOverlayLayoutTest {
             contactCard = persistentListOf(
                 contactEntryGroupUiModel(entries = persistentListOf(contactEntryUiModel())),
             ),
+            connectedApps = persistentListOf(),
             notes = persistentListOf(),
             settings = persistentListOf(),
             emptyPrompt = null,

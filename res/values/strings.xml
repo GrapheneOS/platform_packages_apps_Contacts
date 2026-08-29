@@ -359,6 +359,12 @@
     <string name="contact_entry_default">Default</string>
     <!-- Label of a contact field next to the default marker, example: Mobile · Default. [CHAR LIMIT=NONE] -->
     <string name="contact_entry_default_type"><xliff:g example="Mobile" id="type">%1$s</xliff:g> · <xliff:g example="Default" id="default">%2$s</xliff:g></string>
+    <!-- Title of the section that groups contact rows coming from other apps [CHAR LIMIT=40] -->
+    <string name="contact_details_connected_apps">Connected apps</string>
+    <!-- Content description of the control that opens the rows of a connected app [CHAR LIMIT=NONE] -->
+    <string name="contact_details_connected_app_expand">Show actions</string>
+    <!-- Content description of the control that hides the rows of a connected app [CHAR LIMIT=NONE] -->
+    <string name="contact_details_connected_app_collapse">Hide actions</string>
     <!-- Title of the section listing recent calls with this contact. [CHAR LIMIT=40] -->
     <string name="contact_details_recent_activity">Recent activity</string>
     <!-- Row and dialog title for choosing which SIM calls this contact. [CHAR LIMIT=40] -->

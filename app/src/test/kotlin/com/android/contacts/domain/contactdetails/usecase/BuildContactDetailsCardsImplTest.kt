@@ -4,9 +4,12 @@ import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.SipAddress
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
+import com.android.contacts.data.connectedapps.model.ConnectedApp
+import com.android.contacts.data.connectedapps.repository.ConnectedAppsRepository
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
+import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
 import com.android.contacts.domain.contactdetails.model.ContactEntry
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactEntryGroup
@@ -33,6 +36,7 @@ import com.android.contacts.tests.factory.structuredName
 import com.android.contacts.tests.factory.website
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -45,12 +49,14 @@ class BuildContactDetailsCardsImplTest {
     private val isCallWithNoteSupported = mockk<IsCallWithNoteSupported>()
     private val canVideoCall = mockk<CanVideoCall>()
     private val isSipCallingSupported = mockk<IsSipCallingSupported>()
+    private val connectedAppsRepository = mockk<ConnectedAppsRepository>()
 
     private val buildContactDetailsCards = BuildContactDetailsCardsImpl(
         isDeviceVoiceCapable = isDeviceVoiceCapable,
         isCallWithNoteSupported = isCallWithNoteSupported,
         canVideoCall = canVideoCall,
         isSipCallingSupported = isSipCallingSupported,
+        connectedAppsRepository = connectedAppsRepository,
     )
 
     @Before
@@ -59,6 +65,7 @@ class BuildContactDetailsCardsImplTest {
         every { isCallWithNoteSupported() } returns false
         every { canVideoCall(any()) } returns false
         every { isSipCallingSupported() } returns true
+        every { connectedAppsRepository.getConnectedApp(any(), any()) } returns null
     }
 
     @Test
@@ -69,7 +76,6 @@ class BuildContactDetailsCardsImplTest {
             sipAddress(address = "alex@sip.example.org"),
             phone(number = "4155551212"),
         )
-
         val mimeTypes = mimeTypesOf(buildContactDetailsCards(details, null).contactCard)
 
         assertEquals(
@@ -89,7 +95,6 @@ class BuildContactDetailsCardsImplTest {
             phone(number = "4155551212"),
             email(address = "alex@example.org"),
         )
-
         val cards = buildContactDetailsCards(details, Email.CONTENT_ITEM_TYPE)
 
         assertEquals(
@@ -118,7 +123,6 @@ class BuildContactDetailsCardsImplTest {
             phone(id = 2L, number = "4155552222", isSuperPrimary = true),
             phone(id = 3L, number = "4155553333", isPrimary = true),
         )
-
         val entries = buildContactDetailsCards(details, null).contactCard.first().entries
 
         assertEquals(listOf(2L, 3L, 1L), entries.map(ContactEntry::id))
@@ -130,7 +134,6 @@ class BuildContactDetailsCardsImplTest {
             phone(id = 1L, number = "4155551111"),
             phone(id = 2L, number = "4155552222"),
         )
-
         val entries = buildContactDetailsCards(details, null).contactCard.first().entries
 
         assertEquals(listOf(1L, 2L), entries.map(ContactEntry::id))
@@ -143,7 +146,6 @@ class BuildContactDetailsCardsImplTest {
             event(formattedDate = "May 20, 1980"),
             website(url = "example.org"),
         )
-
         val cards = buildContactDetailsCards(details, null)
 
         assertEquals(
@@ -165,7 +167,6 @@ class BuildContactDetailsCardsImplTest {
             nickname(name = "Al"),
             organization(company = "Acme", department = "R&D", title = "Engineer"),
         )
-
         val cards = buildContactDetailsCards(details, null)
 
         assertEquals("Al", cards.headerNickname)
@@ -188,7 +189,6 @@ class BuildContactDetailsCardsImplTest {
             nickname(id = 1L, name = "Al"),
             nickname(id = 2L, name = "Ally", isSuperPrimary = true),
         )
-
         val cards = buildContactDetailsCards(details, null)
 
         assertEquals("Ally", cards.headerNickname)
@@ -209,7 +209,6 @@ class BuildContactDetailsCardsImplTest {
                 isPrimary = true,
             ),
         )
-
         val cards = buildContactDetailsCards(details, null)
 
         assertEquals(listOf("Globex"), cards.headerOrganizationParts)
@@ -237,7 +236,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_withAPhoneticName_keepsItOutOfTheContactCard() {
         val details = detailsOf(website(url = "example.org")).copy(phoneticName = "Alek")
-
         val cards = buildContactDetailsCards(details, null)
 
         assertEquals(
@@ -256,7 +254,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_withoutAPhoneticName_addsNoEntry() {
         val details = detailsOf(website(url = "example.org"))
-
         val cards = buildContactDetailsCards(details, null)
 
         assertEquals(1, cards.contactCard.size)
@@ -265,7 +262,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_withAStructuredName_buildsNoEntryForIt() {
         val details = detailsOf(structuredName(givenName = "Alex"))
-
         val cards = buildContactDetailsCards(details, null)
 
         assertTrue(cards.contactCard.isEmpty())
@@ -316,6 +312,54 @@ class BuildContactDetailsCardsImplTest {
     }
 
     @Test
+    fun invoke_withAGenericItemOwnedByAnotherApp_movesItToConnectedApps() {
+        val details = detailsOf(
+            phone(number = "4155551212"),
+            generic(id = 7L, mimeType = CHAT_MESSAGE, displayString = "Message 088 525 7470"),
+        )
+        every { connectedAppsRepository.getConnectedApp(7L, CHAT_MESSAGE) } returns CHAT_APP
+
+        val cards = buildContactDetailsCards(details, null)
+
+        assertEquals(listOf(CHAT_APP), cards.connectedApps.map(ContactConnectedApp::app))
+        assertEquals(listOf(7L), cards.connectedApps.single().entries.map(ContactEntry::id))
+        assertEquals(listOf(Phone.CONTENT_ITEM_TYPE), mimeTypesOf(cards.contactCard))
+    }
+
+    @Test
+    fun invoke_withSeveralMimeTypesOfOneApp_groupsThemUnderThatApp() {
+        val details = detailsOf(
+            generic(id = 7L, mimeType = CHAT_MESSAGE, displayString = "Message 088 525 7470"),
+            generic(id = 8L, mimeType = CHAT_CALL, displayString = "Voice call 088 525 7470"),
+        )
+        every { connectedAppsRepository.getConnectedApp(7L, CHAT_MESSAGE) } returns CHAT_APP
+        every { connectedAppsRepository.getConnectedApp(8L, CHAT_CALL) } returns CHAT_APP
+
+        val cards = buildContactDetailsCards(details, null)
+
+        assertEquals(listOf(7L, 8L), cards.connectedApps.single().entries.map(ContactEntry::id))
+        assertTrue(cards.contactCard.isEmpty())
+    }
+
+    @Test
+    fun invoke_withAGenericItemNoAppHandles_keepsItInTheContactCard() {
+        val details = detailsOf(generic(id = 7L))
+        val cards = buildContactDetailsCards(details, null)
+
+        assertTrue(cards.connectedApps.isEmpty())
+        assertEquals(listOf(7L), cards.contactCard.single().entries.map(ContactEntry::id))
+    }
+
+    @Test
+    fun invoke_forAKnownKind_neverAsksForAConnectedApp() {
+        val details = detailsOf(phone(number = "4155551212"))
+        val cards = buildContactDetailsCards(details, null)
+
+        assertTrue(cards.connectedApps.isEmpty())
+        verify(exactly = 0) { connectedAppsRepository.getConnectedApp(any(), any()) }
+    }
+
+    @Test
     fun invoke_withAnEmptyNote_dropsTheEntry() {
         val details = detailsOf(note(note = null))
 
@@ -325,7 +369,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forANote_putsTheNoteInTheHeader() {
         val details = detailsOf(note(note = "Met at the airport"))
-
         val entry = buildContactDetailsCards(details, null).notes.first().entries.first()
 
         assertEquals(ContactEntryText.Value("Met at the airport"), entry.header)
@@ -338,7 +381,6 @@ class BuildContactDetailsCardsImplTest {
         val details = detailsOf(
             phone(number = "4155551212", displayString = "(415) 555-1212", typeLabel = "Mobile"),
         )
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("(415) 555-1212"), entry.header)
@@ -350,7 +392,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAnEmail_labelsTheCopyActionAsEmail() {
         val details = detailsOf(email(address = "alex@example.org", typeLabel = "Work"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("alex@example.org"), entry.header)
@@ -361,7 +402,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forASipAddress_labelsTheCopyActionAsPhone() {
         val details = detailsOf(sipAddress(address = "alex@sip.example.org"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Label(ContactEntryLabel.PHONE), entry.copyLabel)
@@ -373,7 +413,6 @@ class BuildContactDetailsCardsImplTest {
             organization(id = 1L, formattedCompany = "Acme", isSuperPrimary = true),
             organization(id = 2L, formattedCompany = "Globex, Engineer"),
         )
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("Globex, Engineer"), entry.header)
@@ -386,7 +425,6 @@ class BuildContactDetailsCardsImplTest {
         val details = detailsOf(
             im(protocolLabel = "AIM", isCustomProtocol = false),
         )
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("alex@example.org"), entry.header)
@@ -399,7 +437,6 @@ class BuildContactDetailsCardsImplTest {
         val details = detailsOf(
             im(protocolLabel = null, isCustomProtocol = true),
         )
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("alex@example.org"), entry.header)
@@ -409,7 +446,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forACustomFieldWithoutASummary_labelsItAsACustomField() {
         val details = detailsOf(custom(summary = null, content = "Blood type: 0"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("Blood type: 0"), entry.header)
@@ -419,7 +455,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forACustomFieldWithASummary_usesTheSummaryAsTheSubHeader() {
         val details = detailsOf(custom(summary = "Blood type", content = "0"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("0"), entry.header)
@@ -428,10 +463,7 @@ class BuildContactDetailsCardsImplTest {
 
     @Test
     fun invoke_forAGenericItem_labelsTheCopyActionWithTheMimeType() {
-        val details = detailsOf(
-            generic(typeColumn = "data2"),
-        )
-
+        val details = detailsOf(generic(typeColumn = "data2"))
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryText.Value("Thing"), entry.header)
@@ -453,7 +485,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAPhone_offersCallingAndMessaging() {
         val details = detailsOf(phone(number = "4155551212"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.Call("4155551212"), entry.actions.primary)
@@ -464,8 +495,8 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAPhoneWithoutTelephony_offersMessagingOnly() {
         every { isDeviceVoiceCapable() } returns false
-        val details = detailsOf(phone(number = "4155551212"))
 
+        val details = detailsOf(phone(number = "4155551212"))
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertNull(entry.actions.primary)
@@ -476,10 +507,10 @@ class BuildContactDetailsCardsImplTest {
     fun invoke_whenCallingWithANoteIsSupported_offersItAsTheThirdAction() {
         every { isCallWithNoteSupported() } returns true
         every { canVideoCall(any()) } returns true
+
         val details = detailsOf(
             phone(number = "4155551212", formattedNumber = "(415) 555-1212", typeLabel = "Mobile"),
         )
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(
@@ -495,8 +526,8 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_whenOnlyVideoCallingIsAvailable_offersItAsTheThirdAction() {
         every { canVideoCall(any()) } returns true
-        val details = detailsOf(phone(number = "4155551212"))
 
+        val details = detailsOf(phone(number = "4155551212"))
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.VideoCall("4155551212"), entry.actions.third)
@@ -506,11 +537,11 @@ class BuildContactDetailsCardsImplTest {
     fun invoke_forAPhone_asksVideoCallingAboutTheCarrierCapability() {
         every { canVideoCall(true) } returns true
         every { canVideoCall(false) } returns false
+
         val details = detailsOf(
             phone(id = 1L, number = "4155551111", isCarrierVideoCallCapable = true),
             phone(id = 2L, number = "4155552222", isCarrierVideoCallCapable = false),
         )
-
         val entries = buildContactDetailsCards(details, null).contactCard.first().entries
 
         assertEquals(ContactEntryAction.VideoCall("4155551111"), entries.first().actions.third)
@@ -520,7 +551,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAnEmail_offersSendingAnEmail() {
         val details = detailsOf(email(address = "alex@example.org"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.SendEmail("alex@example.org"), entry.actions.primary)
@@ -530,7 +560,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAPostalAddress_offersTheMapAndDirections() {
         val details = detailsOf(postal(formattedAddress = "1 Main St"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.ShowOnMap("1 Main St"), entry.actions.primary)
@@ -540,7 +569,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forASipAddress_offersASipCall() {
         val details = detailsOf(sipAddress(address = "alex@sip.example.org"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.SipCall("alex@sip.example.org"), entry.actions.primary)
@@ -549,8 +577,8 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_withoutSipCalling_offersNoSipAction() {
         every { isSipCallingSupported() } returns false
-        val details = detailsOf(sipAddress(address = "alex@sip.example.org"))
 
+        val details = detailsOf(sipAddress(address = "alex@sip.example.org"))
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertNull(entry.actions.primary)
@@ -559,7 +587,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAWebsite_offersOpeningTheUrl() {
         val details = detailsOf(website(url = "example.org"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.OpenUrl("example.org"), entry.actions.primary)
@@ -568,7 +595,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAnEvent_offersTheDateInTheCalendar() {
         val details = detailsOf(event(formattedDate = "May 20", isRecurringAnnually = true))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(
@@ -580,7 +606,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forARelation_offersSearchingForTheName() {
         val details = detailsOf(relation(name = "Sam"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(ContactEntryAction.SearchContacts("Sam"), entry.actions.primary)
@@ -589,7 +614,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAnIm_offersOpeningTheChat() {
         val details = detailsOf(im(data = "alex@example.org", protocol = 5))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(
@@ -605,7 +629,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forAGenericItem_offersViewingTheDataRow() {
         val details = detailsOf(generic(id = 42L, mimeType = "vnd.example/thing"))
-
         val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
 
         assertEquals(
@@ -617,7 +640,6 @@ class BuildContactDetailsCardsImplTest {
     @Test
     fun invoke_forANote_offersNoAction() {
         val details = detailsOf(note(note = "Met at the airport"))
-
         val entry = buildContactDetailsCards(details, null).notes.first().entries.first()
 
         assertNull(entry.actions.primary)
@@ -631,5 +653,16 @@ class BuildContactDetailsCardsImplTest {
 
     private fun mimeTypesOf(card: List<ContactEntryGroup>): List<String?> {
         return card.map { group -> group.mimeType }
+    }
+
+    private companion object {
+        const val CHAT_MESSAGE = "vnd.android.cursor.item/vnd.com.example.chat.profile"
+        const val CHAT_CALL = "vnd.android.cursor.item/vnd.com.example.chat.call"
+
+        val CHAT_APP = ConnectedApp(
+            packageName = "com.example.chat",
+            label = "Chat",
+            iconUri = "android.resource://com.example.chat/1",
+        )
     }
 }
