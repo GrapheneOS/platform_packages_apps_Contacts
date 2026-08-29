@@ -139,6 +139,7 @@ internal abstract class BaseContactDetailsViewModelTest {
 
         val EMPTY_CARDS = ContactDetailsCards(
             contactCard = emptyList(),
+            connectedApps = emptyList(),
             notes = emptyList(),
             headerNickname = null,
             headerOrganizationParts = emptyList(),
@@ -152,6 +153,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             header = mockk(relaxed = true),
             quickActions = persistentListOf(),
             contactCard = persistentListOf(),
+            connectedApps = persistentListOf(),
             notes = persistentListOf(),
             settings = persistentListOf(),
             emptyPrompt = null,

@@ -9,6 +9,7 @@ internal const val CONTACT_DETAILS_CONTACT_CARD_TEST_TAG = "contact_details_cont
 internal const val CONTACT_DETAILS_NOTES_TEST_TAG = "contact_details_notes"
 internal const val CALLING_SIM_DIALOG_TEST_TAG = "contact_details_calling_sim_dialog"
 internal const val CONTACT_DETAILS_RECENT_CALLS_TEST_TAG = "contact_details_recent_calls"
+internal const val CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG = "contact_details_connected_apps"
 internal const val CONTACT_DETAILS_SETTINGS_TEST_TAG = "contact_details_settings"
 internal const val CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX = "contact_details_setting_"
 internal const val CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG = "contact_details_empty_prompt"

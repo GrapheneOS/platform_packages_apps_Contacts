@@ -11,6 +11,7 @@ import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.settings.model.DisplayOrder
+import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntry
@@ -569,9 +570,11 @@ class ContactDetailsUiStateMapperImplTest {
         headerNickname: String? = null,
         headerOrganizationParts: List<String> = emptyList(),
         groups: List<String> = emptyList(),
+        connectedApps: List<ContactConnectedApp> = emptyList(),
     ): ContactDetailsCards {
         return ContactDetailsCards(
             contactCard = contactCard,
+            connectedApps = connectedApps,
             notes = notes,
             headerNickname = headerNickname,
             headerOrganizationParts = headerOrganizationParts,
