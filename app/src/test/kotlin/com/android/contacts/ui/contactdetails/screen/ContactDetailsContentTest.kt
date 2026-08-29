@@ -33,6 +33,7 @@ import com.android.contacts.tests.factory.contactEntryGroupUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
 import com.android.contacts.tests.factory.contactHeaderUiModel
 import com.android.contacts.tests.factory.contactQuickActionUiModel
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_HEADER_TEST_TAG
@@ -48,6 +49,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction 
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
+import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
@@ -77,6 +79,38 @@ internal class ContactDetailsContentTest {
         onNodeWithTag(CONTACT_DETAILS_SETTINGS_TEST_TAG).assertExists()
         onNodeWithText("Notes").assertExists()
         onNodeWithText("Contact settings").assertExists()
+    }
+
+    @Test
+    fun withConnectedApps_showsTheAppsAndKeepsTheirRowsHidden() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent(connectedApps = CONNECTED_APPS)))
+
+        scrollTo(CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG)
+
+        onNodeWithText("Connected apps").assertExists()
+        onNodeWithText("Chat").assertIsDisplayed()
+        onNodeWithText("Message 088 525 7470").assertDoesNotExist()
+    }
+
+    @Test
+    fun whenAConnectedAppIsTapped_showsItsRows() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent(connectedApps = CONNECTED_APPS)))
+
+        scrollTo(CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG)
+        onNodeWithText("Chat").performClick()
+
+        onNodeWithText("Message 088 525 7470").assertIsDisplayed()
+    }
+
+    @Test
+    fun whenAnOpenConnectedAppIsTapped_hidesItsRowsAgain() = runComposeUiTest {
+        setContentWith(state = State(content = loadedContent(connectedApps = CONNECTED_APPS)))
+
+        scrollTo(CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG)
+        onNodeWithText("Chat").performClick()
+        onNodeWithText("Chat").performClick()
+
+        onNodeWithText("Message 088 525 7470").assertDoesNotExist()
     }
 
     @Test
@@ -354,6 +388,7 @@ internal class ContactDetailsContentTest {
         menu: ContactDetailsMenu = contactDetailsMenu(),
         isStarred: Boolean = false,
         quickActions: ImmutableList<ContactQuickActionUiModel> = QUICK_ACTIONS,
+        connectedApps: ImmutableList<ContactConnectedAppUiModel> = persistentListOf(),
     ): Content.Loaded {
         return Content.Loaded(
             callingSim = null,
@@ -362,12 +397,17 @@ internal class ContactDetailsContentTest {
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = quickActions,
             contactCard = contactCard,
+            connectedApps = connectedApps,
             notes = notes,
             settings = settings,
             emptyPrompt = emptyPrompt,
             menu = menu,
             isStarred = isStarred,
         )
+    }
+
+    private fun ComposeUiTest.scrollTo(testTag: String) {
+        onNode(hasScrollAction()).performScrollToNode(hasTestTag(testTag))
     }
 
     private fun ComposeUiTest.scrollToSetting(name: String) {
@@ -395,6 +435,21 @@ internal class ContactDetailsContentTest {
     }
 
     private companion object {
+
+        private val CONNECTED_APPS = persistentListOf(
+            ContactConnectedAppUiModel(
+                packageName = "com.example.chat",
+                label = "Chat",
+                iconUri = null,
+                entries = persistentListOf(
+                    contactEntryUiModel(
+                        id = 3L,
+                        header = "Message 088 525 7470",
+                        text = null,
+                    ),
+                ),
+            ),
+        )
         val SHARE_SETTING = ContactSettingUiModel(
             icon = ContactSettingIcon.SHARE,
             title = "Share",
