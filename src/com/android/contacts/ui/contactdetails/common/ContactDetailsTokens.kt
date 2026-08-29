@@ -19,6 +19,9 @@ internal object ContactDetailsTokens {
     val quickActionLabelFadeWidth = 4.dp
     val quickActionPinnedPadding = 12.dp
 
+    val connectedAppToggleWidth = 32.dp
+    val connectedAppToggleHeight = 38.dp
+
     val recentCallDirectionSize = 16.dp
     val recentCallDirectionSpacing = 4.dp
 

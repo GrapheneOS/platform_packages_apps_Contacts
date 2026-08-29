@@ -16,6 +16,7 @@ internal sealed interface ContactDetailsContent {
         val quickActions: ImmutableList<ContactQuickActionUiModel>,
         val groups: ImmutableList<String>,
         val contactCard: ImmutableList<ContactEntryGroupUiModel>,
+        val connectedApps: ImmutableList<ContactConnectedAppUiModel>,
         val notes: ImmutableList<ContactEntryGroupUiModel>,
         val settings: ImmutableList<ContactSettingUiModel>,
         val recentCalls: ImmutableList<RecentCallUiModel>,
