@@ -11,6 +11,7 @@ import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.settings.model.DisplayOrder
+import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntry
@@ -28,6 +29,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimAccountUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimNumberUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
@@ -74,6 +76,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         val callingSim = callingSim(callingSimOptions)
         val isEditable = !details.capabilities.isDirectoryEntry
         val contactCard = mapGroups(cards.contactCard, isEditable)
+        val connectedApps = mapConnectedApps(cards.connectedApps, isEditable)
         val notes = mapGroups(cards.notes, isEditable)
 
         return ContactDetailsContent.Loaded(
@@ -83,6 +86,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             callingSim = callingSim,
             groups = cards.groups.toImmutableList(),
             contactCard = contactCard,
+            connectedApps = connectedApps,
             notes = notes,
             settings = settings(details, menu, callingSim),
             emptyPrompt = emptyPrompt(details, contactCard, notes),
@@ -245,6 +249,35 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             action = action,
             isDestructive = isDestructive,
             isChecked = isChecked,
+        )
+    }
+
+    private fun mapConnectedApps(
+        connectedApps: List<ContactConnectedApp>,
+        isEditable: Boolean,
+    ): ImmutableList<ContactConnectedAppUiModel> {
+        return connectedApps
+            .map { connectedApp -> mapConnectedApp(connectedApp, isEditable) }
+            .toImmutableList()
+    }
+
+    private fun mapConnectedApp(
+        connectedApp: ContactConnectedApp,
+        isEditable: Boolean,
+    ): ContactConnectedAppUiModel {
+        return ContactConnectedAppUiModel(
+            packageName = connectedApp.app.packageName,
+            label = connectedApp.app.label,
+            iconUri = connectedApp.app.iconUri,
+            entries = connectedApp.entries
+                .map { entry ->
+                    mapEntry(
+                        mimeType = entry.mimeType,
+                        entry = entry,
+                        isDefaultChangeable = isEditable && entry.isSuperPrimary,
+                    )
+                }
+                .toImmutableList(),
         )
     }
 

@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,6 +60,7 @@ import com.android.contacts.ui.contactdetails.common.ContactDetailsCallingSimDia
 import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
 import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
 import com.android.contacts.ui.contactdetails.common.ContactDetailsProgressDialog
+import com.android.contacts.ui.contactdetails.common.ContactDetailsConnectedAppRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsRecentCallRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsQuickActions
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTopAppBar
@@ -70,10 +72,12 @@ import com.android.contacts.ui.contactdetails.common.ContactEntryRow
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RECENT_CALLS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
@@ -288,6 +292,7 @@ private fun ContactDetailsList(
     quickActionsHeight: Dp,
 ) {
     val itemPadding = horizontalContentPadding(contentPadding)
+    var expandedConnectedApps by rememberSaveable { mutableStateOf(emptySet<String>()) }
 
     LazyColumn(
         state = listState,
@@ -368,6 +373,30 @@ private fun ContactDetailsList(
                     ContactDetailsRecentCalls(
                         recentCalls = content.recentCalls,
                         onRecentCallClick = { onAction(Action.RecentCallClick) },
+                    )
+                }
+            }
+        }
+
+        if (content.connectedApps.isNotEmpty()) {
+            item(key = "connected_apps") {
+                ContactDetailsSection(
+                    title = stringResource(R.string.contact_details_connected_apps),
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .testTag(CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG)
+                        .padding(bottom = Tokens.cardGroupSpacing),
+                ) {
+                    ContactDetailsConnectedApps(
+                        connectedApps = content.connectedApps,
+                        expandedPackages = expandedConnectedApps,
+                        onAppClick = { packageName ->
+                            expandedConnectedApps = when (packageName) {
+                                in expandedConnectedApps -> expandedConnectedApps - packageName
+                                else -> expandedConnectedApps + packageName
+                            }
+                        },
+                        onAction = onAction,
                     )
                 }
             }
@@ -542,6 +571,41 @@ private fun ContactDetailsEntryCard(
 }
 
 @Composable
+private fun ContactDetailsConnectedApps(
+    connectedApps: ImmutableList<ContactConnectedAppUiModel>,
+    expandedPackages: Set<String>,
+    onAppClick: (String) -> Unit,
+    onAction: (Action) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Tokens.cardSpacing),
+        modifier = modifier,
+    ) {
+        connectedApps.forEachIndexed { index, connectedApp ->
+            val isExpanded = connectedApp.packageName in expandedPackages
+
+            ContactDetailsConnectedAppRow(
+                connectedApp = connectedApp,
+                isExpanded = isExpanded,
+                isLast = !isExpanded && index == connectedApps.lastIndex,
+                onClick = { onAppClick(connectedApp.packageName) },
+            )
+
+            if (isExpanded) {
+                ContactDetailsEntryCard(
+                    groups = persistentListOf(
+                        ContactEntryGroupUiModel(entries = connectedApp.entries),
+                    ),
+                    onAction = onAction,
+                    isTopRounded = false,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun ContactDetailsEmptyPrompt(
     prompt: ContactDetailsEmptyPromptUiModel,
     onEntryClick: () -> Unit,
@@ -649,6 +713,17 @@ private fun previewContent(): Content.Loaded {
             ContactEntryGroupUiModel(
                 entries = persistentListOf(
                     previewEntry(id = 1L, header = "088 525 7470", text = "Mobile"),
+                ),
+            ),
+        ),
+        connectedApps = persistentListOf(
+            ContactConnectedAppUiModel(
+                packageName = "com.example.chat",
+                label = "Chat",
+                iconUri = null,
+                entries = persistentListOf(
+                    previewEntry(id = 3L, header = "Message 088 525 7470", text = null),
+                    previewEntry(id = 4L, header = "Voice call 088 525 7470", text = null),
                 ),
             ),
         ),

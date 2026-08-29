@@ -88,6 +88,7 @@ internal class ContactDetailsScreenTest {
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = persistentListOf(),
             contactCard = persistentListOf(),
+            connectedApps = persistentListOf(),
             notes = persistentListOf(),
             settings = persistentListOf(),
             emptyPrompt = null,
