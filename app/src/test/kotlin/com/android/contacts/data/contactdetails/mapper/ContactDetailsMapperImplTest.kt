@@ -11,14 +11,15 @@ import android.provider.ContactsContract.CommonDataKinds.Organization
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.CommonDataKinds.SipAddress
-import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.CommonDataKinds.Website
 import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Directory
 import android.provider.ContactsContract.DisplayNameSources
+import com.android.contacts.data.contactdetails.model.ContactAccount
 import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.model.ContactDataItem
+import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.model.AccountTypeManager
@@ -37,7 +38,6 @@ import com.android.contacts.model.dataitem.OrganizationDataItem
 import com.android.contacts.model.dataitem.PhoneDataItem
 import com.android.contacts.model.dataitem.RelationDataItem
 import com.android.contacts.model.dataitem.SipAddressDataItem
-import com.android.contacts.model.dataitem.StructuredNameDataItem
 import com.android.contacts.model.dataitem.StructuredPostalDataItem
 import com.android.contacts.model.dataitem.WebsiteDataItem
 import com.android.contacts.quickcontact.InvisibleContactUtil
@@ -61,7 +61,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class ContactDetailsMapperImplTest {
+internal class ContactDetailsMapperImplTest {
 
     private val context: Context = RuntimeEnvironment.getApplication()
     private val accountTypeManager = mockk<AccountTypeManager>()
@@ -78,6 +78,8 @@ class ContactDetailsMapperImplTest {
     @Before
     fun setUp() {
         every { accountTypeManager.getKindOrFallback(any(), any()) } returns dataKind
+        every { accountType.getDisplayLabel(context) } returns "Device"
+        every { accountType.areContactsWritable() } returns true
         every { dataItemCollapser.collapse(any()) } answers { firstArg() }
         mockkStatic(InvisibleContactUtil::class)
         every { InvisibleContactUtil.isInvisibleAndAddable(any(), any()) } returns false
@@ -200,7 +202,6 @@ class ContactDetailsMapperImplTest {
 
         assertEquals("me@example.org", im.data)
         assertEquals(Im.PROTOCOL_AIM, im.protocol)
-        assertFalse(im.isCustomProtocol)
         assertNotNull(im.protocolLabel)
     }
 
@@ -211,7 +212,6 @@ class ContactDetailsMapperImplTest {
         val im = mapSingleItem<ContactDataItem.Im>(item)
 
         assertEquals(Im.PROTOCOL_GOOGLE_TALK, im.protocol)
-        assertFalse(im.isCustomProtocol)
     }
 
     @Test
@@ -225,7 +225,6 @@ class ContactDetailsMapperImplTest {
         val im = mapSingleItem<ContactDataItem.Im>(item)
 
         assertEquals(Im.PROTOCOL_CUSTOM, im.protocol)
-        assertTrue(im.isCustomProtocol)
         assertEquals("MyChat", im.protocolLabel)
     }
 
@@ -330,15 +329,6 @@ class ContactDetailsMapperImplTest {
     }
 
     @Test
-    fun map_withStructuredNameDataItem_mapsGivenName() {
-        val item = dataItem<StructuredNameDataItem>(mimeType = StructuredName.CONTENT_ITEM_TYPE) {
-            every { givenName } returns "Alex"
-        }
-
-        assertEquals("Alex", mapSingleItem<ContactDataItem.StructuredName>(item).givenName)
-    }
-
-    @Test
     fun map_withUnhandledMimeType_mapsGenericItem() {
         dataKind.typeColumn = Data.DATA3
         val item = dataItem<DataItem>(mimeType = THIRD_PARTY_MIME_TYPE)
@@ -389,7 +379,7 @@ class ContactDetailsMapperImplTest {
     fun map_withExcludedMimeType_skipsDataItem() {
         val item = dataItem<PhoneDataItem>(mimeType = Phone.CONTENT_ITEM_TYPE)
 
-        val details = mapper.map(contact(item), setOf(Phone.CONTENT_ITEM_TYPE))
+        val details = mapper.map(contact(item), excludedMimeTypes = setOf(Phone.CONTENT_ITEM_TYPE))
 
         assertTrue(details.dataItems.isEmpty())
     }
@@ -402,7 +392,7 @@ class ContactDetailsMapperImplTest {
         val contact = contactMock()
         every { contact.rawContacts } returns ImmutableList.of(rawContact)
 
-        assertTrue(mapper.map(contact, emptySet()).dataItems.isEmpty())
+        assertTrue(mapDetails(contact).dataItems.isEmpty())
     }
 
     @Test
@@ -439,22 +429,20 @@ class ContactDetailsMapperImplTest {
         val contact = contactMock()
         every { contact.rawContacts } returns null
 
-        assertTrue(mapper.map(contact, emptySet()).dataItems.isEmpty())
+        assertTrue(mapDetails(contact).dataItems.isEmpty())
     }
 
     @Test
     fun map_mapsContactIdentityAndName() {
         val contact = contactMock()
-        every { contact.id } returns CONTACT_ID
         every { contact.lookupKey } returns "lookup-key"
-        every { contact.nameRawContactId } returns RAW_CONTACT_ID
         every { contact.displayName } returns "Alex Doe"
         every { contact.altDisplayName } returns "Doe, Alex"
         every { contact.phoneticName } returns "eh-leks"
         every { contact.starred } returns true
         every { contact.customRingtone } returns "content://ringtone"
 
-        val details = mapper.map(contact, emptySet())
+        val details = mapDetails(contact)
 
         assertEquals(CONTACT_ID, details.contactId)
         assertEquals("lookup-key", details.lookupKey)
@@ -486,7 +474,7 @@ class ContactDetailsMapperImplTest {
             assertEquals(
                 "display name source $platformSource",
                 expected,
-                mapper.map(contact, emptySet()).displayNameSource,
+                mapDetails(contact).displayNameSource,
             )
         }
     }
@@ -496,7 +484,7 @@ class ContactDetailsMapperImplTest {
         val contact = contactMock()
         every { contact.displayNameSource } returns UNKNOWN_DISPLAY_NAME_SOURCE
 
-        val details = mapper.map(contact, emptySet())
+        val details = mapDetails(contact)
 
         assertEquals(ContactDisplayNameSource.UNDEFINED, details.displayNameSource)
     }
@@ -507,9 +495,8 @@ class ContactDetailsMapperImplTest {
         every { contact.photoBinaryData } returns byteArrayOf(4, 5)
         every { contact.thumbnailPhotoBinaryData } returns byteArrayOf(1, 2, 3)
         every { contact.photoUri } returns "content://photo"
-        every { contact.photoId } returns PHOTO_ID
 
-        val details = mapper.map(contact, emptySet())
+        val details = mapDetails(contact)
 
         assertEquals(ContactPhoto.Bytes(ByteBuffer.wrap(byteArrayOf(4, 5))), details.photo)
         assertEquals(PHOTO_ID, details.photoId)
@@ -521,7 +508,7 @@ class ContactDetailsMapperImplTest {
         every { contact.thumbnailPhotoBinaryData } returns byteArrayOf(1, 2, 3)
         every { contact.photoUri } returns "content://photo"
 
-        val details = mapper.map(contact, emptySet())
+        val details = mapDetails(contact)
 
         assertEquals(ContactPhoto.Bytes(ByteBuffer.wrap(byteArrayOf(1, 2, 3))), details.photo)
     }
@@ -531,14 +518,14 @@ class ContactDetailsMapperImplTest {
         val contact = contactMock()
         every { contact.photoUri } returns "content://photo"
 
-        val details = mapper.map(contact, emptySet())
+        val details = mapDetails(contact)
 
         assertEquals(ContactPhoto.Uri("content://photo"), details.photo)
     }
 
     @Test
     fun map_withoutAnyPhoto_mapsNullPhoto() {
-        assertNull(mapper.map(contactMock(), emptySet()).photo)
+        assertNull(mapDetails(contactMock()).photo)
     }
 
     @Test
@@ -607,16 +594,66 @@ class ContactDetailsMapperImplTest {
         assertTrue(capabilities(contact).hasMultipleRawContacts)
     }
 
+    @Test
+    fun map_withAnAccountName_reportsItForTheContact() {
+        val contact = contactWithAccounts("alex@example.org")
+
+        assertEquals(listOf("alex@example.org"), accountNamesOf(contact))
+    }
+
+    @Test
+    fun map_withoutAnAccountName_fallsBackToTheAccountTypeLabel() {
+        val contact = contactWithAccounts(null)
+
+        assertEquals(listOf("Device"), accountNamesOf(contact))
+    }
+
+    @Test
+    fun map_withSeveralRawContactsOfOneAccount_reportsItOnce() {
+        val contact = contactWithAccounts("alex@example.org", "alex@example.org")
+
+        assertEquals(listOf("alex@example.org"), accountNamesOf(contact))
+    }
+
+    @Test
+    fun map_withAReadOnlyAccount_leavesItOut() {
+        every { accountType.areContactsWritable() } returns false
+
+        val contact = contactWithAccounts("alex@example.org")
+
+        assertTrue(accountNamesOf(contact).isEmpty())
+    }
+
     private inline fun <reified T : ContactDataItem> mapSingleItem(item: DataItem): T {
         return mapDataItems(item).single() as T
     }
 
+    private fun mapDetails(contact: Contact): ContactDetails {
+        return mapper.map(contact, excludedMimeTypes = emptySet())
+    }
+
     private fun mapDataItems(vararg items: DataItem): List<ContactDataItem> {
-        return mapper.map(contact(*items), emptySet()).dataItems
+        return mapDetails(contact(*items)).dataItems
     }
 
     private fun capabilities(contact: Contact): ContactCapabilities {
-        return mapper.map(contact, emptySet()).capabilities
+        return mapDetails(contact).capabilities
+    }
+
+    private fun accountNamesOf(contact: Contact): List<String> {
+        return mapDetails(contact).accounts.map(ContactAccount::name)
+    }
+
+    private fun contactWithAccounts(vararg accountNames: String?): Contact {
+        val contact = contactMock()
+        val rawContacts = accountNames.map { accountName ->
+            rawContact().also { rawContact ->
+                every { rawContact.accountName } returns accountName
+            }
+        }
+        every { contact.rawContacts } returns ImmutableList.copyOf(rawContacts)
+
+        return contact
     }
 
     private fun contact(vararg items: DataItem): Contact {

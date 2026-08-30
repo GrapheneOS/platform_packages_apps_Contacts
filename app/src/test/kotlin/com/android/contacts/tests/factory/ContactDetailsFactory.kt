@@ -1,11 +1,12 @@
 package com.android.contacts.tests.factory
 
 import android.net.Uri
+import com.android.contacts.data.contactdetails.model.ContactAccount
 import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
-import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
+import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
@@ -44,6 +45,7 @@ internal fun contactDetails(
     customRingtone: String? = null,
     customRingtoneTitle: String? = null,
     groups: List<ContactGroup> = emptyList(),
+    accounts: List<ContactAccount> = emptyList(),
     dataItems: List<ContactDataItem> = emptyList(),
     capabilities: ContactCapabilities = contactCapabilities(),
 ): ContactDetails {
@@ -63,6 +65,7 @@ internal fun contactDetails(
         customRingtone = customRingtone,
         customRingtoneTitle = customRingtoneTitle,
         groups = groups,
+        accounts = accounts,
         dataItems = dataItems,
         capabilities = capabilities,
     )
