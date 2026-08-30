@@ -31,6 +31,7 @@ import com.android.contacts.domain.util.IsCallWithNoteSupported
 import com.android.contacts.domain.util.IsDeviceVoiceCapable
 import com.android.contacts.domain.util.IsSipCallingSupported
 import com.android.contacts.model.dataitem.CustomDataItem
+import com.android.contacts.util.core.extension.trimmedOrNull
 import javax.inject.Inject
 
 internal fun interface BuildContactDetailsCards {
@@ -108,10 +109,6 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             organization.department,
             organization.company,
         ).mapNotNull { part -> part.trimmedOrNull() }
-    }
-
-    private fun String.trimmedOrNull(): String? {
-        return trim().takeIf { trimmed -> trimmed.isNotEmpty() }
     }
 
     private fun headerOrganization(details: ContactDetails): ContactDataItem.Organization? {

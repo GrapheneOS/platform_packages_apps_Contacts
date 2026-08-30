@@ -6,18 +6,17 @@ import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.unit.Dp
-import com.android.contacts.tests.factory.contactDetailsMenu
+import com.android.contacts.tests.factory.contactDetailsLoadedContent
 import com.android.contacts.tests.factory.contactEntryGroupUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
 import com.android.contacts.tests.factory.contactHeaderUiModel
 import com.android.contacts.tests.factory.contactQuickActionUiModel
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_HEADER_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
-import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
-import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Assert.assertEquals
@@ -29,7 +28,7 @@ import org.robolectric.annotation.Config
 @OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w411dp-h891dp")
-class ContactDetailsOverlayLayoutTest {
+internal class ContactDetailsContentLayoutTest {
 
     @Test
     fun theQuickActionsRowSitsRightUnderTheHeader() = runComposeUiTest {
@@ -57,21 +56,7 @@ class ContactDetailsOverlayLayoutTest {
     }
 
     private fun ComposeUiTest.setContentWith(header: ContactHeaderUiModel) {
-        setContent {
-            ContactsPreviewTheme {
-                ContactDetailsContent(
-                    uiState = State(content = loadedContent(header)),
-                    onAction = {},
-                )
-            }
-        }
-    }
-
-    private fun loadedContent(header: ContactHeaderUiModel): Content.Loaded {
-        return Content.Loaded(
-            callingSim = null,
-            recentCalls = persistentListOf(),
-            groups = persistentListOf(),
+        val content = contactDetailsLoadedContent(
             header = header,
             quickActions = persistentListOf(
                 contactQuickActionUiModel(icon = ContactEntryIcon.CALL, label = "Call"),
@@ -82,13 +67,16 @@ class ContactDetailsOverlayLayoutTest {
             contactCard = persistentListOf(
                 contactEntryGroupUiModel(entries = persistentListOf(contactEntryUiModel())),
             ),
-            connectedApps = persistentListOf(),
-            notes = persistentListOf(),
-            settings = persistentListOf(),
-            emptyPrompt = null,
-            menu = contactDetailsMenu(),
-            isStarred = false,
         )
+
+        setContent {
+            ContactsPreviewTheme {
+                ContactDetailsContent(
+                    uiState = State(content = content),
+                    onAction = {},
+                )
+            }
+        }
     }
 
     private fun ComposeUiTest.topOf(testTag: String): Dp {

@@ -49,6 +49,8 @@ internal object ContactDetailsTokens {
     val screenBottomPadding = 32.dp
     val cardGroupSpacing = 24.dp
     val sectionHeaderPadding = 16.dp
+    val accountRowSpacing = 8.dp
+    val accountRowAvatarSize = 28.dp
     val progressDialogPadding = 24.dp
     val progressDialogSpacing = 20.dp
 }

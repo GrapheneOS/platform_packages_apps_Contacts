@@ -156,6 +156,7 @@ internal abstract class BaseContactDetailsViewModelTest {
             connectedApps = persistentListOf(),
             notes = persistentListOf(),
             settings = persistentListOf(),
+            accounts = persistentListOf(),
             emptyPrompt = null,
             menu = contactDetailsMenu(),
             isStarred = false,
