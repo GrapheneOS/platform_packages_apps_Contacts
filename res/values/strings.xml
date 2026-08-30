@@ -359,6 +359,10 @@
     <string name="contact_entry_default">Default</string>
     <!-- Label of a contact field next to the default marker, example: Mobile · Default. [CHAR LIMIT=NONE] -->
     <string name="contact_entry_default_type"><xliff:g example="Mobile" id="type">%1$s</xliff:g> · <xliff:g example="Default" id="default">%2$s</xliff:g></string>
+    <!-- Line at the bottom of a contact naming the account its data is stored in [CHAR LIMIT=NONE] -->
+    <string name="contact_details_info_from_account">Contact info from <xliff:g id="account" example="alex@example.org">%1$s</xliff:g></string>
+    <!-- Label preceding the account name at the bottom of a contact [CHAR LIMIT=40] -->
+    <string name="contact_details_info_from">Contact info from</string>
     <!-- Title of the section that groups contact rows coming from other apps [CHAR LIMIT=40] -->
     <string name="contact_details_connected_apps">Connected apps</string>
     <!-- Content description of the control that opens the rows of a connected app [CHAR LIMIT=NONE] -->

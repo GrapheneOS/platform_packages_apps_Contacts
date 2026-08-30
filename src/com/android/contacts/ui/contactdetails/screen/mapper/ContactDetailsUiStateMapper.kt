@@ -11,6 +11,7 @@ import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.settings.model.DisplayOrder
+import com.android.contacts.data.contactdetails.model.ContactAccount
 import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
@@ -30,6 +31,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimAccountUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimNumberUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactAccountUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
@@ -91,6 +93,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             connectedApps = connectedApps,
             notes = notes,
             settings = settings(details, menu, callingSim),
+            accounts = mapAccounts(details.accounts),
             emptyPrompt = emptyPrompt(details, contactCard, notes),
             menu = menu,
             isStarred = details.isStarred,
@@ -252,6 +255,17 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             isDestructive = isDestructive,
             isChecked = isChecked,
         )
+    }
+
+    private fun mapAccounts(accounts: List<ContactAccount>): ImmutableList<ContactAccountUiModel> {
+        return accounts
+            .map { account ->
+                ContactAccountUiModel(
+                    name = account.name,
+                    iconUri = account.iconUri,
+                )
+            }
+            .toImmutableList()
     }
 
     private fun mapGroups(groups: List<ContactGroup>): ImmutableList<ContactGroupUiModel> {

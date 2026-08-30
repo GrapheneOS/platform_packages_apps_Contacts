@@ -18,6 +18,7 @@ internal data class ContactDetails(
     val customRingtone: String?,
     val customRingtoneTitle: String?,
     val groups: List<ContactGroup>,
+    val accounts: List<ContactAccount>,
     val dataItems: List<ContactDataItem>,
     val capabilities: ContactCapabilities,
 )

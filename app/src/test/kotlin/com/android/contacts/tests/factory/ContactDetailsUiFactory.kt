@@ -1,13 +1,24 @@
 package com.android.contacts.tests.factory
 
+import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.ui.common.components.ContactAvatarImage
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactAccountUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
+import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
+import com.android.contacts.ui.contactdetails.screen.model.RecentCallUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -89,5 +100,55 @@ internal fun contactQuickActionUiModel(
         icon = icon,
         label = label,
         action = action,
+    )
+}
+
+internal fun contactSettingUiModel(
+    icon: ContactSettingIcon = ContactSettingIcon.SHARE,
+    title: String = "Share",
+    subtitle: String? = null,
+    action: ContactDetailsAction = ContactDetailsAction.ShareClick,
+    isDestructive: Boolean = false,
+    isChecked: Boolean? = null,
+): ContactSettingUiModel {
+    return ContactSettingUiModel(
+        icon = icon,
+        title = title,
+        subtitle = subtitle,
+        action = action,
+        isDestructive = isDestructive,
+        isChecked = isChecked,
+    )
+}
+
+internal fun contactDetailsLoadedContent(
+    header: ContactHeaderUiModel = contactHeaderUiModel(),
+    quickActions: ImmutableList<ContactQuickActionUiModel> = persistentListOf(),
+    groups: ImmutableList<ContactGroupUiModel> = persistentListOf(),
+    contactCard: ImmutableList<ContactEntryGroupUiModel> = persistentListOf(),
+    connectedApps: ImmutableList<ContactConnectedAppUiModel> = persistentListOf(),
+    notes: ImmutableList<ContactEntryGroupUiModel> = persistentListOf(),
+    settings: ImmutableList<ContactSettingUiModel> = persistentListOf(),
+    accounts: ImmutableList<ContactAccountUiModel> = persistentListOf(),
+    recentCalls: ImmutableList<RecentCallUiModel> = persistentListOf(),
+    callingSim: CallingSimUiModel? = null,
+    emptyPrompt: ContactDetailsEmptyPromptUiModel? = null,
+    menu: ContactDetailsMenu = contactDetailsMenu(),
+    isStarred: Boolean = false,
+): ContactDetailsContent.Loaded {
+    return ContactDetailsContent.Loaded(
+        header = header,
+        quickActions = quickActions,
+        groups = groups,
+        contactCard = contactCard,
+        connectedApps = connectedApps,
+        notes = notes,
+        settings = settings,
+        accounts = accounts,
+        recentCalls = recentCalls,
+        callingSim = callingSim,
+        emptyPrompt = emptyPrompt,
+        menu = menu,
+        isStarred = isStarred,
     )
 }
