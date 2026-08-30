@@ -17,7 +17,7 @@ internal data class ContactDetails(
     val isSendToVoicemail: Boolean,
     val customRingtone: String?,
     val customRingtoneTitle: String?,
-    val groups: List<String>,
+    val groups: List<ContactGroup>,
     val dataItems: List<ContactDataItem>,
     val capabilities: ContactCapabilities,
 )

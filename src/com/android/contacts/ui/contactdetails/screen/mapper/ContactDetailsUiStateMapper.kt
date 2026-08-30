@@ -11,6 +11,7 @@ import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.settings.model.DisplayOrder
+import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
@@ -31,6 +32,7 @@ import com.android.contacts.ui.contactdetails.screen.model.CallingSimNumberUiMod
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
@@ -84,7 +86,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             quickActions = contactQuickActionsMapper.map(quickActions),
             recentCalls = recentCallsMapper.map(recentCalls),
             callingSim = callingSim,
-            groups = cards.groups.toImmutableList(),
+            groups = mapGroups(cards.groups),
             contactCard = contactCard,
             connectedApps = connectedApps,
             notes = notes,
@@ -250,6 +252,17 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             isDestructive = isDestructive,
             isChecked = isChecked,
         )
+    }
+
+    private fun mapGroups(groups: List<ContactGroup>): ImmutableList<ContactGroupUiModel> {
+        return groups
+            .map { group ->
+                ContactGroupUiModel(
+                    id = group.id,
+                    title = group.title,
+                )
+            }
+            .toImmutableList()
     }
 
     private fun mapConnectedApps(

@@ -1,5 +1,6 @@
 package com.android.contacts.data.contactdetails.model
 
+import com.android.contacts.data.contactdetails.model.ContactGroup
 import android.net.Uri
 
 internal fun contactCapabilities(
@@ -35,7 +36,7 @@ internal fun contactDetails(
     isSendToVoicemail: Boolean = false,
     customRingtone: String? = null,
     customRingtoneTitle: String? = null,
-    groups: List<String> = emptyList(),
+    groups: List<ContactGroup> = emptyList(),
     dataItems: List<ContactDataItem> = emptyList(),
     capabilities: ContactCapabilities = contactCapabilities(),
 ): ContactDetails {

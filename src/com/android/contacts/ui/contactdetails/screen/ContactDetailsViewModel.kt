@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
-
 package com.android.contacts.ui.contactdetails.screen
 
 import android.app.Activity
@@ -10,50 +8,35 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.contacts.data.contactdetails.model.ContactDetails
-import com.android.contacts.data.contactdetails.model.ContactDetailsResult
-import com.android.contacts.data.contactdetails.model.ContactLinkOperation
-import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
-import com.android.contacts.data.settings.model.DisplayOrder
-import com.android.contacts.data.settings.repository.DisplaySettingsRepository
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
-import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
-import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
-import com.android.contacts.domain.calllog.usecase.GetRecentCalls
-import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
-import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
-import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
-import com.android.contacts.ui.contactdetails.screen.model.PendingContactFlags
+import com.android.contacts.ui.contactdetails.screen.delegate.ContactDetailsContentDelegate
+import com.android.contacts.ui.contactdetails.screen.delegate.ContactFlagsDelegate
+import com.android.contacts.ui.contactdetails.screen.delegate.ContactLinkDelegate
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimSelection
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsArguments
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent as NavEvent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal interface ContactDetailsScreenModel {
@@ -62,9 +45,7 @@ internal interface ContactDetailsScreenModel {
     val navigationEvents: Flow<NavEvent>
 
     fun bind(
-        lookupUri: Uri,
-        excludedMimeTypes: Set<String>,
-        prioritizedMimeType: String?,
+        arguments: ContactDetailsArguments,
         callbackActivity: Class<out Activity>,
     )
 
@@ -74,22 +55,16 @@ internal interface ContactDetailsScreenModel {
 @HiltViewModel
 internal class ContactDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
+    private val contentDelegate: ContactDetailsContentDelegate,
+    private val flagsDelegate: ContactFlagsDelegate,
+    private val linkDelegate: ContactLinkDelegate,
     private val contactDetailsRepository: ContactDetailsRepository,
     private val contactActionsRepository: ContactActionsRepository,
-    private val buildContactDetailsCards: BuildContactDetailsCards,
-    private val getContactDetailsMenu: GetContactDetailsMenu,
-    private val getContactQuickActions: GetContactQuickActions,
-    private val getRecentCalls: GetRecentCalls,
-    private val getCallingSimOptions: GetCallingSimOptions,
     private val contactShortcutRepository: ContactShortcutRepository,
-    private val displaySettingsRepository: DisplaySettingsRepository,
-    private val contactDetailsUiStateMapper: ContactDetailsUiStateMapper,
 ) : ViewModel(),
     ContactDetailsScreenModel {
 
-    private var loadedDetails: ContactDetails? = null
-
-    private var isShortcutUsageReported = false
+    private val isShortcutUsageReported = AtomicBoolean(false)
 
     private val _effects = Channel<Effect>(Channel.BUFFERED)
     override val effects: Flow<Effect> = _effects.receiveAsFlow()
@@ -97,26 +72,17 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val _navigationEvents = Channel<NavEvent>(Channel.BUFFERED)
     override val navigationEvents: Flow<NavEvent> = _navigationEvents.receiveAsFlow()
 
-    private val linkProgress = MutableStateFlow(contactActionsRepository.getPendingLinkOperation())
-
-    private val pendingFlags = MutableStateFlow(PendingContactFlags())
-
     private val callingSimPickerVisible = MutableStateFlow(false)
 
-    private val retainedContent = MutableStateFlow<Content>(Content.Loading)
+    private val argumentsBundle: StateFlow<Bundle?> = savedStateHandle
+        .getStateFlow(KEY_ARGUMENTS, null)
 
-    private val content: Flow<Content> = savedStateHandle
-        .getStateFlow<Bundle?>(KEY_ARGUMENTS, null)
-        .filterNotNull()
-        .flatMapLatest { arguments ->
-            observeContent(arguments)
-        }
-        .onEach { loadedContent -> retainedContent.value = loadedContent }
-        .onStart { emit(retainedContent.value) }
+    private val arguments: Flow<ContactDetailsArguments> = argumentsBundle
+        .mapNotNull { bundle -> bundle?.toArguments() }
 
     override val uiState: StateFlow<State> = combine(
-        content,
-        linkProgress,
+        contentDelegate.content,
+        linkDelegate.progress,
         callingSimPickerVisible,
     ) { loadedContent, pendingLinkOperation, isPickerVisible ->
         State(
@@ -127,27 +93,42 @@ internal class ContactDetailsViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(STATE_TIMEOUT_MILLIS),
-        initialValue = State(linkProgress = linkProgress.value),
+        initialValue = State(linkProgress = linkDelegate.progress.value),
     )
 
     init {
-        contactActionsRepository.observeLinkOperations()
-            .onEach { operation ->
-                onLinkOperation(operation)
-            }
+        flagsDelegate.bind(
+            scope = viewModelScope,
+            details = contentDelegate.loadedDetails,
+        )
+
+        linkDelegate.bind(
+            scope = viewModelScope,
+        )
+
+        contentDelegate.bind(
+            scope = viewModelScope,
+            arguments = arguments,
+        )
+
+        linkDelegate.unlinked
+            .onEach { sendNavigationEvent(NavEvent.Close) }
+            .launchIn(viewModelScope)
+
+        contentDelegate.loadedDetails
+            .filterNotNull()
+            .onEach { details -> reportShortcutUsed(details) }
             .launchIn(viewModelScope)
     }
 
     override fun bind(
-        lookupUri: Uri,
-        excludedMimeTypes: Set<String>,
-        prioritizedMimeType: String?,
+        arguments: ContactDetailsArguments,
         callbackActivity: Class<out Activity>,
     ) {
         savedStateHandle[KEY_ARGUMENTS] = Bundle().apply {
-            putParcelable(KEY_LOOKUP_URI, lookupUri)
-            putStringArray(KEY_EXCLUDED_MIME_TYPES, excludedMimeTypes.toTypedArray())
-            putString(KEY_PRIORITIZED_MIME_TYPE, prioritizedMimeType)
+            putParcelable(KEY_LOOKUP_URI, arguments.lookupUri)
+            putStringArray(KEY_EXCLUDED_MIME_TYPES, arguments.excludedMimeTypes.toTypedArray())
+            putString(KEY_PRIORITIZED_MIME_TYPE, arguments.prioritizedMimeType)
             putSerializable(KEY_CALLBACK_ACTIVITY, callbackActivity)
         }
     }
@@ -175,6 +156,7 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.RingtoneClick -> pickRingtone()
             is Action.JoinClick -> pickJoinTarget()
             is Action.LinkedContactsClick -> viewLinkedContacts()
+            is Action.GroupClick -> sendEffect(Effect.ViewGroupMembers(action.groupId))
         }
     }
 
@@ -183,10 +165,7 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.SetDefaultClick -> setDefault(action.dataId)
             is Action.ClearDefaultClick -> clearDefault(action.dataId)
             is Action.EntryClick -> performEntryAction(action.action)
-
-            is Action.CopyClick -> {
-                sendEffect(Effect.CopyToClipboard(action.label, action.text))
-            }
+            is Action.CopyClick -> sendEffect(Effect.CopyToClipboard(action.label, action.text))
         }
     }
 
@@ -199,150 +178,37 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun observeContent(arguments: Bundle): Flow<Content> {
-        val lookupUri = lookupUri(arguments) ?: return flowOf(Content.Loading)
-
-        return flow {
-            val displayOrder = displaySettingsRepository
-                .observeDisplaySettings()
-                .first()
-                .displayOrder
-            val results = contactDetailsRepository
-                .observeContactDetails(lookupUri, excludedMimeTypes(arguments))
-                .onEach { result -> retainLoadedContact(result) }
-
-            val contentUpdates = combine(
-                results,
-                pendingFlags,
-            ) { result, pending ->
-                clearAppliedFlags(result, pending)
-                toContent(result, arguments, displayOrder, pending)
-            }
-
-            emitAll(contentUpdates)
-        }
-    }
-
-    private suspend fun toContent(
-        result: ContactDetailsResult,
-        arguments: Bundle,
-        displayOrder: DisplayOrder,
-        pending: PendingContactFlags,
-    ): Content {
-        return when (result) {
-            is ContactDetailsResult.NotFound -> Content.NotFound
-            is ContactDetailsResult.Error -> Content.Error
-
-            is ContactDetailsResult.Loaded -> {
-                toLoadedContent(
-                    details = pending.applyTo(result.details),
-                    arguments = arguments,
-                    displayOrder = displayOrder,
-                )
-            }
-        }
-    }
-
-    private suspend fun toLoadedContent(
-        details: ContactDetails,
-        arguments: Bundle,
-        displayOrder: DisplayOrder,
-    ): Content {
-        return contactDetailsUiStateMapper.map(
-            details = details,
-            cards = buildContactDetailsCards(details, prioritizedMimeType(arguments)),
-            quickActions = getContactQuickActions(details),
-            recentCalls = getRecentCalls(details),
-            callingSimOptions = getCallingSimOptions(details),
-            menu = getContactDetailsMenu(details.capabilities),
-            displayOrder = displayOrder,
-        )
-    }
-
-    private fun onLinkOperation(operation: ContactLinkOperation) {
-        linkProgress.value = null
-
-        if (operation == ContactLinkOperation.UNLINK) {
-            sendNavigationEvent(NavEvent.Close)
-        }
-    }
-
     private fun showCallingSimPicker() {
         callingSimPickerVisible.value = true
     }
 
-    private fun setCallingSims(selections: Map<Long, PhoneAccountId?>) {
+    private fun setCallingSims(selections: List<CallingSimSelection>) {
         callingSimPickerVisible.value = false
 
         viewModelScope.launch {
-            for ((dataId, account) in selections) {
-                contactActionsRepository.setPreferredPhoneAccount(dataId, account)
+            for (selection in selections) {
+                contactActionsRepository.setPreferredPhoneAccount(
+                    dataId = selection.dataId,
+                    account = selection.accountId,
+                )
             }
         }
     }
 
     private fun toggleSendToVoicemail() {
         val lookupUri = lookupUri() ?: return
-        val details = effectiveDetails() ?: return
 
-        toggleFlag(
-            current = details.isSendToVoicemail,
-            updatePending = { pending ->
-                pendingFlags.update { flags ->
-                    flags.copy(isSendToVoicemail = pending)
-                }
-            },
-            write = { isEnabled ->
-                contactActionsRepository.setSendToVoicemail(lookupUri, isEnabled)
-            },
-        )
+        flagsDelegate.toggleSendToVoicemail(lookupUri)
     }
 
     private fun toggleStarred() {
         val lookupUri = lookupUri() ?: return
-        val details = effectiveDetails() ?: return
 
-        toggleFlag(
-            current = details.isStarred,
-            updatePending = { pending ->
-                pendingFlags.update { flags ->
-                    flags.copy(isStarred = pending)
-                }
-            },
-            write = { isEnabled ->
-                contactActionsRepository.setStarred(lookupUri, isEnabled)
-            },
-        )
-    }
-
-    private fun effectiveDetails(): ContactDetails? {
-        val details = loadedDetails ?: return null
-
-        return pendingFlags.value.applyTo(details)
-    }
-
-    private fun toggleFlag(
-        current: Boolean,
-        updatePending: (Boolean?) -> Unit,
-        write: suspend (Boolean) -> Unit,
-    ) {
-        val isEnabled = !current
-
-        updatePending(isEnabled)
-
-        viewModelScope.launch {
-            try {
-                write(isEnabled)
-            } catch (_: IllegalStateException) {
-                updatePending(null)
-            } catch (_: SecurityException) {
-                updatePending(null)
-            }
-        }
+        flagsDelegate.toggleStarred(lookupUri)
     }
 
     private fun editContact() {
-        val details = loadedDetails ?: return
+        val details = contentDelegate.loadedDetails.value ?: return
         val lookupUri = details.lookupUri ?: return
 
         when {
@@ -369,70 +235,47 @@ internal class ContactDetailsViewModel @Inject constructor(
     }
 
     private fun deleteContact() {
-        val lookupUri = loadedDetails?.lookupUri ?: return
+        val lookupUri = contentDelegate.loadedDetails.value?.lookupUri ?: return
 
         sendEffect(Effect.ConfirmDelete(lookupUri))
     }
 
     private fun shareContact() {
-        val lookupKey = loadedDetails?.lookupKey ?: return
+        val lookupKey = contentDelegate.loadedDetails.value?.lookupKey ?: return
 
         sendEffect(Effect.ShareContact(lookupKey))
     }
 
-    private fun clearAppliedFlags(
-        result: ContactDetailsResult,
-        pending: PendingContactFlags,
-    ) {
-        val details = (result as? ContactDetailsResult.Loaded)?.details ?: return
-        val applied = pending.withoutApplied(details)
-
-        if (applied != pending) {
-            pendingFlags.value = applied
-        }
-    }
-
-    private fun retainLoadedContact(result: ContactDetailsResult) {
-        val details = (result as? ContactDetailsResult.Loaded)?.details ?: return
-
-        loadedDetails = details
-        reportShortcutUsed(details)
-    }
-
     private fun reportShortcutUsed(details: ContactDetails) {
-        if (isShortcutUsageReported) {
-            return
-        }
+        if (!isShortcutUsageReported.compareAndSet(false, true)) return
 
-        isShortcutUsageReported = true
         contactShortcutRepository.reportShortcutUsed(details.lookupKey)
     }
 
     private fun createShortcut() {
-        val details = loadedDetails ?: return
-        val loaded = uiState.value.content as? Content.Loaded ?: return
+        val details = contentDelegate.loadedDetails.value ?: return
 
         contactShortcutRepository.requestPinShortcut(
             contactId = details.contactId,
             lookupKey = details.lookupKey,
-            displayName = loaded.header.displayName,
+            displayName = details.displayName,
         )
     }
 
     private fun pickRingtone() {
-        val details = loadedDetails ?: return
+        val details = contentDelegate.loadedDetails.value ?: return
 
         sendEffect(Effect.PickRingtone(details.customRingtone))
     }
 
     private fun pickJoinTarget() {
-        val details = loadedDetails ?: return
+        val details = contentDelegate.loadedDetails.value ?: return
 
         sendEffect(Effect.PickJoinTarget(details.contactId))
     }
 
     private fun viewLinkedContacts() {
-        val lookupUri = loadedDetails?.lookupUri ?: return
+        val lookupUri = contentDelegate.loadedDetails.value?.lookupUri ?: return
 
         sendEffect(Effect.ViewLinkedContacts(lookupUri))
     }
@@ -447,7 +290,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     }
 
     private fun callWithNoteEffect(action: ContactEntryAction.CallWithNote): Effect? {
-        val details = loadedDetails ?: return null
+        val details = contentDelegate.loadedDetails.value ?: return null
 
         return Effect.CallWithNote(
             number = action.number,
@@ -481,18 +324,14 @@ internal class ContactDetailsViewModel @Inject constructor(
     }
 
     private fun joinContact(targetContactId: Long) {
-        val details = loadedDetails ?: return
+        val details = contentDelegate.loadedDetails.value ?: return
         val callbackActivity = callbackActivity() ?: return
 
-        linkProgress.value = ContactLinkOperation.LINK
-
-        viewModelScope.launch {
-            contactActionsRepository.joinContacts(
-                contactId = details.contactId,
-                otherContactId = targetContactId,
-                callbackActivity = callbackActivity,
-            )
-        }
+        linkDelegate.joinContacts(
+            contactId = details.contactId,
+            otherContactId = targetContactId,
+            callbackActivity = callbackActivity,
+        )
     }
 
     private fun sendEffect(effect: Effect) {
@@ -504,36 +343,36 @@ internal class ContactDetailsViewModel @Inject constructor(
     }
 
     private fun lookupUri(): Uri? {
-        return arguments()?.let { arguments -> lookupUri(arguments) }
+        return currentArguments()?.lookupUri
+    }
+
+    private fun currentArguments(): ContactDetailsArguments? {
+        return argumentsBundle.value?.toArguments()
     }
 
     private fun callbackActivity(): Class<out Activity>? {
-        val arguments = arguments() ?: return null
+        val bundle = argumentsBundle.value ?: return null
 
         @Suppress("UNCHECKED_CAST")
         return BundleCompat.getSerializable(
-            arguments,
+            bundle,
             KEY_CALLBACK_ACTIVITY,
             Class::class.java,
         ) as Class<out Activity>?
     }
 
-    private fun arguments(): Bundle? {
-        return savedStateHandle[KEY_ARGUMENTS]
-    }
+    private fun Bundle.toArguments(): ContactDetailsArguments? {
+        val lookupUri = BundleCompat.getParcelable(
+            this,
+            KEY_LOOKUP_URI,
+            Uri::class.java,
+        ) ?: return null
 
-    private fun lookupUri(arguments: Bundle): Uri? {
-        return BundleCompat.getParcelable(arguments, KEY_LOOKUP_URI, Uri::class.java)
-    }
-
-    private fun excludedMimeTypes(arguments: Bundle): Set<String> {
-        return arguments.getStringArray(KEY_EXCLUDED_MIME_TYPES)
-            .orEmpty()
-            .toSet()
-    }
-
-    private fun prioritizedMimeType(arguments: Bundle): String? {
-        return arguments.getString(KEY_PRIORITIZED_MIME_TYPE)
+        return ContactDetailsArguments(
+            lookupUri = lookupUri,
+            excludedMimeTypes = getStringArray(KEY_EXCLUDED_MIME_TYPES).orEmpty().toSet(),
+            prioritizedMimeType = getString(KEY_PRIORITIZED_MIME_TYPE),
+        )
     }
 
     private companion object {
