@@ -1,19 +1,25 @@
 package com.android.contacts.ui.contactdetails.screen
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
+import android.provider.CallLog.Calls
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Intents
+import android.telecom.TelecomManager
 import androidx.activity.result.ActivityResultLauncher
+import com.android.contacts.activities.ContactEditorSpringBoardActivity
 import com.android.contacts.activities.ContactSelectionActivity
+import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.list.UiIntentActions
+import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.util.ImplicitIntentsUtil
 import io.mockk.every
@@ -46,10 +52,12 @@ internal class ContactDetailsEffectHandlerImplTest {
         activity = activity,
         clipboardManager = clipboardManager,
         contactEntryIntentFactory = contactEntryIntentFactory,
-        joinTargetLauncher = joinTargetLauncher,
-        ringtoneLauncher = ringtoneLauncher,
-        editorLauncher = editorLauncher,
-        directoryCopyLauncher = directoryCopyLauncher,
+        launchers = ContactDetailsLaunchers(
+            editor = editorLauncher,
+            directoryCopy = directoryCopyLauncher,
+            joinTarget = joinTargetLauncher,
+            ringtone = ringtoneLauncher,
+        ),
     )
 
     @Before
@@ -150,7 +158,7 @@ internal class ContactDetailsEffectHandlerImplTest {
         val built = Intent(Intent.ACTION_VIEW)
         every { contactEntryIntentFactory.create(action) } returns built
 
-        handler.handle(entryEffect(action))
+        handler.handle(Effect.PerformEntryAction(action))
 
         assertEquals(built, startedInAppIntent())
     }
@@ -160,18 +168,122 @@ internal class ContactDetailsEffectHandlerImplTest {
         val action = ContactEntryAction.Call(number = "555 0001")
         every { contactEntryIntentFactory.create(action) } returns null
 
-        handler.handle(entryEffect(action))
+        handler.handle(Effect.PerformEntryAction(action))
 
         verify(exactly = 0) { ImplicitIntentsUtil.startActivityInAppIfPossible(any(), any()) }
     }
 
-    private fun entryEffect(action: ContactEntryAction): Effect {
-        return Effect.PerformEntryAction(action)
+    @Test
+    fun viewGroupMembers_opensTheGroupInTheContactsList() {
+        handler.handle(Effect.ViewGroupMembers(groupId = 11L))
+
+        val intent = startedIntent()
+
+        assertEquals(Intent.ACTION_VIEW, intent.action)
+        assertEquals("content://com.android.contacts/groups/11", intent.data.toString())
+        assertEquals(PeopleActivity::class.java.name, intent.component?.className)
+    }
+
+    @Test
+    fun viewLinkedContacts_launchesTheEditorInReadOnlyMode() {
+        handler.handle(Effect.ViewLinkedContacts(lookupUri = LOOKUP_URI))
+
+        val intent = launchedIntent(editorLauncher)
+
+        assertEquals(LOOKUP_URI, intent.data)
+        assertTrue(
+            intent.getBooleanExtra(
+                ContactEditorSpringBoardActivity.EXTRA_SHOW_READ_ONLY,
+                false,
+            ),
+        )
+    }
+
+    @Test
+    fun viewCallLog_opensTheCallLogInTheDefaultDialer() {
+        givenDefaultDialer("com.example.dialer")
+
+        handler.handle(Effect.ViewCallLog)
+
+        val intent = startedIntent()
+
+        assertEquals(Intent.ACTION_VIEW, intent.action)
+        assertEquals(Calls.CONTENT_TYPE, intent.type)
+        assertEquals("com.example.dialer", intent.`package`)
+    }
+
+    @Test
+    fun viewCallLog_whenNoDialerHandlesIt_reportsNoError() {
+        givenDefaultDialer("com.example.dialer")
+        every { activity.startActivity(any()) } throws ActivityNotFoundException()
+
+        handler.handle(Effect.ViewCallLog)
+
+        verify { activity.startActivity(any()) }
+    }
+
+    @Test
+    fun shareContact_whenNoAppHandlesTheChooser_reportsNoError() {
+        every {
+            ImplicitIntentsUtil.startActivityOutsideApp(any(), any())
+        } throws ActivityNotFoundException()
+
+        handler.handle(Effect.ShareContact(lookupKey = "lookup-key"))
+
+        verify { ImplicitIntentsUtil.startActivityOutsideApp(activity, any()) }
+    }
+
+    @Test
+    fun pickRingtone_whenNoPickerIsInstalled_reportsNoError() {
+        every { ringtoneLauncher.launch(any()) } throws ActivityNotFoundException()
+
+        handler.handle(Effect.PickRingtone(currentRingtone = null))
+
+        verify { ringtoneLauncher.launch(any()) }
+    }
+
+    @Test
+    fun performEntryAction_whenNoAppHandlesTheIntent_reportsNoError() {
+        val action = ContactEntryAction.Call(number = "555 0001")
+        every { contactEntryIntentFactory.create(action) } returns Intent(Intent.ACTION_VIEW)
+        every {
+            ImplicitIntentsUtil.startActivityInAppIfPossible(any(), any())
+        } throws ActivityNotFoundException()
+
+        handler.handle(Effect.PerformEntryAction(action))
+
+        verify { ImplicitIntentsUtil.startActivityInAppIfPossible(activity, any()) }
+    }
+
+    @Test
+    fun performEntryAction_whenStartingIsNotPermitted_reportsNoError() {
+        val action = ContactEntryAction.Call(number = "555 0001")
+        every { contactEntryIntentFactory.create(action) } returns Intent(Intent.ACTION_VIEW)
+        every {
+            ImplicitIntentsUtil.startActivityInAppIfPossible(any(), any())
+        } throws SecurityException("not permitted")
+
+        handler.handle(Effect.PerformEntryAction(action))
+
+        verify { ImplicitIntentsUtil.startActivityInAppIfPossible(activity, any()) }
+    }
+
+    private fun givenDefaultDialer(packageName: String) {
+        val telecomManager = mockk<TelecomManager>()
+        every { telecomManager.defaultDialerPackage } returns packageName
+        every { activity.getSystemService(TelecomManager::class.java) } returns telecomManager
     }
 
     private fun launchedIntent(launcher: ActivityResultLauncher<Intent>): Intent {
         val intent = slot<Intent>()
         verify { launcher.launch(capture(intent)) }
+
+        return intent.captured
+    }
+
+    private fun startedIntent(): Intent {
+        val intent = slot<Intent>()
+        verify { activity.startActivity(capture(intent)) }
 
         return intent.captured
     }
