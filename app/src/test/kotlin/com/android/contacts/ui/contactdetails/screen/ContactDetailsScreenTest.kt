@@ -7,18 +7,16 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import com.android.contacts.tests.factory.contactDetailsMenu
+import com.android.contacts.tests.factory.contactDetailsLoadedContent
 import com.android.contacts.tests.factory.contactHeaderUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent as NavEvent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
@@ -37,7 +35,7 @@ internal class ContactDetailsScreenTest {
 
     @Before
     fun setUp() {
-        every { screenModel.uiState } returns MutableStateFlow(State(content = loadedContent()))
+        every { screenModel.uiState } returns MutableStateFlow(State(content = LOADED_CONTENT))
         every { screenModel.effects } returns effects
         every { screenModel.navigationEvents } returns navigationEvents
     }
@@ -80,23 +78,6 @@ internal class ContactDetailsScreenTest {
         verify { screenModel.onAction(Action.StarClick) }
     }
 
-    private fun loadedContent(): Content.Loaded {
-        return Content.Loaded(
-            callingSim = null,
-            recentCalls = persistentListOf(),
-            groups = persistentListOf(),
-            header = contactHeaderUiModel(displayName = "Anna Smith"),
-            quickActions = persistentListOf(),
-            contactCard = persistentListOf(),
-            connectedApps = persistentListOf(),
-            notes = persistentListOf(),
-            settings = persistentListOf(),
-            emptyPrompt = null,
-            menu = contactDetailsMenu(),
-            isStarred = false,
-        )
-    }
-
     private fun ComposeUiTest.setScreenContent(
         onEffect: (Effect) -> Unit = {},
         onNavigateBack: () -> Unit = {},
@@ -108,5 +89,11 @@ internal class ContactDetailsScreenTest {
                 screenModel = screenModel,
             )
         }
+    }
+
+    private companion object {
+        val LOADED_CONTENT = contactDetailsLoadedContent(
+            header = contactHeaderUiModel(displayName = "Anna Smith"),
+        )
     }
 }

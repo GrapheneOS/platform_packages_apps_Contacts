@@ -1,14 +1,13 @@
 package com.android.contacts.data.connectedapps.repository
 
-import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.provider.ContactsContract.Data
 import com.android.contacts.data.connectedapps.model.ConnectedApp
+import com.android.contacts.util.core.resourceUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -29,6 +28,7 @@ internal class ConnectedAppsRepositoryImpl @Inject constructor(
         mimeType: String,
     ): ConnectedApp? {
         val applicationInfo = resolveApplication(dataId, mimeType) ?: return null
+
         if (applicationInfo.packageName == context.packageName) {
             return null
         }
@@ -41,7 +41,10 @@ internal class ConnectedAppsRepositoryImpl @Inject constructor(
         return ConnectedApp(
             packageName = applicationInfo.packageName,
             label = label,
-            iconUri = iconUri(applicationInfo),
+            iconUri = resourceUri(
+                packageName = applicationInfo.packageName,
+                resourceId = applicationInfo.icon,
+            ),
         )
     }
 
@@ -51,29 +54,10 @@ internal class ConnectedAppsRepositoryImpl @Inject constructor(
     ): ApplicationInfo? {
         val dataUri = ContentUris.withAppendedId(Data.CONTENT_URI, dataId)
         val intent = Intent(Intent.ACTION_VIEW).setDataAndType(dataUri, mimeType)
-        val flags = PackageManager.ResolveInfoFlags.of(MATCH_DEFAULT.toLong())
+        val flags = PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong())
 
         return packageManager.resolveActivity(intent, flags)
             ?.activityInfo
             ?.applicationInfo
-    }
-
-    private fun iconUri(applicationInfo: ApplicationInfo): String? {
-        val iconResourceId = applicationInfo.icon
-        if (iconResourceId == NO_ICON) {
-            return null
-        }
-
-        return Uri.Builder()
-            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-            .authority(applicationInfo.packageName)
-            .appendPath(iconResourceId.toString())
-            .build()
-            .toString()
-    }
-
-    private companion object {
-        const val MATCH_DEFAULT = PackageManager.MATCH_DEFAULT_ONLY
-        const val NO_ICON = 0
     }
 }

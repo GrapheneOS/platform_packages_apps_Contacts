@@ -55,6 +55,7 @@ import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.ui.common.components.cellShape
+import com.android.contacts.ui.contactdetails.common.ContactDetailsAccountRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsActionRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsCallingSimDialog
 import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
@@ -72,11 +73,13 @@ import com.android.contacts.ui.contactdetails.common.ContactEntryRow
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ACCOUNTS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RECENT_CALLS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactAccountUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
@@ -420,6 +423,37 @@ private fun ContactDetailsList(
                 }
             }
         }
+
+        if (content.accounts.isNotEmpty()) {
+            item(key = "accounts") {
+                ContactDetailsAccounts(
+                    accounts = content.accounts,
+                    modifier = Modifier
+                        .padding(itemPadding)
+                        .testTag(CONTACT_DETAILS_ACCOUNTS_TEST_TAG)
+                        .padding(bottom = Tokens.cardGroupSpacing),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContactDetailsAccounts(
+    accounts: ImmutableList<ContactAccountUiModel>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Tokens.cardSpacing),
+        modifier = modifier,
+    ) {
+        accounts.forEachIndexed { index, account ->
+            ContactDetailsAccountRow(
+                account = account,
+                isFirst = index == 0,
+                isLast = index == accounts.lastIndex,
+            )
+        }
     }
 }
 
@@ -753,6 +787,9 @@ private fun previewContent(): Content.Loaded {
                 direction = RecentCallDirection.INCOMING,
                 contentDescription = "Incoming call, 01:20, Jun 3",
             ),
+        ),
+        accounts = persistentListOf(
+            ContactAccountUiModel(name = "alex@example.org", iconUri = null),
         ),
         settings = persistentListOf(
             previewSetting(ContactSettingIcon.RINGTONE, "Set ringtone", "Bright Morning"),
