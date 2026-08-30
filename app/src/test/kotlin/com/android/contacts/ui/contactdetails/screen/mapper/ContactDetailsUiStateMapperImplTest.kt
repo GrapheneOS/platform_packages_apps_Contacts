@@ -8,6 +8,7 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import com.android.contacts.R
 import com.android.contacts.data.contactdetails.model.ContactDetails
+import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.settings.model.DisplayOrder
@@ -28,6 +29,7 @@ import com.android.contacts.tests.factory.contactDetailsMenu
 import com.android.contacts.tests.factory.contactQuickActionUiModel
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactSettingUiModel
@@ -554,6 +556,21 @@ class ContactDetailsUiStateMapperImplTest {
         assertTrue(state.isStarred)
     }
 
+    @Test
+    fun map_withGroups_keepsTheirIdsAndTitles() {
+        val cards = cardsOf(
+            groups = listOf(
+                ContactGroup(id = 11L, title = "Coworkers"),
+                ContactGroup(id = 22L, title = "Family"),
+            ),
+        )
+
+        val state = mapOf(cards = cards)
+
+        assertEquals(listOf(11L, 22L), state.groups.map(ContactGroupUiModel::id))
+        assertEquals(listOf("Coworkers", "Family"), state.groups.map(ContactGroupUiModel::title))
+    }
+
     private fun mapOf(
         details: ContactDetails = contactDetails(),
         cards: ContactDetailsCards = cardsOf(),
@@ -569,7 +586,7 @@ class ContactDetailsUiStateMapperImplTest {
         notes: List<ContactEntryGroup> = emptyList(),
         headerNickname: String? = null,
         headerOrganizationParts: List<String> = emptyList(),
-        groups: List<String> = emptyList(),
+        groups: List<ContactGroup> = emptyList(),
         connectedApps: List<ContactConnectedApp> = emptyList(),
     ): ContactDetailsCards {
         return ContactDetailsCards(

@@ -2,15 +2,17 @@ package com.android.contacts.ui.contactdetails.screen.contactdetailsviewmodel
 
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
-import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
+import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.tests.factory.contactCapabilities
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimSelection
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.every
@@ -119,6 +121,9 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
             viewModel.onAction(ContactDetailsAction.LinkedContactsClick)
             assertEquals(ContactDetailsEffect.ViewLinkedContacts(LOOKUP_URI), awaitItem())
 
+            viewModel.onAction(ContactDetailsAction.GroupClick(11L))
+            assertEquals(ContactDetailsEffect.ViewGroupMembers(11L), awaitItem())
+
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -177,7 +182,7 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
 
         verify {
             contactDetailsRepository.addLoadedContactToDefaultGroup(
-                ContactDetailsActivity::class.java
+                ContactDetailsActivity::class.java,
             )
         }
     }
@@ -200,7 +205,7 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         val viewModel = createViewModel().bindContact()
 
         viewModel.effects.test {
-            viewModel.onAction(ContactDetailsAction.CopyClick("Phone", "4155551212"))
+            viewModel.onAction(ContactDetailsAction.CopyClick(label = "Phone", text = "4155551212"))
 
             assertEquals(
                 ContactDetailsEffect.CopyToClipboard(label = "Phone", text = "4155551212"),
@@ -259,7 +264,12 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         val second = PhoneAccountId(componentName = "phone/Sim", id = "2")
 
         viewModel.onAction(
-            ContactDetailsAction.CallingSimPicked(mapOf(1L to first, 2L to second)),
+            ContactDetailsAction.CallingSimPicked(
+                listOf(
+                    CallingSimSelection(dataId = 1L, accountId = first),
+                    CallingSimSelection(dataId = 2L, accountId = second),
+                ),
+            ),
         )
         advanceUntilIdle()
 
@@ -329,6 +339,36 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
     }
 
     @Test
+    fun onAction_whenStarringFails_rollsBackThePendingStar() = runTest {
+        coEvery {
+            contactActionsRepository.setStarred(any(), any())
+        } throws SecurityException("not permitted")
+        val viewModel = loadedViewModel(contactDetails(isStarred = false))
+
+        viewModel.onAction(ContactDetailsAction.StarClick)
+        advanceUntilIdle()
+        viewModel.onAction(ContactDetailsAction.StarClick)
+        advanceUntilIdle()
+
+        coVerify(exactly = 2) { contactActionsRepository.setStarred(LOOKUP_URI, true) }
+    }
+
+    @Test
+    fun onAction_whenSendToVoicemailFails_rollsBackThePendingFlag() = runTest {
+        coEvery {
+            contactActionsRepository.setSendToVoicemail(any(), any())
+        } throws IllegalStateException("no writable raw contact")
+        val viewModel = loadedViewModel(contactDetails(isSendToVoicemail = false))
+
+        viewModel.onAction(ContactDetailsAction.SendToVoicemailClick)
+        advanceUntilIdle()
+        viewModel.onAction(ContactDetailsAction.SendToVoicemailClick)
+        advanceUntilIdle()
+
+        coVerify(exactly = 2) { contactActionsRepository.setSendToVoicemail(LOOKUP_URI, true) }
+    }
+
+    @Test
     fun onAction_withAJoinTargetPicked_joinsTheContacts() = runTest {
         val viewModel = loadedViewModel()
 
@@ -357,11 +397,11 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         }
     }
 
-    private companion object {
-        const val CONTACT_ID_UNDER_TEST = 7L
-    }
-
     private fun editContactEffect(): ContactDetailsEffect {
         return ContactDetailsEffect.EditContact(lookupUri = LOOKUP_URI, photoId = 0L)
+    }
+
+    private companion object {
+        const val CONTACT_ID_UNDER_TEST = 7L
     }
 }

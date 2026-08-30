@@ -81,6 +81,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUi
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
@@ -311,6 +312,7 @@ private fun ContactDetailsList(
             item(key = "groups") {
                 ContactDetailsGroups(
                     groups = content.groups,
+                    onGroupClick = { groupId -> onAction(Action.GroupClick(groupId)) },
                     contentPadding = itemPadding,
                     modifier = Modifier.padding(bottom = Tokens.groupChipSectionSpacing),
                 )
@@ -694,7 +696,10 @@ private fun ContactDetailsContentLoadingPreview() {
 
 private fun previewContent(): Content.Loaded {
     return Content.Loaded(
-        groups = persistentListOf("Coworkers", "Family"),
+        groups = persistentListOf(
+            ContactGroupUiModel(id = 1L, title = "Coworkers"),
+            ContactGroupUiModel(id = 2L, title = "Family"),
+        ),
         header = ContactHeaderUiModel(
             displayName = "Anna Smith",
             subtitles = persistentListOf("Annie", "Acme"),

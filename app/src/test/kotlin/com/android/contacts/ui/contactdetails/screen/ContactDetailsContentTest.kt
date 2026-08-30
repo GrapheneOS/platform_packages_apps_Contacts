@@ -51,6 +51,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPr
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactSettingIcon
@@ -140,6 +141,23 @@ internal class ContactDetailsContentTest {
 
         onNodeWithTag(CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG).assertIsDisplayed()
         onNodeWithTag(CONTACT_DETAILS_CONTACT_CARD_TEST_TAG).assertDoesNotExist()
+    }
+
+    @Test
+    fun whenAGroupChipIsClicked_reportsTheGroupId() = runComposeUiTest {
+        val actions = mutableListOf<Action>()
+        setContentWith(
+            state = State(
+                content = loadedContent(
+                    groups = persistentListOf(ContactGroupUiModel(id = 11L, title = "Coworkers")),
+                ),
+            ),
+            onAction = { action -> actions += action },
+        )
+
+        onNodeWithContentDescription("Coworkers").performClick()
+
+        assertEquals(listOf(Action.GroupClick(11L)), actions)
     }
 
     @Test
@@ -389,11 +407,12 @@ internal class ContactDetailsContentTest {
         isStarred: Boolean = false,
         quickActions: ImmutableList<ContactQuickActionUiModel> = QUICK_ACTIONS,
         connectedApps: ImmutableList<ContactConnectedAppUiModel> = persistentListOf(),
+        groups: ImmutableList<ContactGroupUiModel> = persistentListOf(),
     ): Content.Loaded {
         return Content.Loaded(
             callingSim = null,
             recentCalls = persistentListOf(),
-            groups = persistentListOf(),
+            groups = groups,
             header = contactHeaderUiModel(displayName = "Anna Smith"),
             quickActions = quickActions,
             contactCard = contactCard,
