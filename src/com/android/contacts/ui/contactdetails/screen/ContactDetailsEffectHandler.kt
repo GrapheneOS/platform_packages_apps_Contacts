@@ -4,21 +4,21 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentUris
 import android.content.Intent
 import android.icu.text.MessageFormat
 import android.media.RingtoneManager
-import android.provider.CallLog.Calls
-import android.telecom.TelecomManager
 import android.net.Uri
-import android.provider.CalendarContract
-import android.provider.ContactsContract.CommonDataKinds.Im
+import android.provider.CallLog.Calls
 import android.provider.ContactsContract.Contacts
+import android.provider.ContactsContract.Groups
 import android.provider.ContactsContract.Intents
+import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.R
 import com.android.contacts.activities.ContactSelectionActivity
+import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.dialog.CallSubjectDialog
@@ -28,6 +28,7 @@ import com.android.contacts.editor.EditorIntents
 import com.android.contacts.editor.EditorUiUtils
 import com.android.contacts.interactions.ContactDeletionInteraction
 import com.android.contacts.list.UiIntentActions
+import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.util.ImplicitIntentsUtil
 import java.util.Locale
@@ -40,10 +41,7 @@ internal class ContactDetailsEffectHandlerImpl(
     private val activity: Activity,
     private val clipboardManager: ClipboardManager,
     private val contactEntryIntentFactory: ContactEntryIntentFactory,
-    private val joinTargetLauncher: ActivityResultLauncher<Intent>,
-    private val ringtoneLauncher: ActivityResultLauncher<Intent>,
-    private val editorLauncher: ActivityResultLauncher<Intent>,
-    private val directoryCopyLauncher: ActivityResultLauncher<Intent>,
+    private val launchers: ContactDetailsLaunchers,
 ) : ContactDetailsEffectHandler {
 
     override fun handle(effect: Effect) {
@@ -55,6 +53,7 @@ internal class ContactDetailsEffectHandlerImpl(
             is Effect.ViewCallLog -> viewCallLog()
             is Effect.PickRingtone -> pickRingtone(effect.currentRingtone)
             is Effect.PickJoinTarget -> pickJoinTarget(effect.contactId)
+            is Effect.ViewGroupMembers -> viewGroupMembers(effect.groupId)
             is Effect.ViewLinkedContacts -> viewLinkedContacts(effect.lookupUri)
             is Effect.PerformEntryAction -> performEntryAction(effect.action)
             is Effect.CallWithNote -> callWithNote(effect)
@@ -70,11 +69,11 @@ internal class ContactDetailsEffectHandlerImpl(
             effect.photoId,
         )
 
-        editorLauncher.launch(intent)
+        launchers.editor.launch(intent)
     }
 
     private fun addDirectoryContact(prefill: DirectoryContactPrefill) {
-        directoryCopyLauncher.launch(directoryContactIntent(prefill))
+        launchers.directoryCopy.launch(directoryContactIntent(prefill))
     }
 
     private fun directoryContactIntent(prefill: DirectoryContactPrefill): Intent {
@@ -134,7 +133,7 @@ internal class ContactDetailsEffectHandlerImpl(
             .putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, ringtoneUri)
 
         try {
-            ringtoneLauncher.launch(intent)
+            launchers.ringtone.launch(intent)
         } catch (e: ActivityNotFoundException) {
             showToast(R.string.missing_app, e)
         }
@@ -145,7 +144,7 @@ internal class ContactDetailsEffectHandlerImpl(
             .setAction(UiIntentActions.PICK_JOIN_CONTACT_ACTION)
             .putExtra(UiIntentActions.TARGET_CONTACT_ID_EXTRA_KEY, contactId)
 
-        joinTargetLauncher.launch(intent)
+        launchers.joinTarget.launch(intent)
     }
 
     private fun viewCallLog() {
@@ -161,6 +160,14 @@ internal class ContactDetailsEffectHandlerImpl(
         }
     }
 
+    private fun viewGroupMembers(groupId: Long) {
+        val groupUri = ContentUris.withAppendedId(Groups.CONTENT_URI, groupId)
+        val intent = Intent(Intent.ACTION_VIEW, groupUri)
+            .setClass(activity, PeopleActivity::class.java)
+
+        activity.startActivity(intent)
+    }
+
     private fun viewLinkedContacts(lookupUri: Uri) {
         val intent = EditorIntents.createViewLinkedContactsIntent(
             activity,
@@ -168,7 +175,7 @@ internal class ContactDetailsEffectHandlerImpl(
             null,
         )
 
-        editorLauncher.launch(intent)
+        launchers.editor.launch(intent)
     }
 
     private fun callWithNote(effect: Effect.CallWithNote) {

@@ -21,15 +21,17 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_GROUPS_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.ContactGroupUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 
 @Composable
 internal fun ContactDetailsGroups(
-    groups: ImmutableList<String>,
+    groups: ImmutableList<ContactGroupUiModel>,
+    onGroupClick: (Long) -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
@@ -42,8 +44,8 @@ internal fun ContactDetailsGroups(
     ) {
         groups.forEach { group ->
             SuggestionChip(
-                onClick = {},
-                modifier = Modifier.clearAndSetSemantics { contentDescription = group },
+                onClick = { onGroupClick(group.id) },
+                modifier = Modifier.clearAndSetSemantics { contentDescription = group.title },
                 colors = SuggestionChipDefaults.suggestionChipColors(
                     labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     iconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -57,7 +59,7 @@ internal fun ContactDetailsGroups(
                 },
                 label = {
                     Text(
-                        text = group,
+                        text = group.title,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -72,7 +74,12 @@ internal fun ContactDetailsGroups(
 private fun ContactDetailsGroupsPreview() {
     ContactsPreviewColumn {
         ContactDetailsGroups(
-            groups = persistentListOf("Coworkers", "Family", "Friends"),
+            groups = persistentListOf(
+                ContactGroupUiModel(id = 1L, title = "Coworkers"),
+                ContactGroupUiModel(id = 2L, title = "Family"),
+                ContactGroupUiModel(id = 3L, title = "Friends"),
+            ),
+            onGroupClick = {},
             contentPadding = PaddingValues(),
         )
     }

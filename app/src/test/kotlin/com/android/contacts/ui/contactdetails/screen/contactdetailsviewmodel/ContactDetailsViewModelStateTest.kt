@@ -6,7 +6,7 @@ import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity
-import com.android.contacts.ui.contactdetails.screen.ContactDetailsViewModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsArguments
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent
 import io.mockk.every
@@ -35,19 +35,7 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
     @Test
     fun uiState_whenTheArgumentsSurviveProcessDeath_loadsWithoutRebinding() = runTest {
         createViewModel().bindContact()
-        val restored = ContactDetailsViewModel(
-            savedStateHandle = savedStateHandle,
-            contactDetailsRepository = contactDetailsRepository,
-            contactActionsRepository = contactActionsRepository,
-            buildContactDetailsCards = buildContactDetailsCards,
-            getContactDetailsMenu = getContactDetailsMenu,
-            getContactQuickActions = getContactQuickActions,
-            getRecentCalls = getRecentCalls,
-            getCallingSimOptions = getCallingSimOptions,
-            contactDetailsUiStateMapper = contactDetailsUiStateMapper,
-            contactShortcutRepository = contactShortcutRepository,
-            displaySettingsRepository = displaySettingsRepository,
-        )
+        val restored = createViewModel()
 
         restored.uiState.test {
             awaitItem()
@@ -102,9 +90,11 @@ internal class ContactDetailsViewModelStateTest : BaseContactDetailsViewModelTes
     fun uiState_whenTheContactLoads_buildsTheCardsForThePrioritizedMimeType() = runTest {
         val viewModel = createViewModel()
         viewModel.bind(
-            lookupUri = LOOKUP_URI,
-            excludedMimeTypes = setOf("vnd.example/thing"),
-            prioritizedMimeType = "vnd.example/priority",
+            arguments = ContactDetailsArguments(
+                lookupUri = LOOKUP_URI,
+                excludedMimeTypes = setOf("vnd.example/thing"),
+                prioritizedMimeType = "vnd.example/priority",
+            ),
             callbackActivity = ContactDetailsActivity::class.java,
         )
         val details = contactDetails()

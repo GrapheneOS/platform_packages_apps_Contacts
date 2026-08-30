@@ -14,7 +14,7 @@ internal sealed interface ContactDetailsContent {
     data class Loaded(
         val header: ContactHeaderUiModel,
         val quickActions: ImmutableList<ContactQuickActionUiModel>,
-        val groups: ImmutableList<String>,
+        val groups: ImmutableList<ContactGroupUiModel>,
         val contactCard: ImmutableList<ContactEntryGroupUiModel>,
         val connectedApps: ImmutableList<ContactConnectedAppUiModel>,
         val notes: ImmutableList<ContactEntryGroupUiModel>,

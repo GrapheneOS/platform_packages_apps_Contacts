@@ -14,6 +14,7 @@ import androidx.core.net.toUri
 import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
+import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.data.contactdetails.model.ContactPhoto
@@ -84,7 +85,7 @@ internal class ContactDetailsMapperImpl @Inject constructor(
         )
     }
 
-    private fun mapGroups(contact: Contact): List<String> {
+    private fun mapGroups(contact: Contact): List<ContactGroup> {
         val titles = contact.groupMetaData
             .orEmpty()
             .filterNot { group -> group.favorites || group.defaultGroup }
@@ -96,7 +97,19 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             .filterIsInstance<GroupMembershipDataItem>()
             .mapNotNull { dataItem -> dataItem.groupRowId }
             .distinct()
-            .mapNotNull { groupId -> titles[groupId]?.trim()?.takeIf(String::isNotEmpty) }
+            .mapNotNull { groupId -> toContactGroup(groupId, titles[groupId]) }
+    }
+
+    private fun toContactGroup(
+        groupId: Long,
+        title: String?,
+    ): ContactGroup? {
+        val groupTitle = title?.trim()?.takeIf(String::isNotEmpty) ?: return null
+
+        return ContactGroup(
+            id = groupId,
+            title = groupTitle,
+        )
     }
 
     private fun mapDisplayNameSource(displayNameSource: Int): ContactDisplayNameSource {

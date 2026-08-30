@@ -33,6 +33,10 @@ internal sealed interface ContactDetailsEffect {
         val contactId: Long,
     ) : ContactDetailsEffect
 
+    data class ViewGroupMembers(
+        val groupId: Long,
+    ) : ContactDetailsEffect
+
     data class ViewLinkedContacts(
         val lookupUri: Uri,
     ) : ContactDetailsEffect
