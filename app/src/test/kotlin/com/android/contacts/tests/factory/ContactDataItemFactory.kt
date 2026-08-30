@@ -112,8 +112,6 @@ internal fun im(
     protocol: Int = 0,
     customProtocol: String? = null,
     protocolLabel: String? = "AIM",
-    isCustomProtocol: Boolean = false,
-    chatCapability: Int = 0,
 ): ContactDataItem.Im {
     return ContactDataItem.Im(
         id = id,
@@ -126,8 +124,6 @@ internal fun im(
         protocol = protocol,
         customProtocol = customProtocol,
         protocolLabel = protocolLabel,
-        isCustomProtocol = isCustomProtocol,
-        chatCapability = chatCapability,
     )
 }
 
@@ -266,7 +262,7 @@ internal fun custom(
 internal fun structuredName(
     id: Long = 1L,
     rawContactId: Long = 1L,
-    givenName: String? = "Alex",
+    displayName: String? = "Alex",
     isSuperPrimary: Boolean = false,
 ): ContactDataItem.StructuredName {
     return ContactDataItem.StructuredName(
@@ -275,8 +271,7 @@ internal fun structuredName(
         mimeType = StructuredName.CONTENT_ITEM_TYPE,
         isPrimary = false,
         isSuperPrimary = isSuperPrimary,
-        displayString = givenName,
-        givenName = givenName,
+        displayString = displayName,
     )
 }
 

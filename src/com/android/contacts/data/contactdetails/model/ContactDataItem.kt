@@ -69,8 +69,6 @@ internal sealed interface ContactDataItem {
         val protocol: Int,
         val customProtocol: String?,
         val protocolLabel: String?,
-        val isCustomProtocol: Boolean,
-        val chatCapability: Int,
     ) : ContactDataItem
 
     data class Organization(
@@ -158,7 +156,6 @@ internal sealed interface ContactDataItem {
         override val isPrimary: Boolean,
         override val isSuperPrimary: Boolean,
         override val displayString: String?,
-        val givenName: String?,
     ) : ContactDataItem
 
     data class Generic(

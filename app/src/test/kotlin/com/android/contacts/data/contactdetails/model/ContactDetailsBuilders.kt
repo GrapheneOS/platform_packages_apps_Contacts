@@ -1,7 +1,8 @@
 package com.android.contacts.data.contactdetails.model
 
-import com.android.contacts.data.contactdetails.model.ContactGroup
 import android.net.Uri
+import com.android.contacts.data.contactdetails.model.ContactAccount
+import com.android.contacts.data.contactdetails.model.ContactGroup
 
 internal fun contactCapabilities(
     isDirectoryEntry: Boolean = false,
@@ -37,6 +38,7 @@ internal fun contactDetails(
     customRingtone: String? = null,
     customRingtoneTitle: String? = null,
     groups: List<ContactGroup> = emptyList(),
+    accounts: List<ContactAccount> = emptyList(),
     dataItems: List<ContactDataItem> = emptyList(),
     capabilities: ContactCapabilities = contactCapabilities(),
 ): ContactDetails {
@@ -56,6 +58,7 @@ internal fun contactDetails(
         customRingtone = customRingtone,
         customRingtoneTitle = customRingtoneTitle,
         groups = groups,
+        accounts = accounts,
         dataItems = dataItems,
         capabilities = capabilities,
     )

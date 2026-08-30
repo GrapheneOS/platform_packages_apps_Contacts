@@ -44,10 +44,6 @@ public class StructuredNameDataItem extends DataItem {
         getContentValues().put(StructuredName.DISPLAY_NAME, name);
     }
 
-    public String getGivenName() {
-        return getContentValues().getAsString(StructuredName.GIVEN_NAME);
-    }
-
     public String getFamilyName() {
         return getContentValues().getAsString(StructuredName.FAMILY_NAME);
     }
