@@ -29,19 +29,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
 import com.android.contacts.data.telecom.model.PhoneAccountId
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.CALLING_SIM_DIALOG_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimAccountUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimNumberUiModel
+import com.android.contacts.ui.contactdetails.screen.model.CallingSimSelection
 import com.android.contacts.ui.contactdetails.screen.model.CallingSimUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import kotlinx.collections.immutable.persistentListOf
-import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ContactDetailsCallingSimDialog(
     callingSim: CallingSimUiModel,
-    onConfirm: (Map<Long, PhoneAccountId?>) -> Unit,
+    onConfirm: (List<CallingSimSelection>) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,7 +61,7 @@ internal fun ContactDetailsCallingSimDialog(
 @Composable
 private fun CallingSimContent(
     callingSim: CallingSimUiModel,
-    onConfirm: (Map<Long, PhoneAccountId?>) -> Unit,
+    onConfirm: (List<CallingSimSelection>) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -242,9 +243,12 @@ private fun CallingSimButtons(
 private fun pickedSelections(
     callingSim: CallingSimUiModel,
     selections: Map<Long, PhoneAccountId>,
-): Map<Long, PhoneAccountId?> {
-    return callingSim.numbers.associate { number ->
-        number.dataId to selections[number.dataId]
+): List<CallingSimSelection> {
+    return callingSim.numbers.map { number ->
+        CallingSimSelection(
+            dataId = number.dataId,
+            accountId = selections[number.dataId],
+        )
     }
 }
 
