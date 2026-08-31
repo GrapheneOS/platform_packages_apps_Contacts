@@ -6,9 +6,11 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Relation
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.set
+import com.android.contacts.domain.debug.model.DebugDataConstants
 import com.android.contacts.domain.debug.model.TestContact
 import com.android.contacts.domain.debug.model.TestContact.ValueWithType
 import java.io.ByteArrayOutputStream
+import java.time.LocalDate
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.random.Random
@@ -22,32 +24,24 @@ internal class GenerateTestContactImpl @Inject constructor(
     private val random: Random,
 ) : GenerateTestContact {
     override fun invoke(): TestContact {
-        val givenName = NAMES.random(random)
-        val middleName = if (shouldAddExtraProperty()) NAMES.random(random) else null
-        val familyName = if (shouldAddExtraProperty()) SURNAMES.random(random) else null
-        val displayName = if (shouldAddExtraProperty()) {
-            listOfNotNull(
-                givenName,
-                middleName,
-                familyName,
-            ).joinToString(" ")
-        } else {
-            null
-        }
+        val name = randomName()
+        val identity = if (shouldAddExtraProperty()) randomIdentity(name.given) else null
 
         return TestContact(
             phones = rangeUpTo(MAX_PHONES_COUNT).map { randomPhone() },
-            givenName = givenName,
-            middleName = middleName,
-            familyName = familyName,
-            displayName = displayName,
+            name = name,
             nickname = if (shouldAddExtraProperty()) randomNickname() else null,
-            emails = rangeUpTo(MAX_EMAILS_COUNT).map { randomEmail(givenName) },
-            city = if (shouldAddExtraProperty()) CITIES.random(random) else null,
-            country = if (shouldAddExtraProperty()) COUNTRIES.random(random) else null,
+            emails = rangeUpTo(MAX_EMAILS_COUNT).map { randomEmail(name.given) },
+            postal = if (shouldAddExtraProperty()) randomPostal() else null,
             organization = if (shouldAddExtraProperty()) SURNAMES.random(random) else null,
             relation = if (shouldAddExtraProperty()) RELATIONS.random(random) else null,
-            website = if (shouldAddExtraProperty()) randomWebsite(givenName) else null,
+            website = if (shouldAddExtraProperty()) randomWebsite(name.given) else null,
+            event = if (shouldAddExtraProperty()) randomEvent() else null,
+            im = if (shouldAddExtraProperty()) randomIm(name.given) else null,
+            sipAddress = if (shouldAddExtraProperty()) randomSipAddress(name.given) else null,
+            identityValue = identity?.first,
+            identityNamespace = identity?.second,
+            note = if (shouldAddExtraProperty()) randomNote() else null,
             photo = if (shouldAddExtraProperty()) randomPhoto() else null,
         )
     }
@@ -60,32 +54,106 @@ internal class GenerateTestContactImpl @Inject constructor(
         return random.nextBoolean()
     }
 
-    private fun randomPhone(): ValueWithType {
-        val number = TestContact.PHONE_PREFIX +
+    private fun randomName(): TestContact.Name {
+        val givenName = NAMES.random(random)
+        val middleName = if (shouldAddExtraProperty()) NAMES.random(random) else null
+        val familyName = if (shouldAddExtraProperty()) SURNAMES.random(random) else null
+        val displayName = if (shouldAddExtraProperty()) {
+            listOfNotNull(
+                givenName,
+                middleName,
+                familyName,
+            ).joinToString(" ")
+        } else {
+            null
+        }
+        return TestContact.Name(
+            given = givenName,
+            middle = middleName,
+            family = familyName,
+            display = displayName,
+        )
+    }
+
+    private fun randomPhone(): ValueWithType<String> {
+        val number = DebugDataConstants.PHONE_PREFIX +
             random.nextInt(999_999).toString().padStart(6, '0')
         val type = PHONE_TYPES.random(random)
         return ValueWithType(number, type)
     }
 
-    private fun randomNickname(): ValueWithType {
+    private fun randomNickname(): ValueWithType<String> {
         return ValueWithType(
             (NAMES + SURNAMES).random(random),
             NICKNAME_TYPES.random(random),
         )
     }
 
-    private fun randomEmail(name: String): ValueWithType {
+    private fun randomEmail(name: String): ValueWithType<String> {
         return ValueWithType(
-            "${name.lowercase()}@${DOMAINS.random(random)}",
+            randomEmailValue(name),
             EMAIL_TYPES.random(random),
         )
     }
 
-    private fun randomWebsite(name: String): ValueWithType {
+    private fun randomEmailValue(name: String): String {
+        return "${name.lowercase()}@${DOMAINS.random(random)}"
+    }
+
+    private fun randomPostal(): ValueWithType<TestContact.Postal> {
+        return ValueWithType(
+            TestContact.Postal(
+                city = CITIES.random(random),
+                country = COUNTRIES.random(random),
+            ),
+            POSTAL_TYPES.random(random),
+        )
+    }
+
+    private fun randomWebsite(name: String): ValueWithType<String> {
         return ValueWithType(
             "https://${name.lowercase()}.${DOMAINS.random(random)}",
             WEBSITE_TYPES.random(random),
         )
+    }
+
+    private fun randomEvent(): ValueWithType<String> {
+        val daysToAdd = random.nextLong(-EVENT_DAYS_RANGE, EVENT_DAYS_RANGE)
+        return ValueWithType(
+            LocalDate.now().plusDays(daysToAdd).toString(),
+            EVENT_TYPES.random(random),
+        )
+    }
+
+    private fun randomIm(name: String): ValueWithType<TestContact.Im> {
+        return ValueWithType(
+            TestContact.Im(
+                data = name.lowercase(),
+                protocol = IM_PROTOCOLS.random(random),
+            ),
+            IM_TYPES.random(random),
+        )
+    }
+
+    private fun randomSipAddress(name: String): ValueWithType<String> {
+        return ValueWithType(
+            randomEmailValue(name),
+            SIP_ADDRESS_TYPES.random(random),
+        )
+    }
+
+    private fun randomIdentity(name: String): Pair<String, String> {
+        val value = randomEmailValue(name)
+        val namespace = DOMAINS.random(random).split(".").reversed().joinToString(".")
+        return value to namespace
+    }
+
+    private fun randomNote(): String {
+        val words = (NAMES + SURNAMES + CITIES + COUNTRIES)
+        return words
+            .shuffled()
+            .take(random.nextInt(1, NOTE_MAX_WORDS))
+            .joinToString(" ")
     }
 
     private fun randomPhoto(): TestContact.Photo {
@@ -112,35 +180,41 @@ internal class GenerateTestContactImpl @Inject constructor(
     companion object {
         private const val MAX_PHONES_COUNT = 3
         private const val MAX_EMAILS_COUNT = 3
+        private const val EVENT_DAYS_RANGE = 1000L
+        private const val NOTE_MAX_WORDS = 24
         private const val PHOTO_SIZE = 3
         private val COLOR_RANGE = 0..355
         private const val BITMAP_COMPRESS_QUALITY = 100 // percentage
 
         private val NAMES = listOf(
-            "Alder", "Alf", "Alheri", "Alket", "Amadioha", "Amēlija", "Anastasiya", "Anatolijs",
-            "Angie", "Arun", "Ashur-Bani-Apli", "Carola", "Chimwemwe", "Ernst", "Euthymios",
-            "Gerhild", "Hanae", "Irnerius", "Jimmu", "Kannon", "Khazhak", "Lucas", "Lughaidh",
-            "Margaux", "Marilène", "Miko", "Milagrosa", "Miska", "Mislav", "Nerijus", "Nina",
-            "Phlegon", "Pietronella", "Prosper", "Pryderi", "Ramakanta", "Renatas", "Roland",
-            "Royston", "Saulos", "Severino", "Shaylyn", "Siro", "Slobodan", "Sokrates", "Stepan",
-            "Terah", "Toni", "Varlam", "Victor", "Vikrama", "Vitold", "Waldeburg", "Zhasulan",
-            "Čestislav",
+            "Alder", "Alf", "Alheri", "Alket", "Amadioha", "Amram", "Amália", "Amēlija",
+            "Anastasiya", "Anatolijs", "Angie", "Anke", "Apli", "Apollodoros", "Arun", "Ashur",
+            "Bani", "Bernardo", "Carola", "Chimwemwe", "Christiaan", "Dorinda", "Ernst",
+            "Euthymios", "Fawzi", "Gerhild", "Guy", "Hanae", "Hopcyn", "Hoshiko", "Hrothgar",
+            "Ina", "Irnerius", "Iulian", "Jeyden", "Jimmu", "Jonatan", "Justýna", "Jón", "Kamil",
+            "Kannon", "Khazhak", "Kyrilla", "Lucas", "Lughaidh", "Manawydan", "Margaux",
+            "Marilène", "Melaina", "Mihăiță", "Miko", "Milagrosa", "Miska", "Mislav", "Natalina",
+            "Nerijus", "Nevaeh", "Nina", "Nisa", "Phlegon", "Pietronella", "Prosper", "Pryderi",
+            "Rama", "Ramakanta", "Renatas", "Roland", "Royston", "Rudi", "Saulos", "Severino",
+            "Sharmila", "Shaylyn", "Signý", "Silvia", "Siro", "Slobodan", "Sokrates", "Sperantia",
+            "Stepan", "Stephani", "Suero", "Terah", "Tobias", "Toni", "Varlam", "Victor",
+            "Vikrama", "Vitold", "Waldeburg", "Yehoshafat", "Yisrael", "Yuri", "Zhasulan",
+            "Íñigo", "Čestislav",
         )
         private val SURNAMES = listOf(
-            "Abrams", "Abrams", "Ahmad", "Ayala", "Baart", "Bager", "Bakó", "Beckers", "Benoit",
-            "Charbonneau", "Clemente", "Dalí", "Ergeshov", "Frank", "Geary", "Gentile", "Georgiev",
-            "Giannaki", "Hendrix", "Hepburn", "Hidayat", "Hill", "Hilton", "Honchar", "Hussain",
-            "Jansens", "Kartal", "Knez", "Lauwens", "Macháňová", "McGowan", "McKellar", "McNab",
-            "Morrish", "Musaev", "Novak", "Pawlitzki", "Picasso", "Protz", "Rana", "Samson",
-            "Sappington", "Schäfer", "Souza", "Stankić", "Stauss", "Szymańska", "Tanguy",
-            "Thompson", "Van Aarle", "Van der Laar", "Warszawska", "Yılmaz", "Ó Fionnagáin",
-            "Čížiková",
-        )
-        private val NICKNAME_TYPES = listOf(
-            ContactsContract.CommonDataKinds.Nickname.TYPE_DEFAULT,
-            ContactsContract.CommonDataKinds.Nickname.TYPE_OTHER_NAME,
-            ContactsContract.CommonDataKinds.Nickname.TYPE_MAIDEN_NAME,
-            null,
+            "Aarle", "Abrams", "Agnelli", "Ahmad", "Aiza", "Albanesi", "Andrzejewska", "Armati",
+            "Ayala", "Baart", "Bager", "Bakó", "Bartoš", "Beckers", "Benoit", "Bower", "Brierley",
+            "Brown", "Charbonneau", "Chilikova", "Clemente", "Cochran", "Császár", "Dalí",
+            "Demetriou", "Ergeshov", "Fosse", "Frank", "Geary", "Gentile", "Georgiev", "Giannaki",
+            "Glas", "Habich", "Halmi", "Hassan", "Hendrix", "Hepburn", "Hidayat", "Hill", "Hilton",
+            "Honchar", "Horvatinčić", "Hussain", "Ibragimov", "Jabłońska", "Jansens", "Kartal",
+            "Knez", "Koppel", "Langley", "Lauwens", "Macháňová", "Maekawa", "McCrae", "McGowan",
+            "McKellar", "McNab", "Medeiros", "Moffett", "Morrish", "Musaev", "Niemec", "Novak",
+            "Novikov", "Oppenheimer", "Padovan", "Parrish", "Pawlitzki", "Picasso", "Protz",
+            "Putnam", "Rana", "Samson", "Sappington", "Schäfer", "Sheridan", "Silva", "Souza",
+            "Spanos", "Stankić", "Stauss", "Steele", "Sydorenko", "Szymańska", "Tanguy",
+            "Thompson", "Toloni", "Tähtinen", "Underwood", "Van Aarle", "Van der Laar",
+            "Warszawska", "Wyrzyk", "Yılmaz", "Ó Fionnagáin", "Čížiková", "Žagar",
         )
         private val PHONE_TYPES = listOf(
             ContactsContract.CommonDataKinds.Phone.TYPE_HOME,
@@ -163,6 +237,14 @@ internal class GenerateTestContactImpl @Inject constructor(
             ContactsContract.CommonDataKinds.Phone.TYPE_WORK_PAGER,
             ContactsContract.CommonDataKinds.Phone.TYPE_ASSISTANT,
             ContactsContract.CommonDataKinds.Phone.TYPE_MMS,
+            ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM,
+            null,
+        )
+        private val NICKNAME_TYPES = listOf(
+            ContactsContract.CommonDataKinds.Nickname.TYPE_DEFAULT,
+            ContactsContract.CommonDataKinds.Nickname.TYPE_OTHER_NAME,
+            ContactsContract.CommonDataKinds.Nickname.TYPE_MAIDEN_NAME,
+            ContactsContract.CommonDataKinds.Nickname.TYPE_CUSTOM,
             null,
         )
         private val DOMAINS = listOf(
@@ -175,6 +257,14 @@ internal class GenerateTestContactImpl @Inject constructor(
             ContactsContract.CommonDataKinds.Email.TYPE_WORK,
             ContactsContract.CommonDataKinds.Email.TYPE_OTHER,
             ContactsContract.CommonDataKinds.Email.TYPE_MOBILE,
+            ContactsContract.CommonDataKinds.Email.TYPE_CUSTOM,
+            null,
+        )
+        private val POSTAL_TYPES = listOf(
+            ContactsContract.CommonDataKinds.StructuredPostal.TYPE_HOME,
+            ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK,
+            ContactsContract.CommonDataKinds.StructuredPostal.TYPE_OTHER,
+            ContactsContract.CommonDataKinds.StructuredPostal.TYPE_CUSTOM,
             null,
         )
         private val CITIES = listOf(
@@ -185,8 +275,8 @@ internal class GenerateTestContactImpl @Inject constructor(
             "Dhaka", "Dublin", "Fakaofo", "Fiji", "Godthab", "Guam", "Guatemala", "Guyana",
             "Halifax", "Harare", "Helsinki", "Hobart", "Hong Kong", "Honolulu", "Indianapolis",
             "Irkutsk", "Istanbul", "Jakarta", "Jerusalem", "Johannesburg", "Juneau", "Kabul",
-            "Kamchatka", "Karachi", "Kathmandu", "Kiev", "Kolkata", "Krasnoyarsk", "Kuala_Lumpur",
-            "Kuwait", "La_Paz", "Lima", "Lisbon", "Ljubljana", "London", "Los_Angeles", "Madrid",
+            "Kamchatka", "Karachi", "Kathmandu", "Kiev", "Kolkata", "Krasnoyarsk", "Kuala Lumpur",
+            "Kuwait", "La Paz", "Lima", "Lisbon", "Ljubljana", "London", "Los Angeles", "Madrid",
             "Magadan", "Majuro", "Mazatlan", "Melbourne", "Mexico City", "Minsk", "Monrovia",
             "Monterrey", "Moscow", "Muscat", "Nairobi", "New York", "Noumea", "Novosibirsk",
             "Pago Pago", "Paris", "Perth", "Phoenix", "Port Moresby", "Prague", "Rangoon",
@@ -216,6 +306,7 @@ internal class GenerateTestContactImpl @Inject constructor(
             ValueWithType("Relative", Relation.TYPE_RELATIVE),
             ValueWithType("Sister", Relation.TYPE_SISTER),
             ValueWithType("Spouse", Relation.TYPE_SPOUSE),
+            ValueWithType("Developer", Relation.TYPE_CUSTOM),
         )
         private val WEBSITE_TYPES = listOf(
             ContactsContract.CommonDataKinds.Website.TYPE_HOMEPAGE,
@@ -225,6 +316,28 @@ internal class GenerateTestContactImpl @Inject constructor(
             ContactsContract.CommonDataKinds.Website.TYPE_WORK,
             ContactsContract.CommonDataKinds.Website.TYPE_FTP,
             ContactsContract.CommonDataKinds.Website.TYPE_OTHER,
+            ContactsContract.CommonDataKinds.Website.TYPE_CUSTOM,
+        )
+        private val EVENT_TYPES = listOf(
+            ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY,
+            ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY,
+            ContactsContract.CommonDataKinds.Event.TYPE_OTHER,
+            ContactsContract.CommonDataKinds.Event.TYPE_CUSTOM,
+        )
+        private val IM_TYPES = listOf(
+            ContactsContract.CommonDataKinds.Im.TYPE_HOME,
+            ContactsContract.CommonDataKinds.Im.TYPE_WORK,
+            ContactsContract.CommonDataKinds.Im.TYPE_OTHER,
+            ContactsContract.CommonDataKinds.Im.TYPE_CUSTOM,
+        )
+        private val IM_PROTOCOLS = listOf(
+            "AIM", "MSN", "Yahoo", "Skype", "QQ", "Google Talk", "ICQ", "Jabber", "Netmeeting",
+        )
+        private val SIP_ADDRESS_TYPES = listOf(
+            ContactsContract.CommonDataKinds.SipAddress.TYPE_HOME,
+            ContactsContract.CommonDataKinds.SipAddress.TYPE_WORK,
+            ContactsContract.CommonDataKinds.SipAddress.TYPE_OTHER,
+            ContactsContract.CommonDataKinds.SipAddress.TYPE_CUSTOM,
         )
     }
 }

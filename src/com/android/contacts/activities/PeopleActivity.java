@@ -63,7 +63,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
-import com.android.contacts.compat.CompatUtils;
 import com.android.contacts.domain.accounts.model.AccountFilter;
 import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.drawer.DrawerFragment;

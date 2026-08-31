@@ -1,37 +1,46 @@
 package com.android.contacts.tests.factory
 
+import com.android.contacts.domain.debug.model.DebugDataConstants
 import com.android.contacts.domain.debug.model.TestContact
+import com.android.contacts.domain.debug.model.TestContact.Im
+import com.android.contacts.domain.debug.model.TestContact.Name
+import com.android.contacts.domain.debug.model.TestContact.Postal
+import com.android.contacts.domain.debug.model.TestContact.ValueWithType
 
 internal object TestContactFactory {
     fun build(
-        phones: List<TestContact.ValueWithType> = listOf(
-            TestContact.ValueWithType(value = TestContact.PHONE_PREFIX + "123456"),
+        phones: List<ValueWithType<String>> = listOf(
+            ValueWithType(value = DebugDataConstants.PHONE_PREFIX + "123456"),
         ),
-        givenName: String = "Name",
-        familyName: String? = null,
-        middleName: String? = null,
-        displayName: String? = null,
-        nickname: TestContact.ValueWithType? = null,
-        emails: List<TestContact.ValueWithType> = emptyList(),
-        city: String? = null,
-        country: String? = null,
+        name: Name = Name(given = "Name"),
+        nickname: ValueWithType<String>? = null,
+        emails: List<ValueWithType<String>> = emptyList(),
+        postal: ValueWithType<Postal>? = null,
         organization: String? = null,
-        relation: TestContact.ValueWithType? = null,
-        website: TestContact.ValueWithType? = null,
+        relation: ValueWithType<String>? = null,
+        website: ValueWithType<String>? = null,
+        event: ValueWithType<String>? = null,
+        im: ValueWithType<Im>? = null,
+        sipAddress: ValueWithType<String>? = null,
+        identityValue: String? = null,
+        identityNamespace: String? = null,
+        note: String? = null,
         photo: TestContact.Photo? = null,
     ) = TestContact(
         phones = phones,
-        givenName = givenName,
-        familyName = familyName,
-        middleName = middleName,
-        displayName = displayName,
+        name = name,
         nickname = nickname,
         emails = emails,
-        city = city,
-        country = country,
+        postal = postal,
         organization = organization,
         relation = relation,
         website = website,
+        event = event,
+        im = im,
+        sipAddress = sipAddress,
+        identityValue = identityValue,
+        identityNamespace = identityNamespace,
+        note = note,
         photo = photo,
     )
 }

@@ -16,4 +16,12 @@ internal class DebugProvidesModule {
     fun providesSeedTestContactsCount(): Int {
         return 100
     }
+
+    @Provides
+    @Reusable
+    @SeedTestGroupsCount
+    @Suppress("detekt:FunctionOnlyReturningConstant")
+    fun providesSeedTestGroupsCount(): Int {
+        return 5
+    }
 }
