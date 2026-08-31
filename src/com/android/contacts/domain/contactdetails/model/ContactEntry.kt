@@ -5,6 +5,7 @@ internal data class ContactEntry(
     val mimeType: String?,
     val kind: ContactEntryKind,
     val isSuperPrimary: Boolean,
+    val isDefault: Boolean,
     val header: ContactEntryText?,
     val subHeader: ContactEntryText?,
     val text: String?,
