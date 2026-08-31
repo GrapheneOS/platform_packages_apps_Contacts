@@ -6,7 +6,7 @@ import com.android.contacts.domain.contactdetails.model.CONTACT_DATA_ITEM_PRIORI
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactQuickAction
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType
-import com.android.contacts.domain.util.CanVideoCall
+import com.android.contacts.domain.telecom.usecase.CanVideoCall
 import javax.inject.Inject
 
 internal fun interface GetContactQuickActions {
@@ -25,12 +25,12 @@ internal class GetContactQuickActionsImpl @Inject constructor(
 
         return listOf(
             quickAction(
-                ContactQuickActionType.CALL,
-                number?.let(ContactEntryAction::Call),
+                type = ContactQuickActionType.CALL,
+                action = number?.let { value -> ContactEntryAction.Call(value) },
             ),
             quickAction(
-                ContactQuickActionType.MESSAGE,
-                number?.let(ContactEntryAction::Sms),
+                type = ContactQuickActionType.MESSAGE,
+                action = number?.let { value -> ContactEntryAction.Sms(value) },
             ),
             quickAction(
                 type = ContactQuickActionType.VIDEO_CALL,
@@ -38,7 +38,7 @@ internal class GetContactQuickActionsImpl @Inject constructor(
             ),
             quickAction(
                 type = ContactQuickActionType.EMAIL,
-                action = address?.let(ContactEntryAction::SendEmail),
+                action = address?.let { value -> ContactEntryAction.SendEmail(value) },
             ),
         )
     }

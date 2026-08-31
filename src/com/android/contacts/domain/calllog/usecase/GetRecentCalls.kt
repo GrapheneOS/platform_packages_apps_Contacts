@@ -5,8 +5,8 @@ import com.android.contacts.data.calllog.repository.CallLogRepository
 import com.android.contacts.data.contactdetails.model.ContactDataItem
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.permissions.repository.PermissionsRepository
+import com.android.contacts.data.telecom.source.IsDeviceVoiceCapable
 import com.android.contacts.domain.calllog.model.RecentCall
-import com.android.contacts.domain.util.IsDeviceVoiceCapable
 import javax.inject.Inject
 
 internal fun interface GetRecentCalls {
@@ -27,7 +27,10 @@ internal class GetRecentCallsImpl @Inject constructor(
         val labelsByNumber = labelsByNumber(details)
 
         return recentEntries(labelsByNumber.keys).map { entry ->
-            toRecentCall(entry, labelsByNumber[entry.number])
+            toRecentCall(
+                entry = entry,
+                numberLabel = labelsByNumber[entry.number],
+            )
         }
     }
 
@@ -50,8 +53,8 @@ internal class GetRecentCallsImpl @Inject constructor(
         }
 
         return entries
-            .distinctBy(CallLogEntry::date)
-            .sortedByDescending(CallLogEntry::date)
+            .distinctBy { entry -> entry.date }
+            .sortedByDescending { entry -> entry.date }
             .take(RECENT_CALL_LIMIT)
     }
 

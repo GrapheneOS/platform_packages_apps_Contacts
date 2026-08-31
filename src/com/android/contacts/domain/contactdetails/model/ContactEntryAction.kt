@@ -10,6 +10,10 @@ internal sealed interface ContactEntryAction {
         val number: String,
     ) : ContactEntryAction
 
+    data class EditNumberBeforeCall(
+        val number: String,
+    ) : ContactEntryAction
+
     data class VideoCall(
         val number: String,
     ) : ContactEntryAction
