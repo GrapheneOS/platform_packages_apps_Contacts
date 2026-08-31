@@ -1,16 +1,12 @@
 package com.android.contacts.domain.debug
 
-import android.content.ContentProviderOperation
-import android.content.ContentProviderResult
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.provider.ContactsContract
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountFilter
-import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.debug.usecase.ClearSeededTestData
+import com.android.contacts.domain.debug.usecase.CreateTestGroups
 import com.android.contacts.domain.debug.usecase.GenerateTestContact
+import com.android.contacts.domain.debug.usecase.SaveTestContact
 import com.android.contacts.domain.debug.usecase.SeedTestData
 import com.android.contacts.domain.debug.usecase.SeedTestDataImpl
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
@@ -19,8 +15,7 @@ import com.android.contacts.tests.factory.TestContactFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+import kotlin.random.Random
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -42,14 +37,10 @@ class SeedTestDataTest {
     private val generateTestContact = mockk<GenerateTestContact>(relaxed = true) {
         every { this@mockk.invoke() } returns TestContactFactory.build()
     }
-    private val operationsList = mutableListOf<List<ContentProviderOperation>>()
-    private val contentResolver = mockk<ContentResolver>(relaxed = true) {
-        every { this@mockk.applyBatch(any(), any()) } answers {
-            val operations = secondArg<ArrayList<ContentProviderOperation>>()
-            operationsList.add(operations)
-            emptyArray()
-        }
+    private val createTestGroups = mockk<CreateTestGroups>(relaxed = true) {
+        every { this@mockk.invoke(any(), any()) } returns emptyList()
     }
+    private val saveTestContact = mockk<SaveTestContact>(relaxed = true)
 
     @Test
     fun usesDeviceAccount_ifAvailable() = runTest {
@@ -61,16 +52,8 @@ class SeedTestDataTest {
         buildSubject()()
 
         verify(exactly = DEFAULT_TEST_CONTACTS_COUNT) {
-            contentResolver.applyBatch(any(), any())
+            saveTestContact(deviceAccount.account, any(), any())
         }
-
-        assertTrue(
-            "A contact was inserted to the wrong non-device account",
-            operationsList.all { operations ->
-                val firstOperation = operations.first()
-                valuesMatchAccount(firstOperation.values, deviceAccount.account)
-            },
-        )
     }
 
     @Test
@@ -83,16 +66,8 @@ class SeedTestDataTest {
         buildSubject()()
 
         verify(exactly = DEFAULT_TEST_CONTACTS_COUNT) {
-            contentResolver.applyBatch(any(), any())
+            saveTestContact(defaultAccount.account, any(), any())
         }
-
-        assertTrue(
-            "A contact was inserted to the wrong non-default account",
-            operationsList.all { operations ->
-                val firstOperation = operations.first()
-                valuesMatchAccount(firstOperation.values, defaultAccount.account)
-            },
-        )
     }
 
     @Test
@@ -105,16 +80,8 @@ class SeedTestDataTest {
         buildSubject()()
 
         verify(exactly = DEFAULT_TEST_CONTACTS_COUNT) {
-            contentResolver.applyBatch(any(), any())
+            saveTestContact(firstAccount.account, any(), any())
         }
-
-        assertTrue(
-            "A contact was inserted to the wrong non-first account",
-            operationsList.all { operations ->
-                val firstOperation = operations.first()
-                valuesMatchAccount(firstOperation.values, firstAccount.account)
-            },
-        )
     }
 
     @Test
@@ -124,44 +91,8 @@ class SeedTestDataTest {
 
         buildSubject()()
 
-        verify(exactly = 0) { contentResolver.applyBatch(any(), any()) }
-    }
-
-    @Test
-    fun setsPhoneValuesCorrectly() = runTest {
-        loadAccounts = { flowOf(persistentListOf(buildAccount())) }
-        val contact = TestContactFactory.build()
-        every { generateTestContact() } returns contact
-
-        buildSubject(testContactsCount = 1)()
-
-        verify(exactly = 1) { contentResolver.applyBatch(any(), any()) }
-
-        assertEquals(
-            "More than 1 contact as added",
-            1,
-            operationsList.size,
-        )
-        val operations = operationsList.first()
-        val phoneOperations = operations.filter {
-            it.values[ContactsContract.Data.MIMETYPE] ==
-                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
-        }
-        assertEquals(
-            "The phone operations amount does not match the number of phones of the contact",
-            contact.phones.size,
-            phoneOperations.size,
-        )
-
-        assertTrue(
-            "Phone operations values do not match contact phones",
-            phoneOperations.mapIndexed { index, operation ->
-                val phone = contact.phones[index]
-                val values = operation.values
-                values[ContactsContract.CommonDataKinds.Phone.NUMBER] == phone.value &&
-                    values[ContactsContract.CommonDataKinds.Phone.TYPE] == phone.type
-            }.all { it },
-        )
+        verify(exactly = 0) { saveTestContact(any(), any(), any()) }
+        verify(exactly = 0) { createTestGroups(any(), any()) }
     }
 
     private fun buildAccount(
@@ -177,33 +108,26 @@ class SeedTestDataTest {
         )
     }
 
-    private val ContentProviderOperation.values
-        get(): ContentValues {
-            return resolveValueBackReferences(
-                arrayOf(ContentProviderResult(1)),
-                1,
-            )!!
-        }
-
-    private fun valuesMatchAccount(values: ContentValues, account: AccountModel): Boolean {
-        return values[ContactsContract.RawContacts.ACCOUNT_NAME] == account.name &&
-            values[ContactsContract.RawContacts.ACCOUNT_TYPE] == account.type &&
-            values[ContactsContract.RawContacts.DATA_SET] == account.dataSet
-    }
-
-    private fun buildSubject(testContactsCount: Int = DEFAULT_TEST_CONTACTS_COUNT): SeedTestData {
+    private fun buildSubject(
+        testContactsCount: Int = DEFAULT_TEST_CONTACTS_COUNT,
+        testGroupsCount: Int = DEFAULT_TEST_GROUPS_COUNT,
+    ): SeedTestData {
         return SeedTestDataImpl(
             loadAccounts = loadAccounts,
             getDefaultAccount = getDefaultAccount,
             clearSeededTestData = clearSeededTestData,
             generateTestContact = generateTestContact,
-            contentResolver = contentResolver,
+            createTestGroups = createTestGroups,
+            saveTestContact = saveTestContact,
+            random = Random,
             testContactsCount = testContactsCount,
+            testGroupsCount = testGroupsCount,
             coroutineDispatcher = UnconfinedTestDispatcher(),
         )
     }
 
     companion object {
         private const val DEFAULT_TEST_CONTACTS_COUNT = 3
+        private const val DEFAULT_TEST_GROUPS_COUNT = 1
     }
 }
