@@ -2,6 +2,8 @@ package com.android.contacts.di.debug
 
 import com.android.contacts.domain.debug.usecase.ClearSeededTestData
 import com.android.contacts.domain.debug.usecase.ClearSeededTestDataImpl
+import com.android.contacts.domain.debug.usecase.CreateTestGroups
+import com.android.contacts.domain.debug.usecase.CreateTestGroupsImpl
 import com.android.contacts.domain.debug.usecase.ExportDatabase
 import com.android.contacts.domain.debug.usecase.ExportDatabaseImpl
 import com.android.contacts.domain.debug.usecase.GenerateTestContact
@@ -10,6 +12,8 @@ import com.android.contacts.domain.debug.usecase.IsDebugEnabled
 import com.android.contacts.domain.debug.usecase.IsDebugEnabledImpl
 import com.android.contacts.domain.debug.usecase.IsExportDatabaseAvailable
 import com.android.contacts.domain.debug.usecase.IsExportDatabaseAvailableImpl
+import com.android.contacts.domain.debug.usecase.SaveTestContact
+import com.android.contacts.domain.debug.usecase.SaveTestContactImpl
 import com.android.contacts.domain.debug.usecase.SeedTestData
 import com.android.contacts.domain.debug.usecase.SeedTestDataImpl
 import dagger.Binds
@@ -27,6 +31,12 @@ internal abstract class DebugBindsModule {
     abstract fun bindClearSeededTestData(
         impl: ClearSeededTestDataImpl,
     ): ClearSeededTestData
+
+    @Binds
+    @Reusable
+    abstract fun bindCreateTestGroups(
+        impl: CreateTestGroupsImpl,
+    ): CreateTestGroups
 
     @Binds
     @Reusable
@@ -51,6 +61,12 @@ internal abstract class DebugBindsModule {
     abstract fun bindIsExportDatabaseAvailable(
         impl: IsExportDatabaseAvailableImpl,
     ): IsExportDatabaseAvailable
+
+    @Binds
+    @Reusable
+    abstract fun bindSaveTestContact(
+        impl: SaveTestContactImpl,
+    ): SaveTestContact
 
     @Binds
     @Reusable

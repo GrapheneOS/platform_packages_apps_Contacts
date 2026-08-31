@@ -1,6 +1,6 @@
 package com.android.contacts.domain.debug
 
-import com.android.contacts.domain.debug.model.TestContact
+import com.android.contacts.domain.debug.model.DebugDataConstants
 import com.android.contacts.domain.debug.usecase.GenerateTestContact
 import com.android.contacts.domain.debug.usecase.GenerateTestContactImpl
 import junit.framework.TestCase.assertTrue
@@ -28,7 +28,7 @@ class GenerateTestContactTest {
         val contact = subject()
         assertTrue(
             "There was a contact with a phone not matching the prefix",
-            contact.phones.all { it.value.startsWith(TestContact.PHONE_PREFIX) },
+            contact.phones.all { it.value.startsWith(DebugDataConstants.PHONE_PREFIX) },
         )
     }
 
@@ -37,7 +37,7 @@ class GenerateTestContactTest {
         val contacts = (1..10).map { subject() }
         assertTrue(
             "There was a contact with a blank given name",
-            contacts.all { it.givenName.isNotBlank() },
+            contacts.all { it.name.given.isNotBlank() },
         )
     }
 }
