@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactdetails.common
 
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -12,8 +11,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.v2.runComposeUiTest
-import androidx.compose.ui.unit.LayoutDirection
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.tests.compose.RightToLeftLayout
 import com.android.contacts.tests.factory.contactEntryActionUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX
@@ -61,7 +60,7 @@ internal class ContactEntryRowTest {
             entry = contactEntryUiModel(
                 alternateAction = contactEntryActionUiModel(action = action),
             ),
-            onAlternateActionClick = { clicked = it },
+            onEntryActionClick = { clicked = it },
         )
 
         onNodeWithTag(CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX + 1L).performClick()
@@ -101,6 +100,46 @@ internal class ContactEntryRowTest {
         longClickTheRow()
 
         onNodeWithText("Clear default").assertIsDisplayed()
+    }
+
+    @Test
+    fun whenEditingTheNumberIsChosenFromTheMenu_reportsTheAction() = runComposeUiTest {
+        val action = ContactEntryAction.EditNumberBeforeCall(number = "555 0001")
+        var clicked: ContactEntryAction? = null
+        setRowContent(
+            entry = contactEntryUiModel(editBeforeCallAction = action),
+            onEntryActionClick = { clicked = it },
+        )
+
+        longClickTheRow()
+        onNodeWithText("Edit number before call").performClick()
+
+        assertEquals(action, clicked)
+    }
+
+    @Test
+    fun whenTheCallingSimIsChosenFromTheMenu_reportsIt() = runComposeUiTest {
+        var clicks = 0
+        setRowContent(
+            entry = contactEntryUiModel(isCallingSimChangeable = true),
+            onCallingSimClick = { clicks++ },
+        )
+
+        longClickTheRow()
+        onNodeWithText("Set calling SIM").performClick()
+
+        assertEquals(1, clicks)
+    }
+
+    @Test
+    fun forAnEntryWithoutTheCallingSimOption_hidesItFromTheMenu() = runComposeUiTest {
+        setRowContent(
+            entry = contactEntryUiModel(copyText = "555 0001", isDefaultChangeable = true),
+        )
+
+        longClickTheRow()
+
+        onNodeWithText("Set calling SIM").assertDoesNotExist()
     }
 
     @Test
@@ -160,20 +199,10 @@ internal class ContactEntryRowTest {
 
     @Test
     fun inARightToLeftLayoutForADialableHeader_wrapsItAsLeftToRight() = runComposeUiTest {
-        setContent {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                ContactEntryRow(
-                    entry = contactEntryUiModel(header = "+1 555 0001", isHeaderLtr = true),
-                    isIconVisible = true,
-                    onClick = {},
-                    onCopyClick = {},
-                    onSetDefaultClick = {},
-                    onClearDefaultClick = {},
-                    onAlternateActionClick = {},
-                    onThirdActionClick = {},
-                )
-            }
-        }
+        setRowContent(
+            entry = contactEntryUiModel(header = "+1 555 0001", isHeaderLtr = true),
+            isRightToLeft = true,
+        )
 
         onNodeWithText("+1 555 0001").assertDoesNotExist()
         onNodeWithText("+1 555 0001", substring = true).assertIsDisplayed()
@@ -181,20 +210,10 @@ internal class ContactEntryRowTest {
 
     @Test
     fun inARightToLeftLayoutForAnOrdinaryHeader_leavesItAlone() = runComposeUiTest {
-        setContent {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-                ContactEntryRow(
-                    entry = contactEntryUiModel(header = "Met at the conference"),
-                    isIconVisible = true,
-                    onClick = {},
-                    onCopyClick = {},
-                    onSetDefaultClick = {},
-                    onClearDefaultClick = {},
-                    onAlternateActionClick = {},
-                    onThirdActionClick = {},
-                )
-            }
-        }
+        setRowContent(
+            entry = contactEntryUiModel(header = "Met at the conference"),
+            isRightToLeft = true,
+        )
 
         onNodeWithText("Met at the conference").assertIsDisplayed()
     }
@@ -207,19 +226,28 @@ internal class ContactEntryRowTest {
         entry: ContactEntryUiModel = contactEntryUiModel(),
         onClick: (() -> Unit)? = {},
         onCopyClick: () -> Unit = {},
-        onAlternateActionClick: (ContactEntryAction) -> Unit = {},
+        onCallingSimClick: () -> Unit = {},
+        onEntryActionClick: (ContactEntryAction) -> Unit = {},
+        isRightToLeft: Boolean = false,
     ) {
         setContent {
-            ContactEntryRow(
-                entry = entry,
-                isIconVisible = true,
-                onClick = onClick,
-                onCopyClick = onCopyClick,
-                onSetDefaultClick = {},
-                onClearDefaultClick = {},
-                onAlternateActionClick = onAlternateActionClick,
-                onThirdActionClick = {},
-            )
+            val row = @Composable {
+                ContactEntryRow(
+                    entry = entry,
+                    isIconVisible = true,
+                    onClick = onClick,
+                    onCopyClick = onCopyClick,
+                    onSetDefaultClick = {},
+                    onClearDefaultClick = {},
+                    onCallingSimClick = onCallingSimClick,
+                    onEntryActionClick = onEntryActionClick,
+                )
+            }
+
+            when {
+                isRightToLeft -> RightToLeftLayout(content = row)
+                else -> row()
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.android.contacts.ui.contactdetails.common
 
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,16 +24,16 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction as Action
 import com.android.contacts.ui.common.text.asLtrText
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ENHANCED_CALL_ACTION_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_THIRD_ACTION_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
-import com.android.contacts.domain.contactdetails.model.ContactEntryAction as Action
-import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 
 @Composable
 internal fun ContactEntryRow(
@@ -44,8 +43,8 @@ internal fun ContactEntryRow(
     onCopyClick: () -> Unit,
     onSetDefaultClick: () -> Unit,
     onClearDefaultClick: () -> Unit,
-    onAlternateActionClick: (Action) -> Unit,
-    onThirdActionClick: (Action) -> Unit,
+    onCallingSimClick: () -> Unit,
+    onEntryActionClick: (Action) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isActionsMenuExpanded by remember { mutableStateOf(false) }
@@ -54,7 +53,7 @@ internal fun ContactEntryRow(
         onCopyClick = onCopyClick,
         onOpenActionsMenu = { isActionsMenuExpanded = true },
     )
-    val hasTrailingAction = entry.thirdAction != null || entry.alternateAction != null
+    val hasTrailingAction = entry.enhancedCallAction != null || entry.alternateAction != null
 
     Row(
         modifier = modifier
@@ -71,10 +70,9 @@ internal fun ContactEntryRow(
     ) {
         val icon = entry.icon
         if (icon != null) {
-            if (isIconVisible) {
-                EntryLeadingIcon(icon = icon)
-            } else {
-                Spacer(modifier = Modifier.width(Tokens.rowIconSize))
+            when {
+                isIconVisible -> EntryLeadingIcon(icon = icon)
+                else -> Spacer(modifier = Modifier.width(Tokens.rowIconSize))
             }
 
             Spacer(modifier = Modifier.width(Tokens.rowIconSpacing))
@@ -87,8 +85,7 @@ internal fun ContactEntryRow(
 
         EntryTrailingActions(
             entry = entry,
-            onAlternateActionClick = onAlternateActionClick,
-            onThirdActionClick = onThirdActionClick,
+            onEntryActionClick = onEntryActionClick,
         )
 
         if (actions.hasMenu) {
@@ -99,6 +96,8 @@ internal fun ContactEntryRow(
                 onCopyClick = onCopyClick,
                 onSetDefaultClick = onSetDefaultClick,
                 onClearDefaultClick = onClearDefaultClick,
+                onEditBeforeCallClick = onEntryActionClick,
+                onCallingSimClick = onCallingSimClick,
             )
         }
     }
@@ -117,8 +116,11 @@ private fun entryRowActions(
     onCopyClick: () -> Unit,
     onOpenActionsMenu: () -> Unit,
 ): EntryRowActions {
-    val isCopyOnly = entry.copyText != null && !entry.isDefaultChangeable
-    val hasMenu = !isCopyOnly && (entry.copyText != null || entry.isDefaultChangeable)
+    val hasOtherMenuItems = entry.isDefaultChangeable ||
+        entry.isCallingSimChangeable ||
+        entry.editBeforeCallAction != null
+    val isCopyOnly = entry.copyText != null && !hasOtherMenuItems
+    val hasMenu = !isCopyOnly && (entry.copyText != null || hasOtherMenuItems)
 
     return EntryRowActions(
         onLongClick = when {
@@ -151,15 +153,14 @@ private fun entryPadding(hasTrailingAction: Boolean): PaddingValues {
 @Composable
 private fun EntryTrailingActions(
     entry: ContactEntryUiModel,
-    onAlternateActionClick: (Action) -> Unit,
-    onThirdActionClick: (Action) -> Unit,
+    onEntryActionClick: (Action) -> Unit,
 ) {
-    val thirdAction = entry.thirdAction
-    if (thirdAction != null) {
+    val enhancedCallAction = entry.enhancedCallAction
+    if (enhancedCallAction != null) {
         EntryActionButton(
-            action = thirdAction,
-            testTag = CONTACT_DETAILS_THIRD_ACTION_TEST_TAG_PREFIX + entry.id,
-            onClick = { onThirdActionClick(thirdAction.action) },
+            action = enhancedCallAction,
+            testTag = CONTACT_DETAILS_ENHANCED_CALL_ACTION_TEST_TAG_PREFIX + entry.id,
+            onClick = { onEntryActionClick(enhancedCallAction.action) },
         )
     }
 
@@ -168,7 +169,7 @@ private fun EntryTrailingActions(
         EntryActionButton(
             action = alternateAction,
             testTag = CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX + entry.id,
-            onClick = { onAlternateActionClick(alternateAction.action) },
+            onClick = { onEntryActionClick(alternateAction.action) },
         )
     }
 }
@@ -273,8 +274,8 @@ private fun ContactEntryRowPreview() {
             onCopyClick = {},
             onSetDefaultClick = {},
             onClearDefaultClick = {},
-            onAlternateActionClick = {},
-            onThirdActionClick = {},
+            onCallingSimClick = {},
+            onEntryActionClick = {},
         )
         ContactEntryRow(
             entry = previewNoteEntry(id = 2L),
@@ -283,8 +284,8 @@ private fun ContactEntryRowPreview() {
             onCopyClick = {},
             onSetDefaultClick = {},
             onClearDefaultClick = {},
-            onAlternateActionClick = {},
-            onThirdActionClick = {},
+            onCallingSimClick = {},
+            onEntryActionClick = {},
         )
     }
 }
@@ -300,7 +301,9 @@ private fun previewPhoneEntry(
     return ContactEntryUiModel(
         id = id,
         isSuperPrimary = isSuperPrimary,
+        isDefault = isSuperPrimary,
         isDefaultChangeable = true,
+        isCallingSimChangeable = false,
         icon = ContactEntryIcon.CALL,
         header = number,
         isHeaderLtr = true,
@@ -312,7 +315,8 @@ private fun previewPhoneEntry(
             icon = ContactEntryIcon.MESSAGE,
             contentDescription = "Text $number",
         ),
-        thirdAction = null,
+        enhancedCallAction = null,
+        editBeforeCallAction = Action.EditNumberBeforeCall(number = number),
         copyText = number,
         copyLabel = "Phone",
     )
@@ -322,7 +326,9 @@ private fun previewNoteEntry(id: Long): ContactEntryUiModel {
     return ContactEntryUiModel(
         id = id,
         isSuperPrimary = false,
+        isDefault = false,
         isDefaultChangeable = false,
+        isCallingSimChangeable = false,
         icon = null,
         header = "Note",
         isHeaderLtr = false,
@@ -330,7 +336,8 @@ private fun previewNoteEntry(id: Long): ContactEntryUiModel {
         text = "Met at the conference",
         action = null,
         alternateAction = null,
-        thirdAction = null,
+        enhancedCallAction = null,
+        editBeforeCallAction = null,
         copyText = "Met at the conference",
         copyLabel = "Note",
     )

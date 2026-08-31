@@ -2,8 +2,8 @@ package com.android.contacts.domain.contactdetails.usecase
 
 import android.content.Intent
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
+import com.android.contacts.data.contactdetails.intent.IsIntentRegistered
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
-import com.android.contacts.domain.util.IsIntentRegistered
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -18,6 +18,7 @@ internal class IsEntryActionAvailableImplTest {
 
     private val contactEntryIntentFactory = mockk<ContactEntryIntentFactory>()
     private val isIntentRegistered = mockk<IsIntentRegistered>()
+    private val intent = Intent(Intent.ACTION_VIEW)
 
     private val isEntryActionAvailable = IsEntryActionAvailableImpl(
         contactEntryIntentFactory = contactEntryIntentFactory,
@@ -26,16 +27,16 @@ internal class IsEntryActionAvailableImplTest {
 
     @Test
     fun invoke_whenTheIntentResolves_isAvailable() {
-        every { contactEntryIntentFactory.create(ACTION) } returns INTENT
-        every { isIntentRegistered(INTENT) } returns true
+        every { contactEntryIntentFactory.create(ACTION) } returns intent
+        every { isIntentRegistered(intent) } returns true
 
         assertTrue(isEntryActionAvailable(ACTION))
     }
 
     @Test
     fun invoke_whenNothingResolvesTheIntent_isNotAvailable() {
-        every { contactEntryIntentFactory.create(ACTION) } returns INTENT
-        every { isIntentRegistered(INTENT) } returns false
+        every { contactEntryIntentFactory.create(ACTION) } returns intent
+        every { isIntentRegistered(intent) } returns false
 
         assertFalse(isEntryActionAvailable(ACTION))
     }
@@ -50,6 +51,5 @@ internal class IsEntryActionAvailableImplTest {
 
     private companion object {
         val ACTION = ContactEntryAction.Call(number = "555 0001")
-        val INTENT = Intent(Intent.ACTION_VIEW)
     }
 }

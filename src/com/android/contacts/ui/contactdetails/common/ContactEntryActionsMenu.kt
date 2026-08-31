@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.contacts.R
+import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 
 private val ActionsMenuWidth = 220.dp
@@ -22,6 +23,8 @@ internal fun ContactEntryActionsMenu(
     onCopyClick: () -> Unit,
     onSetDefaultClick: () -> Unit,
     onClearDefaultClick: () -> Unit,
+    onEditBeforeCallClick: (ContactEntryAction) -> Unit,
+    onCallingSimClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     DropdownMenu(
@@ -39,10 +42,21 @@ internal fun ContactEntryActionsMenu(
             )
         }
 
+        val editBeforeCallAction = entry.editBeforeCallAction
+        if (editBeforeCallAction != null) {
+            ContactEntryActionsMenuItem(
+                labelResource = R.string.contact_details_edit_number_before_call,
+                onClick = {
+                    onEditBeforeCallClick(editBeforeCallAction)
+                    onDismissRequest()
+                },
+            )
+        }
+
         when {
             !entry.isDefaultChangeable -> Unit
 
-            entry.isSuperPrimary -> ContactEntryActionsMenuItem(
+            entry.isDefault -> ContactEntryActionsMenuItem(
                 labelResource = R.string.clear_default,
                 onClick = {
                     onClearDefaultClick()
@@ -54,6 +68,16 @@ internal fun ContactEntryActionsMenu(
                 labelResource = R.string.set_default,
                 onClick = {
                     onSetDefaultClick()
+                    onDismissRequest()
+                },
+            )
+        }
+
+        if (entry.isCallingSimChangeable) {
+            ContactEntryActionsMenuItem(
+                labelResource = R.string.contact_details_set_calling_sim,
+                onClick = {
+                    onCallingSimClick()
                     onDismissRequest()
                 },
             )

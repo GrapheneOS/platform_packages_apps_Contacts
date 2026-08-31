@@ -44,7 +44,9 @@ internal fun contactHeaderUiModel(
 internal fun contactEntryUiModel(
     id: Long = 1L,
     isSuperPrimary: Boolean = false,
+    isDefault: Boolean = isSuperPrimary,
     isDefaultChangeable: Boolean = false,
+    isCallingSimChangeable: Boolean = false,
     icon: ContactEntryIcon? = ContactEntryIcon.CALL,
     header: String? = "555 0001",
     subHeader: String? = null,
@@ -52,14 +54,17 @@ internal fun contactEntryUiModel(
     isHeaderLtr: Boolean = false,
     action: ContactEntryAction? = null,
     alternateAction: ContactEntryActionUiModel? = null,
-    thirdAction: ContactEntryActionUiModel? = null,
+    enhancedCallAction: ContactEntryActionUiModel? = null,
+    editBeforeCallAction: ContactEntryAction? = null,
     copyText: String? = null,
     copyLabel: String? = null,
 ): ContactEntryUiModel {
     return ContactEntryUiModel(
         id = id,
         isSuperPrimary = isSuperPrimary,
+        isDefault = isDefault,
         isDefaultChangeable = isDefaultChangeable,
+        isCallingSimChangeable = isCallingSimChangeable,
         icon = icon,
         header = header,
         isHeaderLtr = isHeaderLtr,
@@ -67,7 +72,8 @@ internal fun contactEntryUiModel(
         text = text,
         action = action,
         alternateAction = alternateAction,
-        thirdAction = thirdAction,
+        enhancedCallAction = enhancedCallAction,
+        editBeforeCallAction = editBeforeCallAction,
         copyText = copyText,
         copyLabel = copyLabel,
     )

@@ -1,4 +1,4 @@
-package com.android.contacts.domain.util
+package com.android.contacts.data.telecom.source
 
 import android.content.Context
 import com.android.contacts.util.PhoneCapabilityTester
