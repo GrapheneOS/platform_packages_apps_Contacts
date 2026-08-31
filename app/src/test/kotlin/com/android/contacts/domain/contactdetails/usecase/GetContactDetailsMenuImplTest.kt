@@ -1,9 +1,9 @@
 package com.android.contacts.domain.contactdetails.usecase
 
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.data.telecom.source.IsDeviceVoiceCapable
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
-import com.android.contacts.domain.util.IsDeviceVoiceCapable
 import com.android.contacts.tests.factory.contactCapabilities
 import io.mockk.every
 import io.mockk.mockk
@@ -13,7 +13,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class GetContactDetailsMenuImplTest {
+internal class GetContactDetailsMenuImplTest {
 
     private val contactShortcutRepository = mockk<ContactShortcutRepository>()
     private val isDeviceVoiceCapable = mockk<IsDeviceVoiceCapable>()

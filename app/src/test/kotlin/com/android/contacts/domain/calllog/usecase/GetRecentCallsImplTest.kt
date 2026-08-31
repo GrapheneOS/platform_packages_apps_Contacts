@@ -4,22 +4,23 @@ import com.android.contacts.data.calllog.model.CallLogEntry
 import com.android.contacts.data.calllog.model.CallLogEntryType
 import com.android.contacts.data.calllog.repository.CallLogRepository
 import com.android.contacts.data.permissions.repository.PermissionsRepository
+import com.android.contacts.data.telecom.source.IsDeviceVoiceCapable
 import com.android.contacts.domain.calllog.model.RecentCall
-import com.android.contacts.domain.util.IsDeviceVoiceCapable
 import com.android.contacts.tests.factory.contactDetails
+import com.android.contacts.tests.factory.contactDetailsOf
 import com.android.contacts.tests.factory.phone
 import io.mockk.coEvery
-import kotlin.time.Duration.Companion.seconds
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class GetRecentCallsImplTest {
+internal class GetRecentCallsImplTest {
 
     private val callLogRepository = mockk<CallLogRepository>()
     private val permissionsRepository = mockk<PermissionsRepository>()
@@ -42,9 +43,7 @@ class GetRecentCallsImplTest {
     fun invoke_withoutTheCallLogPermission_returnsNothing() = runTest {
         coEvery { permissionsRepository.isCallLogGranted() } returns false
 
-        val details = contactDetails(dataItems = listOf(phone(number = "4155551212")))
-
-        assertTrue(getRecentCalls(details).isEmpty())
+        assertTrue(getRecentCalls(contactDetailsOf(phone(number = NUMBER))).isEmpty())
         coVerify(exactly = 0) { callLogRepository.getRecentCalls(any(), any()) }
     }
 
@@ -52,9 +51,7 @@ class GetRecentCallsImplTest {
     fun invoke_onADeviceThatCannotCall_returnsNothing() = runTest {
         every { isDeviceVoiceCapable() } returns false
 
-        val details = contactDetails(dataItems = listOf(phone(number = "4155551212")))
-
-        assertTrue(getRecentCalls(details).isEmpty())
+        assertTrue(getRecentCalls(contactDetailsOf(phone(number = NUMBER))).isEmpty())
         coVerify(exactly = 0) { callLogRepository.getRecentCalls(any(), any()) }
     }
 
@@ -66,26 +63,23 @@ class GetRecentCallsImplTest {
 
     @Test
     fun invoke_mapsTheCallsNewestFirst() = runTest {
-        coEvery { callLogRepository.getRecentCalls("4155551212", any()) } returns listOf(
+        coEvery { callLogRepository.getRecentCalls(NUMBER, any()) } returns listOf(
             entry(date = 100L, type = CallLogEntryType.OUTGOING),
             entry(date = 300L, type = CallLogEntryType.MISSED),
         )
-
-        val details = contactDetails(
-            dataItems = listOf(phone(number = "4155551212", typeLabel = "Mobile")),
-        )
+        val details = contactDetailsOf(phone(number = NUMBER, typeLabel = "Mobile"))
 
         assertEquals(
             listOf(
                 RecentCall(
-                    number = "4155551212",
+                    number = NUMBER,
                     numberLabel = "Mobile",
                     date = 300L,
                     duration = 42.seconds,
                     type = CallLogEntryType.MISSED,
                 ),
                 RecentCall(
-                    number = "4155551212",
+                    number = NUMBER,
                     numberLabel = "Mobile",
                     date = 100L,
                     duration = 42.seconds,
@@ -98,16 +92,13 @@ class GetRecentCallsImplTest {
 
     @Test
     fun invoke_withSeveralNumbers_dropsCallsSharingADate() = runTest {
-        coEvery { callLogRepository.getRecentCalls("4155551212", any()) } returns
+        coEvery { callLogRepository.getRecentCalls(NUMBER, any()) } returns
             listOf(entry(date = 100L))
-        coEvery { callLogRepository.getRecentCalls("4155553434", any()) } returns
-            listOf(entry(date = 100L, number = "4155553434"))
-
-        val details = contactDetails(
-            dataItems = listOf(
-                phone(id = 1L, number = "4155551212"),
-                phone(id = 2L, number = "4155553434"),
-            ),
+        coEvery { callLogRepository.getRecentCalls(OTHER_NUMBER, any()) } returns
+            listOf(entry(date = 100L, number = OTHER_NUMBER))
+        val details = contactDetailsOf(
+            phone(id = 1L, number = NUMBER),
+            phone(id = 2L, number = OTHER_NUMBER),
         )
 
         assertEquals(1, getRecentCalls(details).size)
@@ -115,9 +106,9 @@ class GetRecentCallsImplTest {
 
     @Test
     fun invoke_withMoreCallsThanTheLimit_keepsTheNewestThree() = runTest {
-        coEvery { callLogRepository.getRecentCalls("4155551212", any()) } returns
+        coEvery { callLogRepository.getRecentCalls(NUMBER, any()) } returns
             (1L..5L).map { date -> entry(date = date) }
-        val details = contactDetails(dataItems = listOf(phone(number = "4155551212")))
+        val details = contactDetailsOf(phone(number = NUMBER))
 
         assertEquals(listOf(5L, 4L, 3L), getRecentCalls(details).map(RecentCall::date))
     }
@@ -125,7 +116,7 @@ class GetRecentCallsImplTest {
     private fun entry(
         date: Long,
         type: CallLogEntryType = CallLogEntryType.INCOMING,
-        number: String = "4155551212",
+        number: String = NUMBER,
     ): CallLogEntry {
         return CallLogEntry(
             number = number,
@@ -133,5 +124,10 @@ class GetRecentCallsImplTest {
             duration = 42.seconds,
             type = type,
         )
+    }
+
+    private companion object {
+        const val NUMBER = "4155551212"
+        const val OTHER_NUMBER = "4155553434"
     }
 }

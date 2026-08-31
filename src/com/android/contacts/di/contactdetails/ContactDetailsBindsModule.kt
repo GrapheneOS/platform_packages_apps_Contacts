@@ -1,9 +1,9 @@
 package com.android.contacts.di.contactdetails
 
-import com.android.contacts.data.connectedapps.repository.ConnectedAppsRepository
-import com.android.contacts.data.connectedapps.repository.ConnectedAppsRepositoryImpl
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactoryImpl
+import com.android.contacts.data.contactdetails.intent.IsIntentRegistered
+import com.android.contacts.data.contactdetails.intent.IsIntentRegisteredImpl
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapperImpl
 import com.android.contacts.data.contactdetails.mapper.DataItemCollapseMatcher
@@ -18,18 +18,12 @@ import com.android.contacts.data.contactdetails.repository.ContactShortcutReposi
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepositoryImpl
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.data.contactdetails.source.ContactLoaderSourceImpl
+import com.android.contacts.domain.contactdetails.mapper.ContactEntryContentMapper
+import com.android.contacts.domain.contactdetails.mapper.ContactEntryContentMapperImpl
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCardsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenuImpl
-import com.android.contacts.data.calllog.repository.CallLogRepository
-import com.android.contacts.data.telecom.repository.PhoneAccountsRepository
-import com.android.contacts.data.telecom.repository.PhoneAccountsRepositoryImpl
-import com.android.contacts.data.calllog.repository.CallLogRepositoryImpl
-import com.android.contacts.domain.calllog.usecase.GetRecentCalls
-import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
-import com.android.contacts.domain.telecom.usecase.GetCallingSimOptionsImpl
-import com.android.contacts.domain.calllog.usecase.GetRecentCallsImpl
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActionsImpl
 import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
@@ -37,9 +31,9 @@ import com.android.contacts.domain.contactdetails.usecase.IsEntryActionAvailable
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapperImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapper
+import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapperImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.RecentCallsMapper
 import com.android.contacts.ui.contactdetails.screen.mapper.RecentCallsMapperImpl
-import com.android.contacts.ui.contactdetails.screen.mapper.ContactQuickActionsMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -101,6 +95,18 @@ internal abstract class ContactDetailsBindsModule {
 
     @Binds
     @Reusable
+    abstract fun bindIsIntentRegistered(
+        impl: IsIntentRegisteredImpl,
+    ): IsIntentRegistered
+
+    @Binds
+    @Reusable
+    abstract fun bindContactEntryContentMapper(
+        impl: ContactEntryContentMapperImpl,
+    ): ContactEntryContentMapper
+
+    @Binds
+    @Reusable
     abstract fun bindBuildContactDetailsCards(
         impl: BuildContactDetailsCardsImpl,
     ): BuildContactDetailsCards
@@ -119,30 +125,6 @@ internal abstract class ContactDetailsBindsModule {
 
     @Binds
     @Reusable
-    abstract fun bindPhoneAccountsRepository(
-        impl: PhoneAccountsRepositoryImpl,
-    ): PhoneAccountsRepository
-
-    @Binds
-    @Reusable
-    abstract fun bindGetCallingSimOptions(
-        impl: GetCallingSimOptionsImpl,
-    ): GetCallingSimOptions
-
-    @Binds
-    @Reusable
-    abstract fun bindCallLogRepository(
-        impl: CallLogRepositoryImpl,
-    ): CallLogRepository
-
-    @Binds
-    @Reusable
-    abstract fun bindGetRecentCalls(
-        impl: GetRecentCallsImpl,
-    ): GetRecentCalls
-
-    @Binds
-    @Reusable
     abstract fun bindRecentCallsMapper(
         impl: RecentCallsMapperImpl,
     ): RecentCallsMapper
@@ -157,12 +139,6 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindGetContactDetailsMenu(
         impl: GetContactDetailsMenuImpl,
     ): GetContactDetailsMenu
-
-    @Binds
-    @Reusable
-    abstract fun bindConnectedAppsRepository(
-        impl: ConnectedAppsRepositoryImpl,
-    ): ConnectedAppsRepository
 
     @Binds
     @Reusable

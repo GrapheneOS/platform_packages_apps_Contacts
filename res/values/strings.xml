@@ -373,6 +373,8 @@
     <string name="contact_details_recent_activity">Recent activity</string>
     <!-- Row and dialog title for choosing which SIM calls this contact. [CHAR LIMIT=40] -->
     <string name="contact_details_set_calling_sim">Set calling SIM</string>
+    <!-- Menu item on a phone number that opens the dialer with the number filled in [CHAR LIMIT=64] -->
+    <string name="contact_details_edit_number_before_call">Edit number before call</string>
     <!-- Button that clears the SIM chosen for every number of this contact. [CHAR LIMIT=20] -->
     <string name="contact_details_calling_sim_reset">Reset</string>
     <!-- Title of an incoming call in the recent activity section. [CHAR LIMIT=40] -->

@@ -2,9 +2,9 @@ package com.android.contacts.domain.contactdetails.usecase
 
 import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.data.telecom.source.IsDeviceVoiceCapable
 import com.android.contacts.domain.contactdetails.model.ContactDetailsEditAction
 import com.android.contacts.domain.contactdetails.model.ContactDetailsMenu
-import com.android.contacts.domain.util.IsDeviceVoiceCapable
 import javax.inject.Inject
 
 internal fun interface GetContactDetailsMenu {
@@ -23,18 +23,19 @@ internal class GetContactDetailsMenuImpl @Inject constructor(
         val isJoinVisible = isRegularContact &&
             !capabilities.isInvisibleAndAddable &&
             !capabilities.hasMultipleRawContacts
+        val isShortcutSupported = contactShortcutRepository.isPinShortcutSupported()
+        val isVoiceCapable = isDeviceVoiceCapable()
 
         return ContactDetailsMenu(
             isStarVisible = isRegularContact,
             editAction = editAction(capabilities, isEditable),
             isJoinVisible = isJoinVisible,
-            isLinkedContactsVisible = capabilities.hasMultipleRawContacts && !isJoinVisible,
+            isLinkedContactsVisible = capabilities.hasMultipleRawContacts,
             isDeleteVisible = isRegularContact,
             isShareVisible = isShareable,
-            isShortcutVisible = isRegularContact &&
-                contactShortcutRepository.isPinShortcutSupported(),
-            isRingtoneVisible = isRegularContact && isDeviceVoiceCapable(),
-            isSendToVoicemailVisible = isRegularContact && isDeviceVoiceCapable(),
+            isShortcutVisible = isRegularContact && isShortcutSupported,
+            isRingtoneVisible = isRegularContact && isVoiceCapable,
+            isSendToVoicemailVisible = isRegularContact && isVoiceCapable,
         )
     }
 
@@ -42,8 +43,7 @@ internal class GetContactDetailsMenuImpl @Inject constructor(
         capabilities: ContactCapabilities,
         isEditable: Boolean,
     ): ContactDetailsEditAction {
-        val isAddable = capabilities.isAddableDirectoryContact ||
-            capabilities.isInvisibleAndAddable
+        val isAddable = capabilities.isAddableDirectoryContact || capabilities.isInvisibleAndAddable
 
         return when {
             isAddable -> ContactDetailsEditAction.ADD

@@ -1,7 +1,8 @@
 package com.android.contacts.domain.contactdetails.model
 
 internal data class ContactEntryActions(
-    val primary: ContactEntryAction? = null,
-    val alternate: ContactEntryAction? = null,
-    val third: ContactEntryAction? = null,
+    val primaryAction: ContactEntryAction? = null,
+    val alternateAction: ContactEntryAction? = null,
+    val enhancedCallAction: ContactEntryAction? = null,
+    val editBeforeCallAction: ContactEntryAction? = null,
 )

@@ -1,4 +1,4 @@
-package com.android.contacts.domain.util
+package com.android.contacts.data.contactdetails.intent
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,9 +12,10 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class IsIntentRegisteredImplTest {
+internal class IsIntentRegisteredImplTest {
 
     private val packageManager = mockk<PackageManager>(relaxed = true)
+    private val intent = Intent(Intent.ACTION_VIEW)
 
     private val isIntentRegistered = IsIntentRegisteredImpl(packageManager = packageManager)
 
@@ -22,23 +23,19 @@ class IsIntentRegisteredImplTest {
     fun invoke_whenAnActivityHandlesTheIntent_returnsTrue() {
         givenMatches(ResolveInfo())
 
-        assertTrue(isIntentRegistered(INTENT))
+        assertTrue(isIntentRegistered(intent))
     }
 
     @Test
     fun invoke_whenNothingHandlesTheIntent_returnsFalse() {
         givenMatches()
 
-        assertFalse(isIntentRegistered(INTENT))
+        assertFalse(isIntentRegistered(intent))
     }
 
     private fun givenMatches(vararg matches: ResolveInfo) {
         every {
             packageManager.queryIntentActivities(any(), any<Int>())
         } returns matches.toList()
-    }
-
-    private companion object {
-        val INTENT: Intent = Intent(Intent.ACTION_VIEW)
     }
 }
