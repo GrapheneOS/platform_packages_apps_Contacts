@@ -317,9 +317,12 @@ public class ShortcutIntentBuilder {
         final DynamicShortcuts dynamicShortcuts = new DynamicShortcuts(mContext);
         final ShortcutInfo shortcutInfo = dynamicShortcuts.getActionShortcutInfo(
                 id, displayName, shortcutIntent, compatAdaptiveIcon.toIcon(mContext));
-        if (shortcutInfo == null) return;
-        final Intent intent = sm.createShortcutResultIntent(shortcutInfo);
+        if (shortcutInfo == null) {
+            mListener.onShortcutIntentCreated(uri, null);
+            return;
+        }
 
+        final Intent intent = sm.createShortcutResultIntent(shortcutInfo);
         mListener.onShortcutIntentCreated(uri, intent);
     }
 
