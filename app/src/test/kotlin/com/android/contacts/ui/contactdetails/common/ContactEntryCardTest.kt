@@ -163,8 +163,8 @@ internal class ContactEntryCardTest {
                 onEntryCopyClick = {},
                 onEntrySetDefaultClick = {},
                 onEntryClearDefaultClick = {},
-                onAlternateActionClick = {},
-                onThirdActionClick = {},
+                onEntryCallingSimClick = {},
+                onEntryActionClick = {},
             )
         }
     }

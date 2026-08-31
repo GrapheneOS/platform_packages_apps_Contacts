@@ -1,7 +1,5 @@
 package com.android.contacts.domain.contactdetails.usecase
 
-import com.android.contacts.data.contactdetails.model.ContactDataItem
-import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.domain.contactdetails.model.ContactQuickAction
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType
@@ -9,8 +7,9 @@ import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.C
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.EMAIL
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.MESSAGE
 import com.android.contacts.domain.contactdetails.model.ContactQuickActionType.VIDEO_CALL
-import com.android.contacts.domain.util.CanVideoCall
+import com.android.contacts.domain.telecom.usecase.CanVideoCall
 import com.android.contacts.tests.factory.contactDetails
+import com.android.contacts.tests.factory.contactDetailsOf
 import com.android.contacts.tests.factory.email
 import com.android.contacts.tests.factory.phone
 import io.mockk.every
@@ -20,7 +19,7 @@ import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 
-class GetContactQuickActionsImplTest {
+internal class GetContactQuickActionsImplTest {
 
     private val isEntryActionAvailable = mockk<IsEntryActionAvailable>()
     private val canVideoCall = mockk<CanVideoCall>()
@@ -40,7 +39,7 @@ class GetContactQuickActionsImplTest {
     fun invoke_whenTheCarrierDoesNotSupportVideo_disablesTheVideoAction() {
         every { canVideoCall(any()) } returns false
 
-        val quickActions = getContactQuickActions(detailsOf(phone(number = "4155551212")))
+        val quickActions = getContactQuickActions(contactDetailsOf(phone(number = "4155551212")))
 
         assertNull(quickActions.actionOf(VIDEO_CALL))
         assertEquals(ContactEntryAction.Call("4155551212"), quickActions.actionOf(CALL))
@@ -73,7 +72,9 @@ class GetContactQuickActionsImplTest {
 
     @Test
     fun invoke_withoutAPhoneNumber_disablesTheNumberActions() {
-        val quickActions = getContactQuickActions(detailsOf(email(address = "alex@example.org")))
+        val details = contactDetailsOf(email(address = "alex@example.org"))
+
+        val quickActions = getContactQuickActions(details)
 
         assertNull(quickActions.actionOf(CALL))
         assertNull(quickActions.actionOf(MESSAGE))
@@ -86,7 +87,7 @@ class GetContactQuickActionsImplTest {
 
     @Test
     fun invoke_withoutAnEmail_disablesTheEmailAction() {
-        val quickActions = getContactQuickActions(detailsOf(phone(number = "4155551212")))
+        val quickActions = getContactQuickActions(contactDetailsOf(phone(number = "4155551212")))
 
         assertNull(quickActions.actionOf(EMAIL))
         assertEquals(ContactEntryAction.Call("4155551212"), quickActions.actionOf(CALL))
@@ -99,7 +100,7 @@ class GetContactQuickActionsImplTest {
 
     @Test
     fun invoke_withSeveralPhoneNumbers_usesTheSuperPrimaryOne() {
-        val details = detailsOf(
+        val details = contactDetailsOf(
             phone(id = 1L, number = "4155551111"),
             phone(id = 2L, number = "4155552222", isSuperPrimary = true),
         )
@@ -112,7 +113,7 @@ class GetContactQuickActionsImplTest {
 
     @Test
     fun invoke_withSeveralEmails_usesThePrimaryOne() {
-        val details = detailsOf(
+        val details = contactDetailsOf(
             email(id = 1L, address = "alex@example.org"),
             email(id = 2L, address = "alex@work.example.org", isPrimary = true),
         )
@@ -125,7 +126,7 @@ class GetContactQuickActionsImplTest {
 
     @Test
     fun invoke_withABlankPhoneNumber_disablesTheNumberActions() {
-        val quickActions = getContactQuickActions(detailsOf(phone(number = " ")))
+        val quickActions = getContactQuickActions(contactDetailsOf(phone(number = " ")))
 
         assertNull(quickActions.actionOf(CALL))
         assertNull(quickActions.actionOf(MESSAGE))
@@ -135,14 +136,10 @@ class GetContactQuickActionsImplTest {
     fun invoke_whenNothingResolvesAnAction_disablesIt() {
         every { isEntryActionAvailable(ContactEntryAction.VideoCall("4155551212")) } returns false
 
-        val quickActions = getContactQuickActions(detailsOf(phone(number = "4155551212")))
+        val quickActions = getContactQuickActions(contactDetailsOf(phone(number = "4155551212")))
 
         assertNull(quickActions.actionOf(VIDEO_CALL))
         assertEquals(ContactEntryAction.Call("4155551212"), quickActions.actionOf(CALL))
-    }
-
-    private fun detailsOf(vararg dataItems: ContactDataItem): ContactDetails {
-        return contactDetails(dataItems = dataItems.toList())
     }
 
     private fun List<ContactQuickAction>.actionOf(
