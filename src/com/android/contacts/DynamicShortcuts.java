@@ -42,6 +42,7 @@ import android.os.AsyncTask;
 import android.os.PersistableBundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
@@ -299,6 +300,9 @@ public class DynamicShortcuts {
     }
 
     public ShortcutInfo getQuickContactShortcutInfo(long id, String lookupKey, String displayName) {
+        if (TextUtils.isEmpty(displayName)) {
+            displayName = mContext.getResources().getString(R.string.missing_name);
+        }
         final ShortcutInfo.Builder builder = builderForContactShortcut(id, lookupKey, displayName);
         if (builder == null) {
             return null;
