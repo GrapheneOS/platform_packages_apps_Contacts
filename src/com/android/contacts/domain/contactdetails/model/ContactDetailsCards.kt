@@ -6,7 +6,7 @@ internal data class ContactDetailsCards(
     val contactCard: List<ContactEntryGroup>,
     val connectedApps: List<ContactConnectedApp>,
     val notes: List<ContactEntryGroup>,
-    val headerNickname: String?,
-    val headerOrganizationParts: List<String>,
+    val headerNicknames: List<String>,
+    val headerOrganizations: List<List<String>>,
     val groups: List<ContactGroup>,
 )

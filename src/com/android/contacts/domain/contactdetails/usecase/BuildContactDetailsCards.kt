@@ -53,13 +53,12 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         details: ContactDetails,
         prioritizedMimeType: String?,
     ): ContactDetailsCards {
-        val headerNickname = headerNickname(details)
-        val headerOrganization = headerOrganization(details)
+        val headerNicknames = headerNicknames(details)
+        val headerOrganizations = headerOrganizations(details)
         val groupMemberships = groupMemberships(details)
-        val headerDataIds = setOfNotNull(
-            headerNickname?.id,
-            headerOrganization?.id
-        ) + groupMemberships.map { dataItem -> dataItem.id }
+        val headerDataIds = (headerNicknames + headerOrganizations + groupMemberships)
+            .map { dataItem -> dataItem.id }
+            .toSet()
 
         val groups = details.dataItems
             .filterNot { dataItem -> dataItem.id in headerDataIds }
@@ -76,17 +75,17 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             contactCard = groupsByApp[NO_CONNECTED_APP].orEmpty(),
             connectedApps = buildConnectedApps(groupsByApp),
             notes = buildNotes(groups, details),
-            headerNickname = headerNickname?.name,
-            headerOrganizationParts = organizationParts(headerOrganization),
+            headerNicknames = headerNicknames.mapNotNull { dataItem -> dataItem.name },
+            headerOrganizations = headerOrganizations.map(::organizationParts),
             groups = details.groups,
         )
     }
 
-    private fun headerNickname(details: ContactDetails): ContactDataItem.Nickname? {
+    private fun headerNicknames(details: ContactDetails): List<ContactDataItem.Nickname> {
         return details.dataItems
             .filterIsInstance<ContactDataItem.Nickname>()
             .sortedWith(CONTACT_DATA_ITEM_PRIORITY)
-            .firstOrNull { dataItem ->
+            .filter { dataItem ->
                 !dataItem.name.isNullOrBlank() && !duplicatesDisplayName(dataItem, details)
             }
     }
@@ -97,13 +96,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         }
     }
 
-    private fun organizationParts(
-        organization: ContactDataItem.Organization?,
-    ): List<String> {
-        if (organization == null) {
-            return emptyList()
-        }
-
+    private fun organizationParts(organization: ContactDataItem.Organization): List<String> {
         return listOfNotNull(
             organization.title,
             organization.department,
@@ -111,11 +104,11 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         ).mapNotNull { part -> part.trimmedOrNull() }
     }
 
-    private fun headerOrganization(details: ContactDetails): ContactDataItem.Organization? {
+    private fun headerOrganizations(details: ContactDetails): List<ContactDataItem.Organization> {
         return details.dataItems
             .filterIsInstance<ContactDataItem.Organization>()
             .sortedWith(CONTACT_DATA_ITEM_PRIORITY)
-            .firstOrNull { dataItem -> !dataItem.formattedCompany.isNullOrBlank() }
+            .filter { dataItem -> organizationParts(dataItem).isNotEmpty() }
     }
 
     private fun buildContactCard(
@@ -189,17 +182,27 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
         dataItems: List<ContactDataItem>,
         details: ContactDetails,
     ): ContactEntryGroup {
+        val defaultDataItemId = defaultDataItemId(dataItems)
+
         return ContactEntryGroup(
             mimeType = mimeType,
             entries = dataItems.mapNotNull { dataItem ->
-                toEntry(dataItem, details)
+                toEntry(dataItem, details, defaultDataItemId)
             },
         )
+    }
+
+    private fun defaultDataItemId(dataItems: List<ContactDataItem>): Long? {
+        return dataItems
+            .firstOrNull { dataItem ->
+                dataItem.isSuperPrimary || dataItem.isPrimary
+            }?.id
     }
 
     private fun toEntry(
         dataItem: ContactDataItem,
         details: ContactDetails,
+        defaultDataItemId: Long?,
     ): ContactEntry? {
         val content = toContent(dataItem, details)?.takeIf { entry ->
             !entry.isEmpty()
@@ -210,6 +213,7 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
             mimeType = dataItem.mimeType,
             kind = dataItem.kind(),
             isSuperPrimary = dataItem.isSuperPrimary,
+            isDefault = dataItem.id == defaultDataItemId,
             header = content.header,
             subHeader = content.subHeader,
             text = content.text,
@@ -583,11 +587,11 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
 
         val LEADING_MIME_TYPES = listOf(
             Phone.CONTENT_ITEM_TYPE,
-            SipAddress.CONTENT_ITEM_TYPE,
             Email.CONTENT_ITEM_TYPE,
             StructuredPostal.CONTENT_ITEM_TYPE,
             Event.CONTENT_ITEM_TYPE,
             Website.CONTENT_ITEM_TYPE,
+            SipAddress.CONTENT_ITEM_TYPE,
             Relation.CONTENT_ITEM_TYPE,
             Im.CONTENT_ITEM_TYPE,
             Identity.CONTENT_ITEM_TYPE,

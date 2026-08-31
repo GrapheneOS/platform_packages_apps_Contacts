@@ -13,23 +13,26 @@ import com.android.contacts.data.settings.model.DisplaySettings
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
 import com.android.contacts.data.settings.model.SortOrder
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
+import com.android.contacts.domain.calllog.usecase.GetRecentCalls
 import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
-import com.android.contacts.domain.calllog.usecase.GetRecentCalls
-import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
+import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.contactDetails
+import com.android.contacts.tests.factory.contactDetailsLoadedContent
 import com.android.contacts.tests.factory.contactDetailsMenu
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity
 import com.android.contacts.ui.contactdetails.screen.ContactDetailsViewModel
+import com.android.contacts.ui.contactdetails.screen.delegate.ContactDetailsContentDelegateImpl
+import com.android.contacts.ui.contactdetails.screen.delegate.ContactFlagsDelegateImpl
+import com.android.contacts.ui.contactdetails.screen.delegate.ContactLinkDelegateImpl
 import com.android.contacts.ui.contactdetails.screen.mapper.ContactDetailsUiStateMapper
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsArguments
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,25 +79,45 @@ internal abstract class BaseContactDetailsViewModelTest {
         every { getContactQuickActions(any()) } returns emptyList()
         coEvery { getRecentCalls(any()) } returns emptyList()
         coEvery { getCallingSimOptions(any()) } returns null
-        every { displaySettingsRepository.observeDisplaySettings() } returns flowOf(DISPLAY_SETTINGS)
+        every { displaySettingsRepository.observeDisplaySettings() } returns
+            flowOf(DISPLAY_SETTINGS)
         every {
             contactDetailsUiStateMapper.map(any(), any(), any(), any(), any(), any(), any())
         } answers { loadedState.value }
     }
 
     protected fun createViewModel(): ContactDetailsViewModel {
+        val flagsDelegate = ContactFlagsDelegateImpl(
+            contactActionsRepository = contactActionsRepository,
+        )
+
         return ContactDetailsViewModel(
             savedStateHandle = savedStateHandle,
+            contentDelegate = createContentDelegate(flagsDelegate),
+            flagsDelegate = flagsDelegate,
+            linkDelegate = ContactLinkDelegateImpl(
+                contactActionsRepository = contactActionsRepository,
+            ),
             contactDetailsRepository = contactDetailsRepository,
             contactActionsRepository = contactActionsRepository,
+            contactShortcutRepository = contactShortcutRepository,
+        )
+    }
+
+    private fun createContentDelegate(
+        flagsDelegate: ContactFlagsDelegateImpl,
+    ): ContactDetailsContentDelegateImpl {
+        return ContactDetailsContentDelegateImpl(
+            contactDetailsRepository = contactDetailsRepository,
+            displaySettingsRepository = displaySettingsRepository,
             buildContactDetailsCards = buildContactDetailsCards,
             getContactDetailsMenu = getContactDetailsMenu,
             getContactQuickActions = getContactQuickActions,
             getRecentCalls = getRecentCalls,
             getCallingSimOptions = getCallingSimOptions,
             contactDetailsUiStateMapper = contactDetailsUiStateMapper,
-            contactShortcutRepository = contactShortcutRepository,
-            displaySettingsRepository = displaySettingsRepository,
+            contactFlagsDelegate = flagsDelegate,
+            ioDispatcher = mainDispatcherRule.testDispatcher,
         )
     }
 
@@ -112,9 +135,11 @@ internal abstract class BaseContactDetailsViewModelTest {
 
     protected fun ContactDetailsViewModel.bindContact(): ContactDetailsViewModel {
         bind(
-            lookupUri = LOOKUP_URI,
-            excludedMimeTypes = emptySet(),
-            prioritizedMimeType = null,
+            arguments = ContactDetailsArguments(
+                lookupUri = LOOKUP_URI,
+                excludedMimeTypes = emptySet(),
+                prioritizedMimeType = null,
+            ),
             callbackActivity = ContactDetailsActivity::class.java,
         )
 
@@ -141,25 +166,11 @@ internal abstract class BaseContactDetailsViewModelTest {
             contactCard = emptyList(),
             connectedApps = emptyList(),
             notes = emptyList(),
-            headerNickname = null,
-            headerOrganizationParts = emptyList(),
+            headerNicknames = emptyList(),
+            headerOrganizations = emptyList(),
             groups = emptyList(),
         )
 
-        val LOADED_CONTENT = ContactDetailsContent.Loaded(
-            callingSim = null,
-            recentCalls = persistentListOf(),
-            groups = persistentListOf(),
-            header = mockk(relaxed = true),
-            quickActions = persistentListOf(),
-            contactCard = persistentListOf(),
-            connectedApps = persistentListOf(),
-            notes = persistentListOf(),
-            settings = persistentListOf(),
-            accounts = persistentListOf(),
-            emptyPrompt = null,
-            menu = contactDetailsMenu(),
-            isStarred = false,
-        )
+        val LOADED_CONTENT = contactDetailsLoadedContent()
     }
 }

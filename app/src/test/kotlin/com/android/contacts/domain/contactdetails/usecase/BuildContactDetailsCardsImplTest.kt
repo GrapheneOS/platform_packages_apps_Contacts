@@ -81,9 +81,9 @@ class BuildContactDetailsCardsImplTest {
         assertEquals(
             listOf(
                 Phone.CONTENT_ITEM_TYPE,
-                SipAddress.CONTENT_ITEM_TYPE,
                 Email.CONTENT_ITEM_TYPE,
                 StructuredPostal.CONTENT_ITEM_TYPE,
+                SipAddress.CONTENT_ITEM_TYPE,
             ),
             mimeTypes,
         )
@@ -140,6 +140,39 @@ class BuildContactDetailsCardsImplTest {
     }
 
     @Test
+    fun invoke_withinAMimeType_marksTheSuperPrimaryItemAsTheDefault() {
+        val details = detailsOf(
+            phone(id = 1L, number = "4155551111"),
+            phone(id = 2L, number = "4155552222", isSuperPrimary = true),
+        )
+        val entries = buildContactDetailsCards(details, null).contactCard.first().entries
+
+        assertEquals(listOf(2L), entries.filter(ContactEntry::isDefault).map(ContactEntry::id))
+    }
+
+    @Test
+    fun invoke_withoutASuperPrimaryItem_marksThePrimaryItemAsTheDefault() {
+        val details = detailsOf(
+            phone(id = 1L, number = "4155551111"),
+            phone(id = 2L, number = "4155552222", isPrimary = true),
+        )
+        val entries = buildContactDetailsCards(details, null).contactCard.first().entries
+
+        assertEquals(listOf(2L), entries.filter(ContactEntry::isDefault).map(ContactEntry::id))
+    }
+
+    @Test
+    fun invoke_withoutAnyPrimaryItem_marksNoDefault() {
+        val details = detailsOf(
+            phone(id = 1L, number = "4155551111"),
+            phone(id = 2L, number = "4155552222"),
+        )
+        val entries = buildContactDetailsCards(details, null).contactCard.first().entries
+
+        assertTrue(entries.none(ContactEntry::isDefault))
+    }
+
+    @Test
     fun invoke_keepsTheNoteOutOfTheContactCard() {
         val details = detailsOf(
             note(note = "Met at the airport"),
@@ -169,39 +202,36 @@ class BuildContactDetailsCardsImplTest {
         )
         val cards = buildContactDetailsCards(details, null)
 
-        assertEquals("Al", cards.headerNickname)
-        assertEquals(listOf("Engineer", "R&D", "Acme"), cards.headerOrganizationParts)
+        assertEquals(listOf("Al"), cards.headerNicknames)
+        assertEquals(listOf(listOf("Engineer", "R&D", "Acme")), cards.headerOrganizations)
     }
 
     @Test
     fun invoke_forTheHeaderNicknameAndOrganization_buildsNoCardEntries() {
         val details = detailsOf(
             nickname(name = "Al"),
-            organization(formattedCompany = "Acme"),
+            organization(formattedCompany = "Acme", company = "Acme"),
         )
 
         assertTrue(buildContactDetailsCards(details, null).contactCard.isEmpty())
     }
 
     @Test
-    fun invoke_withSeveralNicknames_promotesTheSuperPrimaryOneAndKeepsTheRest() {
+    fun invoke_withSeveralNicknames_promotesThemAllInPriorityOrder() {
         val details = detailsOf(
             nickname(id = 1L, name = "Al"),
             nickname(id = 2L, name = "Ally", isSuperPrimary = true),
         )
         val cards = buildContactDetailsCards(details, null)
 
-        assertEquals("Ally", cards.headerNickname)
-        assertEquals(
-            listOf(ContactEntryText.Value("Al")),
-            cards.contactCard.single().entries.map(ContactEntry::header),
-        )
+        assertEquals(listOf("Ally", "Al"), cards.headerNicknames)
+        assertTrue(cards.contactCard.isEmpty())
     }
 
     @Test
-    fun invoke_withSeveralOrganizations_promotesThePrimaryOneAndKeepsTheRest() {
+    fun invoke_withSeveralOrganizations_promotesThemAllInPriorityOrder() {
         val details = detailsOf(
-            organization(id = 1L, formattedCompany = "Acme"),
+            organization(id = 1L, formattedCompany = "Acme", company = "Acme"),
             organization(
                 id = 2L,
                 formattedCompany = "Globex",
@@ -211,11 +241,23 @@ class BuildContactDetailsCardsImplTest {
         )
         val cards = buildContactDetailsCards(details, null)
 
-        assertEquals(listOf("Globex"), cards.headerOrganizationParts)
-        assertEquals(
-            listOf(ContactEntryText.Value("Acme")),
-            cards.contactCard.single().entries.map(ContactEntry::header),
+        assertEquals(listOf(listOf("Globex"), listOf("Acme")), cards.headerOrganizations)
+        assertTrue(cards.contactCard.isEmpty())
+    }
+
+    @Test
+    fun invoke_withAnOrganizationWithoutACompany_promotesItsTitleToTheHeader() {
+        val details = detailsOf(
+            organization(
+                formattedCompany = null,
+                company = null,
+                title = "Test Data Custodian",
+            ),
         )
+        val cards = buildContactDetailsCards(details, null)
+
+        assertEquals(listOf(listOf("Test Data Custodian")), cards.headerOrganizations)
+        assertTrue(cards.contactCard.isEmpty())
     }
 
     @Test
@@ -223,14 +265,14 @@ class BuildContactDetailsCardsImplTest {
         val details = detailsOf(nickname(name = "Al", rawContactId = 7L))
             .copy(nameRawContactId = 7L, displayNameSource = ContactDisplayNameSource.NICKNAME)
 
-        assertNull(buildContactDetailsCards(details, null).headerNickname)
+        assertTrue(buildContactDetailsCards(details, null).headerNicknames.isEmpty())
     }
 
     @Test
     fun invoke_withABlankNickname_leavesTheHeaderNicknameEmpty() {
         val details = detailsOf(nickname(name = " "))
 
-        assertNull(buildContactDetailsCards(details, null).headerNickname)
+        assertTrue(buildContactDetailsCards(details, null).headerNicknames.isEmpty())
     }
 
     @Test
@@ -273,7 +315,10 @@ class BuildContactDetailsCardsImplTest {
         val details = detailsOf(nickname(name = "Al", rawContactId = 11L))
             .copy(nameRawContactId = 7L, displayNameSource = ContactDisplayNameSource.NICKNAME)
 
-        assertEquals("Al", buildContactDetailsCards(details, null).headerNickname)
+        assertEquals(
+            listOf("Al"),
+            buildContactDetailsCards(details, null).headerNicknames,
+        )
     }
 
     @Test
@@ -408,19 +453,6 @@ class BuildContactDetailsCardsImplTest {
     }
 
     @Test
-    fun invoke_forASecondOrganization_copiesTheFormattedCompany() {
-        val details = detailsOf(
-            organization(id = 1L, formattedCompany = "Acme", isSuperPrimary = true),
-            organization(id = 2L, formattedCompany = "Globex, Engineer"),
-        )
-        val entry = buildContactDetailsCards(details, null).contactCard.first().entries.first()
-
-        assertEquals(ContactEntryText.Value("Globex, Engineer"), entry.header)
-        assertEquals(ContactEntryText.Label(ContactEntryLabel.ORGANIZATION), entry.subHeader)
-        assertEquals("Globex, Engineer", entry.copyText)
-    }
-
-    @Test
     fun invoke_forAnImProtocol_putsTheAddressInTheHeader() {
         val details = detailsOf(
             im(protocolLabel = "AIM", isCustomProtocol = false),
@@ -477,8 +509,8 @@ class BuildContactDetailsCardsImplTest {
 
         assertTrue(cards.contactCard.isEmpty())
         assertTrue(cards.notes.isEmpty())
-        assertNull(cards.headerNickname)
-        assertTrue(cards.headerOrganizationParts.isEmpty())
+        assertTrue(cards.headerNicknames.isEmpty())
+        assertTrue(cards.headerOrganizations.isEmpty())
         assertTrue(cards.groups.isEmpty())
     }
 

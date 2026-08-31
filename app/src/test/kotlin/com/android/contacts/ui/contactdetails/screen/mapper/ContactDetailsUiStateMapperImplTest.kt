@@ -146,13 +146,32 @@ class ContactDetailsUiStateMapperImplTest {
     fun map_joinsTheNicknameAndTheQuotedPhoneticNameIntoTheFirstSubtitle() {
         val details = contactDetails(displayName = "Alex Doe", phoneticName = "Alek Dou")
         val cards = cardsOf(
-            headerNickname = "Al",
-            headerOrganizationParts = listOf("Engineer", "R&D", "Acme"),
+            headerNicknames = listOf("Al"),
+            headerOrganizations = listOf(listOf("Engineer", "R&D", "Acme")),
         )
 
         val header = mapOf(details, cards).header
 
         assertEquals(listOf("Al • “Alek Dou”", "Engineer • R&D • Acme"), header.subtitles)
+    }
+
+    @Test
+    fun map_withSeveralNicknames_joinsThemIntoTheFirstSubtitle() {
+        val cards = cardsOf(headerNicknames = listOf("Al", "Ally"))
+
+        assertEquals(listOf("Al, Ally"), mapOf(cards = cards).header.subtitles)
+    }
+
+    @Test
+    fun map_withSeveralOrganizations_givesEachOneItsOwnSubtitle() {
+        val cards = cardsOf(
+            headerOrganizations = listOf(listOf("Engineer", "Acme"), listOf("Custodian")),
+        )
+
+        assertEquals(
+            listOf("Engineer • Acme", "Custodian"),
+            mapOf(cards = cards).header.subtitles,
+        )
     }
 
     @Test
@@ -470,6 +489,48 @@ class ContactDetailsUiStateMapperImplTest {
     }
 
     @Test
+    fun map_forTheDefaultPhone_marksTheTypeAsDefault() {
+        val cards = cardsOf(
+            contactCard = groupOf(
+                entry(isDefault = true, text = "Mobile", kind = ContactEntryKind.PHONE),
+                mimeType = Phone.CONTENT_ITEM_TYPE,
+            ),
+        )
+
+        val state = mapOf(cards = cards)
+
+        assertEquals("Mobile · Default", firstContactEntry(state).text)
+    }
+
+    @Test
+    fun map_forTheDefaultPostalAddress_marksTheTypeAsDefault() {
+        val cards = cardsOf(
+            contactCard = groupOf(
+                entry(isDefault = true, text = "Work", kind = ContactEntryKind.POSTAL),
+                mimeType = StructuredPostal.CONTENT_ITEM_TYPE,
+            ),
+        )
+
+        val state = mapOf(cards = cards)
+
+        assertEquals("Work · Default", firstContactEntry(state).text)
+    }
+
+    @Test
+    fun map_forAnEntryThatIsNotTheDefault_keepsTheTypeAlone() {
+        val cards = cardsOf(
+            contactCard = groupOf(
+                entry(text = "Mobile", kind = ContactEntryKind.PHONE),
+                mimeType = Phone.CONTENT_ITEM_TYPE,
+            ),
+        )
+
+        val state = mapOf(cards = cards)
+
+        assertEquals("Mobile", firstContactEntry(state).text)
+    }
+
+    @Test
     fun map_withTheOnlyPhoneNumber_doesNotOfferChangingTheDefault() {
         val cards = cardsOf(contactCard = groupOf(entry(), mimeType = Phone.CONTENT_ITEM_TYPE))
 
@@ -584,8 +645,8 @@ class ContactDetailsUiStateMapperImplTest {
     private fun cardsOf(
         contactCard: List<ContactEntryGroup> = emptyList(),
         notes: List<ContactEntryGroup> = emptyList(),
-        headerNickname: String? = null,
-        headerOrganizationParts: List<String> = emptyList(),
+        headerNicknames: List<String> = emptyList(),
+        headerOrganizations: List<List<String>> = emptyList(),
         groups: List<ContactGroup> = emptyList(),
         connectedApps: List<ContactConnectedApp> = emptyList(),
     ): ContactDetailsCards {
@@ -593,8 +654,8 @@ class ContactDetailsUiStateMapperImplTest {
             contactCard = contactCard,
             connectedApps = connectedApps,
             notes = notes,
-            headerNickname = headerNickname,
-            headerOrganizationParts = headerOrganizationParts,
+            headerNicknames = headerNicknames,
+            headerOrganizations = headerOrganizations,
             groups = groups,
         )
     }
@@ -611,6 +672,8 @@ class ContactDetailsUiStateMapperImplTest {
         copyLabel: ContactEntryText? = null,
         actions: ContactEntryActions = ContactEntryActions(),
         isSuperPrimary: Boolean = false,
+        isDefault: Boolean = isSuperPrimary,
+        text: String? = null,
         kind: ContactEntryKind = ContactEntryKind.OTHER,
     ): ContactEntry {
         return ContactEntry(
@@ -618,9 +681,10 @@ class ContactDetailsUiStateMapperImplTest {
             mimeType = null,
             kind = kind,
             isSuperPrimary = isSuperPrimary,
+            isDefault = isDefault,
             header = header,
             subHeader = null,
-            text = null,
+            text = text,
             copyText = null,
             copyLabel = copyLabel,
             actions = actions,

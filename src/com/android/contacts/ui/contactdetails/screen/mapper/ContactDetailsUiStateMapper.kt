@@ -132,15 +132,19 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         val quotedPhoneticName = phoneticName?.let { name ->
             context.getString(R.string.header_phonetic_name_quoted, name)
         }
-        val nameLine = listOfNotNull(cards.headerNickname, quotedPhoneticName)
-            .joinToString(SUBTITLE_SEPARATOR)
+        val nicknames = cards.headerNicknames
+            .joinToString(NICKNAME_SEPARATOR)
+            .takeIf { line -> line.isNotEmpty() }
+        val nameLine = listOfNotNull(
+            nicknames,
+            quotedPhoneticName,
+        ).joinToString(SUBTITLE_SEPARATOR)
+        val organizationLines = cards.headerOrganizations
+            .map { parts -> parts.joinToString(SUBTITLE_SEPARATOR) }
 
-        return listOfNotNull(
-            nameLine.takeIf { line -> line.isNotEmpty() },
-            cards.headerOrganizationParts
-                .joinToString(SUBTITLE_SEPARATOR)
-                .takeIf { line -> line.isNotEmpty() },
-        ).toImmutableList()
+        return (listOf(nameLine) + organizationLines)
+            .filter { line -> line.isNotEmpty() }
+            .toImmutableList()
     }
 
     private fun avatarImage(photo: ContactPhoto?): ContactAvatarImage? {
@@ -365,7 +369,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     }
 
     private fun entryText(entry: ContactEntry): String? {
-        if (!entry.isSuperPrimary || !isDefaultMarked(entry.kind)) {
+        if (!entry.isDefault || !isDefaultMarked(entry.kind)) {
             return entry.text
         }
 
@@ -379,7 +383,9 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     }
 
     private fun isDefaultMarked(kind: ContactEntryKind): Boolean {
-        return kind == ContactEntryKind.PHONE || kind == ContactEntryKind.EMAIL
+        return kind == ContactEntryKind.PHONE ||
+            kind == ContactEntryKind.EMAIL ||
+            kind == ContactEntryKind.POSTAL
     }
 
     private fun isDialable(mimeType: String?): Boolean {
@@ -517,5 +523,6 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     private companion object {
         const val NO_DATA_ID = -1L
         const val SUBTITLE_SEPARATOR = " • "
+        const val NICKNAME_SEPARATOR = ", "
     }
 }
