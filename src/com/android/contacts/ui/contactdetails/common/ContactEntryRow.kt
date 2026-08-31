@@ -70,8 +70,12 @@ internal fun ContactEntryRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val icon = entry.icon
-        if (icon != null && isIconVisible) {
-            EntryLeadingIcon(icon = icon)
+        if (icon != null) {
+            if (isIconVisible) {
+                EntryLeadingIcon(icon = icon)
+            } else {
+                Spacer(modifier = Modifier.width(Tokens.rowIconSize))
+            }
 
             Spacer(modifier = Modifier.width(Tokens.rowIconSpacing))
         }

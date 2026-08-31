@@ -5,6 +5,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.getUnclippedBoundsInRoot
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -14,6 +15,7 @@ import com.android.contacts.tests.factory.contactEntryGroupUiModel
 import com.android.contacts.tests.factory.contactEntryUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -88,6 +90,60 @@ internal class ContactEntryCardTest {
         )
 
         onNodeWithTag(CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX + 1L).assertIsNotEnabled()
+    }
+
+    @Test
+    fun entriesOfAGroup_startAtTheSameOffset() = runComposeUiTest {
+        setCardContent(
+            groups = persistentListOf(contactEntryGroupUiModel(entries = entries(count = 2))),
+        )
+
+        assertEquals(
+            onNodeWithText("entry 1").getUnclippedBoundsInRoot().left,
+            onNodeWithText("entry 2").getUnclippedBoundsInRoot().left,
+        )
+    }
+
+    @Test
+    fun withinAGroup_showsTheIconOnceForEachDistinctIcon() {
+        val groups = listOf(
+            contactEntryGroupUiModel(
+                entries = listOf(
+                    contactEntryUiModel(id = 1L, icon = ContactEntryIcon.BIRTHDAY),
+                    contactEntryUiModel(id = 2L, icon = ContactEntryIcon.EVENT),
+                    contactEntryUiModel(id = 3L, icon = ContactEntryIcon.EVENT),
+                ),
+            ),
+        )
+
+        val cells = contactEntryCells(groups)
+
+        assertEquals(
+            listOf(true, true, false),
+            cells.map(ContactEntryCellModel::isIconVisible),
+        )
+    }
+
+    @Test
+    fun theFirstEntryOfEachGroup_showsItsIcon() {
+        val groups = listOf(
+            contactEntryGroupUiModel(
+                entries = listOf(
+                    contactEntryUiModel(id = 1L, icon = ContactEntryIcon.CALL),
+                    contactEntryUiModel(id = 2L, icon = ContactEntryIcon.CALL),
+                ),
+            ),
+            contactEntryGroupUiModel(
+                entries = listOf(contactEntryUiModel(id = 3L, icon = ContactEntryIcon.EMAIL)),
+            ),
+        )
+
+        val cells = contactEntryCells(groups)
+
+        assertEquals(
+            listOf(true, false, true),
+            cells.map(ContactEntryCellModel::isIconVisible),
+        )
     }
 
     private fun entries(count: Int): List<ContactEntryUiModel> {
