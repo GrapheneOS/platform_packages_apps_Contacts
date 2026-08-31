@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,9 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -58,29 +59,33 @@ import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsAccountRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsActionRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsCallingSimDialog
+import com.android.contacts.ui.contactdetails.common.ContactDetailsConnectedAppRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
 import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
 import com.android.contacts.ui.contactdetails.common.ContactDetailsProgressDialog
-import com.android.contacts.ui.contactdetails.common.ContactDetailsConnectedAppRow
-import com.android.contacts.ui.contactdetails.common.ContactDetailsRecentCallRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsQuickActions
+import com.android.contacts.ui.contactdetails.common.ContactDetailsRecentCallRow
+import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTopAppBar
+import com.android.contacts.ui.contactdetails.common.ContactEntryCard
+import com.android.contacts.ui.contactdetails.common.ContactEntryRow
 import com.android.contacts.ui.contactdetails.common.imageVector
 import com.android.contacts.ui.contactdetails.common.measuredInto
 import com.android.contacts.ui.contactdetails.common.rememberOverlayHeight
-import com.android.contacts.ui.contactdetails.common.ContactEntryCard
-import com.android.contacts.ui.contactdetails.common.ContactEntryRow
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ACCOUNTS_TEST_TAG
+import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONTACT_CARD_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_NOTES_TEST_TAG
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ACCOUNTS_TEST_TAG
-import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RECENT_CALLS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactAccountUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
@@ -94,15 +99,19 @@ import com.android.contacts.ui.contactdetails.screen.model.RecentCallUiModel
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
-import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
 
 private const val VISIBLE_ALPHA = 1f
 private const val HIDDEN_ALPHA = 0f
 private const val HEADER_KEY = "header"
 private const val QUICK_ACTIONS_KEY = "quick_actions"
+private const val GROUPS_KEY = "groups"
+private const val CONTACT_CARD_KEY = "contact_card"
+private const val NOTES_KEY = "notes"
+private const val EMPTY_PROMPT_KEY = "empty_prompt"
+private const val RECENT_CALLS_KEY = "recent_calls"
+private const val CONNECTED_APPS_KEY = "connected_apps"
+private const val SETTINGS_KEY = "settings"
+private const val ACCOUNTS_KEY = "accounts"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -235,8 +244,8 @@ private fun ContactDetailsCards(
                 onAction = onAction,
                 contentPadding = contentPadding,
                 listState = listState,
-                headerHeight = headerHeight.value,
-                quickActionsHeight = quickActionsHeight.value,
+                headerHeight = headerHeight.pixels,
+                quickActionsHeight = quickActionsHeight.pixels,
             )
         }
 
@@ -259,7 +268,7 @@ private fun ContactDetailsCards(
                 .offset {
                     IntOffset(
                         x = 0,
-                        y = listState.headerOffset(headerHeight.value.roundToPx()),
+                        y = listState.headerOffset(headerHeight.pixels),
                     )
                 }
                 .measuredInto(headerHeight)
@@ -292,10 +301,20 @@ private fun ContactDetailsList(
     onAction: (Action) -> Unit,
     contentPadding: PaddingValues,
     listState: LazyListState,
-    headerHeight: Dp,
-    quickActionsHeight: Dp,
+    headerHeight: Int,
+    quickActionsHeight: Int,
 ) {
     val itemPadding = horizontalContentPadding(contentPadding)
+    val density = LocalDensity.current
+
+    val headerSpacing = with(density) {
+        headerHeight.toDp()
+    } + Tokens.cardGroupSpacing
+
+    val quickActionsSpacing = with(density) {
+        quickActionsHeight.toDp()
+    } + groupsSpacing(content.groups.isNotEmpty())
+
     var expandedConnectedApps by rememberSaveable { mutableStateOf(emptySet<String>()) }
 
     LazyColumn(
@@ -304,15 +323,15 @@ private fun ContactDetailsList(
         modifier = Modifier.fillMaxSize(),
     ) {
         item(key = HEADER_KEY) {
-            Spacer(modifier = Modifier.height(headerHeight + Tokens.cardGroupSpacing))
+            Spacer(modifier = Modifier.height(headerSpacing))
         }
 
         item(key = QUICK_ACTIONS_KEY) {
-            Spacer(modifier = Modifier.height(quickActionsHeight + groupsSpacing(content)))
+            Spacer(modifier = Modifier.height(quickActionsSpacing))
         }
 
         if (content.groups.isNotEmpty()) {
-            item(key = "groups") {
+            item(key = GROUPS_KEY) {
                 ContactDetailsGroups(
                     groups = content.groups,
                     onGroupClick = { groupId -> onAction(Action.GroupClick(groupId)) },
@@ -323,7 +342,7 @@ private fun ContactDetailsList(
         }
 
         if (content.contactCard.isNotEmpty()) {
-            item(key = "contact_card") {
+            item(key = CONTACT_CARD_KEY) {
                 ContactDetailsEntryCard(
                     groups = content.contactCard,
                     onAction = onAction,
@@ -336,26 +355,23 @@ private fun ContactDetailsList(
         }
 
         if (content.notes.isNotEmpty()) {
-            item(key = "notes") {
-                ContactDetailsSection(
-                    title = stringResource(R.string.label_notes),
-                    modifier = Modifier
-                        .padding(itemPadding)
-                        .testTag(CONTACT_DETAILS_NOTES_TEST_TAG)
-                        .padding(bottom = Tokens.cardGroupSpacing),
-                ) {
-                    ContactDetailsEntryCard(
-                        groups = content.notes,
-                        onAction = onAction,
-                        isTopRounded = false,
-                    )
-                }
+            cardSection(
+                key = NOTES_KEY,
+                titleResource = R.string.label_notes,
+                testTag = CONTACT_DETAILS_NOTES_TEST_TAG,
+                itemPadding = itemPadding,
+            ) {
+                ContactDetailsEntryCard(
+                    groups = content.notes,
+                    onAction = onAction,
+                    isTopRounded = false,
+                )
             }
         }
 
         val emptyPrompt = content.emptyPrompt
         if (emptyPrompt != null) {
-            item(key = "empty_prompt") {
+            item(key = EMPTY_PROMPT_KEY) {
                 ContactDetailsEmptyPrompt(
                     prompt = emptyPrompt,
                     onEntryClick = { onAction(Action.AddDetailsClick) },
@@ -367,65 +383,56 @@ private fun ContactDetailsList(
         }
 
         if (content.recentCalls.isNotEmpty()) {
-            item(key = "recent_calls") {
-                ContactDetailsSection(
-                    title = stringResource(R.string.contact_details_recent_activity),
-                    modifier = Modifier
-                        .padding(itemPadding)
-                        .testTag(CONTACT_DETAILS_RECENT_CALLS_TEST_TAG)
-                        .padding(bottom = Tokens.cardGroupSpacing),
-                ) {
-                    ContactDetailsRecentCalls(
-                        recentCalls = content.recentCalls,
-                        onRecentCallClick = { onAction(Action.RecentCallClick) },
-                    )
-                }
+            cardSection(
+                key = RECENT_CALLS_KEY,
+                titleResource = R.string.contact_details_recent_activity,
+                testTag = CONTACT_DETAILS_RECENT_CALLS_TEST_TAG,
+                itemPadding = itemPadding,
+            ) {
+                ContactDetailsRecentCalls(
+                    recentCalls = content.recentCalls,
+                    onRecentCallClick = { onAction(Action.RecentCallClick) },
+                )
             }
         }
 
         if (content.connectedApps.isNotEmpty()) {
-            item(key = "connected_apps") {
-                ContactDetailsSection(
-                    title = stringResource(R.string.contact_details_connected_apps),
-                    modifier = Modifier
-                        .padding(itemPadding)
-                        .testTag(CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG)
-                        .padding(bottom = Tokens.cardGroupSpacing),
-                ) {
-                    ContactDetailsConnectedApps(
-                        connectedApps = content.connectedApps,
-                        expandedPackages = expandedConnectedApps,
-                        onAppClick = { packageName ->
-                            expandedConnectedApps = when (packageName) {
-                                in expandedConnectedApps -> expandedConnectedApps - packageName
-                                else -> expandedConnectedApps + packageName
-                            }
-                        },
-                        onAction = onAction,
-                    )
-                }
+            cardSection(
+                key = CONNECTED_APPS_KEY,
+                titleResource = R.string.contact_details_connected_apps,
+                testTag = CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG,
+                itemPadding = itemPadding,
+            ) {
+                ContactDetailsConnectedApps(
+                    connectedApps = content.connectedApps,
+                    expandedPackages = expandedConnectedApps,
+                    onAppClick = { packageName ->
+                        expandedConnectedApps = when (packageName) {
+                            in expandedConnectedApps -> expandedConnectedApps - packageName
+                            else -> expandedConnectedApps + packageName
+                        }
+                    },
+                    onAction = onAction,
+                )
             }
         }
 
         if (content.settings.isNotEmpty()) {
-            item(key = "settings") {
-                ContactDetailsSection(
-                    title = stringResource(R.string.contact_details_settings_title),
-                    modifier = Modifier
-                        .padding(itemPadding)
-                        .testTag(CONTACT_DETAILS_SETTINGS_TEST_TAG)
-                        .padding(bottom = Tokens.cardGroupSpacing),
-                ) {
-                    ContactDetailsSettings(
-                        settings = content.settings,
-                        onAction = onAction,
-                    )
-                }
+            cardSection(
+                key = SETTINGS_KEY,
+                titleResource = R.string.contact_details_settings_title,
+                testTag = CONTACT_DETAILS_SETTINGS_TEST_TAG,
+                itemPadding = itemPadding,
+            ) {
+                ContactDetailsSettings(
+                    settings = content.settings,
+                    onAction = onAction,
+                )
             }
         }
 
         if (content.accounts.isNotEmpty()) {
-            item(key = "accounts") {
+            item(key = ACCOUNTS_KEY) {
                 ContactDetailsAccounts(
                     accounts = content.accounts,
                     modifier = Modifier
@@ -457,10 +464,10 @@ private fun ContactDetailsAccounts(
     }
 }
 
-private fun groupsSpacing(content: Content.Loaded): Dp {
+private fun groupsSpacing(hasGroups: Boolean): Dp {
     return when {
-        content.groups.isEmpty() -> Tokens.cardGroupSpacing
-        else -> Tokens.groupChipSectionSpacing
+        hasGroups -> Tokens.groupChipSectionSpacing
+        else -> Tokens.cardGroupSpacing
     }
 }
 
@@ -499,6 +506,26 @@ private fun horizontalContentPadding(contentPadding: PaddingValues): PaddingValu
     )
 }
 
+private fun LazyListScope.cardSection(
+    key: String,
+    @StringRes titleResource: Int,
+    testTag: String,
+    itemPadding: PaddingValues,
+    content: @Composable () -> Unit,
+) {
+    item(key = key) {
+        ContactDetailsSection(
+            title = stringResource(titleResource),
+            modifier = Modifier
+                .padding(itemPadding)
+                .testTag(testTag)
+                .padding(bottom = Tokens.cardGroupSpacing),
+        ) {
+            content()
+        }
+    }
+}
+
 @Composable
 private fun ContactDetailsSection(
     title: String,
@@ -535,18 +562,15 @@ private fun ContactDetailsRecentCalls(
     }
 }
 
-private fun settingToggle(setting: ContactSettingUiModel): (@Composable () -> Unit)? {
-    val isChecked = setting.isChecked ?: return null
-
-    return {
-        Switch(
-            checked = isChecked,
-            onCheckedChange = null,
-            modifier = Modifier.semantics {
-                toggleableState = ToggleableState(isChecked)
-            },
-        )
-    }
+@Composable
+private fun SettingSwitch(isChecked: Boolean) {
+    Switch(
+        checked = isChecked,
+        onCheckedChange = null,
+        modifier = Modifier.semantics {
+            toggleableState = ToggleableState(isChecked)
+        },
+    )
 }
 
 @Composable
@@ -560,6 +584,8 @@ private fun ContactDetailsSettings(
         modifier = modifier,
     ) {
         settings.forEachIndexed { index, setting ->
+            val isChecked = setting.isChecked
+
             ContactDetailsActionRow(
                 icon = setting.icon.imageVector(),
                 title = setting.title,
@@ -571,7 +597,9 @@ private fun ContactDetailsSettings(
                 isFirst = false,
                 isLast = index == settings.lastIndex,
                 onClick = { onAction(setting.action) },
-                trailingContent = settingToggle(setting),
+                trailingContent = isChecked?.let { checked ->
+                    { SettingSwitch(isChecked = checked) }
+                },
                 modifier = Modifier.testTag(settingTestTag(setting)),
             )
         }
@@ -600,8 +628,8 @@ private fun ContactDetailsEntryCard(
         },
         onEntrySetDefaultClick = { entry -> onAction(Action.SetDefaultClick(entry.id)) },
         onEntryClearDefaultClick = { entry -> onAction(Action.ClearDefaultClick(entry.id)) },
-        onAlternateActionClick = { action -> onAction(Action.EntryClick(action)) },
-        onThirdActionClick = { action -> onAction(Action.EntryClick(action)) },
+        onEntryCallingSimClick = { onAction(Action.CallingSimClick) },
+        onEntryActionClick = { action -> onAction(Action.EntryClick(action)) },
         modifier = modifier,
     )
 }
@@ -629,10 +657,12 @@ private fun ContactDetailsConnectedApps(
             )
 
             if (isExpanded) {
+                val groups = remember(connectedApp.entries) {
+                    persistentListOf(ContactEntryGroupUiModel(entries = connectedApp.entries))
+                }
+
                 ContactDetailsEntryCard(
-                    groups = persistentListOf(
-                        ContactEntryGroupUiModel(entries = connectedApp.entries),
-                    ),
+                    groups = groups,
                     onAction = onAction,
                     isTopRounded = false,
                 )
@@ -666,8 +696,8 @@ private fun ContactDetailsEmptyPrompt(
                     onCopyClick = {},
                     onSetDefaultClick = {},
                     onClearDefaultClick = {},
-                    onAlternateActionClick = {},
-                    onThirdActionClick = {},
+                    onCallingSimClick = {},
+                    onEntryActionClick = {},
                 )
             }
         }
@@ -855,10 +885,13 @@ private fun previewEntry(
         subHeader = null,
         text = text,
         isSuperPrimary = false,
+        isDefault = false,
         isDefaultChangeable = false,
+        isCallingSimChangeable = false,
         action = null,
         alternateAction = null,
-        thirdAction = null,
+        enhancedCallAction = null,
+        editBeforeCallAction = null,
         copyText = header,
         copyLabel = text,
     )

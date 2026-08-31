@@ -27,14 +27,12 @@ import android.telecom.TelecomManager;
 import android.telecom.VideoProfile;
 import android.telephony.CarrierConfigManager;
 import android.telephony.PhoneNumberUtils;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.contacts.util.PermissionsUtil;
 import com.android.contacts.util.PhoneNumberHelper;
 import com.android.contactsbind.FeedbackHelper;
 import com.android.contactsbind.experiments.Flags;
-import com.android.phone.common.PhoneConstants;
 
 import java.util.List;
 
@@ -116,13 +114,10 @@ public class CallUtil {
     /**
      * A variant of {@link #getCallIntent} for starting a video call.
      */
-    public static Intent getVideoCallIntent(String number, String callOrigin) {
+    public static Intent getVideoCallIntent(String number) {
         final Intent intent = new Intent(Intent.ACTION_CALL, getCallUri(number));
         intent.putExtra(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE,
                 VideoProfile.STATE_BIDIRECTIONAL);
-        if (!TextUtils.isEmpty(callOrigin)) {
-            intent.putExtra(PhoneConstants.EXTRA_CALL_ORIGIN, callOrigin);
-        }
         return intent;
     }
 

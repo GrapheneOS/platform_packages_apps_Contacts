@@ -1,8 +1,8 @@
 package com.android.contacts.domain.contactdetails.usecase
 
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
+import com.android.contacts.data.contactdetails.intent.IsIntentRegistered
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
-import com.android.contacts.domain.util.IsIntentRegistered
 import javax.inject.Inject
 
 internal fun interface IsEntryActionAvailable {

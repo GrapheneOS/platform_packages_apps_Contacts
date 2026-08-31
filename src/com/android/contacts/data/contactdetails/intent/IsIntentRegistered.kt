@@ -1,4 +1,4 @@
-package com.android.contacts.domain.util
+package com.android.contacts.data.contactdetails.intent
 
 import android.content.Intent
 import android.content.pm.PackageManager
