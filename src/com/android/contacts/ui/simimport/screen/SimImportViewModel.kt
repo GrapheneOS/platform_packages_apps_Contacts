@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
@@ -115,7 +116,7 @@ internal class SimImportViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        loadAccounts()
+        loadAccounts(AccountFilter.CONTACTS_INSERTABLE)
             .onEach { newAccounts ->
                 accounts.value = newAccounts
                 currentAccount.value = findCurrentAccount(newAccounts)
