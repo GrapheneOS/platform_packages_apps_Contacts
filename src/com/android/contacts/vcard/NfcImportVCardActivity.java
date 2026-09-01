@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.android.contacts.R;
 import com.android.contacts.activities.RequestPermissionsActivity;
+import com.android.contacts.domain.vcard.model.VCardVersion;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.util.ImplicitIntentsUtil;
@@ -105,7 +106,7 @@ public class NfcImportVCardActivity extends Activity implements ServiceConnectio
         VCardParser parser;
         VCardEntryCounter counter = null;
         VCardSourceDetector detector = null;
-        int vcardVersion = ImportVCardActivity.VCARD_VERSION_V21;
+        int vcardVersion = VCardVersion.V21.getValue();
         try {
             ByteArrayInputStream is = new ByteArrayInputStream(mRecord.getPayload());
             is.mark(0);
@@ -118,7 +119,7 @@ public class NfcImportVCardActivity extends Activity implements ServiceConnectio
                 parser.parse(is);
             } catch (VCardVersionException e1) {
                 is.reset();
-                vcardVersion = ImportVCardActivity.VCARD_VERSION_V30;
+                vcardVersion = VCardVersion.V30.getValue();
                 parser = new VCardParser_V30();
                 try {
                     counter = new VCardEntryCounter();
@@ -128,7 +129,7 @@ public class NfcImportVCardActivity extends Activity implements ServiceConnectio
                     parser.parse(is);
                 } catch (VCardVersionException e2) {
                     is.reset();
-                    vcardVersion = ImportVCardActivity.VCARD_VERSION_V40;
+                    vcardVersion = VCardVersion.V40.getValue();
                     parser = new VCardParser_V40();
                     try {
                         counter = new VCardEntryCounter();

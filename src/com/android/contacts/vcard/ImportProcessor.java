@@ -21,6 +21,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.util.Log;
 
+import com.android.contacts.domain.vcard.model.VCardVersion;
 import com.android.contactsbind.FeedbackHelper;
 import com.android.vcard.VCardEntry;
 import com.android.vcard.VCardEntryCommitter;
@@ -129,15 +130,15 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
             return;
         }
         final int[] possibleVCardVersions;
-        if (request.vcardVersion == ImportVCardActivity.VCARD_VERSION_AUTO_DETECT) {
+        if (request.vcardVersion == VCardVersion.AutoDetect.getValue()) {
             /**
              * Note: this code assumes that a given Uri is able to be opened more than once,
              * which may not be true in certain conditions.
              */
             possibleVCardVersions = new int[] {
-                    ImportVCardActivity.VCARD_VERSION_V21,
-                    ImportVCardActivity.VCARD_VERSION_V30,
-                    ImportVCardActivity.VCARD_VERSION_V40
+                    VCardVersion.V21.getValue(),
+                    VCardVersion.V30.getValue(),
+                    VCardVersion.V40.getValue(),
             };
         } else {
             possibleVCardVersions = new int[] {
@@ -233,9 +234,9 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
                 // In the worst case, a user may call cancel() just before creating
                 // mVCardParser.
                 synchronized (this) {
-                    if (vcardVersion == ImportVCardActivity.VCARD_VERSION_V30) {
+                    if (vcardVersion == VCardVersion.V30.getValue()) {
                         mVCardParser = new VCardParser_V30(vcardType);
-                    } else if (vcardVersion == ImportVCardActivity.VCARD_VERSION_V40) {
+                    } else if (vcardVersion == VCardVersion.V40.getValue()) {
                         mVCardParser = new VCardParser_V40(vcardType);
                     } else {
                         mVCardParser = new VCardParser_V21(vcardType);
