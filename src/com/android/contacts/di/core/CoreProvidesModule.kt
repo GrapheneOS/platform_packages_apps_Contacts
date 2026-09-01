@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import androidx.core.text.BidiFormatter
 import com.android.contacts.list.ContactListFilterController
 import com.android.contacts.util.concurrent.ContactsExecutors
 import com.android.contacts.util.core.CurrentTimeProvider
@@ -116,5 +117,11 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): SubscriptionManager {
         return context.getSystemService(SubscriptionManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideBidiFormatter(): BidiFormatter {
+        return BidiFormatter.getInstance()
     }
 }
