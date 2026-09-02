@@ -116,8 +116,8 @@ private fun ContactEntryCardPreview() {
             groups = persistentListOf(
                 ContactEntryGroupUiModel(
                     entries = persistentListOf(
-                        previewEntry(id = 1L, header = "088 525 7470", text = "Mobile"),
-                        previewEntry(id = 2L, header = "088 525 7471", text = "Work"),
+                        previewEntry(id = 1L, header = "+1 555 0123", text = "Mobile"),
+                        previewEntry(id = 2L, header = "+1 555 0124", text = "Work"),
                     ),
                 ),
                 ContactEntryGroupUiModel(

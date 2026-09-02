@@ -27,25 +27,26 @@ internal class ConnectedAppsRepositoryImpl @Inject constructor(
         dataId: Long,
         mimeType: String,
     ): ConnectedApp? {
-        val applicationInfo = resolveApplication(dataId, mimeType) ?: return null
+        val applicationInfo = resolveApplication(dataId, mimeType)
+            ?.takeIf { info -> info.packageName != context.packageName }
+        val label = applicationInfo
+            ?.loadLabel(packageManager)
+            ?.toString()
+            ?.trim()
+            ?.takeIf { value -> value.isNotEmpty() }
 
-        if (applicationInfo.packageName == context.packageName) {
-            return null
-        }
-
-        val label = applicationInfo.loadLabel(packageManager).toString().trim()
-        if (label.isEmpty()) {
-            return null
-        }
-
-        return ConnectedApp(
-            packageName = applicationInfo.packageName,
-            label = label,
-            iconUri = resourceUri(
+        return when {
+            applicationInfo != null && label != null -> ConnectedApp(
                 packageName = applicationInfo.packageName,
-                resourceId = applicationInfo.icon,
-            ),
-        )
+                label = label,
+                iconUri = resourceUri(
+                    packageName = applicationInfo.packageName,
+                    resourceId = applicationInfo.icon,
+                ),
+            )
+
+            else -> null
+        }
     }
 
     private fun resolveApplication(

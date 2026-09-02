@@ -33,6 +33,7 @@ internal class ContactEntryContentMapperImpl @Inject constructor(
     private val isSipCallingSupported: IsSipCallingSupported,
 ) : ContactEntryContentMapper {
 
+    @Suppress("CyclomaticComplexMethod")
     override fun mapKind(dataItem: ContactDataItem): ContactEntryKind {
         return when (dataItem) {
             is ContactDataItem.Phone -> ContactEntryKind.PHONE
@@ -61,6 +62,7 @@ internal class ContactEntryContentMapperImpl @Inject constructor(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     override fun mapContent(
         dataItem: ContactDataItem,
         details: ContactDetails,

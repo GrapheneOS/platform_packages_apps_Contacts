@@ -169,21 +169,16 @@ internal class DataItemCollapseMatcherImpl @Inject constructor(
         number: String,
         otherNumber: String,
     ): Boolean {
-        if (number.contains(POUND) != otherNumber.contains(POUND) ||
-            number.contains(STAR) != otherNumber.contains(STAR)
-        ) {
-            return false
-        }
-
         val parts = splitOnWaitSymbol(number)
         val otherParts = splitOnWaitSymbol(otherNumber)
 
-        if (parts.size != otherParts.size) {
-            return false
-        }
-
-        return parts.indices.all { index ->
-            partsMatch(parts[index], otherParts[index])
+        return when {
+            number.contains(POUND) != otherNumber.contains(POUND) -> false
+            number.contains(STAR) != otherNumber.contains(STAR) -> false
+            parts.size != otherParts.size -> false
+            else -> parts.indices.all { index ->
+                partsMatch(parts[index], otherParts[index])
+            }
         }
     }
 
@@ -218,13 +213,11 @@ internal class DataItemCollapseMatcherImpl @Inject constructor(
         part: String,
         otherPart: String,
     ): Boolean {
-        val countryCode = countryCode(part) ?: return countryCode(otherPart) == null
-
-        if (countryCode != NANP_COUNTRY_CODE) {
-            return false
+        return when (countryCode(part)) {
+            null -> countryCode(otherPart) == null
+            NANP_COUNTRY_CODE -> otherPart.trim().firstOrNull() != TRUNK_PREFIX
+            else -> false
         }
-
-        return otherPart.trim().firstOrNull() != TRUNK_PREFIX
     }
 
     private fun countryCode(number: String): Int? {

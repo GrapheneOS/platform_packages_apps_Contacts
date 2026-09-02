@@ -2,6 +2,7 @@ package com.android.contacts.ui.contactdetails.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -82,37 +84,12 @@ private fun CallingSimContent(
         tonalElevation = AlertDialogDefaults.TonalElevation,
     ) {
         Column {
-            Text(
-                text = stringResource(R.string.contact_details_set_calling_sim),
-                style = MaterialTheme.typography.headlineSmall,
-                color = AlertDialogDefaults.titleContentColor,
-                modifier = Modifier.padding(
-                    start = Tokens.callingSimContentPadding,
-                    end = Tokens.callingSimContentPadding,
-                    top = Tokens.callingSimContentPadding,
-                    bottom = Tokens.callingSimTitleSpacing,
-                ),
-            )
+            CallingSimTitle()
 
-            Column(
-                modifier = Modifier
-                    .weight(
-                        weight = 1f,
-                        fill = false,
-                    )
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                callingSim.numbers.forEach { number ->
-                    CallingSimNumber(
-                        number = number,
-                        accounts = callingSim.accounts,
-                        selectedAccountId = selections[number.dataId],
-                        onAccountSelected = { accountId ->
-                            selections[number.dataId] = accountId
-                        },
-                    )
-                }
-            }
+            CallingSimNumbers(
+                callingSim = callingSim,
+                selections = selections,
+            )
 
             CallingSimButtons(
                 isResetVisible = callingSim.numbers.any { number ->
@@ -124,6 +101,47 @@ private fun CallingSimContent(
                 onReset = { selections.clear() },
                 onConfirm = { onConfirm(pickedSelections(callingSim, selections)) },
                 onDismiss = onDismiss,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CallingSimTitle() {
+    Text(
+        text = stringResource(R.string.contact_details_set_calling_sim),
+        style = MaterialTheme.typography.headlineSmall,
+        color = AlertDialogDefaults.titleContentColor,
+        modifier = Modifier.padding(
+            start = Tokens.callingSimContentPadding,
+            end = Tokens.callingSimContentPadding,
+            top = Tokens.callingSimContentPadding,
+            bottom = Tokens.callingSimTitleSpacing,
+        ),
+    )
+}
+
+@Composable
+private fun ColumnScope.CallingSimNumbers(
+    callingSim: CallingSimUiModel,
+    selections: SnapshotStateMap<Long, PhoneAccountId>,
+) {
+    Column(
+        modifier = Modifier
+            .weight(
+                weight = 1f,
+                fill = false,
+            )
+            .verticalScroll(rememberScrollState()),
+    ) {
+        callingSim.numbers.forEach { number ->
+            CallingSimNumber(
+                number = number,
+                accounts = callingSim.accounts,
+                selectedAccountId = selections[number.dataId],
+                onAccountSelected = { accountId ->
+                    selections[number.dataId] = accountId
+                },
             )
         }
     }
@@ -262,14 +280,10 @@ private fun ContactDetailsCallingSimDialogPreview() {
     ContactsPreviewColumn {
         CallingSimContent(
             callingSim = CallingSimUiModel(
-                accounts = persistentListOf(
-                    CallingSimAccountUiModel(previewAccountId("1"), "+31612345678"),
-                    CallingSimAccountUiModel(previewAccountId("2"), "+15550001"),
-                ),
                 numbers = persistentListOf(
                     CallingSimNumberUiModel(
                         dataId = 1L,
-                        number = "+31687654321",
+                        number = "+15550125",
                         numberLabel = "Mobile",
                         selectedAccountId = previewAccountId("1"),
                     ),
@@ -279,6 +293,10 @@ private fun ContactDetailsCallingSimDialogPreview() {
                         numberLabel = "Work",
                         selectedAccountId = previewAccountId("1"),
                     ),
+                ),
+                accounts = persistentListOf(
+                    CallingSimAccountUiModel(previewAccountId("1"), "+15550126"),
+                    CallingSimAccountUiModel(previewAccountId("2"), "+15550001"),
                 ),
             ),
             onConfirm = {},

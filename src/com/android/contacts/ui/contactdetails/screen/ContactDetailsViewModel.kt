@@ -141,6 +141,7 @@ internal class ContactDetailsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun onMenuAction(action: Action.Menu) {
         when (action) {
             is Action.BackClick -> sendNavigationEvent(NavEvent.Close)
