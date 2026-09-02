@@ -135,17 +135,17 @@ private fun ContactDetailsQuickActionsPreview() {
                 ContactQuickActionUiModel(
                     icon = ContactEntryIcon.CALL,
                     label = "Call",
-                    action = Action.Call("088 525 7470"),
+                    action = Action.Call("+1 555 0123"),
                 ),
                 ContactQuickActionUiModel(
                     icon = ContactEntryIcon.MESSAGE,
                     label = "Text",
-                    action = Action.Sms("088 525 7470"),
+                    action = Action.Sms("+1 555 0123"),
                 ),
                 ContactQuickActionUiModel(
                     icon = ContactEntryIcon.VIDEO_CALL,
                     label = "Video",
-                    action = Action.VideoCall("088 525 7470"),
+                    action = Action.VideoCall("+1 555 0123"),
                 ),
                 ContactQuickActionUiModel(
                     icon = ContactEntryIcon.EMAIL,

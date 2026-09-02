@@ -131,22 +131,21 @@ internal class ContactDetailsMapperImpl @Inject constructor(
 
     private fun mapContactAccount(rawContact: RawContact): ContactAccount? {
         val accountType = rawContact.getAccountType(context)
-
-        if (accountType?.areContactsWritable() != true) {
-            return null
-        }
-
+            ?.takeIf { type -> type.areContactsWritable() }
         val name = rawContact.accountName?.trimmedOrNull()
-            ?: accountType.getDisplayLabel(context)?.toString()?.trimmedOrNull()
-            ?: return null
+            ?: accountType?.getDisplayLabel(context)?.toString()?.trimmedOrNull()
 
-        return ContactAccount(
-            name = name,
-            iconUri = resourceUri(
-                packageName = accountType.syncAdapterPackageName ?: context.packageName,
-                resourceId = accountType.iconRes,
-            ),
-        )
+        return when {
+            accountType != null && name != null -> ContactAccount(
+                name = name,
+                iconUri = resourceUri(
+                    packageName = accountType.syncAdapterPackageName ?: context.packageName,
+                    resourceId = accountType.iconRes,
+                ),
+            )
+
+            else -> null
+        }
     }
 
     private fun mapDisplayNameSource(displayNameSource: Int): ContactDisplayNameSource {
@@ -378,13 +377,17 @@ internal class ContactDetailsMapperImpl @Inject constructor(
     }
 
     private fun preferredPhoneAccount(dataItem: PhoneDataItem): PhoneAccountId? {
-        val componentName = dataItem.preferredPhoneAccountComponentName ?: return null
-        val id = dataItem.preferredPhoneAccountId ?: return null
+        val componentName = dataItem.preferredPhoneAccountComponentName
+        val id = dataItem.preferredPhoneAccountId
 
-        return PhoneAccountId(
-            componentName = componentName,
-            id = id,
-        )
+        return when {
+            componentName != null && id != null -> PhoneAccountId(
+                componentName = componentName,
+                id = id,
+            )
+
+            else -> null
+        }
     }
 
     private fun mapNickname(dataItem: NicknameDataItem): ContactDataItem.Nickname {

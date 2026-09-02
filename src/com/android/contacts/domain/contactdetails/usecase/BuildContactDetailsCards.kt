@@ -139,20 +139,19 @@ internal class BuildContactDetailsCardsImpl @Inject constructor(
     }
 
     private fun connectedApp(group: ContactEntryGroup): ConnectedApp? {
-        val entry = group.entries.firstOrNull() ?: return null
-        if (entry.kind != ContactEntryKind.OTHER) {
-            return null
-        }
+        val entry = group.entries
+            .firstOrNull()
+            ?.takeIf { item -> item.kind == ContactEntryKind.OTHER }
+        val action = entry?.actions?.primaryAction as? ContactEntryAction.ViewDataItem
 
-        val action = entry.actions.primaryAction
-        if (action !is ContactEntryAction.ViewDataItem) {
-            return null
-        }
+        return when {
+            action != null -> connectedAppsRepository.getConnectedApp(
+                dataId = action.dataId,
+                mimeType = action.mimeType,
+            )
 
-        return connectedAppsRepository.getConnectedApp(
-            dataId = action.dataId,
-            mimeType = action.mimeType,
-        )
+            else -> null
+        }
     }
 
     private fun buildNotes(

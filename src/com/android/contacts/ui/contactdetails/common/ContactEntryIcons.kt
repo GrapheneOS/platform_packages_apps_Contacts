@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Videocam
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 
+@Suppress("CyclomaticComplexMethod")
 internal fun ContactEntryIcon.imageVector(): ImageVector {
     return when (this) {
         ContactEntryIcon.CALL -> Icons.Rounded.Call

@@ -22,13 +22,12 @@ internal fun ActivityResult.toRebindIntent(): Intent? {
 }
 
 internal fun ActivityResult.toJoinTargetAction(): Action? {
-    if (resultCode != Activity.RESULT_OK) {
-        return null
+    val contactUri = data?.data?.takeIf { resultCode == Activity.RESULT_OK }
+
+    return when {
+        contactUri != null -> Action.JoinTargetPicked(ContentUris.parseId(contactUri))
+        else -> null
     }
-
-    val contactUri = data?.data ?: return null
-
-    return Action.JoinTargetPicked(ContentUris.parseId(contactUri))
 }
 
 internal fun ActivityResult.toRingtoneAction(): Action? {
