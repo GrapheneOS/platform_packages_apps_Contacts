@@ -22,7 +22,6 @@
 -keep class com.android.contacts.ContactsUtils { *; }
 -keep class com.android.contacts.ContactSaveService { *; }
 -keep class com.android.contacts.ContactSaveService$* { *; }
--keep class com.android.contacts.database.NoNullCursorAsyncQueryHandler { *; }
 -keep class com.android.contacts.database.SimContactDao { *; }
 -keep class com.android.contacts.database.SimContactDao$* { *; }
 -keep class com.android.contacts.database.SimContactDaoImpl { *; }
