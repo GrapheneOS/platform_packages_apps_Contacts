@@ -8,22 +8,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import com.android.contacts.editor.SelectAccountDialogFragment
-import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.list.ContactListFilterController
-import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.core.AppTheme
 import com.android.contacts.ui.settings.screen.SettingsEffectHandlerImpl
 import com.android.contacts.ui.settings.screen.SettingsScreen
 import com.android.contacts.util.AccountFilterUtil
-import com.android.contacts.util.AccountSelectionUtil
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingsActivity :
-    ComponentActivity(),
-    SelectAccountDialogFragment.Listener {
+class SettingsActivity : ComponentActivity() {
 
     @Inject
     lateinit var contactListFilterController: ContactListFilterController
@@ -61,20 +55,6 @@ class SettingsActivity :
             }
         }
     }
-
-    override fun onAccountChosen(
-        account: AccountWithDataSet,
-        extraArgs: Bundle,
-    ) {
-        AccountSelectionUtil.doImport(
-            this,
-            extraArgs.getInt(ImportDialogFragment.KEY_RES_ID),
-            account,
-            extraArgs.getInt(ImportDialogFragment.KEY_SUBSCRIPTION_ID),
-        )
-    }
-
-    override fun onAccountSelectorCancelled() = Unit
 
     private fun applyContactsFilterResult(result: ActivityResult) {
         AccountFilterUtil.handleAccountFilterResult(

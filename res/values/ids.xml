@@ -85,10 +85,6 @@
     <item type="id" name="dialog_cancel_confirmation"/>
     <item type="id" name="dialog_cancel_failed"/>
 
-    <!-- For ExportVCardActivity -->
-    <item type="id" name="dialog_exporting_vcard"/>
-    <item type="id" name="dialog_fail_to_export_with_reason"/>
-
     <!-- For Debug Purpose -->
     <item type="id" name="cliv_name_textview"/>
     <item type="id" name="cliv_phoneticname_textview"/>

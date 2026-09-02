@@ -4,9 +4,12 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.os.PowerManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import androidx.core.text.BidiFormatter
 import com.android.contacts.list.ContactListFilterController
 import com.android.contacts.util.concurrent.ContactsExecutors
 import com.android.contacts.util.core.CurrentTimeProvider
@@ -16,6 +19,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -45,6 +49,24 @@ internal class CoreProvidesModule {
     @MainDispatcher
     fun provideMainDispatcher(): CoroutineDispatcher {
         return Dispatchers.Main
+    }
+
+    @Provides
+    @Reusable
+    @SimReadDispatcher
+    fun provideSimReadDispatcher(): CoroutineDispatcher {
+        return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
+    }
+
+    // Folders
+
+    @Provides
+    @Reusable
+    @CacheDir
+    fun provideCacheDir(
+        @ApplicationContext context: Context,
+    ): File {
+        return context.cacheDir
     }
 
     // Others
@@ -105,16 +127,31 @@ internal class CoreProvidesModule {
 
     @Provides
     @Reusable
-    @SimReadDispatcher
-    fun provideSimReadDispatcher(): CoroutineDispatcher {
-        return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
-    }
-
-    @Provides
-    @Reusable
     fun provideSubscriptionManager(
         @ApplicationContext context: Context,
     ): SubscriptionManager {
         return context.getSystemService(SubscriptionManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideBidiFormatter(): BidiFormatter {
+        return BidiFormatter.getInstance()
+    }
+
+    @Provides
+    @Reusable
+    fun providePowerManager(
+        @ApplicationContext context: Context,
+    ): PowerManager {
+        return context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    }
+
+    @Provides
+    @Reusable
+    fun provideResources(
+        @ApplicationContext context: Context,
+    ): Resources {
+        return context.resources
     }
 }

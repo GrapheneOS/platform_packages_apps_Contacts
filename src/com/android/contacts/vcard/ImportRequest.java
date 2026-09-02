@@ -24,7 +24,7 @@ import com.android.vcard.VCardSourceDetector;
 /**
  * Class representing one request for importing vCard (given as a Uri).
  *
- * Mainly used when {@link ImportVCardActivity} requests {@link VCardService}
+ * Mainly used when {@link com.android.contacts.domain.vcard.usecase.ImportVCards} requests {@link VCardService}
  * to import some specific Uri.
  *
  * Note: This object's accepting only One Uri does NOT mean that

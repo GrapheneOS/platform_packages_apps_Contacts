@@ -13,12 +13,11 @@ import android.telecom.TelecomManager
 import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.LicenseActivity
 import com.android.contacts.compat.TelecomManagerUtil
-import com.android.contacts.interactions.ExportDialogFragment
-import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.list.AccountFilterActivity
 import com.android.contacts.logging.ScreenEvent.ScreenType
-import com.android.contacts.ui.settings.SettingsActivity
+import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
+import com.android.contacts.ui.vcardexport.ExportVCardActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import io.mockk.every
 import io.mockk.mockk
@@ -55,8 +54,6 @@ internal class SettingsEffectHandlerImplTest {
     fun setUp() {
         mockkStatic(ImplicitIntentsUtil::class)
         mockkStatic(TelecomManagerUtil::class)
-        mockkStatic(ImportDialogFragment::class)
-        mockkStatic(ExportDialogFragment::class)
         every { activity.fragmentManager } returns fragmentManager
     }
 
@@ -131,23 +128,23 @@ internal class SettingsEffectHandlerImplTest {
     }
 
     @Test
-    fun showImportDialog_showsTheLegacyDialog() {
+    fun showImportDialog_startsTheImportActivity() {
         effectHandler.handle(Effect.ShowImportDialog)
 
-        verify { ImportDialogFragment.show(fragmentManager) }
+        assertEquals(
+            ImportActivity::class.java.name,
+            startedIntent().component?.className,
+        )
     }
 
     @Test
     fun showExportDialog_showsTheLegacyDialogHostedByTheSettings() {
         effectHandler.handle(Effect.ShowExportDialog)
 
-        verify {
-            ExportDialogFragment.show(
-                fragmentManager,
-                SettingsActivity::class.java,
-                ExportDialogFragment.EXPORT_MODE_ALL_CONTACTS,
-            )
-        }
+        assertEquals(
+            ExportVCardActivity::class.java.name,
+            startedIntent().component?.className,
+        )
     }
 
     @Test

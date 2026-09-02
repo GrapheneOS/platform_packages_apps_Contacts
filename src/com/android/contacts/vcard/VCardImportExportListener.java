@@ -21,7 +21,7 @@ import android.net.Uri;
 
 import com.android.vcard.VCardEntry;
 
-interface VCardImportExportListener {
+public interface VCardImportExportListener {
     Notification onImportProcessed(ImportRequest request, int jobId, int sequence);
     Notification onImportParsed(ImportRequest request, int jobId, VCardEntry entry, int currentCount,
             int totalCount);
