@@ -292,7 +292,7 @@ private fun ContactEntryRowPreview() {
 
 private fun previewPhoneEntry(
     id: Long,
-    number: String = "088 525 7470",
+    number: String = "+1 555 0123",
     label: String = "Mobile",
     isSuperPrimary: Boolean = false,
 ): ContactEntryUiModel {
