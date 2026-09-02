@@ -52,6 +52,7 @@ internal fun LicensesScreen(
                     loadUrl(LICENSE_FILE)
                 }
             },
+            onRelease = WebView::destroy
         )
     }
 }
