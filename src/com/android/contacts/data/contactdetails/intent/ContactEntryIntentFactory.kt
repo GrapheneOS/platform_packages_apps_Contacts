@@ -28,6 +28,7 @@ internal interface ContactEntryIntentFactory {
 
 internal class ContactEntryIntentFactoryImpl @Inject constructor() : ContactEntryIntentFactory {
 
+    @Suppress("CyclomaticComplexMethod")
     override fun create(action: Action): Intent? {
         return when (action) {
             is Action.Call -> callIntent(action.number)

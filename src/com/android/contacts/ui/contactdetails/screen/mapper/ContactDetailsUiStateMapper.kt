@@ -406,6 +406,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
         return action?.takeIf { candidate -> isEntryActionAvailable(candidate) }
     }
 
+    @Suppress("CyclomaticComplexMethod")
     private fun entryIcon(kind: ContactEntryKind): ContactEntryIcon? {
         return when (kind) {
             ContactEntryKind.PHONE -> ContactEntryIcon.CALL

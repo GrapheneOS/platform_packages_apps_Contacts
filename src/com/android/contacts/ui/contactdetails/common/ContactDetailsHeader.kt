@@ -52,9 +52,7 @@ internal fun ContactDetailsHeader(
     onNameLongClick: () -> Unit = {},
     onNameBottomChanged: (Float) -> Unit = {},
 ) {
-    val displayName = header.displayNameText()
     val copyLabel = stringResource(R.string.copy_text)
-    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         modifier = modifier
@@ -74,48 +72,14 @@ internal fun ContactDetailsHeader(
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ContactAvatar(
-            avatarImage = header.photo,
-            size = Tokens.headerAvatarSize,
-            fallbackLabel = contactAvatarLabel(header.displayName),
-            colorSeed = contactAvatarColorSeed(header.avatarSeed),
-            fallbackIcon = when {
-                header.isBusiness -> Icons.Rounded.Business
-                else -> Icons.Rounded.Person
-            },
-        )
+        HeaderAvatar(header = header)
 
         Spacer(modifier = Modifier.height(Tokens.headerNameSpacing))
 
-        Text(
-            text = displayName,
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = NAME_MAX_LINES,
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.small)
-                .indication(interactionSource, ripple())
-                .pointerInput(onNameLongClick) {
-                    detectTapGestures(
-                        onPress = { offset ->
-                            val press = PressInteraction.Press(offset)
-                            interactionSource.emit(press)
-                            tryAwaitRelease()
-                            interactionSource.emit(PressInteraction.Release(press))
-                        },
-                        onLongPress = { onNameLongClick() },
-                    )
-                }
-                .padding(
-                    horizontal = Tokens.headerNameHorizontalPadding,
-                    vertical = Tokens.headerNameVerticalPadding,
-                )
-                .onGloballyPositioned { coordinates ->
-                    onNameBottomChanged(coordinates.positionInRoot().y + coordinates.size.height)
-                },
+        HeaderName(
+            text = header.displayNameText(),
+            onLongClick = onNameLongClick,
+            onBottomChanged = onNameBottomChanged,
         )
 
         if (header.subtitles.isNotEmpty()) {
@@ -126,6 +90,60 @@ internal fun ContactDetailsHeader(
             }
         }
     }
+}
+
+@Composable
+private fun HeaderAvatar(header: ContactHeaderUiModel) {
+    ContactAvatar(
+        avatarImage = header.photo,
+        size = Tokens.headerAvatarSize,
+        fallbackLabel = contactAvatarLabel(header.displayName),
+        colorSeed = contactAvatarColorSeed(header.avatarSeed),
+        fallbackIcon = when {
+            header.isBusiness -> Icons.Rounded.Business
+            else -> Icons.Rounded.Person
+        },
+    )
+}
+
+@Composable
+private fun HeaderName(
+    text: String,
+    onLongClick: () -> Unit,
+    onBottomChanged: (Float) -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineLarge,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = NAME_MAX_LINES,
+        modifier = Modifier
+            .clip(MaterialTheme.shapes.small)
+            .indication(interactionSource, ripple())
+            .pointerInput(onLongClick) {
+                detectTapGestures(
+                    onPress = { offset ->
+                        val press = PressInteraction.Press(offset)
+                        interactionSource.emit(press)
+                        tryAwaitRelease()
+                        interactionSource.emit(PressInteraction.Release(press))
+                    },
+                    onLongPress = { onLongClick() },
+                )
+            }
+            .padding(
+                horizontal = Tokens.headerNameHorizontalPadding,
+                vertical = Tokens.headerNameVerticalPadding,
+            )
+            .onGloballyPositioned { coordinates ->
+                onBottomChanged(coordinates.positionInRoot().y + coordinates.size.height)
+            },
+    )
 }
 
 @Composable
@@ -164,10 +182,10 @@ private fun ContactDetailsHeaderPreview() {
         )
         ContactDetailsHeader(
             header = ContactHeaderUiModel(
-                displayName = "Student Administration",
+                displayName = "Acme Support",
                 subtitles = persistentListOf(),
                 photo = null,
-                avatarSeed = "student-administration",
+                avatarSeed = "acme-support",
                 isBusiness = true,
                 isDisplayNameLtr = false,
             ),

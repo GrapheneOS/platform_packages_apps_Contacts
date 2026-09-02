@@ -37,18 +37,21 @@ internal class PhoneAccountsRepositoryImpl @Inject constructor(
     }
 
     private fun toCallingSim(handle: PhoneAccountHandle): CallingSim? {
-        val account = telecomManager.getPhoneAccount(handle) ?: return null
-        val label = account.label?.toString()?.takeIf { value -> value.isNotBlank() }
-            ?: account.address?.schemeSpecificPart
-            ?: return null
+        val account = telecomManager.getPhoneAccount(handle)
+        val label = account?.label?.toString()?.takeIf { value -> value.isNotBlank() }
+            ?: account?.address?.schemeSpecificPart
 
-        return CallingSim(
-            accountId = PhoneAccountId(
-                componentName = handle.componentName.flattenToString(),
-                id = handle.id,
-            ),
-            label = label,
-        )
+        return when {
+            label != null -> CallingSim(
+                accountId = PhoneAccountId(
+                    componentName = handle.componentName.flattenToString(),
+                    id = handle.id,
+                ),
+                label = label,
+            )
+
+            else -> null
+        }
     }
 
     private companion object {

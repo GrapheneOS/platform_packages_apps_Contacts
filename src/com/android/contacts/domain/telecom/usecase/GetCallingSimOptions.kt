@@ -17,19 +17,19 @@ internal class GetCallingSimOptionsImpl @Inject constructor(
 
     override suspend operator fun invoke(details: ContactDetails): CallingSimOptions? {
         val choices = choices(details)
-        if (choices.isEmpty()) {
-            return null
+        val sims = when {
+            choices.isEmpty() -> emptyList()
+            else -> phoneAccountsRepository.getCallCapableSims()
         }
 
-        val sims = phoneAccountsRepository.getCallCapableSims()
-        if (sims.size < MINIMUM_SIM_COUNT) {
-            return null
-        }
+        return when {
+            sims.size >= MINIMUM_SIM_COUNT -> CallingSimOptions(
+                sims = sims,
+                choices = choices,
+            )
 
-        return CallingSimOptions(
-            sims = sims,
-            choices = choices,
-        )
+            else -> null
+        }
     }
 
     private fun choices(details: ContactDetails): List<CallingSimChoice> {
