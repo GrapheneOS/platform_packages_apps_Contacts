@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
-import com.android.contacts.list.ContactListFilterController
 import com.android.contacts.util.concurrent.ContactsExecutors
 import com.android.contacts.util.core.CurrentTimeProvider
 import dagger.Module
@@ -87,14 +86,6 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): ContentResolver {
         return context.contentResolver
-    }
-
-    @Provides
-    @Reusable
-    fun provideContactListFilterController(
-        @ApplicationContext context: Context,
-    ): ContactListFilterController {
-        return ContactListFilterController.getInstance(context)
     }
 
     @Provides
