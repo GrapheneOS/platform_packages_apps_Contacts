@@ -33,7 +33,10 @@ internal fun SettingsNavHost(
     }
 
     BackHandler(enabled = route != SettingsNavRoute.Main) {
-        route = SettingsNavRoute.Main
+        route = when (route) {
+            SettingsNavRoute.Licenses -> SettingsNavRoute.About
+            SettingsNavRoute.About, SettingsNavRoute.Main -> SettingsNavRoute.Main
+        }
     }
 
     AnimatedContent(
