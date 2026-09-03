@@ -1,6 +1,7 @@
 package com.android.contacts.ui.contactdetails.screen.contactdetailsviewmodel
 
 import app.cash.turbine.test
+import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.data.telecom.model.PhoneAccountId
@@ -82,7 +83,7 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
             viewModel.onAction(ContactDetailsAction.EditClick)
 
             assertEquals(editContactEffect(), awaitItem())
-            verify { contactDetailsRepository.cacheLoadedContact() }
+            verify { contactDetailsRepository.cacheContact(loadedContact) }
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -152,7 +153,7 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
             account = null,
             dataSet = null,
         )
-        every { contactDetailsRepository.getDirectoryContactPrefill() } returns prefill
+        every { contactDetailsRepository.getDirectoryContactPrefill(loadedContact) } returns prefill
         val viewModel = loadedViewModel(
             details = contactDetails(
                 lookupUri = LOOKUP_URI,
@@ -181,9 +182,26 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         advanceUntilIdle()
 
         verify {
-            contactDetailsRepository.addLoadedContactToDefaultGroup(
+            contactDetailsRepository.addToDefaultGroup(
+                loadedContact,
                 ContactDetailsActivity::class.java,
             )
+        }
+    }
+
+    @Test
+    fun onAction_withEditClickAfterAFailedReload_usesTheLastLoadedContact() = runTest {
+        val viewModel = loadedViewModel()
+
+        results.tryEmit(ContactDetailsResult.Error)
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            viewModel.onAction(ContactDetailsAction.EditClick)
+
+            assertEquals(editContactEffect(), awaitItem())
+            verify { contactDetailsRepository.cacheContact(loadedContact) }
+            cancelAndIgnoreRemainingEvents()
         }
     }
 

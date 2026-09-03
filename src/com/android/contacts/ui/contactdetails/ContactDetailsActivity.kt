@@ -118,6 +118,7 @@ class ContactDetailsActivity : ComponentActivity() {
 
         val intent = result.toRebindIntent() ?: return
 
+        setIntent(intent)
         bindIntent(intent)
     }
 
