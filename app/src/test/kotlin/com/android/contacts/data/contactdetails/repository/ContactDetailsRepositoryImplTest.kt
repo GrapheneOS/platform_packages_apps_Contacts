@@ -14,6 +14,7 @@ import android.provider.ContactsContract.Data
 import android.provider.ContactsContract.Directory
 import android.provider.ContactsContract.DisplayNameSources
 import android.provider.ContactsContract.RawContacts
+import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import com.android.contacts.ContactSaveService
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
@@ -42,6 +43,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -85,9 +87,13 @@ internal class ContactDetailsRepositoryImplTest {
     @Test
     fun observeContactDetails_whenTheLoaderDeliversAContact_emitsLoadedDetails() = runTest {
         repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
-            deliver(loadedContact())
+            val contact = loadedContact()
+            deliver(contact)
 
-            assertEquals(ContactDetailsResult.Loaded(MAPPED_DETAILS), awaitItem())
+            val loaded = awaitLoaded()
+
+            assertEquals(MAPPED_DETAILS, loaded.details)
+            assertSame(contact, loaded.source.contact)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -134,7 +140,7 @@ internal class ContactDetailsRepositoryImplTest {
 
             deliver(loadedContact())
 
-            assertEquals(ContactDetailsResult.Loaded(MAPPED_DETAILS), awaitItem())
+            assertEquals(MAPPED_DETAILS, awaitLoaded().details)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -183,48 +189,13 @@ internal class ContactDetailsRepositoryImplTest {
     }
 
     @Test
-    fun cacheLoadedContact_whileTheContactIsLoaded_cachesTheLoaderResult() = runTest {
+    fun cacheContact_cachesTheLoaderResult() = runTest {
         repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
             deliver(loadedContact())
-            awaitItem()
 
-            repository.cacheLoadedContact()
+            repository.cacheContact(awaitLoaded().source)
 
             verify { contactLoader.cacheResult() }
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun cacheLoadedContact_withoutAnActiveLoader_doesNothing() {
-        repository.cacheLoadedContact()
-
-        verify(exactly = 0) { contactLoader.cacheResult() }
-    }
-
-    @Test
-    fun getDirectoryContactPrefill_withoutALoadedContact_returnsNull() {
-        assertNull(repository.getDirectoryContactPrefill())
-    }
-
-    @Test
-    fun getDirectoryContactPrefill_whenCollectionStopped_returnsNull() = runTest {
-        repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
-            deliver(loadedContact())
-            awaitItem()
-            cancelAndIgnoreRemainingEvents()
-        }
-
-        assertNull(repository.getDirectoryContactPrefill())
-    }
-
-    @Test
-    fun getDirectoryContactPrefill_whenTheContactIsNotLoaded_returnsNull() = runTest {
-        repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
-            deliver(contact(isNotFound = true))
-            awaitItem()
-
-            assertNull(repository.getDirectoryContactPrefill())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -237,8 +208,8 @@ internal class ContactDetailsRepositoryImplTest {
         )
 
         withPrefill(contact) { prefill ->
-            assertEquals("Alex Doe", prefill?.name)
-            assertEquals(1, prefill?.values?.size)
+            assertEquals("Alex Doe", prefill.name)
+            assertEquals(1, prefill.values.size)
         }
     }
 
@@ -250,8 +221,8 @@ internal class ContactDetailsRepositoryImplTest {
         )
 
         withPrefill(contact) { prefill ->
-            assertNull(prefill?.name)
-            assertEquals(1, prefill?.values?.size)
+            assertNull(prefill.name)
+            assertEquals(1, prefill.values.size)
         }
     }
 
@@ -263,11 +234,11 @@ internal class ContactDetailsRepositoryImplTest {
         )
 
         withPrefill(contact) { prefill ->
-            val organization = prefill?.values?.last()
+            val organization = prefill.values.last()
 
-            assertNull(prefill?.name)
-            assertEquals(Organization.CONTENT_ITEM_TYPE, organization?.getAsString(Data.MIMETYPE))
-            assertEquals("Acme", organization?.getAsString(Organization.COMPANY))
+            assertNull(prefill.name)
+            assertEquals(Organization.CONTENT_ITEM_TYPE, organization.getAsString(Data.MIMETYPE))
+            assertEquals("Acme", organization.getAsString(Organization.COMPANY))
         }
     }
 
@@ -279,9 +250,9 @@ internal class ContactDetailsRepositoryImplTest {
         )
 
         withPrefill(contact) { prefill ->
-            assertEquals("directory@example.org", prefill?.account?.name)
-            assertEquals("com.example.directory", prefill?.account?.type)
-            assertEquals("plus", prefill?.dataSet)
+            assertEquals("directory@example.org", prefill.account?.name)
+            assertEquals("com.example.directory", prefill.account?.type)
+            assertEquals("plus", prefill.dataSet)
         }
     }
 
@@ -293,41 +264,19 @@ internal class ContactDetailsRepositoryImplTest {
         )
 
         withPrefill(contact) { prefill ->
-            assertNull(prefill?.account)
-            assertNull(prefill?.dataSet)
+            assertNull(prefill.account)
+            assertNull(prefill.dataSet)
         }
     }
 
     @Test
-    fun getDirectoryContactPrefill_afterAFailedReload_usesTheLastLoadedContact() = runTest {
-        repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
-            deliver(loadedContact(displayName = "Alex Doe"))
-            awaitItem()
-
-            deliver(contact(isError = true))
-            awaitItem()
-
-            assertEquals("Alex Doe", repository.getDirectoryContactPrefill()?.name)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun addLoadedContactToDefaultGroup_withoutALoadedContact_doesNotStartTheSaveService() {
-        repository.addLoadedContactToDefaultGroup(Activity::class.java)
-
-        verify(exactly = 0) { context.startService(any()) }
-    }
-
-    @Test
-    fun addLoadedContactToDefaultGroup_withALoadedContact_startsTheSaveService() = runTest {
+    fun addToDefaultGroup_startsTheSaveService() = runTest {
         givenTheContactCanBeAdded(canBeAdded = true)
 
         repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
             deliver(loadedContact())
-            awaitItem()
 
-            repository.addLoadedContactToDefaultGroup(Activity::class.java)
+            repository.addToDefaultGroup(awaitLoaded().source, Activity::class.java)
 
             val intent = serviceIntentSlot.captured
             val callbackIntent = intent.getParcelableExtra(
@@ -342,14 +291,13 @@ internal class ContactDetailsRepositoryImplTest {
     }
 
     @Test
-    fun addLoadedContactToDefaultGroup_withoutADefaultGroup_doesNotStartTheSaveService() = runTest {
+    fun addToDefaultGroup_withoutADefaultGroup_doesNotStartTheSaveService() = runTest {
         givenTheContactCanBeAdded(canBeAdded = false)
 
         repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
             deliver(loadedContact())
-            awaitItem()
 
-            repository.addLoadedContactToDefaultGroup(Activity::class.java)
+            repository.addToDefaultGroup(awaitLoaded().source, Activity::class.java)
 
             verify(exactly = 0) { context.startService(any()) }
             cancelAndIgnoreRemainingEvents()
@@ -357,20 +305,16 @@ internal class ContactDetailsRepositoryImplTest {
     }
 
     @Test
-    fun addLoadedContactToDefaultGroup_afterAFailedReload_usesTheLastLoadedContact() = runTest {
+    fun addToDefaultGroup_addsTheGivenContact() = runTest {
         givenTheContactCanBeAdded(canBeAdded = true)
-        val loaded = loadedContact()
+        val contact = loadedContact()
 
         repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
-            deliver(loaded)
-            awaitItem()
+            deliver(contact)
 
-            deliver(contact(isError = true))
-            awaitItem()
+            repository.addToDefaultGroup(awaitLoaded().source, Activity::class.java)
 
-            repository.addLoadedContactToDefaultGroup(Activity::class.java)
-
-            verify { InvisibleContactUtil.markAddToDefaultGroup(loaded, any(), any()) }
+            verify { InvisibleContactUtil.markAddToDefaultGroup(contact, any(), any()) }
             assertNotNull(serviceIntentSlot.captured)
             cancelAndIgnoreRemainingEvents()
         }
@@ -383,15 +327,19 @@ internal class ContactDetailsRepositoryImplTest {
 
     private suspend fun withPrefill(
         contact: Contact,
-        assertions: (DirectoryContactPrefill?) -> Unit,
+        assertions: (DirectoryContactPrefill) -> Unit,
     ) {
         repository.observeContactDetails(LOOKUP_URI, excludedMimeTypes = emptySet()).test {
             deliver(contact)
-            awaitItem()
 
-            assertions(repository.getDirectoryContactPrefill())
+            assertions(repository.getDirectoryContactPrefill(awaitLoaded().source))
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    private suspend fun ReceiveTurbine<ContactDetailsResult>.awaitLoaded():
+        ContactDetailsResult.Loaded {
+        return awaitItem() as ContactDetailsResult.Loaded
     }
 
     private fun givenLookupRow(

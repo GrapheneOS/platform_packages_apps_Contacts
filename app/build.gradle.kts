@@ -29,7 +29,7 @@ detekt {
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
     ignoredBuildTypes = listOf("release")
     parallel = true
-    source.setFrom(files("../src"))
+    source.setFrom(files("../src", "src/test/kotlin"))
 }
 
 afterEvaluate {

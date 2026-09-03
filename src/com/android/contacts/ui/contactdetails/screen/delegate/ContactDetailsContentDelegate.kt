@@ -4,6 +4,7 @@ package com.android.contacts.ui.contactdetails.screen.delegate
 
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
+import com.android.contacts.data.contactdetails.model.LoadedContact
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.repository.DisplaySettingsRepository
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.onEach
 internal interface ContactDetailsContentDelegate {
     val content: StateFlow<Content>
     val loadedDetails: StateFlow<ContactDetails?>
+    val loadedContact: StateFlow<LoadedContact?>
 
     fun bind(
         scope: CoroutineScope,
@@ -65,6 +67,9 @@ internal class ContactDetailsContentDelegateImpl @Inject constructor(
 
     private val _loadedDetails = MutableStateFlow<ContactDetails?>(null)
     override val loadedDetails: StateFlow<ContactDetails?> = _loadedDetails.asStateFlow()
+
+    private val _loadedContact = MutableStateFlow<LoadedContact?>(null)
+    override val loadedContact: StateFlow<LoadedContact?> = _loadedContact.asStateFlow()
 
     private var isBound = false
 
@@ -117,6 +122,7 @@ internal class ContactDetailsContentDelegateImpl @Inject constructor(
 
                 DerivedContactDetails.Loaded(
                     details = details,
+                    source = result.source,
                     cards = buildContactDetailsCards(details, arguments.prioritizedMimeType),
                     quickActions = getContactQuickActions(details),
                     recentCalls = getRecentCalls(details),
@@ -149,10 +155,11 @@ internal class ContactDetailsContentDelegateImpl @Inject constructor(
     }
 
     private fun retainLoadedContact(derived: DerivedContactDetails) {
-        val details = (derived as? DerivedContactDetails.Loaded)?.details ?: return
+        val loaded = derived as? DerivedContactDetails.Loaded ?: return
 
-        _loadedDetails.value = details
-        contactFlagsDelegate.clearApplied(details)
+        _loadedDetails.value = loaded.details
+        _loadedContact.value = loaded.source
+        contactFlagsDelegate.clearApplied(loaded.details)
     }
 }
 
@@ -164,6 +171,7 @@ private sealed interface DerivedContactDetails {
 
     data class Loaded(
         val details: ContactDetails,
+        val source: LoadedContact,
         val cards: ContactDetailsCards,
         val quickActions: List<ContactQuickAction>,
         val recentCalls: List<RecentCall>,
