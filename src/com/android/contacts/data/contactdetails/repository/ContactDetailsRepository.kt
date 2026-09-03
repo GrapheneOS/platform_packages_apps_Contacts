@@ -19,6 +19,7 @@ import com.android.contacts.ContactSaveService
 import com.android.contacts.data.contactdetails.mapper.ContactDetailsMapper
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
+import com.android.contacts.data.contactdetails.model.LoadedContact
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.di.core.MainDispatcher
@@ -43,11 +44,11 @@ internal interface ContactDetailsRepository {
         excludedMimeTypes: Set<String>,
     ): Flow<ContactDetailsResult>
 
-    fun getDirectoryContactPrefill(): DirectoryContactPrefill?
+    fun getDirectoryContactPrefill(loaded: LoadedContact): DirectoryContactPrefill
 
-    fun addLoadedContactToDefaultGroup(callbackActivity: Class<out Activity>)
+    fun addToDefaultGroup(loaded: LoadedContact, callbackActivity: Class<out Activity>)
 
-    fun cacheLoadedContact()
+    fun cacheContact(loaded: LoadedContact)
 }
 
 internal class ContactDetailsRepositoryImpl @Inject constructor(
@@ -59,12 +60,6 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
     @param:MainDispatcher private val mainDispatcher: CoroutineDispatcher,
 ) : ContactDetailsRepository {
 
-    @Volatile
-    private var contactLoader: ContactLoader? = null
-
-    @Volatile
-    private var loadedContact: Contact? = null
-
     override fun observeContactDetails(
         lookupUri: Uri,
         excludedMimeTypes: Set<String>,
@@ -74,16 +69,16 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
                 null -> emit(ContactDetailsResult.NotFound)
 
                 else -> emitAll(
-                    observeContact(uri).map { contact ->
-                        toResult(contact, excludedMimeTypes)
+                    observeContact(uri).map { loaded ->
+                        toResult(loaded, excludedMimeTypes)
                     },
                 )
             }
         }.flowOn(ioDispatcher)
     }
 
-    override fun getDirectoryContactPrefill(): DirectoryContactPrefill? {
-        val contact = loadedContact ?: return null
+    override fun getDirectoryContactPrefill(loaded: LoadedContact): DirectoryContactPrefill {
+        val contact = loaded.contact
         val values = contact.contentValues.toMutableList()
 
         if (contact.displayNameSource == DisplayNameSources.ORGANIZATION) {
@@ -101,8 +96,11 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun addLoadedContactToDefaultGroup(callbackActivity: Class<out Activity>) {
-        val contact = loadedContact ?: return
+    override fun addToDefaultGroup(
+        loaded: LoadedContact,
+        callbackActivity: Class<out Activity>,
+    ) {
+        val contact = loaded.contact
         val deltas = contact.createRawContactDeltaList()
 
         if (!InvisibleContactUtil.markAddToDefaultGroup(contact, deltas, context)) {
@@ -125,35 +123,21 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         ContactSaveService.startService(context, intent)
     }
 
-    override fun cacheLoadedContact() {
-        contactLoader?.cacheResult()
+    override fun cacheContact(loaded: LoadedContact) {
+        loaded.loader.cacheResult()
     }
 
-    private fun observeContact(lookupUri: Uri): Flow<Contact> {
+    private fun observeContact(lookupUri: Uri): Flow<LoadedContact> {
         return callbackFlow {
             val loader = contactLoaderSource.create(lookupUri)
             val listener = Loader.OnLoadCompleteListener { _, contact ->
-                retainLoadedContact(contact)
-                trySend(contact)
+                trySend(LoadedContact(contact, loader))
             }
 
-            contactLoader = loader
             startLoading(loader, listener)
 
-            awaitClose {
-                release(loader, listener)
-                contactLoader = null
-                loadedContact = null
-            }
+            awaitClose { release(loader, listener) }
         }.flowOn(mainDispatcher)
-    }
-
-    private fun retainLoadedContact(contact: Contact) {
-        if (!contact.isLoaded) {
-            return
-        }
-
-        loadedContact = contact
     }
 
     private fun startLoading(
@@ -185,15 +169,18 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
     }
 
     private fun toResult(
-        contact: Contact,
+        loaded: LoadedContact,
         excludedMimeTypes: Set<String>,
     ): ContactDetailsResult {
+        val contact = loaded.contact
+
         return when {
             contact.isError -> ContactDetailsResult.Error
             contact.isNotFound -> ContactDetailsResult.NotFound
 
             else -> ContactDetailsResult.Loaded(
-                contactDetailsMapper.map(contact, excludedMimeTypes),
+                details = contactDetailsMapper.map(contact, excludedMimeTypes),
+                source = loaded,
             )
         }
     }

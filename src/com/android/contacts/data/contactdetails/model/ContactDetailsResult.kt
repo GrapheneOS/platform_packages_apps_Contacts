@@ -4,6 +4,7 @@ internal sealed interface ContactDetailsResult {
 
     data class Loaded(
         val details: ContactDetails,
+        val source: LoadedContact,
     ) : ContactDetailsResult
 
     data object NotFound : ContactDetailsResult

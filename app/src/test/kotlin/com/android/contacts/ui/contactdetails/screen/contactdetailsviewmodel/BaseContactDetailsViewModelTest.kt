@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
+import com.android.contacts.data.contactdetails.model.LoadedContact
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
@@ -62,6 +63,8 @@ internal abstract class BaseContactDetailsViewModelTest {
     protected val getCallingSimOptions = mockk<GetCallingSimOptions>()
     protected val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
+
+    protected val loadedContact = LoadedContact(mockk(relaxed = true), mockk(relaxed = true))
 
     protected val results = MutableSharedFlow<ContactDetailsResult>(replay = 1)
     protected val linkOperations = MutableSharedFlow<ContactLinkOperation>()
@@ -127,7 +130,7 @@ internal abstract class BaseContactDetailsViewModelTest {
         val viewModel = createViewModel().bindContact()
 
         viewModel.uiState.launchIn(backgroundScope)
-        results.tryEmit(ContactDetailsResult.Loaded(details))
+        results.tryEmit(ContactDetailsResult.Loaded(details, loadedContact))
         advanceUntilIdle()
 
         return viewModel
@@ -147,7 +150,7 @@ internal abstract class BaseContactDetailsViewModelTest {
     }
 
     protected suspend fun emitLoaded(details: ContactDetails = contactDetails()) {
-        results.emit(ContactDetailsResult.Loaded(details))
+        results.emit(ContactDetailsResult.Loaded(details, loadedContact))
     }
 
     protected companion object {
