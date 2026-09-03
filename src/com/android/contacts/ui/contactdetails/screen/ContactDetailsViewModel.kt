@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
@@ -79,6 +80,7 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private val arguments: Flow<ContactDetailsArguments> = argumentsBundle
         .mapNotNull { bundle -> bundle?.toArguments() }
+        .distinctUntilChanged()
 
     override val uiState: StateFlow<State> = combine(
         contentDelegate.content,
@@ -217,22 +219,30 @@ internal class ContactDetailsViewModel @Inject constructor(
             details.capabilities.isInvisibleAndAddable -> addToDefaultGroup()
 
             else -> {
-                contactDetailsRepository.cacheLoadedContact()
+                cacheLoadedContact()
                 sendEffect(Effect.EditContact(lookupUri, details.photoId))
             }
         }
     }
 
+    private fun cacheLoadedContact() {
+        val loaded = contentDelegate.loadedContact.value ?: return
+
+        contactDetailsRepository.cacheContact(loaded)
+    }
+
     private fun addDirectoryContact() {
-        val prefill = contactDetailsRepository.getDirectoryContactPrefill() ?: return
+        val loaded = contentDelegate.loadedContact.value ?: return
+        val prefill = contactDetailsRepository.getDirectoryContactPrefill(loaded)
 
         sendEffect(Effect.AddDirectoryContact(prefill))
     }
 
     private fun addToDefaultGroup() {
+        val loaded = contentDelegate.loadedContact.value ?: return
         val callbackActivity = callbackActivity() ?: return
 
-        contactDetailsRepository.addLoadedContactToDefaultGroup(callbackActivity)
+        contactDetailsRepository.addToDefaultGroup(loaded, callbackActivity)
     }
 
     private fun deleteContact() {

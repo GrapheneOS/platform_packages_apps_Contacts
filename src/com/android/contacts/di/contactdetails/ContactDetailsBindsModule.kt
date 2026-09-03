@@ -39,7 +39,6 @@ import dagger.Module
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -76,7 +75,7 @@ internal abstract class ContactDetailsBindsModule {
     ): ContactLoaderSource
 
     @Binds
-    @Singleton
+    @Reusable
     abstract fun bindContactDetailsRepository(
         impl: ContactDetailsRepositoryImpl,
     ): ContactDetailsRepository
