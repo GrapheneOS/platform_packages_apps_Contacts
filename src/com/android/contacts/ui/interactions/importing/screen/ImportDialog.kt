@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -75,18 +77,20 @@ internal fun ImportDialog(
 }
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 internal fun ImportDialogContent(
     uiState: State,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    @OptIn(ExperimentalMaterial3Api::class)
+    val sheetState = rememberStandardBottomSheetState(
+        initialValue = SheetValue.Expanded,
+        confirmValueChange = { it != SheetValue.PartiallyExpanded },
+        skipHiddenState = false,
+    )
     ModalBottomSheet(
         onDismissRequest = { onAction(Action.Dismiss) },
-        sheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Expanded,
-            skipHiddenState = false,
-        ),
+        sheetState = sheetState,
         sheetGesturesEnabled = false,
         dragHandle = null,
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -136,6 +140,10 @@ internal fun ImportDialogContent(
             }
         },
     )
+    // Workaround to ensure the sheet is always expanded, even when the content changes
+    LaunchedEffect(uiState.isVCardImportAvailable, uiState.simCardOptions) {
+        sheetState.expand()
+    }
 }
 
 @Composable
@@ -152,6 +160,8 @@ private fun ImportOptionsList(
                 VCardCell(uiState, onAction)
             }
         }
+
+        val isSingleSimCard = uiState.simCardOptions?.size == 1
         itemsIndexed(
             items = uiState.simCardOptions.orEmpty(),
             key = { _, option -> "sim_${option.subscriptionId}" },
@@ -161,6 +171,7 @@ private fun ImportOptionsList(
                 onAction = onAction,
                 index = index,
                 option = option,
+                isSingleOption = isSingleSimCard,
             )
         }
     }
@@ -197,6 +208,7 @@ private fun SimCardCell(
     onAction: (Action) -> Unit,
     index: Int,
     option: SimCardOption,
+    isSingleOption: Boolean,
 ) {
     OptionCell(
         isFirst = index == 0 && uiState.isVCardImportAvailable != true,
@@ -212,10 +224,15 @@ private fun SimCardCell(
             )
             Column {
                 Text(
-                    text = stringResource(
-                        R.string.import_from_sim_summary_fmt,
-                        option.name ?: (index + 1),
-                    ),
+                    text = when (isSingleOption) {
+                        true ->
+                            stringResource(R.string.import_from_sim)
+                        false ->
+                            stringResource(
+                                R.string.import_from_sim_summary_fmt,
+                                option.name ?: (index + 1),
+                            )
+                    },
                     style = MaterialTheme.typography.titleMedium,
                 )
                 simCardOptionDescription(option)?.let { description ->
@@ -259,7 +276,11 @@ private fun OptionCell(
 }
 
 @Composable
-private fun simCardOptionDescription(option: SimCardOption): String? {
+private fun simCardOptionDescription(option: SimCardOption): AnnotatedString? {
+    fun CharSequence.toAnnotatedString(): AnnotatedString {
+        return buildAnnotatedString { append(this@toAnnotatedString) }
+    }
+
     return when {
         option.contactsCount != null && !option.phone.isNullOrBlank() -> {
             expandStringTemplate(
@@ -268,14 +289,14 @@ private fun simCardOptionDescription(option: SimCardOption): String? {
                     persistentMapOf("count" to option.contactsCount),
                 ),
                 option.phone,
-            )
+            ).toAnnotatedString()
         }
 
         option.contactsCount != null -> {
             messageFormatResource(
                 R.string.import_from_sim_secondary_contact_count_fmt,
                 persistentMapOf("count" to option.contactsCount),
-            )
+            ).toAnnotatedString()
         }
 
         !option.phone.isNullOrBlank() -> option.phone
@@ -329,7 +350,7 @@ private fun ImportDialogPreview() {
                             subscriptionId = 1,
                             name = "John Smith",
                             contactsCount = 10,
-                            phone = "123 456 789",
+                            phone = buildAnnotatedString { append("123 456 789") },
                         ),
                         SimCardOption(
                             subscriptionId = 2,

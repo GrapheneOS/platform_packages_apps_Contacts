@@ -1,5 +1,6 @@
 package com.android.contacts.tests.factory
 
+import androidx.compose.ui.text.AnnotatedString
 import com.android.contacts.ui.interactions.importing.screen.model.SimCardOption
 
 internal object SimCardOptionFactory {
@@ -7,7 +8,7 @@ internal object SimCardOptionFactory {
         subscriptionId: Int = 1,
         name: String? = null,
         contactsCount: Int? = null,
-        phone: String? = null,
+        phone: AnnotatedString? = null,
     ) = SimCardOption(
         subscriptionId = subscriptionId,
         name = name,
