@@ -26,6 +26,7 @@ internal class ImportEffectHandlerImpl(
                 activity.startActivity(
                     UIIntents.getSimImportIntent(activity, effect.subscriptionId),
                 )
+                activity.finish()
             }
 
             Effect.OpenSelectAccount -> {

@@ -24,7 +24,7 @@ internal fun messageFormatResource(
 @Composable
 internal fun expandStringTemplate(
     template: String,
-    vararg values: String,
-): String {
-    return TextUtils.expandTemplate(template, *values).toString()
+    vararg values: CharSequence,
+): CharSequence {
+    return TextUtils.expandTemplate(template, *values)
 }
