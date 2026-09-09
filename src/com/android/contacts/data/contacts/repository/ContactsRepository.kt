@@ -97,12 +97,13 @@ internal class ContactsRepositoryImpl @Inject constructor(
         val results = mutableListOf<ContactLookupResult>()
         while (cursor.moveToNext()) {
             val id = cursor.getLong(LOOKUP_ID_INDEX)
-            val key = cursor.getString(LOOKUP_KEY_INDEX)
+            val key = cursor.getString(LOOKUP_KEY_INDEX) ?: continue
+            val uri = ContactsContract.Contacts.getLookupUri(id, key) ?: continue
             results.add(
                 ContactLookupResult(
                     id = id,
                     key = key,
-                    uri = ContactsContract.Contacts.getLookupUri(id, key),
+                    uri = uri,
                 ),
             )
         }
