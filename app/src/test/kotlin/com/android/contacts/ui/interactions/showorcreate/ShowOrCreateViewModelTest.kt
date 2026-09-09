@@ -154,7 +154,7 @@ class ShowOrCreateViewModelTest {
         }
 
     @Test
-    fun whenCreateIsConfirmed_openCreateContact() =
+    fun whenCreateIsConfirmed_openCreateOrEditContact() =
         runTest(mainDispatcherRule.testDispatcher) {
             every { contactsRepository.lookup(any()) } returns flowOf(emptyList())
             val subject = createViewModel(
@@ -167,7 +167,7 @@ class ShowOrCreateViewModelTest {
                 subject.onAction(Action.CreateConfirm)
                 advanceUntilIdle()
                 assertEquals(
-                    Effect.CreateContact::class.java,
+                    Effect.CreateOrEditContact::class.java,
                     awaitItem().javaClass,
                 )
             }

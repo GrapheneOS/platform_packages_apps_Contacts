@@ -21,17 +21,6 @@ internal class ShowOrCreateEffectHandlerImpl(
                 activity.finish()
             }
 
-            is Effect.CreateContact -> {
-                val intent = Intent(Intent.ACTION_INSERT)
-                    .putExtras(effect.extras)
-                    .setDataAndType(
-                        ContactsContract.RawContacts.CONTENT_URI,
-                        ContactsContract.RawContacts.CONTENT_TYPE,
-                    )
-                ImplicitIntentsUtil.startActivityInApp(activity, intent)
-                activity.finish()
-            }
-
             is Effect.ShowContact -> {
                 ImplicitIntentsUtil.startActivityInApp(
                     activity,
@@ -45,6 +34,25 @@ internal class ShowOrCreateEffectHandlerImpl(
                     .setComponent(ComponentName(activity, PeopleActivity::class.java))
                     .putExtras(effect.extras)
                 activity.startActivity(intent)
+                activity.finish()
+            }
+
+            is Effect.CreateContact -> {
+                val intent = Intent(Intent.ACTION_INSERT)
+                    .setDataAndType(
+                        ContactsContract.RawContacts.CONTENT_URI,
+                        ContactsContract.RawContacts.CONTENT_TYPE,
+                    )
+                    .putExtras(effect.extras)
+                ImplicitIntentsUtil.startActivityInApp(activity, intent)
+                activity.finish()
+            }
+
+            is Effect.CreateOrEditContact -> {
+                val intent = Intent(Intent.ACTION_INSERT_OR_EDIT)
+                    .setType(ContactsContract.RawContacts.CONTENT_ITEM_TYPE)
+                    .putExtras(effect.extras)
+                ImplicitIntentsUtil.startActivityInApp(activity, intent)
                 activity.finish()
             }
         }
