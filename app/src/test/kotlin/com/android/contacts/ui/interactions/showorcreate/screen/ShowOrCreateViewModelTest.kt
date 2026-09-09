@@ -1,4 +1,4 @@
-package com.android.contacts.ui.interactions.showorcreate
+package com.android.contacts.ui.interactions.showorcreate.screen
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,10 +10,9 @@ import com.android.contacts.data.contacts.model.ContactLookupQuery
 import com.android.contacts.data.contacts.model.ContactLookupResult
 import com.android.contacts.data.contacts.repository.ContactsRepository
 import com.android.contacts.tests.MainDispatcherRule
-import com.android.contacts.ui.interactions.showorcreate.screen.ShowOrCreateViewModel
-import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateAction as Action
-import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateEffect as Effect
-import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateUiState as State
+import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateAction
+import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateEffect
+import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -25,7 +24,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -68,7 +67,7 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                assertEquals(Effect.Close, awaitItem())
+                Assert.assertEquals(ShowOrCreateEffect.Close, awaitItem())
             }
         }
 
@@ -113,7 +112,7 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                assertEquals(Effect.ShowContact(contactUri), awaitItem())
+                Assert.assertEquals(ShowOrCreateEffect.ShowContact(contactUri), awaitItem())
             }
         }
 
@@ -136,8 +135,8 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                assertEquals(
-                    Effect.ShowContactList::class.java,
+                Assert.assertEquals(
+                    ShowOrCreateEffect.ShowContactList::class.java,
                     awaitItem().javaClass,
                 )
             }
@@ -154,8 +153,8 @@ class ShowOrCreateViewModelTest {
                 ),
             )
             advanceUntilIdle()
-            assertEquals(
-                State.ConfirmingCreate::class.java,
+            Assert.assertEquals(
+                ShowOrCreateUiState.ConfirmingCreate::class.java,
                 subject.uiState.value.javaClass,
             )
         }
@@ -171,10 +170,10 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                subject.onAction(Action.CreateConfirm)
+                subject.onAction(ShowOrCreateAction.CreateConfirm)
                 advanceUntilIdle()
-                assertEquals(
-                    Effect.CreateOrEditContact::class.java,
+                Assert.assertEquals(
+                    ShowOrCreateEffect.CreateOrEditContact::class.java,
                     awaitItem().javaClass,
                 )
             }
@@ -191,9 +190,9 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                subject.onAction(Action.CreateDismiss)
+                subject.onAction(ShowOrCreateAction.CreateDismiss)
                 advanceUntilIdle()
-                assertEquals(Effect.Close, awaitItem())
+                Assert.assertEquals(ShowOrCreateEffect.Close, awaitItem())
             }
         }
 
@@ -209,8 +208,8 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                assertEquals(
-                    Effect.CreateContact::class.java,
+                Assert.assertEquals(
+                    ShowOrCreateEffect.CreateContact::class.java,
                     awaitItem().javaClass,
                 )
             }

@@ -96,18 +96,23 @@ internal class ContactsRepositoryImpl @Inject constructor(
     private fun toLookupResults(cursor: Cursor): List<ContactLookupResult> {
         val results = mutableListOf<ContactLookupResult>()
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(LOOKUP_ID_INDEX)
-            val key = cursor.getString(LOOKUP_KEY_INDEX) ?: continue
-            val uri = ContactsContract.Contacts.getLookupUri(id, key) ?: continue
-            results.add(
+            buildContactLookupResult(cursor)
+                ?.let(results::add)
+        }
+        return results
+    }
+
+    private fun buildContactLookupResult(cursor: Cursor): ContactLookupResult? {
+        val id = cursor.getLong(LOOKUP_ID_INDEX)
+        val key = cursor.getString(LOOKUP_KEY_INDEX) ?: return null
+        return ContactsContract.Contacts.getLookupUri(id, key)
+            ?.let { uri ->
                 ContactLookupResult(
                     id = id,
                     key = key,
                     uri = uri,
-                ),
-            )
-        }
-        return results
+                )
+            }
     }
 
     private fun failedLookup(cause: Exception): List<ContactLookupResult> {
