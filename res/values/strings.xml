@@ -13,8 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Application name used in Settings/Apps. Default label for activities
          that don't specify a label. -->
@@ -1103,15 +1102,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt"> {count, plural,
         =1    {# contact}
         other {# contacts}
-    }</string>
-
-    <!-- Secondary string showing the number of SIM contacts and phone number for the SIM card
-         on the action for importing that SIM. Note that the bullet character is purely a visual
-         separator between the contact count and phone number; it has no grammatical meaning in
-         this string [CHAR LIMIT=35]-->
-    <string name="import_from_sim_secondary_template"> {count, plural,
-        =1    {# contact • <xliff:g id="phone_number">^1</xliff:g>}
-        other {# contacts • <xliff:g id="phone_number">^1</xliff:g>}
     }</string>
 
     <!-- Action string for selecting a .vcf file to import contacts from [CHAR LIMIT=30] -->

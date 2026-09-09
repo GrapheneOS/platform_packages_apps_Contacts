@@ -1,7 +1,6 @@
 package com.android.contacts.ui.common.util
 
 import android.icu.text.MessageFormat
-import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalLocale
@@ -19,12 +18,4 @@ internal fun messageFormatResource(
         LocalLocale.current.platformLocale,
     )
     return msgFormat.format(args)
-}
-
-@Composable
-internal fun expandStringTemplate(
-    template: String,
-    vararg values: CharSequence,
-): CharSequence {
-    return TextUtils.expandTemplate(template, *values)
 }

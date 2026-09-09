@@ -1,5 +1,8 @@
 package com.android.contacts.ui.interactions.importing
 
+import android.content.res.Resources
+import android.icu.text.MessageFormat
+import androidx.annotation.StringRes
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -7,6 +10,8 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.intl.Locale
 import com.android.contacts.R
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.tests.factory.AccountModelFactory
@@ -98,8 +103,15 @@ class ImportDialogTest {
         fakeUiStateFlow.value = State(
             isVCardImportAvailable = false,
             simCardOptions = persistentListOf(
-                SimCardOptionFactory.build(subscriptionId = 1),
-                SimCardOptionFactory.build(subscriptionId = 2, name = "Test"),
+                SimCardOptionFactory.build(
+                    subscriptionId = 1,
+                ),
+                SimCardOptionFactory.build(
+                    subscriptionId = 2,
+                    name = "Test",
+                    contactsCount = 5,
+                    phone = AnnotatedString("123456789"),
+                ),
             ),
         )
 
@@ -108,6 +120,17 @@ class ImportDialogTest {
         ).assertIsDisplayed()
         onNodeWithText(
             resources.getString(R.string.import_from_sim_summary_fmt, "Test"),
+        ).assertIsDisplayed()
+        onNodeWithText(
+            text = resources.messageFormat(
+                R.string.import_from_sim_secondary_contact_count_fmt,
+                mapOf("count" to 5),
+            ),
+            substring = true,
+        ).assertIsDisplayed()
+        onNodeWithText(
+            text = "123456789",
+            substring = true,
         ).assertIsDisplayed()
     }
 
@@ -128,5 +151,13 @@ class ImportDialogTest {
                 accountChosen = accountChosen,
             )
         }
+    }
+
+    private fun Resources.messageFormat(
+        @StringRes id: Int,
+        args: Map<String, Any> = mapOf(),
+    ): String {
+        return MessageFormat(getString(id), Locale.current.platformLocale)
+            .format(args)
     }
 }
