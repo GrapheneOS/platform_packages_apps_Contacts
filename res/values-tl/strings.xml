@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"Mga Contact"</string>
     <string name="contactsList" msgid="4456188358262700898">"Mga Contact"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"Magdagdag ng contact"</string>
@@ -366,7 +365,6 @@
     <string name="import_from_sim" msgid="7825280799813847991">"SIM card"</string>
     <string name="import_from_sim_summary_fmt" msgid="4234771828377985321">"SIM na <xliff:g id="SIM_NAME">%1$s</xliff:g>"</string>
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# contact}one{# contact}other{# na contact}}"</string>
-    <string name="import_from_sim_secondary_template" msgid="7574306746844258362">"{count,plural, =1{# contact • <xliff:g id="PHONE_NUMBER_0">^1</xliff:g>}one{# contact • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}other{# na contact • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf na file"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"Walang i-import"</string>
     <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"I-import ang mga contact mula sa vCard?"</string>

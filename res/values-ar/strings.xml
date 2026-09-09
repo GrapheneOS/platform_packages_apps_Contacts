@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"جهات الاتصال"</string>
     <string name="contactsList" msgid="4456188358262700898">"جهات الاتصال"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"إضافة جهة اتصال"</string>
@@ -366,7 +365,6 @@
     <string name="import_from_sim" msgid="7825280799813847991">"‏شريحة SIM"</string>
     <string name="import_from_sim_summary_fmt" msgid="4234771828377985321">"‏شريحة SIM <xliff:g id="SIM_NAME">%1$s</xliff:g>"</string>
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# جهة اتصال}zero{# جهات اتصال}two{# جهات اتصال}few{# جهات اتصال}many{# جهة اتصال}other{# جهة اتصال}}"</string>
-    <string name="import_from_sim_secondary_template" msgid="7574306746844258362">"{count,plural, =1{# جهة اتصال • <xliff:g id="PHONE_NUMBER_0">^1</xliff:g>}zero{# جهات اتصال • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}two{# جهات اتصال • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}few{# جهات اتصال • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}many{# جهة اتصال • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}other{# جهة اتصال • <xliff:g id="PHONE_NUMBER_1">^1</xliff:g>}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">"‏ملف .vcf"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"لا يوجد شيء للاستيراد"</string>
     <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"‏استيراد جهات الاتصال من vCard؟"</string>
