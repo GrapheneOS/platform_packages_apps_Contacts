@@ -82,7 +82,7 @@ internal class ShowOrCreateViewModel @Inject constructor(
         when (action) {
             Action.CreateConfirm -> {
                 val query = query ?: return
-                emitEffect(Effect.CreateContact(buildCreateExtras(query)))
+                emitEffect(Effect.CreateOrEditContact(buildCreateExtras(query)))
             }
             Action.CreateDismiss -> {
                 emitEffect(Effect.Close)
