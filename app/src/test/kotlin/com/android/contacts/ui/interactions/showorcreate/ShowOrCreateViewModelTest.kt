@@ -18,11 +18,13 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
+import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -49,6 +51,11 @@ class ShowOrCreateViewModelTest {
                     uriStringSlot.captured.split(":").getOrNull(1)
                 }
             }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
