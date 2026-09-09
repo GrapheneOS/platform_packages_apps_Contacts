@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.FragmentActivity
+import com.android.contacts.activities.RequestPermissionsActivity
 import com.android.contacts.ui.core.AppTheme
 import com.android.contacts.ui.interactions.showorcreate.screen.ShowOrCreateDialog
 import com.android.contacts.ui.interactions.showorcreate.screen.ShowOrCreateEffectHandlerImpl
@@ -16,6 +17,10 @@ class ShowOrCreateActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        if (RequestPermissionsActivity.startPermissionActivityIfNeeded(this)) {
+            return
+        }
 
         intent.putExtra(ShowOrCreateViewModel.EXTRA_DATA, intent.data)
         intent.putExtra(ShowOrCreateViewModel.EXTRA_EXTRAS, intent.extras)

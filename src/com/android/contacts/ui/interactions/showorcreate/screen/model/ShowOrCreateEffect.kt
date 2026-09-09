@@ -17,4 +17,8 @@ internal sealed interface ShowOrCreateEffect {
     data class CreateContact(
         val extras: Bundle,
     ) : ShowOrCreateEffect
+
+    data class CreateOrEditContact(
+        val extras: Bundle,
+    ) : ShowOrCreateEffect
 }
