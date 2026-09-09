@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -67,7 +67,7 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                Assert.assertEquals(ShowOrCreateEffect.Close, awaitItem())
+                assertEquals(ShowOrCreateEffect.Close, awaitItem())
             }
         }
 
@@ -112,7 +112,7 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                Assert.assertEquals(ShowOrCreateEffect.ShowContact(contactUri), awaitItem())
+                assertEquals(ShowOrCreateEffect.ShowContact(contactUri), awaitItem())
             }
         }
 
@@ -124,9 +124,7 @@ class ShowOrCreateViewModelTest {
             val results = listOf(contactResult1, contactResult2)
             every { contactsRepository.lookup(any()) } returns flowOf(results)
             val email = "user@example.org"
-            val bundle = mockk<Bundle>(relaxed = true) {
-                every { deepCopy() } returns this@mockk
-            }
+            val bundle = mockBundle()
             val subject = createViewModel(
                 savedState = mapOf(
                     ShowOrCreateViewModel.EXTRA_DATA to "mailto:$email".toUri(),
@@ -135,9 +133,9 @@ class ShowOrCreateViewModelTest {
             )
             subject.effects.test {
                 advanceUntilIdle()
-                Assert.assertEquals(
-                    ShowOrCreateEffect.ShowContactList::class.java,
-                    awaitItem().javaClass,
+                assertEquals(
+                    ShowOrCreateEffect.ShowContactList(bundle),
+                    awaitItem(),
                 )
             }
             verify { bundle.putString(ContactsContract.Intents.Insert.EMAIL, email) }
@@ -153,7 +151,7 @@ class ShowOrCreateViewModelTest {
                 ),
             )
             advanceUntilIdle()
-            Assert.assertEquals(
+            assertEquals(
                 ShowOrCreateUiState.ConfirmingCreate::class.java,
                 subject.uiState.value.javaClass,
             )
@@ -163,20 +161,24 @@ class ShowOrCreateViewModelTest {
     fun whenCreateIsConfirmed_openCreateOrEditContact() =
         runTest(mainDispatcherRule.testDispatcher) {
             every { contactsRepository.lookup(any()) } returns flowOf(emptyList())
+            val email = "user@example.org"
+            val bundle = mockBundle()
             val subject = createViewModel(
                 savedState = mapOf(
-                    ShowOrCreateViewModel.EXTRA_DATA to "mailto:user@example.org".toUri(),
+                    ShowOrCreateViewModel.EXTRA_DATA to "mailto:$email".toUri(),
+                    ShowOrCreateViewModel.EXTRA_EXTRAS to bundle,
                 ),
             )
             subject.effects.test {
                 advanceUntilIdle()
                 subject.onAction(ShowOrCreateAction.CreateConfirm)
                 advanceUntilIdle()
-                Assert.assertEquals(
-                    ShowOrCreateEffect.CreateOrEditContact::class.java,
-                    awaitItem().javaClass,
+                assertEquals(
+                    ShowOrCreateEffect.CreateOrEditContact(bundle),
+                    awaitItem(),
                 )
             }
+            verify { bundle.putString(ContactsContract.Intents.Insert.EMAIL, email) }
         }
 
     @Test
@@ -192,7 +194,7 @@ class ShowOrCreateViewModelTest {
                 advanceUntilIdle()
                 subject.onAction(ShowOrCreateAction.CreateDismiss)
                 advanceUntilIdle()
-                Assert.assertEquals(ShowOrCreateEffect.Close, awaitItem())
+                assertEquals(ShowOrCreateEffect.Close, awaitItem())
             }
         }
 
@@ -200,19 +202,23 @@ class ShowOrCreateViewModelTest {
     fun whenNoContactIsFoundAndForceCreate_openCreateContact() =
         runTest(mainDispatcherRule.testDispatcher) {
             every { contactsRepository.lookup(any()) } returns flowOf(emptyList())
+            val phone = "123456789"
+            val bundle = mockBundle()
             val subject = createViewModel(
                 savedState = mapOf(
-                    ShowOrCreateViewModel.EXTRA_DATA to "mailto:user@example.org".toUri(),
+                    ShowOrCreateViewModel.EXTRA_DATA to "tel:$phone".toUri(),
+                    ShowOrCreateViewModel.EXTRA_EXTRAS to bundle,
                     ContactsContract.Intents.EXTRA_FORCE_CREATE to true,
                 ),
             )
             subject.effects.test {
                 advanceUntilIdle()
-                Assert.assertEquals(
-                    ShowOrCreateEffect.CreateContact::class.java,
-                    awaitItem().javaClass,
+                assertEquals(
+                    ShowOrCreateEffect.CreateContact(bundle),
+                    awaitItem(),
                 )
             }
+            verify { bundle.putString(ContactsContract.Intents.Insert.PHONE, phone) }
         }
 
     private fun createViewModel(
@@ -221,4 +227,10 @@ class ShowOrCreateViewModelTest {
         savedStateHandle = SavedStateHandle(savedState),
         contactsRepository = contactsRepository,
     )
+
+    private fun mockBundle(): Bundle {
+        return mockk<Bundle>(relaxed = true) {
+            every { deepCopy() } returns this@mockk
+        }
+    }
 }
