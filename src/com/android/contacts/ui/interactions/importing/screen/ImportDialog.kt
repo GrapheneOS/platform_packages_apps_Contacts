@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.android.contacts.ui.interactions.importing.screen
 
 import androidx.compose.foundation.clickable
@@ -17,9 +19,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +42,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
 import com.android.contacts.domain.accounts.model.AccountModel
-import com.android.contacts.ui.common.util.expandStringTemplate
 import com.android.contacts.ui.common.util.messageFormatResource
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.core.itemClipShape
@@ -77,17 +80,12 @@ internal fun ImportDialog(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 internal fun ImportDialogContent(
     uiState: State,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ) {
-    val sheetState = rememberStandardBottomSheetState(
-        initialValue = SheetValue.Expanded,
-        confirmValueChange = { it != SheetValue.PartiallyExpanded },
-        skipHiddenState = false,
-    )
     ModalBottomSheet(
         onDismissRequest = { onAction(Action.Dismiss) },
         sheetState = sheetState,
@@ -140,10 +138,6 @@ internal fun ImportDialogContent(
             }
         },
     )
-    // Workaround to ensure the sheet is always expanded, even when the content changes
-    LaunchedEffect(uiState.isVCardImportAvailable, uiState.simCardOptions) {
-        sheetState.expand()
-    }
 }
 
 @Composable
@@ -277,31 +271,31 @@ private fun OptionCell(
 
 @Composable
 private fun simCardOptionDescription(option: SimCardOption): AnnotatedString? {
-    fun CharSequence.toAnnotatedString(): AnnotatedString {
-        return buildAnnotatedString { append(this@toAnnotatedString) }
-    }
-
-    return when {
-        option.contactsCount != null && !option.phone.isNullOrBlank() -> {
-            expandStringTemplate(
+    val parts = buildList {
+        if (option.contactsCount != null) {
+            add(
                 messageFormatResource(
-                    R.string.import_from_sim_secondary_template,
+                    R.string.import_from_sim_secondary_contact_count_fmt,
                     persistentMapOf("count" to option.contactsCount),
                 ),
-                option.phone,
-            ).toAnnotatedString()
+            )
         }
-
-        option.contactsCount != null -> {
-            messageFormatResource(
-                R.string.import_from_sim_secondary_contact_count_fmt,
-                persistentMapOf("count" to option.contactsCount),
-            ).toAnnotatedString()
+        if (!option.phone.isNullOrBlank()) {
+            add(option.phone)
         }
+    }
 
-        !option.phone.isNullOrBlank() -> option.phone
+    if (parts.isEmpty()) {
+        return null
+    }
 
-        else -> null
+    return buildAnnotatedString {
+        parts.forEachIndexed { index, part ->
+            append(part)
+            if (index != parts.lastIndex) {
+                append(" • ")
+            }
+        }
     }
 }
 
@@ -316,6 +310,7 @@ private fun ImportDialogProgressPreview() {
                     simCardOptions = null,
                 ),
                 onAction = {},
+                sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded),
             )
         }
     }
@@ -332,6 +327,7 @@ private fun ImportDialogEmptyPreview() {
                     simCardOptions = persistentListOf(),
                 ),
                 onAction = {},
+                sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded),
             )
         }
     }
@@ -350,7 +346,7 @@ private fun ImportDialogPreview() {
                             subscriptionId = 1,
                             name = "John Smith",
                             contactsCount = 10,
-                            phone = buildAnnotatedString { append("123 456 789") },
+                            phone = AnnotatedString("123 456 789"),
                         ),
                         SimCardOption(
                             subscriptionId = 2,
@@ -361,6 +357,7 @@ private fun ImportDialogPreview() {
                     ),
                 ),
                 onAction = {},
+                sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded),
             )
         }
     }
