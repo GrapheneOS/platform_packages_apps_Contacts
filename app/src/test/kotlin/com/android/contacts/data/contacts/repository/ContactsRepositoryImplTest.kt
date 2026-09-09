@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -64,14 +65,23 @@ class ContactsRepositoryImplTest {
     }
 
     @Test
+    fun lookup_whenKeyIsNull_skipsResult() = runTest {
+        givenQueryRows(
+            resultRow(2L, null),
+        )
+
+        repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
+            assertTrue(awaitItem().isEmpty())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun lookup_whenNoContactMatches_emitsResult() = runTest {
         givenQueryRows()
 
         repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
-            assertEquals(
-                emptyList<ContactLookupResult>(),
-                awaitItem(),
-            )
+            assertTrue(awaitItem().isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -180,7 +190,7 @@ class ContactsRepositoryImplTest {
 
     private fun resultRow(
         contactId: Long = 1L,
-        contactKey: String = "1",
+        contactKey: String? = "1",
     ): Array<Any?> {
         return arrayOf(contactId, contactKey)
     }
