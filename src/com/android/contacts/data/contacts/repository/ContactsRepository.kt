@@ -116,7 +116,7 @@ internal class ContactsRepositoryImpl @Inject constructor(
     }
 
     private fun failedLookup(cause: Exception): List<ContactLookupResult> {
-        Log.w(TAG, "Could not load the user profile", cause)
+        Log.w(TAG, "Could not lookup contacts", cause)
         return emptyList()
     }
 
