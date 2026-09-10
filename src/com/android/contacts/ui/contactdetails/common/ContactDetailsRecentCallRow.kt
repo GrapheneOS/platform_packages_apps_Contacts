@@ -80,7 +80,9 @@ internal fun ContactDetailsRecentCallRow(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
-                modifier = Modifier.clearAndSetSemantics {},
+                modifier = Modifier
+                    .padding(end = Tokens.actionRowTrailingPadding)
+                    .clearAndSetSemantics {},
             )
         },
     )
