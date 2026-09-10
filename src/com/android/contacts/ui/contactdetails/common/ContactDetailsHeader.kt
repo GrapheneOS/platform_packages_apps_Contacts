@@ -16,13 +16,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.onLongClick
@@ -54,9 +58,12 @@ internal fun ContactDetailsHeader(
 ) {
     val copyLabel = stringResource(R.string.copy_text)
 
+    var headerCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .onGloballyPositioned { coordinates -> headerCoordinates = coordinates }
             .testTag(CONTACT_DETAILS_HEADER_TEST_TAG)
             .semantics(mergeDescendants = true) {
                 onLongClick(label = copyLabel) {
@@ -79,7 +86,11 @@ internal fun ContactDetailsHeader(
         HeaderName(
             text = header.displayNameText(),
             onLongClick = onNameLongClick,
-            onBottomChanged = onNameBottomChanged,
+            onBottomChanged = { coordinates ->
+                headerCoordinates?.let { header ->
+                    onNameBottomChanged(nameBottomInHeader(header, coordinates))
+                }
+            },
         )
 
         if (header.subtitles.isNotEmpty()) {
@@ -106,11 +117,23 @@ private fun HeaderAvatar(header: ContactHeaderUiModel) {
     )
 }
 
+private fun nameBottomInHeader(
+    header: LayoutCoordinates,
+    name: LayoutCoordinates,
+): Float {
+    val nameBottom = Offset(
+        x = 0f,
+        y = name.size.height.toFloat(),
+    )
+
+    return header.localPositionOf(name, nameBottom).y
+}
+
 @Composable
 private fun HeaderName(
     text: String,
     onLongClick: () -> Unit,
-    onBottomChanged: (Float) -> Unit,
+    onBottomChanged: (LayoutCoordinates) -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -140,9 +163,7 @@ private fun HeaderName(
                 horizontal = Tokens.headerNameHorizontalPadding,
                 vertical = Tokens.headerNameVerticalPadding,
             )
-            .onGloballyPositioned { coordinates ->
-                onBottomChanged(coordinates.positionInRoot().y + coordinates.size.height)
-            },
+            .onGloballyPositioned { coordinates -> onBottomChanged(coordinates) },
     )
 }
 

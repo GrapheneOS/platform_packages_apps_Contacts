@@ -640,6 +640,10 @@
             <action android:name="android.intent.action.VIEW"/>
             <data android:scheme="geo"/>
         </intent>
+        <intent>
+            <action android:name="android.intent.action.NAVIGATE"/>
+            <data android:scheme="geo"/>
+        </intent>
         <!-- About card -->
         <intent>
             <!-- View CalendarContract Uris -->

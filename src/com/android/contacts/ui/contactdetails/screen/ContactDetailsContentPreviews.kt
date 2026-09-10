@@ -74,7 +74,7 @@ private fun previewContent(): Content.Loaded {
             ),
         ),
         accounts = persistentListOf(
-            ContactAccountUiModel(name = "alex@example.org", iconUri = null),
+            ContactAccountUiModel(name = "alex@example.org", iconData = null),
         ),
         settings = previewSettings(),
         emptyPrompt = null,
