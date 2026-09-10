@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.net.Uri;
 
 public class StructuredPostalUtils {
+    private static final String ACTION_NAVIGATE = "android.intent.action.NAVIGATE";
+
     private StructuredPostalUtils() {
     }
 
@@ -32,6 +34,15 @@ public class StructuredPostalUtils {
     }
 
     public static Intent getViewPostalAddressDirectionsIntent(String postalAddress) {
-        return new Intent(Intent.ACTION_VIEW, getPostalAddressUri(postalAddress));
+        return new Intent(ACTION_NAVIGATE, getPostalAddressDirectionsUri(postalAddress));
+    }
+
+    public static Uri getPostalAddressDirectionsUri(String postalAddress) {
+        return Uri.parse("geo:0,0?q=" + Uri.encode(toSingleLine(postalAddress))
+                + "&intent=directions&target=d");
+    }
+
+    private static String toSingleLine(String postalAddress) {
+        return postalAddress.replaceAll("\\s*\\R\\s*", ", ").trim();
     }
 }
