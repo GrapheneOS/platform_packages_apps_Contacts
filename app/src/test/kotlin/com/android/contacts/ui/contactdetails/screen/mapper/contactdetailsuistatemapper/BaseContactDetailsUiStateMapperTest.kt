@@ -4,6 +4,7 @@ import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Email
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactGroup
+import com.android.contacts.data.contactdetails.source.RingtoneTitleSource
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.telecom.model.CallingSim
 import com.android.contacts.data.telecom.model.PhoneAccountId
@@ -44,12 +45,14 @@ internal abstract class BaseContactDetailsUiStateMapperTest {
     protected val isEntryActionAvailable = mockk<IsEntryActionAvailable>()
     protected val contactQuickActionsMapper = mockk<ContactQuickActionsMapper>()
     private val recentCallsMapper = mockk<RecentCallsMapper>()
+    private val ringtoneTitleSource = mockk<RingtoneTitleSource>()
 
     private val mapper = ContactDetailsUiStateMapperImpl(
         context = context,
         isEntryActionAvailable = isEntryActionAvailable,
         contactQuickActionsMapper = contactQuickActionsMapper,
         recentCallsMapper = recentCallsMapper,
+        ringtoneTitleSource = ringtoneTitleSource,
     )
 
     @Before
@@ -57,6 +60,7 @@ internal abstract class BaseContactDetailsUiStateMapperTest {
         every { isEntryActionAvailable(any()) } returns true
         every { contactQuickActionsMapper.map(any()) } returns QUICK_ACTIONS
         every { recentCallsMapper.map(any()) } returns persistentListOf()
+        every { ringtoneTitleSource(any()) } returns null
     }
 
     protected fun mapState(

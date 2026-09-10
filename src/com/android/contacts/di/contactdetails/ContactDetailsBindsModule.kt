@@ -18,6 +18,8 @@ import com.android.contacts.data.contactdetails.repository.ContactShortcutReposi
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepositoryImpl
 import com.android.contacts.data.contactdetails.source.ContactLoaderSource
 import com.android.contacts.data.contactdetails.source.ContactLoaderSourceImpl
+import com.android.contacts.data.contactdetails.source.RingtoneTitleSource
+import com.android.contacts.data.contactdetails.source.RingtoneTitleSourceImpl
 import com.android.contacts.domain.contactdetails.mapper.ContactEntryContentMapper
 import com.android.contacts.domain.contactdetails.mapper.ContactEntryContentMapperImpl
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
@@ -73,6 +75,12 @@ internal abstract class ContactDetailsBindsModule {
     abstract fun bindContactLoaderSource(
         impl: ContactLoaderSourceImpl,
     ): ContactLoaderSource
+
+    @Binds
+    @Reusable
+    abstract fun bindRingtoneTitleSource(
+        impl: RingtoneTitleSourceImpl,
+    ): RingtoneTitleSource
 
     @Binds
     @Reusable

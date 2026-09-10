@@ -1,26 +1,31 @@
 package com.android.contacts.ui.contactdetails.screen
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.android.contacts.R
 import com.android.contacts.ui.contactdetails.common.ContactDetailsGroups
+import com.android.contacts.ui.contactdetails.common.ContactDetailsHeader
+import com.android.contacts.ui.contactdetails.common.ContactDetailsQuickActions
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_ACCOUNTS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG
@@ -30,7 +35,14 @@ import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_RECEN
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_SETTINGS_TEST_TAG
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsContent as Content
+import com.android.contacts.ui.contactdetails.screen.model.ContactHeaderUiModel
+import com.android.contacts.ui.contactdetails.screen.model.ContactQuickActionUiModel
+import kotlinx.collections.immutable.ImmutableList
 
+private const val UNKNOWN_NAME_BOTTOM = Float.MAX_VALUE
+
+private const val HEADER_KEY = "header"
+private const val QUICK_ACTIONS_KEY = "quick_actions"
 private const val GROUPS_KEY = "groups"
 private const val CONTACT_CARD_KEY = "contact_card"
 private const val NOTES_KEY = "notes"
@@ -46,35 +58,38 @@ internal fun ContactDetailsList(
     onAction: (Action) -> Unit,
     contentPadding: PaddingValues,
     listState: LazyListState,
-    headerHeight: Int,
-    quickActionsHeight: Int,
+    onNameHiddenChanged: (Boolean) -> Unit,
 ) {
     val itemPadding = horizontalContentPadding(contentPadding)
-    val density = LocalDensity.current
-
-    val headerSpacing = with(density) {
-        headerHeight.toDp()
-    } + Tokens.cardGroupSpacing
-
-    val quickActionsSpacing = with(density) {
-        quickActionsHeight.toDp()
-    } + groupsSpacing(content.groups.isNotEmpty())
 
     var expandedConnectedApps by rememberSaveable { mutableStateOf(emptySet<String>()) }
+    var nameBottom by remember { mutableFloatStateOf(UNKNOWN_NAME_BOTTOM) }
+
+    NameVisibility(
+        listState = listState,
+        nameBottom = nameBottom,
+        onNameHiddenChanged = onNameHiddenChanged,
+    )
 
     LazyColumn(
         state = listState,
         contentPadding = screenContentPadding(contentPadding),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = contentPadding.calculateTopPadding()),
     ) {
-        item(key = HEADER_KEY) {
-            Spacer(modifier = Modifier.height(headerSpacing))
-        }
-
-        item(key = QUICK_ACTIONS_KEY) {
-            Spacer(modifier = Modifier.height(quickActionsSpacing))
-        }
-
+        headerItem(
+            header = content.header,
+            onAction = onAction,
+            itemPadding = itemPadding,
+            onNameBottomChanged = { bottom -> nameBottom = bottom },
+        )
+        quickActionsItem(
+            quickActions = content.quickActions,
+            onAction = onAction,
+            itemPadding = itemPadding,
+            hasGroups = content.groups.isNotEmpty(),
+        )
         groupsItem(content, onAction, itemPadding)
         contactCardItem(content, onAction, itemPadding)
         notesSection(content, onAction, itemPadding)
@@ -89,6 +104,68 @@ internal fun ContactDetailsList(
         )
         settingsSection(content, onAction, itemPadding)
         accountsItem(content, itemPadding)
+    }
+}
+
+@Composable
+private fun NameVisibility(
+    listState: LazyListState,
+    nameBottom: Float,
+    onNameHiddenChanged: (Boolean) -> Unit,
+) {
+    val isNameHidden by remember(listState) {
+        derivedStateOf {
+            val header = listState.layoutInfo.visibleItemsInfo
+                .firstOrNull { item -> item.key == HEADER_KEY }
+
+            when {
+                header == null -> listState.firstVisibleItemIndex > 0
+                nameBottom == UNKNOWN_NAME_BOTTOM -> false
+                else -> header.offset + nameBottom <= 0f
+            }
+        }
+    }
+
+    LaunchedEffect(isNameHidden) {
+        onNameHiddenChanged(isNameHidden)
+    }
+}
+
+private fun LazyListScope.headerItem(
+    header: ContactHeaderUiModel,
+    onAction: (Action) -> Unit,
+    itemPadding: PaddingValues,
+    onNameBottomChanged: (Float) -> Unit,
+) {
+    item(key = HEADER_KEY) {
+        val nameLabel = stringResource(R.string.nameLabelsGroup)
+
+        ContactDetailsHeader(
+            header = header,
+            onNameLongClick = { onAction(Action.CopyClick(nameLabel, header.displayName)) },
+            onNameBottomChanged = onNameBottomChanged,
+            modifier = Modifier
+                .padding(itemPadding)
+                .padding(bottom = Tokens.cardGroupSpacing),
+        )
+    }
+}
+
+private fun LazyListScope.quickActionsItem(
+    quickActions: ImmutableList<ContactQuickActionUiModel>,
+    onAction: (Action) -> Unit,
+    itemPadding: PaddingValues,
+    hasGroups: Boolean,
+) {
+    stickyHeader(key = QUICK_ACTIONS_KEY) {
+        ContactDetailsQuickActions(
+            quickActions = quickActions,
+            onActionClick = { action -> onAction(Action.EntryClick(action)) },
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(itemPadding)
+                .padding(bottom = Tokens.quickActionPinnedPadding + groupsSpacing(hasGroups)),
+        )
     }
 }
 

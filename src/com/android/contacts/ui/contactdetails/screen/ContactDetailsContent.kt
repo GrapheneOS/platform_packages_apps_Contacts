@@ -74,12 +74,11 @@ internal fun ContactDetailsContent(
             }
 
             is Content.Loaded -> {
-                ContactDetailsCards(
+                ContactDetailsList(
                     content = content,
                     onAction = onAction,
                     contentPadding = contentPadding,
                     listState = listState,
-                    isNameHidden = isNameHidden,
                     onNameHiddenChanged = { hidden -> isNameHidden = hidden },
                 )
             }

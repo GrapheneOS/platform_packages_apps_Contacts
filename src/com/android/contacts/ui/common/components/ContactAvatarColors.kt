@@ -5,14 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
-import kotlin.math.abs
-import kotlin.math.roundToInt
 
 private const val DARK_THEME_LUMINANCE_THRESHOLD = 0.5f
 private const val FULL_HUE_CIRCLE_DEGREES = 360f
-private const val HUE_SEGMENT_DEGREES = 60f
 private const val GOLDEN_ANGLE_DEGREES = 137.508f
-private const val BYTE_COLOR_MAX_VALUE = 255
 private const val FNV_OFFSET_BASIS = -0x7ee3623b
 private const val FNV_PRIME = 0x01000193
 
@@ -67,12 +63,12 @@ internal fun contactAvatarFallbackColors(
 
     return when {
         isDarkTheme -> ContactAvatarFallbackColors(
-            background = hslColor(
+            background = Color.hsl(
                 hue = hue,
                 saturation = DARK_THEME_AVATAR_BACKGROUND_SATURATION,
                 lightness = DARK_THEME_AVATAR_BACKGROUND_LIGHTNESS,
             ),
-            content = hslColor(
+            content = Color.hsl(
                 hue = hue,
                 saturation = DARK_THEME_AVATAR_CONTENT_SATURATION,
                 lightness = DARK_THEME_AVATAR_CONTENT_LIGHTNESS,
@@ -80,12 +76,12 @@ internal fun contactAvatarFallbackColors(
         )
 
         else -> ContactAvatarFallbackColors(
-            background = hslColor(
+            background = Color.hsl(
                 hue = hue,
                 saturation = LIGHT_THEME_AVATAR_BACKGROUND_SATURATION,
                 lightness = LIGHT_THEME_AVATAR_BACKGROUND_LIGHTNESS,
             ),
-            content = hslColor(
+            content = Color.hsl(
                 hue = hue,
                 saturation = LIGHT_THEME_AVATAR_CONTENT_SATURATION,
                 lightness = LIGHT_THEME_AVATAR_CONTENT_LIGHTNESS,
@@ -109,37 +105,4 @@ private fun String.stableHashCode(): Int {
     }
 
     return hash
-}
-
-private fun hslColor(
-    hue: Float,
-    saturation: Float,
-    lightness: Float,
-): Color {
-    val chroma = (1f - abs(2f * lightness - 1f)) * saturation
-    val huePrime = hue / HUE_SEGMENT_DEGREES
-    val secondLargestComponent = chroma * (1f - abs(huePrime % 2f - 1f))
-    val lightnessMatch = lightness - chroma / 2f
-
-    val sextantComponents = listOf(
-        Triple(chroma, secondLargestComponent, 0f),
-        Triple(secondLargestComponent, chroma, 0f),
-        Triple(0f, chroma, secondLargestComponent),
-        Triple(0f, secondLargestComponent, chroma),
-        Triple(secondLargestComponent, 0f, chroma),
-        Triple(chroma, 0f, secondLargestComponent),
-    )
-    val sextant = huePrime.toInt().coerceIn(0, sextantComponents.lastIndex)
-    val (redPrime, greenPrime, bluePrime) = sextantComponents[sextant]
-
-    return Color(
-        red = (redPrime + lightnessMatch).toByteColorComponent(),
-        green = (greenPrime + lightnessMatch).toByteColorComponent(),
-        blue = (bluePrime + lightnessMatch).toByteColorComponent(),
-    )
-}
-
-private fun Float.toByteColorComponent(): Int {
-    return (coerceIn(minimumValue = 0f, maximumValue = 1f) * BYTE_COLOR_MAX_VALUE)
-        .roundToInt()
 }

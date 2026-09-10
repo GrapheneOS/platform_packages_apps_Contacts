@@ -119,7 +119,7 @@ internal class ContactDetailsContentTest {
     fun withAnAccount_showsWhereTheContactInfoComesFrom() = runComposeUiTest {
         val content = loadedContent(
             accounts = persistentListOf(
-                ContactAccountUiModel(name = "alex@example.org", iconUri = null),
+                ContactAccountUiModel(name = "alex@example.org", iconData = null),
             ),
         )
 

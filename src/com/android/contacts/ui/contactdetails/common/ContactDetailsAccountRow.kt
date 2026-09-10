@@ -16,10 +16,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
-import com.android.contacts.ui.common.components.ContactAvatar
-import com.android.contacts.ui.common.components.ContactAvatarImage
+import com.android.contacts.ui.common.components.AccountIcon
 import com.android.contacts.ui.common.components.cellShape
-import com.android.contacts.ui.common.components.contactAvatarLabel
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.ContactAccountUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
@@ -62,10 +60,9 @@ internal fun ContactDetailsAccountRow(
                 overflow = TextOverflow.Ellipsis,
             )
 
-            ContactAvatar(
-                avatarImage = account.iconUri?.let(ContactAvatarImage::Uri),
-                size = Tokens.accountRowAvatarSize,
-                fallbackLabel = contactAvatarLabel(account.name),
+            AccountIcon(
+                iconData = account.iconData,
+                size = Tokens.accountRowIconSize,
             )
 
             Text(
@@ -90,7 +87,7 @@ private fun ContactDetailsAccountRowPreview() {
         ContactDetailsAccountRow(
             account = ContactAccountUiModel(
                 name = "alex@example.org",
-                iconUri = null,
+                iconData = null,
             ),
             isFirst = true,
             isLast = true,
@@ -98,7 +95,7 @@ private fun ContactDetailsAccountRowPreview() {
         ContactDetailsAccountRow(
             account = ContactAccountUiModel(
                 name = "alexander.placeholder@long-example-domain.org",
-                iconUri = null,
+                iconData = null,
             ),
             isFirst = true,
             isLast = true,

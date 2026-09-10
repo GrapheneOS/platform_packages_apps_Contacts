@@ -1,7 +1,6 @@
 package com.android.contacts.data.contactdetails.mapper
 
 import android.content.Context
-import android.media.RingtoneManager
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.provider.ContactsContract.CommonDataKinds.Event
 import android.provider.ContactsContract.CommonDataKinds.Im
@@ -10,7 +9,6 @@ import android.provider.ContactsContract.CommonDataKinds.Relation
 import android.provider.ContactsContract.CommonDataKinds.SipAddress
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal
 import android.provider.ContactsContract.DisplayNameSources as Sources
-import androidx.core.net.toUri
 import com.android.contacts.data.contactdetails.model.ContactAccount
 import com.android.contacts.data.contactdetails.model.ContactCapabilities
 import com.android.contacts.data.contactdetails.model.ContactDataItem
@@ -20,10 +18,13 @@ import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.detail.ContactDisplayUtils
+import com.android.contacts.domain.accounts.model.AccountIconData
 import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.model.Contact
 import com.android.contacts.model.RawContact
 import com.android.contacts.model.account.AccountType
+import com.android.contacts.model.account.FallbackAccountType
+import com.android.contacts.model.account.SimAccountType
 import com.android.contacts.model.dataitem.CustomDataItem
 import com.android.contacts.model.dataitem.DataItem
 import com.android.contacts.model.dataitem.DataKind
@@ -44,7 +45,6 @@ import com.android.contacts.quickcontact.DirectoryContactUtil
 import com.android.contacts.quickcontact.InvisibleContactUtil
 import com.android.contacts.util.DateUtils
 import com.android.contacts.util.core.extension.trimmedOrNull
-import com.android.contacts.util.core.resourceUri
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.nio.ByteBuffer
 import javax.inject.Inject
@@ -80,7 +80,6 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             photo = mapPhoto(contact),
             isSendToVoicemail = contact.isSendToVoicemail,
             customRingtone = contact.customRingtone,
-            customRingtoneTitle = ringtoneTitle(contact.customRingtone),
             groups = mapGroups(contact),
             accounts = mapAccounts(contact),
             dataItems = mapDataItems(contact, excludedMimeTypes),
@@ -138,14 +137,20 @@ internal class ContactDetailsMapperImpl @Inject constructor(
         return when {
             accountType != null && name != null -> ContactAccount(
                 name = name,
-                iconUri = resourceUri(
-                    packageName = accountType.syncAdapterPackageName ?: context.packageName,
-                    resourceId = accountType.iconRes,
-                ),
+                iconData = accountIconData(accountType),
             )
 
             else -> null
         }
+    }
+
+    private fun accountIconData(accountType: AccountType): AccountIconData {
+        return AccountIconData(
+            titleRes = accountType.titleRes,
+            iconRes = accountType.iconRes,
+            syncAdapterPackageName = accountType.syncAdapterPackageName,
+            applyGrayTint = accountType is FallbackAccountType || accountType is SimAccountType,
+        )
     }
 
     private fun mapDisplayNameSource(displayNameSource: Int): ContactDisplayNameSource {
@@ -424,16 +429,6 @@ internal class ContactDetailsMapperImpl @Inject constructor(
             displayString = displayString(dataItem),
             url = dataItem.url,
         )
-    }
-
-    private fun ringtoneTitle(customRingtone: String?): String? {
-        if (customRingtone.isNullOrEmpty()) {
-            return null
-        }
-
-        val ringtone = RingtoneManager.getRingtone(context, customRingtone.toUri())
-
-        return ringtone?.getTitle(context)
     }
 
     private fun mapEvent(dataItem: EventDataItem): ContactDataItem.Event {

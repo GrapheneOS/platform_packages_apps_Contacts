@@ -329,9 +329,7 @@ internal class ContactDetailsViewModel @Inject constructor(
     private fun setRingtone(ringtone: String?) {
         val lookupUri = lookupUri() ?: return
 
-        viewModelScope.launch {
-            contactActionsRepository.setRingtone(lookupUri, ringtone)
-        }
+        flagsDelegate.setRingtone(lookupUri, ringtone)
     }
 
     private fun joinContact(targetContactId: Long) {
