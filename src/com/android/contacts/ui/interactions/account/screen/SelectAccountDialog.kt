@@ -164,7 +164,7 @@ private fun AccountCell(
                 .padding(vertical = 12.dp, horizontal = 16.dp),
         ) {
             AccountIcon(
-                account = account,
+                iconData = account.iconData,
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .size(32.dp),

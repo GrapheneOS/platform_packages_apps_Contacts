@@ -6,6 +6,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
+import com.android.contacts.data.contacts.delegate.LoadRawContactsRepositoryDelegate
+import com.android.contacts.data.contacts.delegate.LoadRawContactsRepositoryDelegateImpl
 import com.android.contacts.data.contacts.model.ContactLookupQuery
 import com.android.contacts.data.contacts.model.ContactLookupResult
 import com.android.contacts.di.core.IoDispatcher
@@ -17,14 +19,17 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-internal interface ContactsRepository {
+internal interface ContactsRepository : LoadRawContactsRepositoryDelegate {
     fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>?>
 }
 
 internal class ContactsRepositoryImpl @Inject constructor(
+    private val loadRawContactsRepositoryDelegateImpl: LoadRawContactsRepositoryDelegateImpl,
     private val contentResolver: ContentResolver,
     @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) : ContactsRepository {
+) : ContactsRepository,
+    LoadRawContactsRepositoryDelegate by loadRawContactsRepositoryDelegateImpl {
+
     override fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>?> {
         return observeUri(getQueryUri(query))
             .map { queryContacts(query) }

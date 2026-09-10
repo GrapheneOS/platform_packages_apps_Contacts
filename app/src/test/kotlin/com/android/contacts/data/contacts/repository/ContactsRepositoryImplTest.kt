@@ -6,6 +6,8 @@ import android.database.MatrixCursor
 import android.net.Uri
 import android.provider.ContactsContract
 import app.cash.turbine.test
+import com.android.contacts.data.contacts.delegate.LoadRawContactsRepositoryDelegate
+import com.android.contacts.data.contacts.delegate.LoadRawContactsRepositoryDelegateImpl
 import com.android.contacts.data.contacts.model.ContactLookupQuery
 import com.android.contacts.data.contacts.model.ContactLookupResult
 import io.mockk.CapturingSlot
@@ -29,10 +31,13 @@ import org.robolectric.RobolectricTestRunner
 class ContactsRepositoryImplTest {
 
     private val contentResolver = mockk<ContentResolver>(relaxed = true)
+    private val loadRawContactsRepositoryDelegateImpl =
+        mockk<LoadRawContactsRepositoryDelegateImpl>(relaxed = true)
     private val uriSlot = slot<Uri>()
     private val projectionSlot = slot<Array<String>>()
 
     private val repository = ContactsRepositoryImpl(
+        loadRawContactsRepositoryDelegateImpl = loadRawContactsRepositoryDelegateImpl,
         contentResolver = contentResolver,
         ioDispatcher = UnconfinedTestDispatcher(),
     )
