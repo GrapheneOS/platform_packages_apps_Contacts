@@ -1,4 +1,4 @@
-package com.android.contacts.sim
+package com.android.contacts.ui.simimport
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test

@@ -288,9 +288,9 @@
             android:theme="@style/PeopleActivityTheme"/>
 
         <activity
-            android:name=".activities.ShowOrCreateActivity"
+            android:name=".ui.interactions.showorcreate.ShowOrCreateActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar">
+            android:theme="@style/Theme.Compose.Dialog">
 
             <intent-filter>
                 <action android:name="com.android.contacts.action.SHOW_OR_CREATE_CONTACT"/>
