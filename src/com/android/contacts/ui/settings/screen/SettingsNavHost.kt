@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.android.contacts.ui.settings.about.AboutScreen
+import com.android.contacts.ui.settings.about.LicensesScreen
 import com.android.contacts.ui.settings.screen.model.SettingsAction as Action
 import com.android.contacts.ui.settings.screen.model.SettingsNavRoute
 import com.android.contacts.ui.settings.screen.model.SettingsUiState
@@ -32,7 +33,10 @@ internal fun SettingsNavHost(
     }
 
     BackHandler(enabled = route != SettingsNavRoute.Main) {
-        route = SettingsNavRoute.Main
+        route = when (route) {
+            SettingsNavRoute.Licenses -> SettingsNavRoute.About
+            SettingsNavRoute.About, SettingsNavRoute.Main -> SettingsNavRoute.Main
+        }
     }
 
     AnimatedContent(
@@ -57,9 +61,15 @@ internal fun SettingsNavHost(
                     AboutScreen(
                         buildVersion = uiState.buildVersion,
                         onBuildVersionLongClick = { onAction(Action.BuildVersionLongClicked) },
-                        onLicensesClick = { onAction(Action.LicensesClicked) },
+                        onLicensesClick = { route = SettingsNavRoute.Licenses },
                         onNavigateBack = { route = SettingsNavRoute.Main },
                         snackbarHostState = snackbarHostState,
+                    )
+                }
+
+                SettingsNavRoute.Licenses -> {
+                    LicensesScreen(
+                        onNavigateBack = { route = SettingsNavRoute.About },
                     )
                 }
             }

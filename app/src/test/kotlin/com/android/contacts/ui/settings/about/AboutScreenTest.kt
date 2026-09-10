@@ -8,6 +8,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.ui.settings.screen.model.ABOUT_BUILD_VERSION_TEST_TAG
@@ -97,6 +98,23 @@ internal class AboutScreenTest {
         onNodeWithTag(ABOUT_BUILD_VERSION_TEST_TAG).performTouchInput { longClick() }
 
         assertEquals(0, buildVersionLongClicks)
+    }
+
+    @Test
+    fun licensesTriggersClick() = runComposeUiTest {
+        var licensesClicks = 0
+        setContent {
+            AboutScreen(
+                buildVersion = null,
+                onBuildVersionLongClick = {},
+                onLicensesClick = { licensesClicks++ },
+                onNavigateBack = {},
+            )
+        }
+
+        onNodeWithTag(ABOUT_LICENSES_TEST_TAG).performClick()
+
+        assertEquals(1, licensesClicks)
     }
 
     private companion object {

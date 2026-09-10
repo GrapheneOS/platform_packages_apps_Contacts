@@ -20,6 +20,11 @@ internal class SettingsNavRouteSaverTest {
     }
 
     @Test
+    fun licensesRoute_survivesSaveAndRestore() {
+        assertEquals(SettingsNavRoute.Licenses, restore(SettingsNavRoute.Licenses))
+    }
+
+    @Test
     fun unknownSavedValue_restoresTheMainRoute() {
         assertEquals(SettingsNavRoute.Main, SettingsNavRouteSaver.restore("nonsense"))
     }

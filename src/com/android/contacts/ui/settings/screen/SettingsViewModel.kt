@@ -96,10 +96,6 @@ internal class SettingsViewModel @Inject constructor(
 
     override fun onAction(action: Action) {
         when (action) {
-            is Action.LicensesClicked -> {
-                emitEffect(Effect.OpenLicenses)
-            }
-
             is Action.BuildVersionLongClicked -> {
                 copyBuildVersion()
             }
