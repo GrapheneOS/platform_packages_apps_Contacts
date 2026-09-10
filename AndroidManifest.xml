@@ -402,9 +402,9 @@
         </activity-alias>
 
         <activity
-            android:name=".activities.ContactEditorSpringBoardActivity"
+            android:name=".ui.editor.springboard.ContactEditorSpringBoardActivity"
             android:exported="true"
-            android:theme="@style/TransparentThemeAppCompat">
+            android:theme="@style/Theme.Compose.Dialog">
 
             <intent-filter>
                 <action android:name="android.intent.action.EDIT"/>
@@ -415,6 +415,12 @@
                 <data android:mimeType="vnd.android.cursor.item/raw_contact"/>
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".activities.ContactEditorSpringBoardActivity"
+            android:exported="true"
+            android:targetActivity=".ui.editor.springboard.ContactEditorSpringBoardActivity"
+            />
 
         <activity android:name=".test.FragmentTestActivity"
             android:exported="true">

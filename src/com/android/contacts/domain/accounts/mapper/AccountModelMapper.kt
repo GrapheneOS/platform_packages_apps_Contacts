@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 internal interface AccountModelMapper {
     fun map(accountWithDataSet: AccountWithDataSet): AccountModel
+    fun map(account: AccountModel): AccountWithDataSet
 }
 
 internal class AccountModelMapperImpl @Inject constructor() : AccountModelMapper {
@@ -14,6 +15,14 @@ internal class AccountModelMapperImpl @Inject constructor() : AccountModelMapper
             name = accountWithDataSet.name,
             type = accountWithDataSet.type,
             dataSet = accountWithDataSet.dataSet,
+        )
+    }
+
+    override fun map(account: AccountModel): AccountWithDataSet {
+        return AccountWithDataSet(
+            account.name,
+            account.type,
+            account.dataSet,
         )
     }
 }

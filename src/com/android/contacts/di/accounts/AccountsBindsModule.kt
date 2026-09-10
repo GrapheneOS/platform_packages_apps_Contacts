@@ -2,6 +2,8 @@ package com.android.contacts.di.accounts
 
 import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapperImpl
+import com.android.contacts.domain.accounts.mapper.AccountIconDataMapper
+import com.android.contacts.domain.accounts.mapper.AccountIconDataMapperImpl
 import com.android.contacts.domain.accounts.mapper.AccountModelMapper
 import com.android.contacts.domain.accounts.mapper.AccountModelMapperImpl
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
@@ -29,6 +31,12 @@ internal abstract class AccountsBindsModule {
     abstract fun bindAccountModelMapper(
         impl: AccountModelMapperImpl,
     ): AccountModelMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindAccountIconDataMapper(
+        impl: AccountIconDataMapperImpl,
+    ): AccountIconDataMapper
 
     @Binds
     @Reusable

@@ -11,19 +11,17 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.android.contacts.R
 import com.android.contacts.domain.accounts.model.AccountIconData
-import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
-import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 
 @Composable
 internal fun AccountIcon(
-    account: AccountUiModel,
+    data: AccountIconData?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     Image(
-        painter = account.getDisplayIcon(context)
+        painter = data?.getDisplayIcon(context)
             ?.let { rememberDrawablePainter(it) }
             ?: painterResource(R.drawable.accounts_empty),
         // contentDescription set in parent
@@ -37,33 +35,24 @@ internal fun AccountIcon(
 @PreviewLightDark
 @Composable
 private fun AccountIconPreview() {
-    fun buildAccount(iconData: AccountIconData?): AccountUiModel {
-        val account1 = AccountModel(name = "user@example.org")
-        return AccountUiModel(account = account1, name = account1.name, iconData = iconData)
-    }
-
     ContactsPreviewColumn {
         // Empty
-        AccountIcon(buildAccount(iconData = null))
+        AccountIcon(null)
 
         // SIM
         AccountIcon(
-            buildAccount(
-                iconData = AccountIconData(
-                    iconRes = R.drawable.quantum_ic_sim_card_vd_theme_24,
-                    applyGrayTint = true,
-                ),
-            ),
+            AccountIconData(
+                iconRes = R.drawable.quantum_ic_sim_card_vd_theme_24,
+                applyGrayTint = true,
+            )
         )
 
         // Fallback
         AccountIcon(
-            buildAccount(
-                iconData = AccountIconData(
-                    iconRes = R.drawable.quantum_ic_smartphone_vd_theme_24,
-                    applyGrayTint = true,
-                ),
-            ),
+            AccountIconData(
+                iconRes = R.drawable.quantum_ic_smartphone_vd_theme_24,
+                applyGrayTint = true,
+            )
         )
     }
 }
