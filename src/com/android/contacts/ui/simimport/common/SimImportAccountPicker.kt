@@ -71,7 +71,7 @@ internal fun SimImportAccountPicker(
                         onChange(account)
                         isExpanded = false
                     },
-                    leadingIcon = { AccountIcon(account) },
+                    leadingIcon = { AccountIcon(account.iconData) },
                     trailingIcon = {
                         if (current == account) {
                             Icon(
@@ -101,7 +101,7 @@ private fun ExposedDropdownMenuBoxScope.AccountTextField(
         value = currentAccountLabel,
         onValueChange = {},
         label = { Text(stringResource(R.string.editor_account_selector_title)) },
-        leadingIcon = { AccountIcon(current) },
+        leadingIcon = { AccountIcon(current.iconData) },
         trailingIcon = {
             if (canChangeAccounts) {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)

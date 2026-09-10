@@ -4,6 +4,8 @@ import com.android.contacts.util.core.AcquireWakeLock
 import com.android.contacts.util.core.AcquireWakeLockImpl
 import com.android.contacts.util.core.BuildBroadcastReceiverFlow
 import com.android.contacts.util.core.BuildBroadcastReceiverFlowImpl
+import com.android.contacts.util.core.GetUriType
+import com.android.contacts.util.core.GetUriTypeImpl
 import com.android.contacts.util.core.IsPermissionGranted
 import com.android.contacts.util.core.IsPermissionGrantedImpl
 import com.android.contacts.util.core.SaveUriToFile
@@ -29,6 +31,12 @@ internal abstract class UtilCoreBindsModule {
     abstract fun bindBuildBroadcastReceiverFlow(
         impl: BuildBroadcastReceiverFlowImpl,
     ): BuildBroadcastReceiverFlow
+
+    @Binds
+    @Reusable
+    abstract fun bindGetUriType(
+        impl: GetUriTypeImpl,
+    ): GetUriType
 
     @Binds
     @Reusable
