@@ -4,6 +4,7 @@ import android.net.Uri
 import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.ui.contactdetails.screen.model.PendingContactFlags
+import com.android.contacts.ui.contactdetails.screen.model.PendingContactRingtone
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +26,11 @@ internal interface ContactFlagsDelegate {
     fun toggleStarred(lookupUri: Uri)
 
     fun toggleSendToVoicemail(lookupUri: Uri)
+
+    fun setRingtone(
+        lookupUri: Uri,
+        ringtone: String?,
+    )
 }
 
 internal class ContactFlagsDelegateImpl @Inject constructor(
@@ -79,6 +85,27 @@ internal class ContactFlagsDelegateImpl @Inject constructor(
                 contactActionsRepository.setSendToVoicemail(lookupUri, isEnabled)
             },
         )
+    }
+
+    override fun setRingtone(
+        lookupUri: Uri,
+        ringtone: String?,
+    ) {
+        updatePendingRingtone(PendingContactRingtone(uri = ringtone))
+
+        boundScope?.launch {
+            try {
+                contactActionsRepository.setRingtone(lookupUri, ringtone)
+            } catch (_: IllegalStateException) {
+                updatePendingRingtone(null)
+            } catch (_: SecurityException) {
+                updatePendingRingtone(null)
+            }
+        }
+    }
+
+    private fun updatePendingRingtone(pending: PendingContactRingtone?) {
+        _pendingFlags.update { flags -> flags.copy(ringtone = pending) }
     }
 
     private fun effectiveDetails(): ContactDetails? {

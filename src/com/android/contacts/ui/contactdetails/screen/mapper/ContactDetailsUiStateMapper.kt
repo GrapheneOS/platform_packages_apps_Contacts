@@ -12,6 +12,7 @@ import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contactdetails.model.ContactDisplayNameSource
 import com.android.contacts.data.contactdetails.model.ContactGroup
 import com.android.contacts.data.contactdetails.model.ContactPhoto
+import com.android.contacts.data.contactdetails.source.RingtoneTitleSource
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.domain.calllog.model.RecentCall
 import com.android.contacts.domain.contactdetails.model.ContactConnectedApp
@@ -66,6 +67,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
     private val isEntryActionAvailable: IsEntryActionAvailable,
     private val contactQuickActionsMapper: ContactQuickActionsMapper,
     private val recentCallsMapper: RecentCallsMapper,
+    private val ringtoneTitleSource: RingtoneTitleSource,
 ) : ContactDetailsUiStateMapper {
 
     override fun map(
@@ -207,7 +209,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
                 icon = ContactSettingIcon.RINGTONE,
                 titleResource = R.string.menu_set_ring_tone,
                 action = ContactDetailsAction.RingtoneClick,
-                subtitle = details.customRingtoneTitle,
+                subtitle = ringtoneTitleSource(details.customRingtone),
             ).takeIf { menu.isRingtoneVisible },
             setting(
                 icon = ContactSettingIcon.SEND_TO_VOICEMAIL,
@@ -267,7 +269,7 @@ internal class ContactDetailsUiStateMapperImpl @Inject constructor(
             .map { account ->
                 ContactAccountUiModel(
                     name = account.name,
-                    iconUri = account.iconUri,
+                    iconData = account.iconData,
                 )
             }
             .toImmutableList()

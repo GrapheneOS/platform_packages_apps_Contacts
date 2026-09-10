@@ -43,6 +43,7 @@ internal object ContactDetailsTokens {
     val rowActionSize = 48.dp
     val rowActionEndPadding = 4.dp
     val actionRowLeadingPadding = 8.dp
+    val actionRowTrailingPadding = 8.dp
     val actionRowExtraVerticalPadding = 6.dp
 
     val screenHorizontalPadding = 16.dp
@@ -50,7 +51,7 @@ internal object ContactDetailsTokens {
     val cardGroupSpacing = 24.dp
     val sectionHeaderPadding = 16.dp
     val accountRowSpacing = 8.dp
-    val accountRowAvatarSize = 28.dp
+    val accountRowIconSize = 20.dp
     val progressDialogPadding = 24.dp
     val progressDialogSpacing = 20.dp
 }
