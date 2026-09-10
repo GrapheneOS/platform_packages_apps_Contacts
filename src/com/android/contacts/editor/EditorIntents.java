@@ -24,8 +24,8 @@ import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
 
 import com.android.contacts.activities.ContactEditorActivity;
-import com.android.contacts.activities.ContactEditorSpringBoardActivity;
 import com.android.contacts.model.RawContactDeltaList;
+import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivity;
 import com.android.contacts.util.MaterialColorMapUtils.MaterialPalette;
 
 import java.util.ArrayList;
