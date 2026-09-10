@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Nenhum contato"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Adicionar \"<xliff:g id="EMAIL">%s</xliff:g>\" aos contatos?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Nomes dos seus contatos"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"Clique para retornar à tela anterior"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"Adicionar número de telefone"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"Adicionar e-mail"</string>
     <string name="missing_app" msgid="5674389915738964148">"Nenhum app foi encontrado para executar esta ação."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"Adicionar nova conta"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"Exportar arquivos do banco de dados"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"Criar novo contato"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"Ver mais"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"Ver menos"</string>
     <string name="about_card_title" msgid="6635849009952435700">"Sobre"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"Criando uma cópia pessoal..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"Definir"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"Mensagem instantânea"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"Organização"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"Falha ao abrir o editor."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"Salvar em"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"As informações do contato em <xliff:g id="ACCOUNT">%s</xliff:g> não são editáveis"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"VINCULAR CONTATOS"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"CANCELAR"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"Este contato"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"Possíveis cópias"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"Talvez esses contatos sejam a mesma pessoa. É possível vinculá-los como um único contato."</string>

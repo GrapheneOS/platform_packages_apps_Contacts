@@ -34,14 +34,11 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.provider.ContactsContract.Contacts.Data;
-import com.android.contacts.Collapser;
-import com.android.contacts.MoreContactUtils;
-import com.android.contacts.model.RawContactModifier;
 
 /**
  * This is the base class for data items, which represents a row from the Data table.
  */
-public class DataItem implements Collapser.Collapsible<DataItem> {
+public class DataItem {
 
     private final ContentValues mContentValues;
     protected DataKind mKind;
@@ -185,45 +182,5 @@ public class DataItem implements Collapser.Collapsible<DataItem> {
 
     public DataKind getDataKind() {
         return mKind;
-    }
-
-    @Override
-    public void collapseWith(DataItem that) {
-        DataKind thisKind = getDataKind();
-        DataKind thatKind = that.getDataKind();
-        // If this does not have a type and that does, or if that's type is higher precedence,
-        // use that's type
-        if ((!hasKindTypeColumn(thisKind) && that.hasKindTypeColumn(thatKind)) ||
-                that.hasKindTypeColumn(thatKind) &&
-                RawContactModifier.getTypePrecedence(thisKind, getKindTypeColumn(thisKind))
-                >
-                RawContactModifier.getTypePrecedence(thatKind, that.getKindTypeColumn(thatKind))) {
-            mContentValues.put(thatKind.typeColumn, that.getKindTypeColumn(thatKind));
-            mKind = thatKind;
-        }
-
-        // Choose the max of the maxLines and maxLabelLines values.
-        mKind.maxLinesForDisplay = Math.max(thisKind.maxLinesForDisplay,
-                thatKind.maxLinesForDisplay);
-
-        // If any of the collapsed entries are super primary make the whole thing super primary.
-        if (isSuperPrimary() || that.isSuperPrimary()) {
-            mContentValues.put(Data.IS_SUPER_PRIMARY, 1);
-            mContentValues.put(Data.IS_PRIMARY, 1);
-        }
-
-        // If any of the collapsed entries are primary make the whole thing primary.
-        if (isPrimary() || that.isPrimary()) {
-            mContentValues.put(Data.IS_PRIMARY, 1);
-        }
-    }
-
-    @Override
-    public boolean shouldCollapseWith(DataItem t, Context context) {
-        if (mKind == null || t.getDataKind() == null) {
-            return false;
-        }
-        return MoreContactUtils.shouldCollapse(getMimeType(), buildDataString(context, mKind),
-                t.getMimeType(), t.buildDataString(context, t.getDataKind()));
     }
 }

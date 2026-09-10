@@ -25,7 +25,7 @@ import com.android.contacts.editor.SplitContactConfirmationDialogFragment;
 import com.android.contacts.logging.EditorEvent;
 import com.android.contacts.logging.Logger;
 import com.android.contacts.model.AccountTypeManager;
-import com.android.contacts.quickcontact.QuickContactActivity;
+import com.android.contacts.ui.contactdetails.ContactDetailsActivity;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contacts.util.MaterialColorMapUtils.MaterialPalette;
 import com.android.contactsbind.FeedbackHelper;
@@ -252,7 +252,7 @@ public class ContactEditorSpringBoardActivity extends AppCompatContactsActivity 
         if (data != null) {
             final Intent intent = ContactSaveService.createJoinContactsIntent(
                     this, mResult.contactId, ContentUris.parseId(data.getData()),
-                    QuickContactActivity.class, Intent.ACTION_VIEW);
+                    ContactDetailsActivity.class, Intent.ACTION_VIEW);
             startService(intent);
             finish();
         }

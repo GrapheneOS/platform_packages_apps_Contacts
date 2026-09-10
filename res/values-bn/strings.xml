@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"কোনো পরিচিতি নেই"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"পরিচিতিগুলিতে <xliff:g id="EMAIL">%s</xliff:g> যোগ করবেন?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"আপনার পরিচিতিগুলির নামগুলি"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"পূর্ববর্তী স্ক্রীনে প্রত্যাবর্তন করার জন্য ক্লিক করুন"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"ফোন নম্বর জুড়ুন"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"ইমেল জুড়ুন"</string>
     <string name="missing_app" msgid="5674389915738964148">"এই ক্রিয়াটিকে চালনা করার জন্য কোনো অ্যাপ্লিকেশান পাওয়া যায়নি৷"</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"নতুন অ্যাকাউন্ট যোগ করুন"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"ডেটাবেস ফাইলগুলি রপ্তানি করুন"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"নতুন পরিচিতি বানান"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"আরও দেখুন"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"আরও কম"</string>
     <string name="about_card_title" msgid="6635849009952435700">"সম্পর্কে"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"একটি ব্যক্তিগত অনুলিপি তৈরি করা হচ্ছে…"</string>
     <string name="date_time_set" msgid="8526160894146496334">"সেট করুন"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"IM"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"সংগঠন"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"সম্পাদক খোলা গেল না৷"</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"এতে সংরক্ষণ করা হচ্ছে"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> এর থেকে আসা পরিচিতির তথ্য সম্পাদনযোগ্য নয়"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"পরিচিতি লিঙ্ক করুন"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"বাতিল করুন"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"এই পরিচিতি"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"সম্ভাব্য সদৃশগুলি"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"এই পরিচিতিগুলি একই ব্যক্তির হতে পারে৷ আপনি সেগুলিকে একটি একক পরিচিতি হিসাবে লিঙ্ক করতে পারবেন৷"</string>

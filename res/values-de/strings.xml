@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Keine Kontakte"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" zu den Kontakten hinzufügen?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Namen meiner Kontakte"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"Klicke hier, um zum vorherigen Bildschirm zurückzukehren."</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"Telefonnummer hinzufügen"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"E-Mail-Adresse hinzufügen"</string>
     <string name="missing_app" msgid="5674389915738964148">"Für diese Aktion wurde keine App gefunden."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"Neues Konto hinzufügen"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"Datenbankdateien exportieren"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"Neuen Kontakt erstellen"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"Mehr anzeigen"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"Weniger anzeigen"</string>
     <string name="about_card_title" msgid="6635849009952435700">"Info"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"Persönliche Kopie wird erstellt..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"Festlegen"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"Chat"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"Organisation"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"Fehler beim Öffnen des Editors."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"Speichern in"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"Kontaktinfo von <xliff:g id="ACCOUNT">%s</xliff:g> kann nicht bearbeitet werden"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"Kontakte verknüpfen"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"Abbrechen"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"Dieser Kontakt"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"Mögliche Duplikate"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"Bei diesen Kontakten könnte es sich um dieselbe Person handeln. Du kannst sie zu einem einzigen Kontakt verknüpfen."</string>

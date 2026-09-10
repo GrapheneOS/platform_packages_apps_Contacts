@@ -29,14 +29,23 @@ detekt {
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
     ignoredBuildTypes = listOf("release")
     parallel = true
-    source.setFrom(files("../src"))
+    source.setFrom(files("../src", "src/test/kotlin"))
 }
 
-tasks.withType<Detekt>().configureEach {
-    setSource(files("../src"))
-    include("**/*.kt")
-    include("**/*.kts")
-    exclude("**/build/**")
+afterEvaluate {
+    tasks.withType<Detekt>().configureEach {
+        include("**/*.kt")
+        include("**/*.kts")
+        exclude("**/build/**")
+    }
+
+    tasks.named<Detekt>("detektDebugSourceSet") {
+        setSource(files("../src"))
+    }
+
+    tasks.named<Detekt>("detektDebugUnitTestSourceSet") {
+        setSource(files("src/test/kotlin"))
+    }
 }
 
 android {
@@ -98,6 +107,7 @@ dependencies {
     implementation(libs.androidx.palette)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.accompanist.drawablepainter)
+    implementation(libs.coil.compose)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)

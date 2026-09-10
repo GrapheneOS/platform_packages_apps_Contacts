@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"कुनै कन्ट्याक्टहरू छैनन्।"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" लाई सम्पर्कमा थप्ने?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"तपाईँका सम्पर्कहरूका नामहरू"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"अघिल्लो पर्दामा फर्कनको लागि क्लिक गर्नुहोस्"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"फोन नम्बर थप्नुहोस्"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"इमेल थप्नुहोस्"</string>
     <string name="missing_app" msgid="5674389915738964148">"यो कार्य सम्हाल्न कुनै पनि एप पाइएन।"</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"नयाँ खाता हाल्नुहोस्"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"डेटाबेस फाइलहरू एक्सपोर्ट गर्नुहोस्"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"नयाँ कन्ट्याक्ट हाल्नुहोस्"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"थप हेर्नुहोस्"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"कम हेर्नुहोस्"</string>
     <string name="about_card_title" msgid="6635849009952435700">"बारेमा"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"एउटा व्यक्तिगत प्रतिलिपि बनाउँदै..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"सेट गर्नुहोस्"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"IM"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"संगठन"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"सम्पादक खोल्न सकिएन।"</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"यसमा सुरक्षित गरिँदै"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> को सम्पर्क सम्बन्धी जानकारी सम्पादन गर्न मिल्दैन"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"कन्ट्याक्टहरू लिंक गर्नुहोस्"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"रद्द गर्नुहोस्"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"यो सम्पर्क ठेगाना"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"सम्भावित प्रतिलिपिहरू"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"यी कन्ट्याक्टहरू एउटै व्यक्तिको हुन सक्छ। तपाईँले एउटै सम्पर्कको रूपमा तिनीहरूलाई सँगै लिंक गर्न सक्नुहुन्छ।"</string>

@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"沒有聯絡人"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"要將「<xliff:g id="EMAIL">%s</xliff:g>」加到通訊錄嗎？"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"您的聯絡人姓名"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"按一下即可返回上一個畫面"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"新增電話號碼"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"新增電子郵件地址"</string>
     <string name="missing_app" msgid="5674389915738964148">"找不到可以處理這個動作的應用程式。"</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"新增帳戶"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"匯出資料庫檔案"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"建立新聯絡人"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"顯示更多"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"顯示較少"</string>
     <string name="about_card_title" msgid="6635849009952435700">"關於"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"正在建立個人副本…"</string>
     <string name="date_time_set" msgid="8526160894146496334">"設定"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"即時訊息"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"機構"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"無法開啟編輯器。"</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"儲存到"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> 的聯絡人資訊不開放編輯"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"連結聯絡人"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"取消"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"這位聯絡人"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"可能重複的聯絡人"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"這些聯絡人可能是同一人。您可以將這些聯絡人連結合併成單筆聯絡人資料。"</string>

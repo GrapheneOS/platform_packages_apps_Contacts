@@ -118,7 +118,6 @@
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"कोणतेही संपर्क नाहीत"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"संपर्कांमध्ये \"<xliff:g id="EMAIL">%s</xliff:g>\" जोडायचे?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"आपल्या संपर्कांची नावे"</string>
-    <string name="quickcontact_transparent_view_description" msgid="7783027850792852265">"पूर्वीच्या स्क्रीनवर परत येण्यासाठी क्लिक करा"</string>
     <string name="quickcontact_add_phone_number" msgid="1683577288080727862">"फोन नंबर जोडा"</string>
     <string name="quickcontact_add_email" msgid="1442894568471116797">"ईमेल जोडा"</string>
     <string name="missing_app" msgid="5674389915738964148">"ही क्रिया हाताळण्यासाठी कोणताही अ‍ॅप आढळला नाही."</string>
@@ -188,10 +187,7 @@
     <string name="add_new_account" msgid="573368229646104110">"नवीन खाते जोडा"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"डेटाबेस फाइल एक्सपोर्ट करा"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"नवीन संपर्क तयार करा"</string>
-    <string name="expanding_entry_card_view_see_more" msgid="6636033205952561590">"अधिक पहा"</string>
-    <string name="expanding_entry_card_view_see_less" msgid="6399603072579278030">"कमी पहा"</string>
     <string name="about_card_title" msgid="6635849009952435700">"विषयी"</string>
-    <string name="toast_making_personal_copy" msgid="9053129410039312386">"वैयक्तिक प्रत तयार करत आहे..."</string>
     <string name="date_time_set" msgid="8526160894146496334">"सेट करा"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"IM"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"संस्था"</string>
@@ -211,8 +207,6 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"संपादक उघडण्यात अयशस्वी."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"यावर सेव्ह करत आहे"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> वरील संपर्क माहिती संपादनयोग्य नाही"</string>
-    <string name="quickcontact_suggestion_link_button" msgid="3485212664301802371">"संपर्क लिंक करा"</string>
-    <string name="quickcontact_suggestion_cancel_button" msgid="8851156850681440055">"रद्द करा"</string>
     <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"हा संपर्क"</string>
     <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"संभाव्य डुप्लिकेट"</string>
     <string name="suggestion_card_help_message" msgid="8367379652312412794">"हे संपर्क म्हणजे कदाचित एकच व्यक्ती असू शकते. तुम्ही त्या सर्वांना एकच लिंक म्हणून एकत्र जोडू शकता."</string>

@@ -32,8 +32,6 @@
     <dimen name="join_header_top_margin">16dip</dimen>
     <dimen name="join_header_bottom_margin">16dip</dimen>
 
-    <dimen name="frequently_contacted_title_text_size">24sp</dimen>
-
     <!-- End margin of edit group title -->
     <dimen name="edit_group_end_margin">80dp</dimen>
 

@@ -32,6 +32,14 @@ public class StructuredPostalUtils {
     }
 
     public static Intent getViewPostalAddressDirectionsIntent(String postalAddress) {
-        return new Intent(Intent.ACTION_VIEW, getPostalAddressUri(postalAddress));
+        return new Intent(Intent.ACTION_VIEW, getPostalAddressDirectionsUri(postalAddress));
+    }
+
+    public static Uri getPostalAddressDirectionsUri(String postalAddress) {
+        return Uri.parse("google.navigation:q=" + Uri.encode(toSingleLine(postalAddress)));
+    }
+
+    private static String toSingleLine(String postalAddress) {
+        return postalAddress.replaceAll("\\s*\\R\\s*", ", ").trim();
     }
 }

@@ -73,7 +73,6 @@ import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.preference.ContactsPreferences;
-import com.android.contacts.quickcontact.QuickContactActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contacts.util.SharedPreferenceUtil;
@@ -973,24 +972,9 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
                         getContext(),
                         new Rect(),
                         contactLookupUri,
-                        QuickContactActivity.MODE_FULLY_EXPANDED,
+                        ContactsContract.QuickContact.MODE_LARGE,
                         null);
             } else {
-                final int previousScreen;
-                if (isSearchMode()) {
-                    previousScreen = ScreenEvent.ScreenType.SEARCH;
-                } else {
-                    if (isAllContactsFilter(getFilter())) {
-                        if (position < getAdapter().getNumberOfFavorites()) {
-                            previousScreen = ScreenEvent.ScreenType.FAVORITES;
-                        } else {
-                            previousScreen = ScreenEvent.ScreenType.ALL_CONTACTS;
-                        }
-                    } else {
-                        previousScreen = ScreenEvent.ScreenType.LIST_ACCOUNT;
-                    }
-                }
-
                 Logger.logListEvent(
                         ListEvent.ActionType.CLICK,
                         /* listType */ getListTypeIncludingSearch(),
@@ -998,8 +982,7 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
                         /* clickedIndex */ position, /* numSelected */
                         0);
 
-                ImplicitIntentsUtil.startQuickContact(
-                        getActivity(), contactLookupUri, previousScreen);
+                ImplicitIntentsUtil.startQuickContact(getActivity(), contactLookupUri);
             }
         }
 

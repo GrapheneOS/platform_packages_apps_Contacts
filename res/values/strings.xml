@@ -347,14 +347,68 @@
     <!-- The string used to describe Contacts as a searchable item within system search settings. -->
     <string name="search_settings_description">Names of your contacts</string>
 
-    <!-- Content description for the transparent views around the visible section of QuickContacts.
-         Clicking this view causes Quick Contacts to close. [CHAR LIMIT=NONE] -->
-    <string name="quickcontact_transparent_view_description">Click to return to previous screen</string>
-
     <!-- When a contact has no data, we prompt the user to add a phone number for the contact. [CHAR LIMIT=40] -->
     <string name="quickcontact_add_phone_number">Add phone number</string>
     <!-- When a contact has no data, we prompt the user to add an email for the contact. [CHAR LIMIT=40] -->
     <string name="quickcontact_add_email">Add email</string>
+    <!-- Title of the settings section on the contact details screen. [CHAR LIMIT=40] -->
+    <string name="contact_details_settings_title">Contact settings</string>
+    <!-- Phonetic name shown next to the nickname under the contact name. [CHAR LIMIT=NONE] -->
+    <string name="header_phonetic_name_quoted">“<xliff:g id="name" example="Arekkusu">%1$s</xliff:g>”</string>
+    <!-- Marks the phone number or email used by default for this contact. [CHAR LIMIT=20] -->
+    <string name="contact_entry_default">Default</string>
+    <!-- Label of a contact field next to the default marker, example: Mobile · Default. [CHAR LIMIT=NONE] -->
+    <string name="contact_entry_default_type"><xliff:g example="Mobile" id="type">%1$s</xliff:g> · <xliff:g example="Default" id="default">%2$s</xliff:g></string>
+    <!-- Line at the bottom of a contact naming the account its data is stored in [CHAR LIMIT=NONE] -->
+    <string name="contact_details_info_from_account">Contact info from <xliff:g id="account" example="alex@example.org">%1$s</xliff:g></string>
+    <!-- Label preceding the account name at the bottom of a contact [CHAR LIMIT=40] -->
+    <string name="contact_details_info_from">Contact info from</string>
+    <!-- Title of the section that groups contact rows coming from other apps [CHAR LIMIT=40] -->
+    <string name="contact_details_connected_apps">Connected apps</string>
+    <!-- Content description of the control that opens the rows of a connected app [CHAR LIMIT=NONE] -->
+    <string name="contact_details_connected_app_expand">Show actions</string>
+    <!-- Content description of the control that hides the rows of a connected app [CHAR LIMIT=NONE] -->
+    <string name="contact_details_connected_app_collapse">Hide actions</string>
+    <!-- Title of the section listing recent calls with this contact. [CHAR LIMIT=40] -->
+    <string name="contact_details_recent_activity">Recent activity</string>
+    <!-- Row and dialog title for choosing which SIM calls this contact. [CHAR LIMIT=40] -->
+    <string name="contact_details_set_calling_sim">Set calling SIM</string>
+    <!-- Menu item on a phone number that opens the dialer with the number filled in [CHAR LIMIT=64] -->
+    <string name="contact_details_edit_number_before_call">Edit number before call</string>
+    <!-- Button that clears the SIM chosen for every number of this contact. [CHAR LIMIT=20] -->
+    <string name="contact_details_calling_sim_reset">Reset</string>
+    <!-- Title of an incoming call in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_incoming">Incoming call</string>
+    <!-- Title of an outgoing call in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_outgoing">Outgoing call</string>
+    <!-- Title of a missed call in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_missed">Missed call</string>
+    <!-- Title of a call that went to voicemail, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_voicemail">Voicemail</string>
+    <!-- Title of a call the user declined, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_rejected">Declined call</string>
+    <!-- Title of a call that was blocked, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_blocked">Blocked call</string>
+    <!-- Title of a call answered on another device, in the recent activity section. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_answered_elsewhere">Answered on another device</string>
+    <!-- Title of an answered call, showing how long it lasted. [CHAR LIMIT=40] -->
+    <string name="contact_details_call_duration">Call time <xliff:g example="1:20" id="duration">%1$s</xliff:g></string>
+    <!-- Call duration shorter than a minute, for example: 58s. [CHAR LIMIT=20] -->
+    <string name="contact_details_call_duration_seconds"><xliff:g example="58" id="seconds">%1$d</xliff:g>s</string>
+    <!-- Call duration shorter than an hour, for example: 1m 20s. [CHAR LIMIT=20] -->
+    <string name="contact_details_call_duration_minutes"><xliff:g example="1" id="minutes">%1$d</xliff:g>m <xliff:g example="20" id="seconds">%2$d</xliff:g>s</string>
+    <!-- Call duration of an hour or longer, for example: 1h 5m. [CHAR LIMIT=20] -->
+    <string name="contact_details_call_duration_hours"><xliff:g example="1" id="hours">%1$d</xliff:g>h <xliff:g example="5" id="minutes">%2$d</xliff:g>m</string>
+    <!-- Spoken description of a recent call, for example: Incoming, 1:20, Jun 3. [CHAR LIMIT=NONE] -->
+    <string name="contact_details_recent_call_description"><xliff:g example="Incoming" id="type">%1$s</xliff:g>, <xliff:g example="1:20" id="duration">%2$s</xliff:g>, <xliff:g example="Jun 3" id="date">%3$s</xliff:g></string>
+    <!-- Spoken description of a recent call without a duration, for example: Missed call, Jun 3. [CHAR LIMIT=NONE] -->
+    <string name="contact_details_recent_call_description_short"><xliff:g example="Missed call" id="type">%1$s</xliff:g>, <xliff:g example="Jun 3" id="date">%2$s</xliff:g></string>
+    <!-- Toggle in the contact settings that routes this contact's calls to voicemail. [CHAR LIMIT=NONE] -->
+    <string name="contact_details_send_to_voicemail">Send to voicemail</string>
+    <!-- Label under the message button on the contact details screen. [CHAR LIMIT=12] -->
+    <string name="quickcontact_action_message">Message</string>
+    <!-- Label under the video call button on the contact details screen. [CHAR LIMIT=12] -->
+    <string name="quickcontact_action_video">Video</string>
 
     <!-- Shown as a toast when the user attempts an action (add contact, edit
          contact, etc) and no application was found that could perform that
@@ -431,6 +485,9 @@
 
     <!-- Content description for a back button. [CHAR LIMIT=NONE] -->
     <string name="back_arrow_content_description">Back</string>
+
+    <!-- Content description for an overflow menu button. [CHAR LIMIT=NONE] -->
+    <string name="more_options">More options</string>
 
     <!-- Content description for the fake action menu up button as used
          inside edit or select. [CHAR LIMIT=NONE] -->
@@ -594,16 +651,9 @@
     <!-- Content description for the button that adds a new contact
          [CHAR LIMIT=NONE] -->
     <string name="action_menu_add_new_contact_button">Create new contact</string>
-    <!-- Button Label to see more on an ExpandingEntryCardView [CHAR LIMIT=40] -->
-    <string name="expanding_entry_card_view_see_more">See more</string>
-    <!-- Button Label to see less on an ExpandingEntryCardView [CHAR LIMIT=40] -->
-    <string name="expanding_entry_card_view_see_less">See less</string>
 
     <!-- Title of about card. [CHAR LIMIT=40] -->
     <string name="about_card_title">About</string>
-
-    <!-- Toast that appears when you are copying a directory contact into your personal contacts -->
-    <string name="toast_making_personal_copy">Creating a personal copy&#8230;</string>
 
     <!-- Name of the button in the date/time picker to accept the date/time change [CHAR LIMIT=15] -->
     <string name="date_time_set">Set</string>
@@ -652,12 +702,6 @@
 
     <!-- Label for the account selector to indicate the current information (name, phone number, email etc.) about the contact comes from a read-only account. [CHAR LIMIT=55] -->
     <string name="editor_account_selector_read_only_title">Contact info from <xliff:g id="account">%s</xliff:g> is not editable</string>
-
-    <!-- Button used in quick contact suggestion card to link selected contacts. [CHAR LIMIT=30]-->
-    <string name="quickcontact_suggestion_link_button">LINK CONTACTS</string>
-
-    <!-- Button used in quick contact suggestion card to collapse suggestion card. [CHAR LIMIT=30]-->
-    <string name="quickcontact_suggestion_cancel_button">CANCEL</string>
 
     <!-- "This contact" title showing in suggestion card in Quick contact. [CHAR LIMIT=30]-->
     <string name="suggestion_card_this_contact_title">This contact</string>
