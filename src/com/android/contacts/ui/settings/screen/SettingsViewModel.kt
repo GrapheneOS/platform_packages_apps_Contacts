@@ -127,7 +127,6 @@ internal class SettingsViewModel @Inject constructor(
             SettingsItemId.MY_INFO -> openProfile()
             SettingsItemId.ACCOUNTS -> emitEffect(Effect.OpenAddAccount)
             SettingsItemId.DEFAULT_ACCOUNT -> emitEffect(Effect.OpenDefaultAccountPicker)
-            SettingsItemId.CONTACTS_FILTER -> emitEffect(Effect.OpenContactsFilter)
             SettingsItemId.IMPORT -> emitEffect(Effect.ShowImportDialog)
             SettingsItemId.EXPORT -> emitEffect(Effect.ShowExportDialog)
             SettingsItemId.BLOCKED_NUMBERS -> emitEffect(Effect.OpenBlockedNumbers)

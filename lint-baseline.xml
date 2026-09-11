@@ -25,17 +25,6 @@
 
     <issue
         id="GestureBackNavigation"
-        message="`onBackPressed` is no longer called for back gestures; migrate to AndroidX's backward compatible `OnBackPressedDispatcher`"
-        errorLine1="    public void onBackPressed() {"
-        errorLine2="                ~~~~~~~~~~~~~">
-        <location
-            file="packages/apps/Contacts/src/com/android/contacts/list/CustomContactListFilterActivity.java"
-            line="957"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="GestureBackNavigation"
         message="If intercepting back events, this should be handled through the registration of callbacks; see https://developer.android.com/guide/navigation/custom-back/predictive-back-gesture"
         errorLine1="            if (keyCode == KeyEvent.KEYCODE_BACK) {"
         errorLine2="                           ~~~~~~~~~~~~~~~~~~~~~">

@@ -3,8 +3,6 @@ package com.android.contacts.domain.settings.usecase
 import app.cash.turbine.test
 import com.android.contacts.data.accounts.repository.AccountsRepository
 import com.android.contacts.data.appinfo.repository.AppInfoRepository
-import com.android.contacts.data.contactsfilter.model.ContactsFilter
-import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
 import com.android.contacts.data.permissions.repository.PermissionsRepository
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.DisplaySettings
@@ -37,7 +35,6 @@ class GetSettingsDataImplTest {
     private val settingsAvailabilityRepository = mockk<SettingsAvailabilityRepository>()
     private val displaySettingsRepository = mockk<DisplaySettingsRepository>()
     private val accountsRepository = mockk<AccountsRepository>()
-    private val contactsFilterRepository = mockk<ContactsFilterRepository>()
     private val appInfoRepository = mockk<AppInfoRepository>()
     private val permissionsRepository = mockk<PermissionsRepository>()
 
@@ -45,7 +42,6 @@ class GetSettingsDataImplTest {
         settingsAvailabilityRepository = settingsAvailabilityRepository,
         displaySettingsRepository = displaySettingsRepository,
         accountsRepository = accountsRepository,
-        contactsFilterRepository = contactsFilterRepository,
         appInfoRepository = appInfoRepository,
         permissionsRepository = permissionsRepository,
     )
@@ -56,7 +52,6 @@ class GetSettingsDataImplTest {
         every { displaySettingsRepository.observeDisplaySettings() } returns
             flowOf(DISPLAY_SETTINGS)
         coEvery { accountsRepository.getDefaultAccountLabel() } returns "Device"
-        coEvery { contactsFilterRepository.getContactsFilter() } returns ContactsFilter.CUSTOM
         coEvery { appInfoRepository.getBuildVersion() } returns BUILD_VERSION
         coEvery { permissionsRepository.isCallLogGranted() } returns true
     }
@@ -69,7 +64,6 @@ class GetSettingsDataImplTest {
                     availability = AVAILABILITY,
                     displaySettings = DISPLAY_SETTINGS,
                     defaultAccountLabel = "Device",
-                    contactsFilter = ContactsFilter.CUSTOM,
                     buildVersion = BUILD_VERSION,
                     isCallLogPermissionGranted = true,
                 ),
@@ -80,15 +74,13 @@ class GetSettingsDataImplTest {
     }
 
     @Test
-    fun invoke_whenThereIsNoDefaultAccountOrFilter_keepsThemNull() = runTest {
+    fun invoke_whenThereIsNoDefaultAccount_keepsItNull() = runTest {
         coEvery { accountsRepository.getDefaultAccountLabel() } returns null
-        coEvery { contactsFilterRepository.getContactsFilter() } returns null
 
         useCase().test {
             val settingsData = awaitItem()
 
             assertNull(settingsData.defaultAccountLabel)
-            assertNull(settingsData.contactsFilter)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -104,7 +96,6 @@ class GetSettingsDataImplTest {
         runCurrent()
 
         coVerify(exactly = 1) { accountsRepository.getDefaultAccountLabel() }
-        coVerify(exactly = 1) { contactsFilterRepository.getContactsFilter() }
         coVerify(exactly = 1) { appInfoRepository.getBuildVersion() }
 
         slowAvailability.complete(AVAILABILITY)

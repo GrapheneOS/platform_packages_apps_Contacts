@@ -4,8 +4,6 @@ import com.android.contacts.data.accounts.repository.AccountsRepository
 import com.android.contacts.data.accounts.repository.AccountsRepositoryImpl
 import com.android.contacts.data.appinfo.repository.AppInfoRepository
 import com.android.contacts.data.appinfo.repository.AppInfoRepositoryImpl
-import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepository
-import com.android.contacts.data.contactsfilter.repository.ContactsFilterRepositoryImpl
 import com.android.contacts.data.permissions.repository.PermissionsRepository
 import com.android.contacts.data.permissions.repository.PermissionsRepositoryImpl
 import com.android.contacts.data.profile.repository.ProfileRepository
@@ -48,12 +46,6 @@ internal abstract class SettingsBindsModule {
     abstract fun bindProfileRepository(
         impl: ProfileRepositoryImpl,
     ): ProfileRepository
-
-    @Binds
-    @Reusable
-    abstract fun bindContactsFilterRepository(
-        impl: ContactsFilterRepositoryImpl,
-    ): ContactsFilterRepository
 
     @Binds
     @Reusable

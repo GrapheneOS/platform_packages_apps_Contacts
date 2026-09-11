@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"Contatos"</string>
     <string name="contactsList" msgid="4456188358262700898">"Contatos"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"Adicionar contato"</string>
@@ -169,7 +168,6 @@
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"Descartar alterações?"</string>
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"Descartar"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"Cancelar"</string>
-    <string name="leave_customize_confirmation_dialog_message" msgid="5330853530872707231">"Descartar personalizações?"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"Pesquisar contatos"</string>
     <string name="title_edit_group" msgid="4246193439931854759">"Remover contatos"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"Meu perfil local"</string>
@@ -350,17 +348,6 @@
     <string name="collapse_fields_description" msgid="3213872920491992960">"Recolher"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"Expandido"</string>
     <string name="announce_collapsed_fields" msgid="7611318715383228182">"Recolhido"</string>
-    <string name="list_filter_all_accounts" msgid="6173785387972096770">"Todos os contatos"</string>
-    <string name="list_filter_all_starred" msgid="2582865760150432568">"Com estrela"</string>
-    <string name="list_filter_customize" msgid="2368900508906139537">"Personalizar"</string>
-    <string name="list_filter_single" msgid="6003845379327432129">"Contato"</string>
-    <string name="display_ungrouped" msgid="4823012484407759332">"Todos os outros contatos"</string>
-    <string name="display_all_contacts" msgid="1281067776483704512">"Todos os contatos"</string>
-    <string name="menu_sync_remove" msgid="7523335046562082188">"Remover sincronização do grupo"</string>
-    <string name="dialog_sync_add" msgid="8012361965908515959">"Adicionar grupo sincronizado"</string>
-    <string name="display_more_groups" msgid="8398232980355188133">"Mais grupos…"</string>
-    <string name="display_warn_remove_ungrouped" msgid="522866344738506017">"A remoção de \"<xliff:g id="GROUP">%s</xliff:g>\" da sincronização também removerá os contatos não agrupados da sincronização."</string>
-    <string name="savingDisplayGroups" msgid="6779839417901711381">"Salvando opções de exibição…"</string>
     <string name="listCustomView" msgid="5782275477737032610">"Visualização personalizada"</string>
     <string name="dialog_new_contact_account" msgid="5652018124788855057">"Salvar contatos importados em:"</string>
     <string name="import_from_sim" msgid="7825280799813847991">"Chip"</string>
@@ -431,10 +418,6 @@
     <string name="dialog_import" msgid="4590232235052756593">"Importar contatos de"</string>
     <string name="share_error" msgid="4854612167186185739">"Este contato não pode ser compartilhado."</string>
     <string name="no_contact_to_share" msgid="6285287228557175749">"Não há contatos para compartilhar."</string>
-    <string name="menu_contacts_filter" msgid="5854584270038139275">"Contatos para exibição"</string>
-    <string name="activity_title_contacts_filter" msgid="6340531582631006680">"Contatos a exibir"</string>
-    <string name="custom_list_filter" msgid="2544327670202891979">"Personalizar visualização"</string>
-    <string name="menu_custom_filter_save" msgid="2412959737200856930">"Salvar"</string>
     <string name="hint_findContacts" msgid="5554298639062659655">"Pesquisar contatos"</string>
     <string name="contactsFavoritesLabel" msgid="8339645684721732714">"Favoritos"</string>
     <string name="menu_import" msgid="2206768098740726906">"Importar"</string>
@@ -458,8 +441,6 @@
     <string name="about_terms_of_service" msgid="7419670771785057738">"Termos de Serviço"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"Licenças de código aberto"</string>
     <string name="url_open_error_toast" msgid="4885855620824048385">"Falha ao abrir o URL."</string>
-    <string name="account_filter_view_checked" msgid="4740544238806346376">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> verificado"</string>
-    <string name="account_filter_view_not_checked" msgid="5782705545786455847">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> não verificado"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"Realizar videochamada"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"Excluir"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"Reticências"</string>

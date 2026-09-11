@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="applicationLabel" msgid="8908212014470937609">"କଣ୍ଟାକ୍ଟ"</string>
     <string name="contactsList" msgid="4456188358262700898">"ଯୋଗାଯୋଗ"</string>
     <string name="shortcut_add_contact" msgid="7949342235528657981">"ଯୋଗାଯୋଗକୁ ଯୋଗ କରନ୍ତୁ"</string>
@@ -169,7 +168,6 @@
     <string name="cancel_confirmation_dialog_message" msgid="7486892574762212762">"ପରିବର୍ତ୍ତନଗୁଡ଼ିକୁ ଖାରଜ କରିବେ?"</string>
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"ଖାରଜ କରନ୍ତୁ"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"ବାତିଲ୍‍ କରନ୍ତୁ"</string>
-    <string name="leave_customize_confirmation_dialog_message" msgid="5330853530872707231">"କଷ୍ଟମାଇ‍ଜ୍‍ କରିବା ଖାରଜ କରିବେ?"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"ଯୋଗାଯୋଗଗୁଡ଼ିକୁ ସନ୍ଧାନ କରନ୍ତୁ"</string>
     <string name="title_edit_group" msgid="4246193439931854759">"ଯୋଗାଯୋଗଙ୍କୁ କାଢ଼ିଦିଅନ୍ତୁ"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"ମୋ ସ୍ଥାନୀୟ ପ୍ରୋଫାଇଲ୍‌"</string>
@@ -350,17 +348,6 @@
     <string name="collapse_fields_description" msgid="3213872920491992960">"ସଂକୁଚିତ କରନ୍ତୁ"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"ବିସ୍ତାର କରାଗଲା"</string>
     <string name="announce_collapsed_fields" msgid="7611318715383228182">"ସଂକୁଚିତ କରାଗଲା"</string>
-    <string name="list_filter_all_accounts" msgid="6173785387972096770">"ସମସ୍ତ ଯୋଗାଯୋଗ"</string>
-    <string name="list_filter_all_starred" msgid="2582865760150432568">"ତାରାଙ୍କିତ"</string>
-    <string name="list_filter_customize" msgid="2368900508906139537">"କଷ୍ଟମାଇଜ୍‌ କରନ୍ତୁ"</string>
-    <string name="list_filter_single" msgid="6003845379327432129">"ଯୋଗାଯୋଗ"</string>
-    <string name="display_ungrouped" msgid="4823012484407759332">"ଅନ୍ୟ ସମସ୍ତ ଯୋଗାଯୋଗ"</string>
-    <string name="display_all_contacts" msgid="1281067776483704512">"ସମସ୍ତ ଯୋଗାଯୋଗ"</string>
-    <string name="menu_sync_remove" msgid="7523335046562082188">"ସିଙ୍କ ଗ୍ରୁପ୍‌କୁ କାଢ଼ନ୍ତୁ"</string>
-    <string name="dialog_sync_add" msgid="8012361965908515959">"ସିଙ୍କ ହୋଇଥିବା ଗୋଷ୍ଠୀକୁ ଯୋଡ଼ନ୍ତୁ"</string>
-    <string name="display_more_groups" msgid="8398232980355188133">"ଅଧିକ ଗୋଷ୍ଠୀ…"</string>
-    <string name="display_warn_remove_ungrouped" msgid="522866344738506017">"\"<xliff:g id="GROUP">%s</xliff:g>\" କୁ ସିଙ୍କରୁ ବାହାର କଲେ, ସିଙ୍କରେ ଥିବା ଅନ୍‍ଗ୍ରୁପ୍ ଯୋଗାଯୋଗଗୁଡ଼ିକ ମଧ୍ୟ ବାହାରିଯିବ।"</string>
-    <string name="savingDisplayGroups" msgid="6779839417901711381">"ଡିସ୍‌ପ୍ଲେ ବିକଳ୍ପଗୁଡ଼ିକୁ ସେଭ୍‍ କରାଯାଉଛି…"</string>
     <string name="listCustomView" msgid="5782275477737032610">"କଷ୍ଟମାଇଜ୍‍ କରାଯାଇଥିବା ଦୃଶ୍ୟ"</string>
     <string name="dialog_new_contact_account" msgid="5652018124788855057">"ଇମ୍ପୋର୍ଟ ହୋଇଥିବା ଯୋଗାଯୋଗଗୁଡ଼ିକୁ ଏଥିରେ ସେଭ୍‍ କରନ୍ତୁ:"</string>
     <string name="import_from_sim" msgid="7825280799813847991">"SIM କାର୍ଡ"</string>
@@ -431,10 +418,6 @@
     <string name="dialog_import" msgid="4590232235052756593">"ଏଠାରୁ ଯୋଗାଯୋଗ ଇମ୍ପୋର୍ଟ କରନ୍ତୁ"</string>
     <string name="share_error" msgid="4854612167186185739">"ଏହି ଯୋଗାଯୋଗ ସେୟାର୍‍ କରିହେବ ନାହିଁ।"</string>
     <string name="no_contact_to_share" msgid="6285287228557175749">"ସେୟାର୍‌ କରିବା ପାଇଁ କୌଣସି ଯୋଗାଯୋଗ ନାହାନ୍ତି"</string>
-    <string name="menu_contacts_filter" msgid="5854584270038139275">"ଡିସ୍‌ପ୍ଲେ ପାଇଁ ଯୋଗାଯୋଗ"</string>
-    <string name="activity_title_contacts_filter" msgid="6340531582631006680">"ଡିସ୍‌ପ୍ଲେ କରିବା ପାଇଁ ଯୋଗାଯୋଗ"</string>
-    <string name="custom_list_filter" msgid="2544327670202891979">"ଦୃଶ୍ୟ କୁ ଷ୍ଟମାଇଜ୍ କରନ୍ତୁ"</string>
-    <string name="menu_custom_filter_save" msgid="2412959737200856930">"ସେଭ୍‌ କରନ୍ତୁ"</string>
     <string name="hint_findContacts" msgid="5554298639062659655">"ଯୋଗାଯୋଗଙ୍କୁ ଖୋଜନ୍ତୁ"</string>
     <string name="contactsFavoritesLabel" msgid="8339645684721732714">"ପସନ୍ଦର"</string>
     <string name="menu_import" msgid="2206768098740726906">"ଇମ୍ପୋର୍ଟ କରନ୍ତୁ"</string>
@@ -458,8 +441,6 @@
     <string name="about_terms_of_service" msgid="7419670771785057738">"ସେବା ସର୍ତ୍ତାବଳୀ"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"ଓପନ୍‌ ସୋର୍ସ ଲାଇସେନ୍ସ"</string>
     <string name="url_open_error_toast" msgid="4885855620824048385">"URL ଖୋଲିହେଲା ନାହିଁ।"</string>
-    <string name="account_filter_view_checked" msgid="4740544238806346376">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> ଯାଞ୍ଚ କରାଯାଇଛି"</string>
-    <string name="account_filter_view_not_checked" msgid="5782705545786455847">"<xliff:g id="ACCOUNT_INFO">%s</xliff:g> ଯାଞ୍ଚ କରାଯାଇନାହିଁ"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"ଭିଡିଓ କଲ୍‍ କରନ୍ତୁ"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"ଡିଲିଟ୍ କରନ୍ତୁ"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"ଏଲିପସିସ୍"</string>

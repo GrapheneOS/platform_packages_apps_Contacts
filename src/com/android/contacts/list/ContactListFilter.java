@@ -25,6 +25,8 @@ import android.os.Parcelable;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.android.contacts.logging.ListEvent;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.account.GoogleAccountType;
@@ -55,7 +57,8 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
      */
     private static final int FILTER_TYPE_GROUP = 1;
 
-    private static final String KEY_FILTER_TYPE = "filter.type";
+    @VisibleForTesting
+    static final String KEY_FILTER_TYPE = "filter.type";
     private static final String KEY_ACCOUNT_NAME = "filter.accountName";
     private static final String KEY_ACCOUNT_TYPE = "filter.accountType";
     private static final String KEY_DATA_SET = "filter.dataSet";
@@ -282,8 +285,10 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
         }
         // "Group" filter is obsolete and thus is not exposed anymore. The "single contact mode"
         // should also not be stored in preferences anymore since it is a temporary state.
+        // Custom filter has been removed as well.
         if (filter.filterType == FILTER_TYPE_GROUP
-                || filter.filterType == FILTER_TYPE_SINGLE_CONTACT) {
+                || filter.filterType == FILTER_TYPE_SINGLE_CONTACT
+                || filter.filterType == FILTER_TYPE_CUSTOM) {
             filter = ContactListFilter.createFilterWithType(FILTER_TYPE_ALL_ACCOUNTS);
         }
         return filter;

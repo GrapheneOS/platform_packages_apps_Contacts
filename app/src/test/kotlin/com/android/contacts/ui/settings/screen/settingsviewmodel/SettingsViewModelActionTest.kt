@@ -30,10 +30,6 @@ internal class SettingsViewModelActionTest : BaseSettingsViewModelTest() {
         assertItemClickEmits(SettingsItemId.DEFAULT_ACCOUNT, Effect.OpenDefaultAccountPicker)
 
     @Test
-    fun onAction_whenContactsFilterClicked_opensFilter() =
-        assertItemClickEmits(SettingsItemId.CONTACTS_FILTER, Effect.OpenContactsFilter)
-
-    @Test
     fun onAction_whenImportClicked_showsImportDialog() =
         assertItemClickEmits(SettingsItemId.IMPORT, Effect.ShowImportDialog)
 

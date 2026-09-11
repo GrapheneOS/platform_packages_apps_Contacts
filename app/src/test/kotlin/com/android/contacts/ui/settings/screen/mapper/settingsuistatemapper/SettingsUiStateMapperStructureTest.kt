@@ -44,7 +44,6 @@ internal class SettingsUiStateMapperStructureTest : BaseSettingsUiStateMapperTes
                 SettingsItemId.MY_INFO,
                 SettingsItemId.ACCOUNTS,
                 SettingsItemId.DEFAULT_ACCOUNT,
-                SettingsItemId.CONTACTS_FILTER,
                 SettingsItemId.SORT_ORDER,
                 SettingsItemId.DISPLAY_ORDER,
                 SettingsItemId.PHONETIC_NAME_DISPLAY,

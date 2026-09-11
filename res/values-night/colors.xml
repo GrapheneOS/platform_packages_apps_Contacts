@@ -196,10 +196,6 @@
     <!-- Background color for a snackbar. -->
     <color name="snackbar_background">#9C9C9C</color>
 
-    <!-- Color of account/custom filters -->
-    <color name="account_filter_text_color">@color/actionbar_text_color_black</color>
-    <color name="custom_filter_divider">#444444</color>
-
     <!-- Primary text color in Contacts app -->
     <color name="contacts_text_color">#EAEAEA</color>
 

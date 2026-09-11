@@ -12,11 +12,9 @@ import android.provider.ContactsContract.Settings as ContactsContractSettings
 import android.provider.Settings
 import android.telecom.TelecomManager
 import android.util.Log
-import androidx.activity.result.ActivityResultLauncher
 import com.android.contacts.activities.LicenseActivity
 import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.interactions.ImportDialogFragment
-import com.android.contacts.list.AccountFilterActivity
 import com.android.contacts.logging.ScreenEvent.ScreenType
 import com.android.contacts.ui.settings.SettingsActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
@@ -31,7 +29,6 @@ internal class SettingsEffectHandlerImpl(
     private val newLocalProfileExtra: String?,
     private val telecomManager: TelecomManager,
     private val clipboardManager: ClipboardManager,
-    private val contactsFilterLauncher: ActivityResultLauncher<Intent>,
 ) : SettingsEffectHandler {
 
     override fun handle(effect: Effect.Host) {
@@ -41,7 +38,6 @@ internal class SettingsEffectHandlerImpl(
             is Effect.CreateProfile -> createProfile()
             is Effect.OpenAddAccount -> openAddAccount()
             is Effect.OpenDefaultAccountPicker -> openDefaultAccountPicker()
-            is Effect.OpenContactsFilter -> openContactsFilter()
             is Effect.ShowImportDialog -> showImportDialog()
             is Effect.ShowExportDialog -> showExportDialog()
             is Effect.OpenBlockedNumbers -> openBlockedNumbers()
@@ -76,10 +72,6 @@ internal class SettingsEffectHandlerImpl(
 
     private fun openDefaultAccountPicker() {
         startActivity(Intent(ContactsContractSettings.ACTION_SET_DEFAULT_ACCOUNT))
-    }
-
-    private fun openContactsFilter() {
-        contactsFilterLauncher.launch(Intent(activity, AccountFilterActivity::class.java))
     }
 
     private fun showImportDialog() {
