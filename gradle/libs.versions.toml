@@ -9,7 +9,7 @@ ktlint-gradle = "14.2.0"
 
 activity-compose = "1.13.0"
 appcompat = "1.8.0"
-compose-bom = "2026.06.01"
+compose-bom = "2026.09.00"
 lifecycle = "2.10.0"
 kotlinx-immutable = "0.5.2"
 coroutines = "1.11.0"
