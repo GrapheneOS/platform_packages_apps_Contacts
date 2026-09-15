@@ -3,8 +3,10 @@ package com.android.contacts.ui.interactions.showorcreate.screen
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
+import android.os.Bundle
 import android.provider.ContactsContract
 import com.android.contacts.activities.PeopleActivity
+import com.android.contacts.data.contacts.model.ContactLookupQuery
 import com.android.contacts.ui.interactions.showorcreate.screen.model.ShowOrCreateEffect as Effect
 import com.android.contacts.util.ImplicitIntentsUtil
 
@@ -14,6 +16,7 @@ internal interface ShowOrCreateEffectHandler {
 
 internal class ShowOrCreateEffectHandlerImpl(
     private val activity: Activity,
+    private val originalExtras: Bundle,
 ) : ShowOrCreateEffectHandler {
     override fun handle(effect: Effect) {
         when (effect) {
@@ -32,7 +35,8 @@ internal class ShowOrCreateEffectHandlerImpl(
             is Effect.ShowContactList -> {
                 val intent = Intent(Intent.ACTION_SEARCH)
                     .setComponent(ComponentName(activity, PeopleActivity::class.java))
-                    .putExtras(effect.extras)
+                    .putExtras(originalExtras)
+                    .putQueryExtra(effect.query)
                 activity.startActivity(intent)
                 activity.finish()
             }
@@ -43,7 +47,8 @@ internal class ShowOrCreateEffectHandlerImpl(
                         ContactsContract.RawContacts.CONTENT_URI,
                         ContactsContract.RawContacts.CONTENT_TYPE,
                     )
-                    .putExtras(effect.extras)
+                    .putExtras(originalExtras)
+                    .putQueryExtra(effect.query)
                 ImplicitIntentsUtil.startActivityInApp(activity, intent)
                 activity.finish()
             }
@@ -51,9 +56,21 @@ internal class ShowOrCreateEffectHandlerImpl(
             is Effect.CreateOrEditContact -> {
                 val intent = Intent(Intent.ACTION_INSERT_OR_EDIT)
                     .setType(ContactsContract.RawContacts.CONTENT_ITEM_TYPE)
-                    .putExtras(effect.extras)
+                    .putExtras(originalExtras)
+                    .putQueryExtra(effect.query)
                 ImplicitIntentsUtil.startActivityInApp(activity, intent)
                 activity.finish()
+            }
+        }
+    }
+
+    private fun Intent.putQueryExtra(query: ContactLookupQuery): Intent {
+        return when (query) {
+            is ContactLookupQuery.Email -> {
+                putExtra(ContactsContract.Intents.Insert.EMAIL, query.value)
+            }
+            is ContactLookupQuery.Phone -> {
+                putExtra(ContactsContract.Intents.Insert.PHONE, query.value)
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.android.contacts.ui.interactions.showorcreate.screen
 
 import android.net.Uri
-import android.os.Bundle
 import android.provider.ContactsContract
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
@@ -124,21 +123,18 @@ class ShowOrCreateViewModelTest {
             val results = listOf(contactResult1, contactResult2)
             every { contactsRepository.lookup(any()) } returns flowOf(results)
             val email = "user@example.org"
-            val bundle = mockBundle()
             val subject = createViewModel(
                 savedState = mapOf(
                     ShowOrCreateViewModel.EXTRA_DATA to "mailto:$email".toUri(),
-                    ShowOrCreateViewModel.EXTRA_EXTRAS to bundle,
                 ),
             )
             subject.effects.test {
                 advanceUntilIdle()
                 assertEquals(
-                    ShowOrCreateEffect.ShowContactList(bundle),
+                    ShowOrCreateEffect.ShowContactList(ContactLookupQuery.Email(email)),
                     awaitItem(),
                 )
             }
-            verify { bundle.putString(ContactsContract.Intents.Insert.EMAIL, email) }
         }
 
     @Test
@@ -162,11 +158,9 @@ class ShowOrCreateViewModelTest {
         runTest(mainDispatcherRule.testDispatcher) {
             every { contactsRepository.lookup(any()) } returns flowOf(emptyList())
             val email = "user@example.org"
-            val bundle = mockBundle()
             val subject = createViewModel(
                 savedState = mapOf(
                     ShowOrCreateViewModel.EXTRA_DATA to "mailto:$email".toUri(),
-                    ShowOrCreateViewModel.EXTRA_EXTRAS to bundle,
                 ),
             )
             subject.effects.test {
@@ -174,11 +168,10 @@ class ShowOrCreateViewModelTest {
                 subject.onAction(ShowOrCreateAction.CreateConfirm)
                 advanceUntilIdle()
                 assertEquals(
-                    ShowOrCreateEffect.CreateOrEditContact(bundle),
+                    ShowOrCreateEffect.CreateOrEditContact(ContactLookupQuery.Email(email)),
                     awaitItem(),
                 )
             }
-            verify { bundle.putString(ContactsContract.Intents.Insert.EMAIL, email) }
         }
 
     @Test
@@ -203,22 +196,19 @@ class ShowOrCreateViewModelTest {
         runTest(mainDispatcherRule.testDispatcher) {
             every { contactsRepository.lookup(any()) } returns flowOf(emptyList())
             val phone = "123456789"
-            val bundle = mockBundle()
             val subject = createViewModel(
                 savedState = mapOf(
                     ShowOrCreateViewModel.EXTRA_DATA to "tel:$phone".toUri(),
-                    ShowOrCreateViewModel.EXTRA_EXTRAS to bundle,
                     ContactsContract.Intents.EXTRA_FORCE_CREATE to true,
                 ),
             )
             subject.effects.test {
                 advanceUntilIdle()
                 assertEquals(
-                    ShowOrCreateEffect.CreateContact(bundle),
+                    ShowOrCreateEffect.CreateContact(ContactLookupQuery.Phone(phone)),
                     awaitItem(),
                 )
             }
-            verify { bundle.putString(ContactsContract.Intents.Insert.PHONE, phone) }
         }
 
     private fun createViewModel(
@@ -227,10 +217,4 @@ class ShowOrCreateViewModelTest {
         savedStateHandle = SavedStateHandle(savedState),
         contactsRepository = contactsRepository,
     )
-
-    private fun mockBundle(): Bundle {
-        return mockk<Bundle>(relaxed = true) {
-            every { deepCopy() } returns this@mockk
-        }
-    }
 }
