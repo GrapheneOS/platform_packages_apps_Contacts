@@ -1,32 +1,37 @@
-package com.android.contacts.ui.interactions.importing
+package com.android.contacts.ui.interactions.importing.screen
 
+import app.cash.turbine.awaitItem
 import app.cash.turbine.test
+import com.android.contacts.data.settings.model.SettingsAvailability
+import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimCards
-import com.android.contacts.domain.vcard.usecase.CanImportFromVCard
 import com.android.contacts.model.SimCard
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
 import com.android.contacts.tests.factory.SimCardFactory
 import com.android.contacts.tests.factory.SimCardOptionFactory
-import com.android.contacts.ui.interactions.importing.screen.ImportViewModel
 import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapper
 import com.android.contacts.ui.interactions.importing.screen.model.ImportAction as Action
 import com.android.contacts.ui.interactions.importing.screen.model.ImportEffect as Effect
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -36,20 +41,49 @@ class ImportViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    private val settingsAvailabilityRepo = mockk<SettingsAvailabilityRepository>(relaxed = true)
+
+    @Before
+    fun setUp() {
+        coEvery { settingsAvailabilityRepo.getSettingsAvailability() } returns SETTINGS_AVAILABILITY
+    }
+
     @Test
-    fun isLoading_whileSimCardsAreLoading_isTrue() =
+    fun isLoading_whileSettingsAvailabilityAndSimCardsAreLoading_isTrue() =
         runTest(context = mainDispatcherRule.testDispatcher) {
-            val loadSimCardsFlow = MutableSharedFlow<List<SimCard>>()
+            val availabilityChannel = Channel<SettingsAvailability>(Channel.BUFFERED)
+            coEvery {
+                settingsAvailabilityRepo.getSettingsAvailability()
+            } coAnswers { availabilityChannel.awaitItem() }
+            val loadSimCardsFlow = MutableStateFlow<List<SimCard>?>(null)
             val viewModel = createViewModel(
-                canImportFromVCard = { true },
-                loadSimCards = { loadSimCardsFlow },
+                loadSimCards = { loadSimCardsFlow.filterNotNull() },
+            )
+
+            viewModel.uiState.test {
+                assertTrue(awaitItem().isLoading)
+                availabilityChannel.send(SETTINGS_AVAILABILITY)
+                loadSimCardsFlow.value = listOf(SimCardFactory.build())
+                advanceUntilIdle()
+                assertFalse(awaitItem().isLoading)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun whenImportIsNotAvailable_setStateValue() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            coEvery {
+                settingsAvailabilityRepo.getSettingsAvailability()
+            } coAnswers { SETTINGS_AVAILABILITY.copy(isImportFromVCardAvailable = false) }
+
+            val viewModel = createViewModel(
+                loadSimCards = { flowOf(emptyList()) },
             )
 
             viewModel.uiState.test {
                 advanceUntilIdle()
-                assertTrue(awaitItem().isLoading)
-                loadSimCardsFlow.emit(listOf(SimCardFactory.build()))
-                assertFalse(awaitItem().isLoading)
+                assertEquals(false, expectMostRecentItem().isVCardImportAvailable)
             }
         }
 
@@ -114,14 +148,23 @@ class ImportViewModelTest {
         }
 
     private fun createViewModel(
-        canImportFromVCard: CanImportFromVCard = { true },
+        settingsAvailabilityRepository: SettingsAvailabilityRepository = settingsAvailabilityRepo,
         loadSimCards: LoadSimCards = { emptyFlow() },
         simCardOptionMapper: SimCardOptionMapper = { SimCardOptionFactory.build() },
         loadAccounts: LoadAccounts = { emptyFlow() },
     ) = ImportViewModel(
-        canImportFromVCard = canImportFromVCard,
+        settingsAvailabilityRepository = settingsAvailabilityRepository,
         loadSimCards = loadSimCards,
         simCardOptionMapper = simCardOptionMapper,
         loadAccounts = loadAccounts,
     )
+
+    companion object {
+        private val SETTINGS_AVAILABILITY = SettingsAvailability(
+            areContactsAvailable = true,
+            areBlockedNumbersAvailable = true,
+            isAboutAvailable = true,
+            isImportFromVCardAvailable = true,
+        )
+    }
 }

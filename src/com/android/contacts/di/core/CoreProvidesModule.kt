@@ -4,6 +4,7 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.UserManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
@@ -112,6 +113,13 @@ internal class CoreProvidesModule {
 
     @Provides
     @Reusable
+    fun provideUserManager(
+        @ApplicationContext context: Context,
+    ): UserManager {
+        return context.getSystemService(UserManager::class.java)
+    }
+
+    @Provides
     fun provideBidiFormatter(): BidiFormatter {
         return BidiFormatter.getInstance()
     }
