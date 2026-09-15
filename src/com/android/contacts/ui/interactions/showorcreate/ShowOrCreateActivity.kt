@@ -22,12 +22,13 @@ class ShowOrCreateActivity : FragmentActivity() {
             return
         }
 
-        intent.putExtra(ShowOrCreateViewModel.EXTRA_DATA, intent.data)
-        intent.putExtra(ShowOrCreateViewModel.EXTRA_EXTRAS, intent.extras)
-
+        val originalExtras = intent.extras?.deepCopy() ?: Bundle()
         val effectHandler = ShowOrCreateEffectHandlerImpl(
             activity = this,
+            originalExtras = originalExtras,
         )
+
+        intent.putExtra(ShowOrCreateViewModel.EXTRA_DATA, intent.data)
 
         setContent {
             AppTheme {
