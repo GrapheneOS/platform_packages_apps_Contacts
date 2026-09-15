@@ -2,9 +2,9 @@ package com.android.contacts.ui.interactions.importing.screen
 
 import android.app.Activity
 import com.android.contacts.R
+import com.android.contacts.domain.accounts.mapper.AccountModelMapper
 import com.android.contacts.editor.SelectAccountDialogFragment
 import com.android.contacts.model.AccountTypeManager
-import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.interactions.importing.screen.model.ImportEffect as Effect
 import com.android.contacts.util.AccountSelectionUtil
@@ -15,6 +15,7 @@ internal interface ImportEffectHandler {
 
 internal class ImportEffectHandlerImpl(
     private val activity: Activity,
+    private val accountModelMapper: AccountModelMapper,
 ) : ImportEffectHandler {
     override fun handle(effect: Effect) {
         when (effect) {
@@ -42,13 +43,7 @@ internal class ImportEffectHandlerImpl(
             is Effect.OpenVCardImport -> {
                 AccountSelectionUtil.doImportFromVcfFile(
                     activity,
-                    effect.account?.let { account ->
-                        AccountWithDataSet(
-                            account.name,
-                            account.type,
-                            account.dataSet,
-                        )
-                    },
+                    effect.account?.let(accountModelMapper::map),
                 )
                 activity.finish()
             }

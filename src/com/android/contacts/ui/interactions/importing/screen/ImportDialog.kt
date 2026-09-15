@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.SimCard
+import androidx.compose.material.icons.outlined.UploadFile
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
@@ -47,7 +49,7 @@ import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.core.itemClipShape
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_EMPTY_MESSAGE_TEST_TAG
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_PROGRESS_TEST_TAG
-import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_SIM_CARD_BUTTON_TEST_TAG
+import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_SIM_CARD_BUTTON_TEST_TAG_PREFIX
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_VCARD_BUTTON_TEST_TAG
 import com.android.contacts.ui.interactions.importing.screen.model.ImportAction as Action
 import com.android.contacts.ui.interactions.importing.screen.model.ImportUiState as State
@@ -69,7 +71,7 @@ internal fun ImportDialog(
     }
 
     LaunchedEffect(screenModel, accountChosen) {
-        accountChosen?.let { screenModel.onAction(Action.AccountChosen(accountChosen)) }
+        accountChosen?.let { screenModel.onAction(Action.AccountChosen(it)) }
     }
 
     ImportDialogContent(
@@ -151,7 +153,11 @@ private fun ImportOptionsList(
     ) {
         if (uiState.isVCardImportAvailable == true) {
             item(key = "vcard") {
-                VCardCell(uiState, onAction)
+                VCardCell(
+                    isFirst = true,
+                    isLast = uiState.simCardOptions.isNullOrEmpty(),
+                    onClick = { onAction(Action.VCardClick) },
+                )
             }
         }
 
@@ -161,11 +167,14 @@ private fun ImportOptionsList(
             key = { _, option -> "sim_${option.subscriptionId}" },
         ) { index, option ->
             SimCardCell(
-                uiState = uiState,
-                onAction = onAction,
-                index = index,
                 option = option,
-                isSingleOption = isSingleSimCard,
+                index = when (isSingleSimCard) {
+                    true -> null
+                    false -> index
+                },
+                isFirst = index == 0 && uiState.isVCardImportAvailable != true,
+                isLast = index == uiState.simCardOptions?.lastIndex,
+                onClick = { onAction(Action.SimOptionClick(option)) },
             )
         }
     }
@@ -173,18 +182,19 @@ private fun ImportOptionsList(
 
 @Composable
 private fun VCardCell(
-    uiState: State,
-    onAction: (Action) -> Unit,
+    isFirst: Boolean,
+    isLast: Boolean,
+    onClick: () -> Unit,
 ) {
     OptionCell(
-        isFirst = true,
-        isLast = uiState.simCardOptions.isNullOrEmpty(),
-        onClick = { onAction(Action.VCardClick) },
+        isFirst = isFirst,
+        isLast = isLast,
+        onClick = onClick,
         modifier = Modifier.testTag(IMPORT_VCARD_BUTTON_TEST_TAG),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(R.drawable.ic_upload_file_24),
+                imageVector = Icons.Outlined.UploadFile,
                 contentDescription = null,
                 modifier = Modifier.padding(end = 12.dp),
             )
@@ -198,34 +208,34 @@ private fun VCardCell(
 
 @Composable
 private fun SimCardCell(
-    uiState: State,
-    onAction: (Action) -> Unit,
-    index: Int,
     option: SimCardOption,
-    isSingleOption: Boolean,
+    index: Int?,
+    isFirst: Boolean,
+    isLast: Boolean,
+    onClick: () -> Unit,
 ) {
     OptionCell(
-        isFirst = index == 0 && uiState.isVCardImportAvailable != true,
-        isLast = index == uiState.simCardOptions?.lastIndex,
-        onClick = { onAction(Action.SimOptionClick(option)) },
-        modifier = Modifier.testTag(IMPORT_SIM_CARD_BUTTON_TEST_TAG),
+        isFirst = isFirst,
+        isLast = isLast,
+        onClick = onClick,
+        modifier = Modifier.testTag(IMPORT_SIM_CARD_BUTTON_TEST_TAG_PREFIX + option.subscriptionId),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(R.drawable.quantum_ic_sim_card_vd_theme_24),
+                imageVector = Icons.Outlined.SimCard,
                 contentDescription = null,
                 modifier = Modifier.padding(end = 12.dp),
             )
             Column {
                 Text(
-                    text = when (isSingleOption) {
-                        true ->
-                            stringResource(R.string.import_from_sim)
-                        false ->
-                            stringResource(
-                                R.string.import_from_sim_summary_fmt,
-                                option.name ?: (index + 1),
-                            )
+                    text = when (index) {
+                        null -> stringResource(
+                            R.string.import_from_sim,
+                        )
+                        else -> stringResource(
+                            R.string.import_from_sim_summary_fmt,
+                            option.name ?: (index + 1),
+                        )
                     },
                     style = MaterialTheme.typography.titleMedium,
                 )

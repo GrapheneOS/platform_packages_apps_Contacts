@@ -127,6 +127,7 @@ class GetSettingsDataImplTest {
             areContactsAvailable = true,
             areBlockedNumbersAvailable = true,
             isAboutAvailable = true,
+            isImportFromVCardAvailable = true,
         )
 
         val DISPLAY_SETTINGS = DisplaySettings(

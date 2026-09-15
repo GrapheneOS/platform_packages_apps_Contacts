@@ -35,6 +35,7 @@ class ImportActivity :
 
         val effectHandler = ImportEffectHandlerImpl(
             activity = this,
+            accountModelMapper = accountModelMapper,
         )
 
         setContent {

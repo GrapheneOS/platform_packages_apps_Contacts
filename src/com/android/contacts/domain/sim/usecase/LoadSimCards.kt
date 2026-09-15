@@ -11,6 +11,7 @@ import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -19,12 +20,17 @@ internal fun interface LoadSimCards {
 }
 
 internal class LoadSimCardsImpl @Inject constructor(
+    private val canUserImportFromSim: CanUserImportFromSim,
     private val subscriptionManager: SubscriptionManager,
     private val simContactDao: SimContactDao,
     @param:SimReadDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : LoadSimCards {
 
     override operator fun invoke(): Flow<List<SimCard>> {
+        if (!canUserImportFromSim()) {
+            return flowOf(emptyList())
+        }
+
         return onSubcriptionsChange()
             .map { load() }
             .flowOn(coroutineDispatcher)
@@ -41,7 +47,6 @@ internal class LoadSimCardsImpl @Inject constructor(
                 coroutineDispatcher.asExecutor(),
                 listener,
             )
-            trySend(Unit)
             awaitClose {
                 subscriptionManager.removeOnSubscriptionsChangedListener(listener)
             }

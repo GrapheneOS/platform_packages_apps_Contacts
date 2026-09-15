@@ -2,11 +2,11 @@ package com.android.contacts.ui.interactions.importing.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.contacts.data.settings.repository.SettingsAvailabilityRepository
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.sim.usecase.LoadSimCards
-import com.android.contacts.domain.vcard.usecase.CanImportFromVCard
 import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapper
 import com.android.contacts.ui.interactions.importing.screen.model.ImportAction as Action
 import com.android.contacts.ui.interactions.importing.screen.model.ImportEffect as Effect
@@ -18,9 +18,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 
@@ -33,7 +34,7 @@ internal interface ImportScreenModel {
 
 @HiltViewModel
 internal class ImportViewModel @Inject constructor(
-    canImportFromVCard: CanImportFromVCard,
+    private val settingsAvailabilityRepository: SettingsAvailabilityRepository,
     loadSimCards: LoadSimCards,
     simCardOptionMapper: SimCardOptionMapper,
     loadAccounts: LoadAccounts,
@@ -43,21 +44,23 @@ internal class ImportViewModel @Inject constructor(
     private val _effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
     override val effects: Flow<Effect> = _effects.asSharedFlow()
 
-    private val isVCardImportAvailable = canImportFromVCard()
     private var accounts: List<AccountDisplayModel>? = null
 
-    override val uiState = loadSimCards()
-        .map {
+    override val uiState =
+        combine(
+            settingsAvailabilityRepository::getSettingsAvailability.asFlow(),
+            loadSimCards(),
+        ) { settingsAvailability, simCards ->
             State(
-                isVCardImportAvailable = isVCardImportAvailable,
-                simCardOptions = it
+                isVCardImportAvailable = settingsAvailability.isImportFromVCardAvailable,
+                simCardOptions = simCards
                     .map(simCardOptionMapper::map)
-                    .toImmutableList()
+                    .toImmutableList(),
             )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(STATEFLOW_STOP_TIMEOUT_MILLIS),
-            initialValue = State(isVCardImportAvailable = isVCardImportAvailable),
+            initialValue = State(),
         )
 
     init {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.provider.BlockedNumberContract
 import android.provider.ContactsContract.ProviderStatus
 import android.telephony.TelephonyManager
+import com.android.contacts.R
 import com.android.contacts.compat.TelephonyManagerCompat
 import com.android.contacts.data.settings.model.SettingsAvailability
 import com.android.contacts.di.core.IoDispatcher
@@ -31,6 +32,7 @@ internal class SettingsAvailabilityRepositoryImpl @Inject constructor(
                 areContactsAvailable = areContactsAvailable(),
                 areBlockedNumbersAvailable = areBlockedNumbersAvailable(),
                 isAboutAvailable = !HelpUtils.isHelpAndFeedbackAvailable(),
+                isImportFromVCardAvailable = isImportFromVCardAvailable(),
             )
         }
     }
@@ -42,5 +44,9 @@ internal class SettingsAvailabilityRepositoryImpl @Inject constructor(
     private fun areBlockedNumbersAvailable(): Boolean {
         return TelephonyManagerCompat.isVoiceCapable(telephonyManager) &&
             BlockedNumberContract.canCurrentUserBlockNumbers(context)
+    }
+
+    private fun isImportFromVCardAvailable(): Boolean {
+        return context.resources.getBoolean(R.bool.config_allow_import_from_vcf_file)
     }
 }
