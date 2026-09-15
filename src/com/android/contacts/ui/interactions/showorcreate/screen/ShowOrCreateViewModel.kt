@@ -97,6 +97,10 @@ internal class ShowOrCreateViewModel @Inject constructor(
         viewModelScope.launch {
             val results = contactsRepository.lookup(query).first()
             when {
+                results == null -> {
+                    // There was an issue running the lookup query
+                    emitEffect(Effect.Close)
+                }
                 results.size == 1 -> {
                     val result = results.first()
                     emitEffect(Effect.ShowContact(result.uri))
