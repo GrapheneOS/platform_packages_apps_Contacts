@@ -301,6 +301,11 @@
             </intent-filter>
         </activity>
 
+        <activity-alias
+            android:name=".activities.ShowOrCreateActivity"
+            android:exported="true"
+            android:targetActivity=".ui.interactions.showorcreate.ShowOrCreateActivity" />
+
         <activity
             android:name=".quickcontact.QuickContactActivity"
             android:excludeFromRecents="true"
