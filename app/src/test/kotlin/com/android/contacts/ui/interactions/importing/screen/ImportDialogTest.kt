@@ -1,4 +1,4 @@
-package com.android.contacts.ui.interactions.importing
+package com.android.contacts.ui.interactions.importing.screen
 
 import android.content.res.Resources
 import android.icu.text.MessageFormat
@@ -9,6 +9,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.intl.Locale
@@ -17,11 +18,9 @@ import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.tests.factory.AccountModelFactory
 import com.android.contacts.tests.factory.SimCardOptionFactory
 import com.android.contacts.tests.resources
-import com.android.contacts.ui.interactions.importing.screen.ImportDialog
-import com.android.contacts.ui.interactions.importing.screen.ImportEffectHandler
-import com.android.contacts.ui.interactions.importing.screen.ImportScreenModel
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_EMPTY_MESSAGE_TEST_TAG
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_PROGRESS_TEST_TAG
+import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_SIM_CARD_BUTTON_TEST_TAG_PREFIX
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_VCARD_BUTTON_TEST_TAG
 import com.android.contacts.ui.interactions.importing.screen.model.ImportAction as Action
 import com.android.contacts.ui.interactions.importing.screen.model.ImportUiState as State
@@ -97,6 +96,19 @@ class ImportDialogTest {
     }
 
     @Test
+    fun onVCardClick_triggersAction() = runComposeUiTest {
+        setScreenContent()
+
+        fakeUiStateFlow.value = State(
+            isVCardImportAvailable = true,
+            simCardOptions = persistentListOf(),
+        )
+        onNodeWithTag(IMPORT_VCARD_BUTTON_TEST_TAG).performClick()
+
+        verify { screenModel.onAction(Action.VCardClick) }
+    }
+
+    @Test
     fun showsSimCardOptions() = runComposeUiTest {
         setScreenContent()
 
@@ -132,6 +144,23 @@ class ImportDialogTest {
             text = "123456789",
             substring = true,
         ).assertIsDisplayed()
+    }
+
+    @Test
+    fun onSimCardClick_triggersAction() = runComposeUiTest {
+        setScreenContent()
+
+        val simCardOption = SimCardOptionFactory.build(
+            subscriptionId = 1,
+        )
+        fakeUiStateFlow.value = State(
+            isVCardImportAvailable = false,
+            simCardOptions = persistentListOf(simCardOption),
+        )
+        onNodeWithTag(IMPORT_SIM_CARD_BUTTON_TEST_TAG_PREFIX + simCardOption.subscriptionId)
+            .performClick()
+
+        verify { screenModel.onAction(Action.SimOptionClick(simCardOption)) }
     }
 
     @Test

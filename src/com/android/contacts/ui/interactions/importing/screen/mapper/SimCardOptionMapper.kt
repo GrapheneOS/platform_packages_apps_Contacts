@@ -1,6 +1,5 @@
 package com.android.contacts.ui.interactions.importing.screen.mapper
 
-import android.telephony.PhoneNumberUtils
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.VerbatimTtsAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
@@ -10,13 +9,14 @@ import androidx.core.text.TextDirectionHeuristicsCompat
 import com.android.contacts.model.SimCard
 import com.android.contacts.ui.interactions.importing.screen.model.SimCardOption
 import javax.inject.Inject
+import javax.inject.Provider
 
 internal fun interface SimCardOptionMapper {
     fun map(simCard: SimCard): SimCardOption
 }
 
 internal class SimCardOptionMapperImpl @Inject constructor(
-    private val bidiFormatter: BidiFormatter,
+    private val bidiFormatterProvider: Provider<BidiFormatter>,
 ) : SimCardOptionMapper {
     override fun map(simCard: SimCard): SimCardOption {
         return SimCardOption(
@@ -31,12 +31,8 @@ internal class SimCardOptionMapperImpl @Inject constructor(
         val phone = (simCard.getFormattedPhone() ?: simCard.phone)
             ?.takeIf { it.isNotBlank() }
             ?: return null
-        val wrappedPhone = bidiFormatter.unicodeWrap(
-            PhoneNumberUtils.createTtsSpannable(phone),
-            TextDirectionHeuristicsCompat.LTR,
-        )
-            .takeIf { it.isNotBlank() }
-            ?: phone
+        val wrappedPhone = bidiFormatterProvider.get()
+            .unicodeWrap(phone, TextDirectionHeuristicsCompat.LTR)
 
         return buildAnnotatedString {
             withAnnotation(VerbatimTtsAnnotation(phone.toString())) {

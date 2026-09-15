@@ -1,11 +1,9 @@
-package com.android.contacts.ui.interactions.importing.mapper
+package com.android.contacts.ui.interactions.importing.screen.mapper
 
 import androidx.compose.ui.text.VerbatimTtsAnnotation
 import androidx.core.text.BidiFormatter
 import com.android.contacts.tests.factory.SimCardFactory
 import com.android.contacts.tests.factory.SimContactFactory
-import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapper
-import com.android.contacts.ui.interactions.importing.screen.mapper.SimCardOptionMapperImpl
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -16,7 +14,7 @@ import org.robolectric.RobolectricTestRunner
 internal class SimCardOptionMapperTest {
 
     private val bidiFormatter = BidiFormatter.getInstance()
-    private val mapper: SimCardOptionMapper = SimCardOptionMapperImpl(bidiFormatter)
+    private val mapper: SimCardOptionMapper = SimCardOptionMapperImpl({ bidiFormatter })
 
     @Test
     fun map_setsBasicFields() {
