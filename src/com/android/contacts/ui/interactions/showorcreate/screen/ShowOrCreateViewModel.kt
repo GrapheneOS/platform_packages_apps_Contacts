@@ -1,7 +1,6 @@
 package com.android.contacts.ui.interactions.showorcreate.screen
 
 import android.net.Uri
-import android.os.Bundle
 import android.provider.ContactsContract
 import android.telecom.PhoneAccount
 import android.util.Log
@@ -55,8 +54,6 @@ internal class ShowOrCreateViewModel @Inject constructor(
         savedStateHandle[ContactsContract.Intents.EXTRA_CREATE_DESCRIPTION] ?: schemeSpecificPart
     private val forceCreate: Boolean? =
         savedStateHandle[ContactsContract.Intents.EXTRA_FORCE_CREATE] as? Boolean
-    private val originalExtras: Bundle? =
-        savedStateHandle[EXTRA_EXTRAS] as? Bundle
 
     private val query: ContactLookupQuery? = buildQuery()
 
@@ -68,7 +65,7 @@ internal class ShowOrCreateViewModel @Inject constructor(
         when (action) {
             Action.CreateConfirm -> {
                 val query = query ?: return
-                emitEffect(Effect.CreateOrEditContact(buildCreateExtras(query)))
+                emitEffect(Effect.CreateOrEditContact(query))
             }
             Action.CreateDismiss -> {
                 emitEffect(Effect.Close)
@@ -105,10 +102,10 @@ internal class ShowOrCreateViewModel @Inject constructor(
                     emitEffect(Effect.ShowContact(result.uri))
                 }
                 results.size > 1 -> {
-                    emitEffect(Effect.ShowContactList(buildCreateExtras(query)))
+                    emitEffect(Effect.ShowContactList(query))
                 }
                 forceCreate == true -> {
-                    emitEffect(Effect.CreateContact(buildCreateExtras(query)))
+                    emitEffect(Effect.CreateContact(query))
                 }
                 else -> {
                     _uiState.value = State.ConfirmingCreate(createDescription)
@@ -117,22 +114,8 @@ internal class ShowOrCreateViewModel @Inject constructor(
         }
     }
 
-    private fun buildCreateExtras(query: ContactLookupQuery): Bundle {
-        val extras = originalExtras?.deepCopy() ?: Bundle()
-        when (query) {
-            is ContactLookupQuery.Email -> {
-                extras.putString(ContactsContract.Intents.Insert.EMAIL, query.value)
-            }
-            is ContactLookupQuery.Phone -> {
-                extras.putString(ContactsContract.Intents.Insert.PHONE, query.value)
-            }
-        }
-        return extras
-    }
-
     companion object {
         private const val TAG = "ShowOrCreateViewModel"
         const val EXTRA_DATA = "data"
-        const val EXTRA_EXTRAS = "extras"
     }
 }

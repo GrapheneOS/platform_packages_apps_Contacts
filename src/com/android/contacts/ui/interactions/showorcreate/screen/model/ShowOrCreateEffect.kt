@@ -1,7 +1,7 @@
 package com.android.contacts.ui.interactions.showorcreate.screen.model
 
 import android.net.Uri
-import android.os.Bundle
+import com.android.contacts.data.contacts.model.ContactLookupQuery
 
 internal sealed interface ShowOrCreateEffect {
     data object Close : ShowOrCreateEffect
@@ -11,14 +11,14 @@ internal sealed interface ShowOrCreateEffect {
     ) : ShowOrCreateEffect
 
     data class ShowContactList(
-        val extras: Bundle,
+        val query: ContactLookupQuery,
     ) : ShowOrCreateEffect
 
     data class CreateContact(
-        val extras: Bundle,
+        val query: ContactLookupQuery,
     ) : ShowOrCreateEffect
 
     data class CreateOrEditContact(
-        val extras: Bundle,
+        val query: ContactLookupQuery,
     ) : ShowOrCreateEffect
 }
