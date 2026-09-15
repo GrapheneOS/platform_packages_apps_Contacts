@@ -20,14 +20,14 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 internal interface ContactsRepository {
-    fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>>
+    fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>?>
 }
 
 internal class ContactsRepositoryImpl @Inject constructor(
     private val contentResolver: ContentResolver,
     @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ContactsRepository {
-    override fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>> {
+    override fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>?> {
         return observeUri(getQueryUri(query))
             .map { queryContacts(query) }
             .flowOn(ioDispatcher)
@@ -73,7 +73,7 @@ internal class ContactsRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun queryContacts(query: ContactLookupQuery): List<ContactLookupResult> {
+    private fun queryContacts(query: ContactLookupQuery): List<ContactLookupResult>? {
         return try {
             contentResolver.query(
                 getQueryUri(query),
@@ -83,7 +83,6 @@ internal class ContactsRepositoryImpl @Inject constructor(
                 null,
             )
                 ?.use(::toLookupResults)
-                ?: emptyList()
         } catch (e: SecurityException) {
             failedLookup(e)
         } catch (e: SQLiteException) {
@@ -115,9 +114,9 @@ internal class ContactsRepositoryImpl @Inject constructor(
             }
     }
 
-    private fun failedLookup(cause: Exception): List<ContactLookupResult> {
+    private fun failedLookup(cause: Exception): List<ContactLookupResult>? {
         Log.w(TAG, "Could not lookup contacts", cause)
-        return emptyList()
+        return null
     }
 
     private companion object {
