@@ -1,6 +1,7 @@
 import dev.detekt.gradle.Detekt
 
 plugins {
+    id("contacts.licenses")
     alias(libs.plugins.android.application)
     alias(libs.plugins.detekt)
     alias(libs.plugins.hilt)
