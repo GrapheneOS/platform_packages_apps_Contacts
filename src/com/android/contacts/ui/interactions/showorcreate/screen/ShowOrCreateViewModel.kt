@@ -34,7 +34,7 @@ internal interface ShowOrCreateScreenModel {
 
 @HiltViewModel
 internal class ShowOrCreateViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val contactsRepository: ContactsRepository,
 ) : ViewModel(),
     ShowOrCreateScreenModel {
@@ -45,36 +45,22 @@ internal class ShowOrCreateViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<State>(State.Searching)
     override val uiState = _uiState.asStateFlow()
 
-    private val data: Uri?
-        get() = savedStateHandle[EXTRA_DATA] as? Uri
-    private val scheme: String?
-        get() = data?.scheme
-    private val schemeSpecificPart: String?
-        get() = data?.schemeSpecificPart
-    private val createDescription: String?
-        get() = savedStateHandle[ContactsContract.Intents.EXTRA_CREATE_DESCRIPTION]
-            ?: schemeSpecificPart
-    private val forceCreate: Boolean?
-        get() = savedStateHandle[ContactsContract.Intents.EXTRA_FORCE_CREATE] as? Boolean
-    private val originalExtras: Bundle?
-        get() = savedStateHandle[EXTRA_EXTRAS] as? Bundle
+    private val data: Uri? =
+        savedStateHandle[EXTRA_DATA] as? Uri
+    private val scheme: String? =
+        data?.scheme
+    private val schemeSpecificPart: String? =
+        data?.schemeSpecificPart
+    private val createDescription: String? =
+        savedStateHandle[ContactsContract.Intents.EXTRA_CREATE_DESCRIPTION] ?: schemeSpecificPart
+    private val forceCreate: Boolean? =
+        savedStateHandle[ContactsContract.Intents.EXTRA_FORCE_CREATE] as? Boolean
+    private val originalExtras: Bundle? =
+        savedStateHandle[EXTRA_EXTRAS] as? Bundle
 
-    private var query: ContactLookupQuery? = null
+    private val query: ContactLookupQuery? = buildQuery()
 
     init {
-        query = when (scheme) {
-            ContactsUtils.SCHEME_MAILTO -> {
-                ContactLookupQuery.Email(schemeSpecificPart.orEmpty())
-            }
-            PhoneAccount.SCHEME_TEL -> {
-                ContactLookupQuery.Phone(schemeSpecificPart.orEmpty())
-            }
-            else -> {
-                Log.w(TAG, "Invalid intent scheme: $scheme")
-                emitEffect(Effect.Close)
-                null
-            }
-        }
         query?.let(::lookupContacts)
     }
 
@@ -92,6 +78,22 @@ internal class ShowOrCreateViewModel @Inject constructor(
 
     private fun emitEffect(effect: Effect) {
         _effects.trySend(effect)
+    }
+
+    private fun buildQuery(): ContactLookupQuery? {
+        return when (scheme) {
+            ContactsUtils.SCHEME_MAILTO -> {
+                ContactLookupQuery.Email(schemeSpecificPart.orEmpty())
+            }
+            PhoneAccount.SCHEME_TEL -> {
+                ContactLookupQuery.Phone(schemeSpecificPart.orEmpty())
+            }
+            else -> {
+                Log.w(TAG, "Invalid intent scheme: $scheme")
+                emitEffect(Effect.Close)
+                null
+            }
+        }
     }
 
     private fun lookupContacts(query: ContactLookupQuery) {
