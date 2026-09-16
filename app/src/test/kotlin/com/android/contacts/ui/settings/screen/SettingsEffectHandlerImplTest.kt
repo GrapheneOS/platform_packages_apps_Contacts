@@ -10,8 +10,6 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Settings as ContactsContractSettings
 import android.provider.Settings
 import android.telecom.TelecomManager
-import androidx.activity.result.ActivityResultLauncher
-import com.android.contacts.activities.LicenseActivity
 import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.logging.ScreenEvent.ScreenType
