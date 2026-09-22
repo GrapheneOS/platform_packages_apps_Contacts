@@ -9,8 +9,6 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,6 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.core.ContactsPreviewColumn
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -132,22 +131,6 @@ private fun Modifier.longPressable(
                 true
             }
         }
-}
-
-@Composable
-private fun cellShape(
-    isFirst: Boolean,
-    isLast: Boolean,
-): Shape {
-    val cornerSize = MaterialTheme.shapes.extraSmall.topStart
-    val defaultCornerSize = CornerSize(2.dp)
-
-    return RoundedCornerShape(
-        topStart = if (isFirst) cornerSize else defaultCornerSize,
-        topEnd = if (isFirst) cornerSize else defaultCornerSize,
-        bottomStart = if (isLast) cornerSize else defaultCornerSize,
-        bottomEnd = if (isLast) cornerSize else defaultCornerSize,
-    )
 }
 
 @PreviewLightDark

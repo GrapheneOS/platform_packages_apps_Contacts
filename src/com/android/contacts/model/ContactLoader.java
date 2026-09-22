@@ -184,6 +184,8 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
                 Contacts.IS_USER_PROFILE,
 
                 Data.CARRIER_PRESENCE,
+                Data.PREFERRED_PHONE_ACCOUNT_COMPONENT_NAME,
+                Data.PREFERRED_PHONE_ACCOUNT_ID,
         };
 
         public static final int NAME_RAW_CONTACT_ID = 0;
@@ -255,6 +257,8 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
         public static final int IS_USER_PROFILE = 61;
 
         public static final int CARRIER_PRESENCE = 62;
+        public static final int PREFERRED_PHONE_ACCOUNT_COMPONENT_NAME = 63;
+        public static final int PREFERRED_PHONE_ACCOUNT_ID = 64;
     }
 
     /**
@@ -664,6 +668,9 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
         cursorColumnToContentValues(cursor, cv, ContactQuery.GROUP_SOURCE_ID);
         cursorColumnToContentValues(cursor, cv, ContactQuery.CHAT_CAPABILITY);
         cursorColumnToContentValues(cursor, cv, ContactQuery.CARRIER_PRESENCE);
+        cursorColumnToContentValues(
+                cursor, cv, ContactQuery.PREFERRED_PHONE_ACCOUNT_COMPONENT_NAME);
+        cursorColumnToContentValues(cursor, cv, ContactQuery.PREFERRED_PHONE_ACCOUNT_ID);
 
         return cv;
     }

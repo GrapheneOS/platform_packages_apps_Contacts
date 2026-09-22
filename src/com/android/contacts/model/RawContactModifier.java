@@ -265,20 +265,6 @@ public class RawContactModifier {
     }
 
     /**
-     * Return the precedence for the the given {@link EditType#rawValue}, where
-     * lower numbers are higher precedence.
-     */
-    public static int getTypePrecedence(DataKind kind, int rawValue) {
-        for (int i = 0; i < kind.typeList.size(); i++) {
-            final EditType type = kind.typeList.get(i);
-            if (type.rawValue == rawValue) {
-                return i;
-            }
-        }
-        return Integer.MAX_VALUE;
-    }
-
-    /**
      * Find the best {@link EditType} for a potential insert. The "best" is the
      * first primary type that doesn't already exist. When all valid types
      * exist, we pick the last valid option.
