@@ -71,7 +71,7 @@ class ContactsRepositoryImplTest {
         )
 
         repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
-            assertTrue(awaitItem().isEmpty())
+            assertTrue(awaitItem()!!.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -81,7 +81,7 @@ class ContactsRepositoryImplTest {
         givenQueryRows()
 
         repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
-            assertTrue(awaitItem().isEmpty())
+            assertTrue(awaitItem()!!.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -138,12 +138,12 @@ class ContactsRepositoryImplTest {
         givenQueryRows(resultRow(1L, "1"))
 
         repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
-            assertEquals(1L, awaitItem().first().id)
+            assertEquals(1L, awaitItem()!!.first().id)
 
             givenQueryRows(resultRow(2L, "2"))
             observerSlot.captured.onChange(false)
 
-            assertEquals(2L, awaitItem().first().id)
+            assertEquals(2L, awaitItem()!!.first().id)
             cancelAndIgnoreRemainingEvents()
         }
     }
