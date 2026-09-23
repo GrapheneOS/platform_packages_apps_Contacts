@@ -1,4 +1,4 @@
-package com.android.contacts.ui.simimport
+package com.android.contacts.ui.simimport.screen
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
@@ -15,7 +15,6 @@ import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
 import com.android.contacts.tests.factory.SimContactFactory
 import com.android.contacts.ui.UIIntents
-import com.android.contacts.ui.simimport.screen.SimImportViewModel
 import com.android.contacts.ui.simimport.screen.mapper.AccountUiModelMapperImpl
 import com.android.contacts.ui.simimport.screen.mapper.SimContactUiModelMapperImpl
 import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action

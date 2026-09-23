@@ -1,4 +1,4 @@
-package com.android.contacts.ui.simimport
+package com.android.contacts.ui.simimport.screen
 
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
@@ -13,9 +13,6 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.tests.factory.AccountUiModelFactory
 import com.android.contacts.tests.factory.SimContactUiModelFactory
 import com.android.contacts.ui.common.model.SelectableItem
-import com.android.contacts.ui.simimport.screen.SimImportEffectHandler
-import com.android.contacts.ui.simimport.screen.SimImportScreen
-import com.android.contacts.ui.simimport.screen.SimImportScreenModel
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_MENU_ITEM_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_ACCOUNT_PICKER_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.SIM_IMPORT_CONTACTS_TO_IMPORT_TITLE_TEST_TAG
