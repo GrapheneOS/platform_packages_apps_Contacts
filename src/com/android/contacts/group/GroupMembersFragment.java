@@ -46,13 +46,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import androidx.core.content.ContextCompat;
+
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.ContactsUtils;
 import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.R;
 import com.android.contacts.activities.ActionBarAdapter;
 import com.android.contacts.activities.PeopleActivity;
+import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.group.GroupMembersAdapter.GroupMembersQuery;
 import com.android.contacts.interactions.GroupDeletionDialogFragment;
 import com.android.contacts.list.ContactsRequest;
@@ -65,9 +68,11 @@ import com.android.contacts.logging.ListEvent.ListType;
 import com.android.contacts.logging.Logger;
 import com.android.contacts.logging.ScreenEvent;
 import com.android.contacts.model.account.AccountWithDataSet;
+import com.android.contacts.ui.group.edit.GroupNameEditActivity;
 import com.android.contacts.util.ImplicitIntentsUtil;
 import com.android.contactsbind.FeedbackHelper;
 import com.google.common.primitives.Longs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,7 +80,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Displays the members of a group. */
+/**
+ * Displays the members of a group.
+ */
 public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupMembersAdapter> {
 
     private static final String TAG = "GroupMembers";
@@ -84,14 +91,16 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
     private static final String KEY_GROUP_URI = "groupUri";
     private static final String KEY_GROUP_METADATA = "groupMetadata";
 
-    public static final String TAG_GROUP_NAME_EDIT_DIALOG = "groupNameEditDialog";
+    public static final int REQUEST_GROUP_NAME_EDIT = 1001;
 
     private static final String ARG_GROUP_URI = "groupUri";
 
     private static final int LOADER_GROUP_METADATA = 100;
     private static final int MSG_FAIL_TO_LOAD = 1;
 
-    /** Filters out duplicate contacts. */
+    /**
+     * Filters out duplicate contacts.
+     */
     private class FilterCursorWrapper extends CursorWrapper {
 
         private int[] mIndex;
@@ -212,7 +221,8 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
         }
 
         @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
+        public void onLoaderReset(Loader<Cursor> loader) {
+        }
     };
 
     private ActionBarAdapter mActionBarAdapter;
@@ -230,7 +240,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what == MSG_FAIL_TO_LOAD) {
+            if (msg.what == MSG_FAIL_TO_LOAD) {
                 mActivity.onBackPressed();
             }
         }
@@ -440,7 +450,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
     }
 
     private void startSendToSelectionPickerActivity(long[] ids, long[] defaultSelection,
-            String sendScheme, String title) {
+                                                    String sendScheme, String title) {
         startActivity(GroupUtil.createSendToSelectionPickerIntent(getContext(), ids,
                 defaultSelection, sendScheme, title));
     }
@@ -470,12 +480,21 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
             sendToGroup(ids, ContactsUtils.SCHEME_SMSTO,
                     getString(R.string.menu_sendMessageOption));
         } else if (id == R.id.menu_rename_group) {
-            GroupNameEditDialogFragment.newInstanceForUpdate(
-                    new AccountWithDataSet(mGroupMetaData.accountName,
-                            mGroupMetaData.accountType, mGroupMetaData.dataSet),
-                    GroupUtil.ACTION_UPDATE_GROUP, mGroupMetaData.groupId,
-                    mGroupMetaData.groupName).show(getFragmentManager(),
-                    TAG_GROUP_NAME_EDIT_DIALOG);
+            mActivity.startActivityForResult(
+                    GroupNameEditActivity.Companion.buildEditIntent$app(
+                            getContext(),
+                            mGroupMetaData.groupId,
+                            mGroupMetaData.groupName,
+                            new AccountModel(
+                                    mGroupMetaData.accountName,
+                                    mGroupMetaData.accountType,
+                                    mGroupMetaData.dataSet
+                            ),
+                            PeopleActivity.class,
+                            GroupUtil.ACTION_UPDATE_GROUP
+                    ),
+                    REQUEST_GROUP_NAME_EDIT
+            );
         } else if (id == R.id.menu_delete_group) {
             deleteGroup();
         } else if (id == R.id.menu_edit_group) {
@@ -608,7 +627,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
         mActivity = (PeopleActivity) getActivity();
         mActionBarAdapter = new ActionBarAdapter(mActivity, mActionBarListener,
                 mActivity.getSupportActionBar(), mActivity.getToolbar(),
-                        R.string.enter_contact_name);
+                R.string.enter_contact_name);
         mActionBarAdapter.setShowHomeIcon(true);
         final ContactsRequest contactsRequest = new ContactsRequest();
         contactsRequest.setActionCode(ContactsRequest.ACTION_GROUP);
@@ -857,7 +876,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
 
     public void toastForSaveAction(String action) {
         int id = -1;
-        switch(action) {
+        switch (action) {
             case GroupUtil.ACTION_UPDATE_GROUP:
                 id = R.string.groupUpdatedToast;
                 break;

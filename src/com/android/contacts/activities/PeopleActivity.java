@@ -69,7 +69,6 @@ import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
 import com.android.contacts.editor.ContactEditorFragment;
 import com.android.contacts.group.GroupListItem;
 import com.android.contacts.group.GroupMembersFragment;
-import com.android.contacts.group.GroupNameEditDialogFragment;
 import com.android.contacts.group.GroupUtil;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.list.ContactListFilterController;
@@ -87,6 +86,7 @@ import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.ui.UIIntents;
+import com.android.contacts.ui.group.edit.GroupNameEditActivity;
 import com.android.contacts.ui.interactions.account.SelectAccountActivity;
 import com.android.contacts.ui.settings.SettingsActivity;
 import com.android.contacts.util.AccountFilterUtil;
@@ -129,8 +129,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private static final String TAG_ALL = "contacts-all";
     private static final String TAG_UNAVAILABLE = "contacts-unavailable";
     private static final String TAG_GROUP_VIEW = "contacts-groups";
-    private static final String TAG_GROUP_NAME_EDIT_DIALOG = "groupNameEditDialog";
-
     public static final String TAG_ASSISTANT = "contacts-assistant";
     public static final String TAG_SECOND_LEVEL = "second-level";
     public static final String TAG_THIRD_LEVEL = "third-level";
@@ -143,6 +141,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private static final String KEY_NEW_GROUP_ACCOUNT = "newGroupAccount";
 
     private static final int REQUEST_SELECT_ACCOUNT = 1001;
+    private static final int REQUEST_GROUP_NAME_EDIT = 1002;
 
     private static final long DRAWER_CLOSE_DELAY = 300L;
 
@@ -1199,9 +1198,20 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     private void onAccountChosen(AccountWithDataSet account) {
         mNewGroupAccount = account;
-        GroupNameEditDialogFragment.newInstanceForCreation(
-                        mNewGroupAccount, GroupUtil.ACTION_CREATE_GROUP)
-                .show(getFragmentManager(), TAG_GROUP_NAME_EDIT_DIALOG);
+        AccountModel newGroupAccountModel = new AccountModel(
+                account.name,
+                account.type,
+                account.dataSet
+        );
+        startActivityForResult(
+                GroupNameEditActivity.Companion.buildCreateIntent$app(
+                        this,
+                        newGroupAccountModel,
+                        PeopleActivity.class,
+                        GroupUtil.ACTION_CREATE_GROUP
+                ),
+                REQUEST_GROUP_NAME_EDIT
+        );
     }
 
     // Implementation of DrawerFragmentListener
