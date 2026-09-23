@@ -34,7 +34,7 @@ internal class ClearSeededTestDataImpl @Inject constructor(
                 " = " +
                 "\"${ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE}\"" +
                 " AND " +
-                "${ContactsContract.CommonDataKinds.Phone.NUMBER} LIKE ?",
+                "${ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER} LIKE ?",
             arrayOf("${DebugDataConstants.PHONE_PREFIX}%"),
             null,
         )?.use {

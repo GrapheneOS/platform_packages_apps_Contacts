@@ -8,8 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.StringRes
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
-import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.core.AppTheme
 import com.android.contacts.ui.interactions.account.screen.SelectAccountDialog
@@ -61,7 +61,7 @@ class SelectAccountActivity : ComponentActivity() {
 
         data class Request(
             @param:StringRes val titleResId: Int? = null,
-            val accountFilter: AccountTypeManager.AccountFilter? = null,
+            val accountFilter: AccountFilter? = null,
         )
     }
 
