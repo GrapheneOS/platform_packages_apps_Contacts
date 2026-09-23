@@ -4,9 +4,11 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.UserManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import androidx.core.text.BidiFormatter
 import com.android.contacts.util.concurrent.ContactsExecutors
 import com.android.contacts.util.core.CurrentTimeProvider
 import dagger.Module
@@ -107,5 +109,18 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): SubscriptionManager {
         return context.getSystemService(SubscriptionManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideUserManager(
+        @ApplicationContext context: Context,
+    ): UserManager {
+        return context.getSystemService(UserManager::class.java)
+    }
+
+    @Provides
+    fun provideBidiFormatter(): BidiFormatter {
+        return BidiFormatter.getInstance()
     }
 }

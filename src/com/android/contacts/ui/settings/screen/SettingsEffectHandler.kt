@@ -13,8 +13,8 @@ import android.provider.Settings
 import android.telecom.TelecomManager
 import android.util.Log
 import com.android.contacts.interactions.ExportDialogFragment
-import com.android.contacts.interactions.ImportDialogFragment
 import com.android.contacts.logging.ScreenEvent.ScreenType
+import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.settings.SettingsActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import com.android.contacts.util.ImplicitIntentsUtil
@@ -73,7 +73,7 @@ internal class SettingsEffectHandlerImpl(
     }
 
     private fun showImportDialog() {
-        ImportDialogFragment.show(activity.fragmentManager)
+        startActivity(UIIntents.getImportDialogIntent(activity))
     }
 
     private fun showExportDialog() {
