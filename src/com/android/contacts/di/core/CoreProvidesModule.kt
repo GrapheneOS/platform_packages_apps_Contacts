@@ -123,6 +123,14 @@ internal class CoreProvidesModule {
 
     @Provides
     @Reusable
+    fun provideResources(
+        @ApplicationContext context: Context,
+    ): Resources {
+        return context.resources
+    }
+
+    @Provides
+    @Reusable
     fun provideCurrentTimeProvider(): CurrentTimeProvider {
         return CurrentTimeProvider { System.currentTimeMillis() }
     }
