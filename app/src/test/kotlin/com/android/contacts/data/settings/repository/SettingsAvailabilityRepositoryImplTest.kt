@@ -1,9 +1,11 @@
 package com.android.contacts.data.settings.repository
 
 import android.content.Context
+import android.content.res.Resources
 import android.provider.BlockedNumberContract
 import android.provider.ContactsContract.ProviderStatus
 import android.telephony.TelephonyManager
+import com.android.contacts.R
 import com.android.contacts.compat.TelephonyManagerCompat
 import com.android.contacts.list.ProviderStatusWatcher
 import com.android.contactsbind.HelpUtils
@@ -27,6 +29,7 @@ import org.robolectric.RobolectricTestRunner
 class SettingsAvailabilityRepositoryImplTest {
 
     private val context = mockk<Context>(relaxed = true)
+    private val resources = mockk<Resources>(relaxed = true)
     private val telephonyManager = mockk<TelephonyManager>(relaxed = true)
     private val providerStatusWatcher = mockk<ProviderStatusWatcher>()
 
@@ -42,6 +45,7 @@ class SettingsAvailabilityRepositoryImplTest {
         mockkStatic(TelephonyManagerCompat::class)
         mockkStatic(BlockedNumberContract::class)
         mockkStatic(HelpUtils::class)
+        every { context.resources } returns resources
         every { providerStatusWatcher.providerStatus } returns ProviderStatus.STATUS_NORMAL
         givenBlockedNumbersSupport(isVoiceCapable = true, canBlockNumbers = true)
         every { HelpUtils.isHelpAndFeedbackAvailable() } returns false
@@ -99,6 +103,20 @@ class SettingsAvailabilityRepositoryImplTest {
             every { HelpUtils.isHelpAndFeedbackAvailable() } returns true
 
             assertFalse(repository.getSettingsAvailability().isAboutAvailable)
+        }
+
+    @Test
+    fun getSettingsAvailability_whenAllowImportResourceIsFalse_reportsIsImportAsUnavailable() =
+        runTest {
+            every { resources.getBoolean(R.bool.config_allow_import_from_vcf_file) } returns false
+            assertFalse(repository.getSettingsAvailability().isImportFromVCardAvailable)
+        }
+
+    @Test
+    fun getSettingsAvailability_whenAllowImportResourceIsTrue_reportsIsImportAsAvailable() =
+        runTest {
+            every { resources.getBoolean(R.bool.config_allow_import_from_vcf_file) } returns true
+            assertTrue(repository.getSettingsAvailability().isImportFromVCardAvailable)
         }
 
     private fun givenBlockedNumbersSupport(

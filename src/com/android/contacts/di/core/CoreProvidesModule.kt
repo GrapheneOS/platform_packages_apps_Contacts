@@ -4,9 +4,11 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.UserManager
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
+import androidx.core.text.BidiFormatter
 import com.android.contacts.util.concurrent.ContactsExecutors
 import com.android.contacts.util.core.CurrentTimeProvider
 import dagger.Module
@@ -15,6 +17,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -107,5 +110,24 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): SubscriptionManager {
         return context.getSystemService(SubscriptionManager::class.java)
+    }
+
+    @Provides
+    @Reusable
+    fun provideUserManager(
+        @ApplicationContext context: Context,
+    ): UserManager {
+        return context.getSystemService(UserManager::class.java)
+    }
+
+    @Provides
+    fun provideBidiFormatter(): BidiFormatter {
+        return BidiFormatter.getInstance()
+    }
+
+    @Provides
+    @Reusable
+    fun provideRandom(): Random {
+        return Random
     }
 }

@@ -1,5 +1,7 @@
 package com.android.contacts.di.sim
 
+import com.android.contacts.domain.sim.usecase.CanUserImportFromSim
+import com.android.contacts.domain.sim.usecase.CanUserImportFromSimImpl
 import com.android.contacts.domain.sim.usecase.LoadSimCards
 import com.android.contacts.domain.sim.usecase.LoadSimCardsImpl
 import com.android.contacts.domain.sim.usecase.LoadSimContacts
@@ -15,6 +17,12 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class SimBindsModule {
+
+    @Binds
+    @Reusable
+    abstract fun bindCanUserImportFromSim(
+        impl: CanUserImportFromSimImpl,
+    ): CanUserImportFromSim
 
     @Binds
     @Reusable

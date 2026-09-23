@@ -1,0 +1,90 @@
+package com.android.contacts.domain.debug.usecase
+
+import android.content.ContentResolver
+import android.provider.ContactsContract
+import android.util.Log
+import com.android.contacts.di.core.IoDispatcher
+import com.android.contacts.domain.debug.model.DebugDataConstants
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+
+internal fun interface ClearSeededTestData {
+    suspend operator fun invoke()
+}
+
+internal class ClearSeededTestDataImpl @Inject constructor(
+    private val contentResolver: ContentResolver,
+    @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
+) : ClearSeededTestData {
+    override suspend fun invoke() {
+        withContext(coroutineDispatcher) {
+            clearContacts()
+            clearGroups()
+        }
+    }
+
+    private fun clearContacts() {
+        val rawContactIds = mutableListOf<Int>()
+
+        contentResolver.query(
+            ContactsContract.Data.CONTENT_URI,
+            arrayOf(ContactsContract.Data.RAW_CONTACT_ID),
+            ContactsContract.Data.MIMETYPE +
+                " = " +
+                "\"${ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE}\"" +
+                " AND " +
+                "${ContactsContract.CommonDataKinds.Phone.NUMBER} LIKE ?",
+            arrayOf("${DebugDataConstants.PHONE_PREFIX}%"),
+            null,
+        )?.use {
+            while (it.moveToNext()) {
+                val index = it.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID)
+                if (index != -1) {
+                    rawContactIds.add(it.getInt(index))
+                }
+            }
+        }
+
+        val jointIds = rawContactIds.joinToString(",")
+        val result = contentResolver.delete(
+            ContactsContract.RawContacts.CONTENT_URI,
+            "${ContactsContract.RawContacts._ID} IN ($jointIds)",
+            null,
+        )
+
+        Log.i(TAG, "Cleared $result seeded test contacts")
+    }
+
+    private fun clearGroups() {
+        val groupIds = mutableListOf<Int>()
+
+        contentResolver.query(
+            ContactsContract.Groups.CONTENT_URI,
+            arrayOf(ContactsContract.Groups._ID),
+            "${ContactsContract.Groups.TITLE} LIKE ?",
+            arrayOf("${DebugDataConstants.GROUP_PREFIX}%"),
+            null,
+        )?.use {
+            while (it.moveToNext()) {
+                val index = it.getColumnIndex(ContactsContract.Groups._ID)
+                if (index != -1) {
+                    groupIds.add(it.getInt(index))
+                }
+            }
+        }
+
+        val jointIds = groupIds.joinToString(",")
+        val result = contentResolver.delete(
+            ContactsContract.Groups.CONTENT_URI,
+            "${ContactsContract.Groups._ID} IN ($jointIds)",
+            null,
+        )
+
+        Log.i(TAG, "Cleared $result seeded test groups")
+    }
+
+    private companion object {
+        const val TAG = "ClearSeededTestData"
+    }
+}
