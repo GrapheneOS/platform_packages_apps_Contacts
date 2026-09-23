@@ -550,6 +550,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.group.edit.GroupNameEditActivity"
+            android:theme="@style/Theme.Compose.Dialog"/>
+
         <!-- Service that is exclusively for the Phone application that sends out a view
              notification. This service might be removed in future versions of the app.
 
