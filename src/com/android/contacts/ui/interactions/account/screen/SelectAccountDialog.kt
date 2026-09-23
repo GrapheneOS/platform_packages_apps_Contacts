@@ -41,6 +41,7 @@ import com.android.contacts.ui.interactions.account.screen.model.SelectAccountAc
 import com.android.contacts.ui.interactions.account.screen.model.SelectAccountUiState as State
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_PROGRESS_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -102,7 +103,10 @@ internal fun SelectAccountDialogContent(
                         }
 
                         else -> {
-                            ImportOptionsList(uiState, onAction)
+                            AccountsList(
+                                accounts = uiState.accounts ?: persistentListOf(),
+                                onAccountClick = { onAction(Action.AccountSelected(it)) },
+                            )
                         }
                     }
                 }
@@ -112,23 +116,23 @@ internal fun SelectAccountDialogContent(
 }
 
 @Composable
-private fun ImportOptionsList(
-    uiState: State,
-    onAction: (Action) -> Unit,
+private fun AccountsList(
+    accounts: ImmutableList<AccountUiModel>,
+    onAccountClick: (AccountUiModel) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(1.dp),
         modifier = Modifier.fillMaxWidth(),
     ) {
         itemsIndexed(
-            items = uiState.accounts.orEmpty(),
-            key = { _, account -> "account_${account.hashCode()}" },
+            items = accounts,
+            key = { _, account -> account.account },
         ) { index, account ->
             AccountCell(
                 account = account,
                 isFirst = index == 0,
-                isLast = index == uiState.accounts?.lastIndex,
-                onClick = { onAction(Action.AccountSelected(account)) },
+                isLast = index == accounts.lastIndex,
+                onClick = { onAccountClick(account) },
             )
         }
     }
