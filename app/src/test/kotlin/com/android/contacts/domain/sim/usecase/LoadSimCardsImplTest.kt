@@ -1,10 +1,8 @@
-package com.android.contacts.domain.sim.usercase
+package com.android.contacts.domain.sim.usecase
 
 import android.telephony.SubscriptionManager
 import app.cash.turbine.test
 import com.android.contacts.database.SimContactDao
-import com.android.contacts.domain.sim.usecase.CanUserImportFromSim
-import com.android.contacts.domain.sim.usecase.LoadSimCardsImpl
 import com.android.contacts.model.SimCard
 import com.android.contacts.tests.factory.SimCardFactory
 import io.mockk.every
