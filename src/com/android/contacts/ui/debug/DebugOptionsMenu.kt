@@ -19,11 +19,12 @@ internal class DebugOptionsMenu @Inject constructor(
     private val clearSeededTestData: ClearSeededTestData,
 ) {
     fun show(context: Context) {
-        val optionsLabels = getOptions().map { context.getString(it.titleId) }.toTypedArray()
+        val options = getOptions()
+        val optionsLabels = options.map { context.getString(it.titleId) }.toTypedArray()
         AlertDialog.Builder(context)
             .setItems(optionsLabels) { _, which ->
-                CoroutineScope(Dispatchers.Main).launch {
-                    when (DebugOption.entries[which]) {
+                CoroutineScope(Dispatchers.Main.immediate).launch {
+                    when (options[which]) {
                         DebugOption.ExportDatabase -> exportDatabase()
                         DebugOption.SeedTestData -> seedTestData()
                         DebugOption.ClearSeededTestData -> clearSeededTestData()

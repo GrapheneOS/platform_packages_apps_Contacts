@@ -117,6 +117,7 @@ internal class SaveTestContactImpl @Inject constructor(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
                 )
                 put(ContactsContract.CommonDataKinds.Phone.NUMBER, it.value)
+                put(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER, it.value)
                 put(ContactsContract.CommonDataKinds.Phone.TYPE, it.type)
                 put(ContactsContract.CommonDataKinds.Phone.LABEL, it.label)
             }

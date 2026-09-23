@@ -80,10 +80,12 @@ class SaveTestContactTest {
         assertTrue(
             "Phone operations values do not match contact phones",
             phoneOperations.mapIndexed { index, operation ->
-                val phone = contact.phones[index]
+                val item = contact.phones[index]
+                val phone = item.value
                 val values = operation.values
-                values[ContactsContract.CommonDataKinds.Phone.NUMBER] == phone.value &&
-                    values[ContactsContract.CommonDataKinds.Phone.TYPE] == phone.type
+                values[ContactsContract.CommonDataKinds.Phone.NUMBER] == phone &&
+                    values[ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER] == phone &&
+                    values[ContactsContract.CommonDataKinds.Phone.TYPE] == item.type
             }.all { it },
         )
     }

@@ -7,7 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.android.contacts.R
-import com.android.contacts.model.AccountTypeManager
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.ui.interactions.account.SelectAccountActivity
 import com.android.contacts.ui.vcard.importing.screen.model.ImportVCardAction
 import com.android.contacts.ui.vcard.importing.screen.model.ImportVCardEffect
@@ -49,7 +49,7 @@ internal fun ImportVCardEffects(
                     is ImportVCardEffect.SelectAccount -> {
                         val request = SelectAccountActivity.Contract.Request(
                             titleResId = R.string.dialog_new_contact_account,
-                            accountFilter = AccountTypeManager.AccountFilter.CONTACTS_INSERTABLE,
+                            accountFilter = AccountFilter.CONTACTS_INSERTABLE,
                         )
                         selectAccountLauncher.launch(request)
                     }
