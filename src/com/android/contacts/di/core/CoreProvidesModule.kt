@@ -4,6 +4,7 @@ import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
@@ -86,6 +87,14 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): ContentResolver {
         return context.contentResolver
+    }
+
+    @Provides
+    @Reusable
+    fun provideResources(
+        @ApplicationContext context: Context,
+    ): Resources {
+        return context.resources
     }
 
     @Provides
