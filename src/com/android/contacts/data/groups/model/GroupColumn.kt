@@ -9,5 +9,4 @@ internal data class GroupColumn(
     val accountType: String?,
     val accountDataSet: String?,
     val isReadOnly: Boolean,
-    val isDeleted: Boolean,
 )
