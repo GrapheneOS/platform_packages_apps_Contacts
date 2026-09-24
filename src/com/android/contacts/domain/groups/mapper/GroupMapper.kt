@@ -22,7 +22,6 @@ internal class GroupMapperImpl @Inject constructor() : GroupMapper {
                 dataSet = groupColumn.accountDataSet,
             ).takeIf { !it.isNullAccount },
             isReadOnly = groupColumn.isReadOnly,
-            isDeleted = groupColumn.isDeleted,
         )
     }
 }

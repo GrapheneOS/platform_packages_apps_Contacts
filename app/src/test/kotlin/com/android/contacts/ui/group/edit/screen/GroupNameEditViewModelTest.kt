@@ -7,9 +7,9 @@ import com.android.contacts.domain.groups.model.Group
 import com.android.contacts.domain.groups.usecase.CreateOrEditGroupName
 import com.android.contacts.domain.groups.usecase.GetGroups
 import com.android.contacts.group.GroupUtil
-import com.android.contacts.tests.AccountModelFactory
-import com.android.contacts.tests.GroupFactory
 import com.android.contacts.tests.MainDispatcherRule
+import com.android.contacts.tests.factory.AccountModelFactory
+import com.android.contacts.tests.factory.GroupFactory
 import com.android.contacts.ui.group.edit.GroupNameEditActivity
 import com.android.contacts.ui.group.edit.screen.model.GroupNameEditAction as Action
 import com.android.contacts.ui.group.edit.screen.model.GroupNameEditEffect as Effect
@@ -27,7 +27,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class ContactEditorSpringBoardViewModelTest {
+internal class GroupNameEditViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()

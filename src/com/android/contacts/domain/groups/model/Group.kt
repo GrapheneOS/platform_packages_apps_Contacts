@@ -11,7 +11,6 @@ internal data class Group(
     val systemId: String?,
     val account: AccountModel?,
     val isReadOnly: Boolean,
-    val isDeleted: Boolean,
 ) {
     val isEmptyFFCGroup: Boolean
         get() {
