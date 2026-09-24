@@ -7,7 +7,6 @@ internal data class Group(
     val name: String,
     val summaryCount: Int,
     val systemId: String?,
-    val account: AccountModel?,
+    val account: AccountModel,
     val isReadOnly: Boolean,
-    val isDeleted: Boolean,
 )

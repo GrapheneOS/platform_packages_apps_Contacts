@@ -8,10 +8,10 @@ internal object AccountDisplayModelFactory {
     fun build(
         name: String = "Account",
         type: String? = null,
+        account: AccountModel = AccountModelFactory.build(name = name, type = type),
         iconData: AccountIconData? = null,
         isDeviceAccount: Boolean = true,
         areContactsWritable: Boolean = true,
-        account: AccountModel = AccountModelFactory.build(name = name, type = type),
     ) = AccountDisplayModel(
         account = account,
         name = name,

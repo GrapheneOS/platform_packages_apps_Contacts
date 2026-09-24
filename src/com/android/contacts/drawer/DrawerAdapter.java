@@ -30,7 +30,6 @@ import androidx.annotation.LayoutRes;
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
 import com.android.contacts.domain.debug.usecase.IsDebugEnabled;
-import com.android.contacts.group.GroupListItem;
 import com.android.contacts.list.ContactListFilter;
 import com.android.contacts.model.account.AccountDisplayInfo;
 import com.android.contacts.model.account.AccountDisplayInfoFactory;
@@ -48,14 +47,12 @@ public class DrawerAdapter extends BaseAdapter {
     private static final int VIEW_TYPE_PRIMARY_ITEM = 0;
     private static final int VIEW_TYPE_MISC_ITEM = 1;
     private static final int VIEW_TYPE_HEADER_ITEM = 2;
-    private static final int VIEW_TYPE_GROUP_ENTRY = 3;
-    private static final int VIEW_TYPE_ACCOUNT_ENTRY = 4;
-    private static final int VIEW_TYPE_CREATE_LABEL = 5;
-    private static final int VIEW_TYPE_NAV_SPACER = 6;
-    private static final int VIEW_TYPE_NAV_DIVIDER = 7;
+    private static final int VIEW_TYPE_ACCOUNT_ENTRY = 3;
+    private static final int VIEW_TYPE_NAV_SPACER = 4;
+    private static final int VIEW_TYPE_NAV_DIVIDER = 5;
 
     // This count must be updated if we add more view types.
-    private static final int VIEW_TYPE_COUNT = 9;
+    private static final int VIEW_TYPE_COUNT = 6;
 
     private static final int TYPEFACE_STYLE_ACTIVATE = R.style.DrawerItemTextActiveStyle;
     private static final int TYPEFACE_STYLE_INACTIVE = R.style.DrawerItemTextInactiveStyle;
@@ -63,27 +60,19 @@ public class DrawerAdapter extends BaseAdapter {
     private final Activity mActivity;
     private final LayoutInflater mInflater;
     private ContactsView mSelectedView;
-    private boolean mAreGroupWritableAccountsAvailable;
 
     // The group/account that was last clicked.
-    private long mSelectedGroupId;
     private ContactListFilter mSelectedAccount;
 
     // Adapter elements, ordered in this way mItemsList. The ordering is based on:
     //  [Navigation spacer item]
     //  [Primary items] (Contacts, Suggestions)
-    //  [Group Header]
-    //  [Groups]
-    //  [Create Label button]
     //  [Account Header]
     //  [Accounts]
-    //  [Misc items] (a divider, Settings, Help & Feedback)
+    //  [Misc items] (dividers, Labels, Settings, Help & Feedback)
     //  [Navigation spacer item]
     private NavSpacerItem mNavSpacerItem = null;
     private List<PrimaryItem> mPrimaryItems = new ArrayList<>();
-    private HeaderItem mGroupHeader = null;
-    private List<GroupEntryItem> mGroupEntries = new ArrayList<>();
-    private BaseDrawerItem mCreateLabelButton = null;
     private HeaderItem mAccountHeader = null;
     private List<AccountEntryItem> mAccountEntries = new ArrayList<>();
     private List<BaseDrawerItem> mMiscItems = new ArrayList<>();
@@ -112,14 +101,14 @@ public class DrawerAdapter extends BaseAdapter {
             mPrimaryItems.add(new PrimaryItem(R.id.nav_assistant, R.string.menu_assistant,
                     R.drawable.quantum_ic_assistant_vd_theme_24, ContactsView.ASSISTANT));
         }
-        // Group Header
-        mGroupHeader = new HeaderItem(R.id.nav_groups, R.string.menu_title_groups);
         // Account Header
         mAccountHeader = new HeaderItem(R.id.nav_filters, R.string.menu_title_filters);
-        // Create Label Button
-        mCreateLabelButton = new BaseDrawerItem(VIEW_TYPE_CREATE_LABEL, R.id.nav_create_label,
-                R.string.menu_new_group_action_bar, R.drawable.quantum_ic_add_vd_theme_24);
         // Misc Items
+        mMiscItems.add(new DividerItem());
+        mMiscItems.add(
+                new MiscItem(R.id.nav_groups, R.string.menu_title_groups,
+                        R.drawable.quantum_ic_label_vd_theme_24)
+        );
         mMiscItems.add(new DividerItem());
         mMiscItems.add(new MiscItem(R.id.nav_settings, R.string.menu_settings,
                 R.drawable.quantum_ic_settings_vd_theme_24));
@@ -137,30 +126,12 @@ public class DrawerAdapter extends BaseAdapter {
         mItemsList.clear();
         mItemsList.add(mNavSpacerItem);
         mItemsList.addAll(mPrimaryItems);
-        if (mAreGroupWritableAccountsAvailable || !mGroupEntries.isEmpty()) {
-            mItemsList.add(mGroupHeader);
-        }
-        mItemsList.addAll(mGroupEntries);
-        if (mAreGroupWritableAccountsAvailable) {
-            mItemsList.add(mCreateLabelButton);
-        }
         if (mAccountEntries.size() > 0) {
             mItemsList.add(mAccountHeader);
         }
         mItemsList.addAll(mAccountEntries);
         mItemsList.addAll(mMiscItems);
         mItemsList.add(mNavSpacerItem);
-    }
-
-    public void setGroups(List<GroupListItem> groupListItems, boolean areGroupWritable) {
-        final ArrayList<GroupEntryItem> groupEntries = new ArrayList<GroupEntryItem>();
-        for (GroupListItem group : groupListItems) {
-            groupEntries.add(new GroupEntryItem(R.id.nav_group, group));
-        }
-        mGroupEntries.clear();
-        mGroupEntries.addAll(groupEntries);
-        mAreGroupWritableAccountsAvailable = areGroupWritable;
-        notifyChangeAndRebuildList();
     }
 
     public void setAccounts(List<ContactListFilter> accountFilterItems) {
@@ -203,10 +174,6 @@ public class DrawerAdapter extends BaseAdapter {
                 return getPrimaryItemView((PrimaryItem) drawerItem, view, viewGroup);
             case VIEW_TYPE_HEADER_ITEM:
                 return getHeaderItemView((HeaderItem) drawerItem, view, viewGroup);
-            case VIEW_TYPE_CREATE_LABEL:
-                return getDrawerItemView(drawerItem, view, viewGroup);
-            case VIEW_TYPE_GROUP_ENTRY:
-                return getGroupEntryView((GroupEntryItem) drawerItem, view, viewGroup);
             case VIEW_TYPE_ACCOUNT_ENTRY:
                 return getAccountItemView((AccountEntryItem) drawerItem, view, viewGroup);
             case VIEW_TYPE_MISC_ITEM:
@@ -251,28 +218,6 @@ public class DrawerAdapter extends BaseAdapter {
         final TextView textView = (TextView) result.findViewById(R.id.title);
         textView.setText(item.text);
         result.setId(item.id);
-        return result;
-    }
-
-    private View getGroupEntryView(GroupEntryItem item, View result, ViewGroup parent) {
-        if (result == null || !(result.getTag() instanceof GroupEntryItem)) {
-            result = mInflater.inflate(R.layout.drawer_item, parent, false);
-            result.setId(item.id);
-        }
-
-        final GroupListItem groupListItem = item.group;
-        final TextView title = (TextView) result.findViewById(R.id.title);
-        title.setText(groupListItem.getTitle());
-        final ImageView icon = (ImageView) result.findViewById(R.id.icon);
-        icon.setImageResource(R.drawable.quantum_ic_label_vd_theme_24);
-        final boolean activated = groupListItem.getGroupId() == mSelectedGroupId &&
-                mSelectedView == ContactsView.GROUP_VIEW;
-        updateSelectedStatus(title, icon, activated);
-        result.setActivated(activated);
-
-        result.setTag(groupListItem);
-        result.setContentDescription(
-                mActivity.getString(R.string.navigation_drawer_label, groupListItem.getTitle()));
         return result;
     }
 
@@ -345,19 +290,6 @@ public class DrawerAdapter extends BaseAdapter {
         notifyChangeAndRebuildList();
     }
 
-
-    public void setSelectedGroupId(long groupId) {
-        if (mSelectedGroupId == groupId) {
-            return;
-        }
-        mSelectedGroupId = groupId;
-        notifyChangeAndRebuildList();
-    }
-
-    public long getSelectedGroupId() {
-        return mSelectedGroupId;
-    }
-
     public void setSelectedAccount(ContactListFilter filter) {
         if (mSelectedAccount == filter) {
             return;
@@ -420,16 +352,6 @@ public class DrawerAdapter extends BaseAdapter {
     public static class DividerItem extends BaseDrawerItem {
         public DividerItem() {
             super(VIEW_TYPE_NAV_DIVIDER, /* id */ 0, /* textResId */ 0, /* iconResId */ 0);
-        }
-    }
-
-    // Navigation drawer item for a group.
-    public static class GroupEntryItem extends BaseDrawerItem {
-        private final GroupListItem group;
-
-        public GroupEntryItem(int id, GroupListItem group) {
-            super(VIEW_TYPE_GROUP_ENTRY, id, /* textResId */ 0, /* iconResId */ 0);
-            this.group = group;
         }
     }
 

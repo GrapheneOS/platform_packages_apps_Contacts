@@ -13,5 +13,5 @@ internal data class AccountDisplayModel(
     val type: String? = null,
     val iconData: AccountIconData? = null,
     val isDeviceAccount: Boolean = true,
-    val areContactsWritable: Boolean,
+    val areContactsWritable: Boolean = true,
 ) : Parcelable

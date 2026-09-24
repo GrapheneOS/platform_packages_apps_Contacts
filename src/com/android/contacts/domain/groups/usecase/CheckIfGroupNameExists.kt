@@ -1,6 +1,7 @@
 package com.android.contacts.domain.groups.usecase
 
 import com.android.contacts.domain.accounts.model.AccountModel
+import com.android.contacts.domain.groups.model.GroupFilter
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 
@@ -16,7 +17,7 @@ internal class CheckIfGroupNameExistsImpl @Inject constructor(
         groupName: String,
     ): Boolean {
         val groupNameTrimmed = groupName.trim()
-        val existingGroups = getGroups(account).first().orEmpty()
+        val existingGroups = getGroups(listOf(GroupFilter.ByAccount(account))).first().orEmpty()
         // When "Group" exists, do not save " Group ". This behavior is the same as Google Contacts.
         return existingGroups.any { it.name.trim() == groupNameTrimmed }
     }

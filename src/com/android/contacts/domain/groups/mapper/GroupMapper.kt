@@ -20,9 +20,8 @@ internal class GroupMapperImpl @Inject constructor() : GroupMapper {
                 name = groupColumn.accountName,
                 type = groupColumn.accountType,
                 dataSet = groupColumn.accountDataSet,
-            ).takeIf { !it.isNullAccount },
+            ),
             isReadOnly = groupColumn.isReadOnly,
-            isDeleted = groupColumn.isDeleted,
         )
     }
 }

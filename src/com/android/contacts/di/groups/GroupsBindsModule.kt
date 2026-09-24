@@ -8,6 +8,8 @@ import com.android.contacts.domain.groups.usecase.CheckIfGroupNameExists
 import com.android.contacts.domain.groups.usecase.CheckIfGroupNameExistsImpl
 import com.android.contacts.domain.groups.usecase.GetGroups
 import com.android.contacts.domain.groups.usecase.GetGroupsImpl
+import com.android.contacts.ui.group.list.screen.mapper.GroupsUiMapper
+import com.android.contacts.ui.group.list.screen.mapper.GroupsUiMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -29,6 +31,12 @@ internal abstract class GroupsBindsModule {
     abstract fun bindGroupMapper(
         impl: GroupMapperImpl,
     ): GroupMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindGroupsUiMapper(
+        impl: GroupsUiMapperImpl,
+    ): GroupsUiMapper
 
     @Binds
     @Reusable
