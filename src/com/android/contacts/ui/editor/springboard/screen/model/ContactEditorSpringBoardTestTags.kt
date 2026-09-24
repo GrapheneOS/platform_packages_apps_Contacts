@@ -1,0 +1,10 @@
+package com.android.contacts.ui.editor.springboard.screen.model
+
+internal const val CONTACT_EDITOR_SB_PICK_RAW_CONTACT_TEST_TAG = "contact_editor_sb_pick_to_edit"
+internal const val CONTACT_EDITOR_SB_LINKED_CONTACTS_TEST_TAG = "contact_editor_sb_linked_contacts"
+internal const val CONTACT_EDITOR_SB_ADD_BUTTON_TEST_TAG = "contact_editor_sb_add"
+internal const val CONTACT_EDITOR_SB_UNLINK_BUTTON_TEST_TAG = "contact_editor_sb_unlink"
+internal const val CONTACT_EDITOR_SB_SPLIT_CONFIRMATION_TEST_TAG = "contact_editor_sb_split_dialog"
+internal const val CONTACT_EDITOR_SB_SPLIT_CONFIRM_BUTTON_TEST_TAG = "contact_editor_sb_split_ok"
+internal const val CONTACT_EDITOR_SB_SPLIT_CANCEL_BUTTON_TEST_TAG = "contact_editor_sb_split_cancel"
+internal const val CONTACT_EDITOR_SB_RAW_CONTACT_TEST_TAG_PREFIX = "contact_editor_sb_raw_contact_"
