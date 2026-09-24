@@ -27,7 +27,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class ContactEditorSpringBoardViewModelTest {
+internal class GroupNameEditViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()

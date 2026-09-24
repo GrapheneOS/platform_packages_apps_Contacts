@@ -7,6 +7,8 @@ import android.provider.ContactsContract
 import app.cash.turbine.test
 import com.android.contacts.data.groups.model.GroupColumn
 import com.android.contacts.domain.accounts.model.AccountModel
+import com.android.contacts.domain.groups.model.GroupFilter
+import com.android.contacts.domain.groups.model.GroupSort
 import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
@@ -19,7 +21,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -39,7 +40,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
     fun whenEmptyRows_returnsEmptyList() = runTest {
         givenQueryRows()
 
-        val result = subject.loadGroups(null).first()!!
+        val result = subject.loadGroups().first()!!
 
         assertEquals(emptyList<GroupColumn>(), result)
     }
@@ -56,11 +57,10 @@ internal class LoadRawContactsRepositoryDelegateTest {
                 "Device",
                 null,
                 0,
-                1,
             ),
         )
 
-        val result = subject.loadGroups(null).first()!!
+        val result = subject.loadGroups().first()!!
 
         assertEquals(1, result.size)
         with(result.first()) {
@@ -72,19 +72,18 @@ internal class LoadRawContactsRepositoryDelegateTest {
             assertEquals("Device", accountType)
             assertNull(accountDataSet)
             assertFalse(isReadOnly)
-            assertTrue(isDeleted)
         }
     }
 
     @Test
-    fun withoutAccount_querySelectionIsNull() = runTest {
-        subject.loadGroups(null).first()
+    fun withoutFilters_querySelectionIsJustDeleted() = runTest {
+        subject.loadGroups(filters = emptyList()).first()
 
         verify {
             contentResolver.query(
                 ContactsContract.Groups.CONTENT_SUMMARY_URI,
                 any(),
-                null,
+                "${ContactsContract.Groups.DELETED}=0",
                 null,
                 any(),
             )
@@ -92,23 +91,86 @@ internal class LoadRawContactsRepositoryDelegateTest {
     }
 
     @Test
-    fun withoutAccount_querySelectionUsesNonNullFields() = runTest {
+    fun withAccountFilter_querySelectionUsesNonNullFields() = runTest {
         val account = AccountModel(
             name = null,
             type = "type",
             dataSet = "data_set",
         )
-        subject.loadGroups(account).first()
+        subject.loadGroups(filters = listOf(GroupFilter.ByAccount(account))).first()
 
         verify {
             contentResolver.query(
                 ContactsContract.Groups.CONTENT_SUMMARY_URI,
                 any(),
                 "${ContactsContract.Groups.ACCOUNT_NAME} IS NULL AND " +
-                    "${ContactsContract.Groups.ACCOUNT_TYPE} =? AND " +
-                    "${ContactsContract.Groups.DATA_SET} =?",
+                    "${ContactsContract.Groups.ACCOUNT_TYPE}=? AND " +
+                    "${ContactsContract.Groups.DATA_SET}=? AND " +
+                    "${ContactsContract.Groups.DELETED}=0",
                 arrayOf("type", "data_set"),
                 any(),
+            )
+        }
+    }
+
+    @Test
+    fun withAutoAddFilter_querySelection() = runTest {
+        subject.loadGroups(filters = listOf(GroupFilter.AutoAdd(true))).first()
+
+        verify {
+            contentResolver.query(
+                ContactsContract.Groups.CONTENT_SUMMARY_URI,
+                any(),
+                "${ContactsContract.Groups.AUTO_ADD}=1 AND " +
+                    "${ContactsContract.Groups.DELETED}=0",
+                null,
+                any(),
+            )
+        }
+    }
+
+    @Test
+    fun withFavoriteFilter_querySelection() = runTest {
+        subject.loadGroups(filters = listOf(GroupFilter.Favorites(false))).first()
+
+        verify {
+            contentResolver.query(
+                ContactsContract.Groups.CONTENT_SUMMARY_URI,
+                any(),
+                "${ContactsContract.Groups.FAVORITES}=0 AND " +
+                    "${ContactsContract.Groups.DELETED}=0",
+                null,
+                any(),
+            )
+        }
+    }
+
+    @Test
+    fun withSortUndefined_sortOrderIsNull() = runTest {
+        subject.loadGroups(sort = GroupSort.UNDEFINED).first()
+
+        verify {
+            contentResolver.query(
+                ContactsContract.Groups.CONTENT_SUMMARY_URI,
+                any(),
+                any(),
+                null,
+                null,
+            )
+        }
+    }
+
+    @Test
+    fun withSortByTitle_sortOrderIsTitleAsc() = runTest {
+        subject.loadGroups(sort = GroupSort.BY_TITLE).first()
+
+        verify {
+            contentResolver.query(
+                ContactsContract.Groups.CONTENT_SUMMARY_URI,
+                any(),
+                any(),
+                null,
+                "${ContactsContract.Groups.TITLE} COLLATE LOCALIZED ASC",
             )
         }
     }
@@ -117,7 +179,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
     fun whenObserverTriggers_loadsDataAgain() = runTest {
         val observerSlot = givenRegisteredContentObserver()
 
-        subject.loadGroups(null).test {
+        subject.loadGroups().test {
             awaitItem()
             observerSlot.captured.onChange(false)
             awaitItem()

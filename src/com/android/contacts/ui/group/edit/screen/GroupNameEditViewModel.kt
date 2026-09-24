@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.contacts.domain.accounts.model.AccountModel
+import com.android.contacts.domain.groups.model.GroupFilter
 import com.android.contacts.domain.groups.usecase.CreateOrEditGroupName
 import com.android.contacts.domain.groups.usecase.GetGroupNameMaxLenght
 import com.android.contacts.domain.groups.usecase.GetGroups
@@ -74,7 +75,10 @@ internal class GroupNameEditViewModel @Inject constructor(
             emitEffect(Effect.Close(isSuccessful = false))
         }
 
-        getGroups(account)
+        val groupFilters = listOfNotNull(
+            account?.let { GroupFilter.ByAccount(it) }
+        )
+        getGroups(filters = groupFilters)
             .onEach { groups ->
                 if (groups == null) return@onEach
                 existingGroupNames = groups.map { it.name }

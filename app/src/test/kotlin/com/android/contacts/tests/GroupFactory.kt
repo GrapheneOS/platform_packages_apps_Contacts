@@ -11,7 +11,6 @@ internal object GroupFactory {
         systemId: String? = null,
         account: AccountModel? = null,
         isReadOnly: Boolean = false,
-        isDeleted: Boolean = false,
     ) = Group(
         id = id,
         name = name,
@@ -19,6 +18,5 @@ internal object GroupFactory {
         systemId = systemId,
         account = account,
         isReadOnly = isReadOnly,
-        isDeleted = isDeleted,
     )
 }

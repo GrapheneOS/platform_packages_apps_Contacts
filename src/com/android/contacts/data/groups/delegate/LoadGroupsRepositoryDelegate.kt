@@ -5,7 +5,8 @@ import android.database.Cursor
 import android.provider.ContactsContract
 import com.android.contacts.data.groups.model.GroupColumn
 import com.android.contacts.di.core.IoDispatcher
-import com.android.contacts.domain.accounts.model.AccountModel
+import com.android.contacts.domain.groups.model.GroupFilter
+import com.android.contacts.domain.groups.model.GroupSort
 import com.android.contacts.util.core.observeContentUri
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.map
 
 internal interface LoadGroupsRepositoryDelegate {
     fun loadGroups(
-        account: AccountModel?,
+        filters: List<GroupFilter> = emptyList(),
+        sort: GroupSort = GroupSort.UNDEFINED,
     ): Flow<List<GroupColumn>?>
 }
 
@@ -23,19 +25,25 @@ internal class LoadGroupsRepositoryDelegateImpl @Inject constructor(
     private val contentResolver: ContentResolver,
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : LoadGroupsRepositoryDelegate {
-    override fun loadGroups(account: AccountModel?): Flow<List<GroupColumn>?> {
+    override fun loadGroups(
+        filters: List<GroupFilter>,
+        sort: GroupSort,
+    ): Flow<List<GroupColumn>?> {
         return observeContentUri(contentResolver, ContactsContract.Groups.CONTENT_SUMMARY_URI)
-            .map { load(account) }
+            .map { load(filters, sort) }
             .flowOn(coroutineDispatcher)
     }
 
-    private fun load(account: AccountModel?): List<GroupColumn>? {
+    private fun load(
+        filters: List<GroupFilter>,
+        sort: GroupSort,
+    ): List<GroupColumn>? {
         return contentResolver.query(
             ContactsContract.Groups.CONTENT_SUMMARY_URI,
             GROUP_PROJECTION,
-            selection(account),
-            selectionArgs(account),
-            null,
+            selection(filters),
+            selectionArgs(filters),
+            sortOrder(sort),
         )?.use { cursor ->
             buildList {
                 while (cursor.moveToNext()) {
@@ -45,27 +53,58 @@ internal class LoadGroupsRepositoryDelegateImpl @Inject constructor(
         }
     }
 
-    private fun selection(account: AccountModel?): String? {
-        if (account == null) return null
-
-        fun comparisonFor(field: String?): String {
+    private fun selection(filters: List<GroupFilter>): String {
+        fun comparisonFor(value: String?): String {
             return when {
-                field == null -> "IS NULL"
+                value == null -> " IS NULL"
                 else -> "=?"
             }
         }
 
-        return listOf(
-            "${ContactsContract.Groups.ACCOUNT_NAME} ${comparisonFor(account.name)}",
-            "${ContactsContract.Groups.ACCOUNT_TYPE} ${comparisonFor(account.type)}",
-            "${ContactsContract.Groups.DATA_SET} ${comparisonFor(account.dataSet)}",
-        ).joinToString(" AND ")
+        fun comparisonFor(value: Boolean): String {
+            return "=" + if (value) "1" else "0"
+        }
+
+        return buildList {
+            filters.forEach { filter ->
+                when (filter) {
+                    is GroupFilter.AutoAdd -> {
+                        add("${ContactsContract.Groups.AUTO_ADD}${comparisonFor(filter.value)}")
+                    }
+                    is GroupFilter.ByAccount -> {
+                        val account = filter.account
+                        add("${ContactsContract.Groups.ACCOUNT_NAME}${comparisonFor(account.name)}")
+                        add("${ContactsContract.Groups.ACCOUNT_TYPE}${comparisonFor(account.type)}")
+                        add("${ContactsContract.Groups.DATA_SET}${comparisonFor(account.dataSet)}")
+                    }
+                    is GroupFilter.Favorites -> {
+                        add("${ContactsContract.Groups.FAVORITES}${comparisonFor(filter.value)}")
+                    }
+                }
+            }
+            add("${ContactsContract.Groups.DELETED}=0")
+        }.joinToString(" AND ")
     }
 
-    private fun selectionArgs(account: AccountModel?): Array<String>? {
-        if (account == null) return null
-        return listOfNotNull(account.name, account.type, account.dataSet)
-            .toTypedArray()
+    private fun selectionArgs(filters: List<GroupFilter>): Array<String>? {
+        return filters.flatMap { filter ->
+            when (filter) {
+                is GroupFilter.AutoAdd -> emptyList()
+                is GroupFilter.ByAccount -> listOfNotNull(
+                    filter.account.name,
+                    filter.account.type,
+                    filter.account.dataSet,
+                )
+                is GroupFilter.Favorites -> emptyList()
+            }
+        }.toTypedArray().takeIf { it.isNotEmpty() }
+    }
+
+    private fun sortOrder(sort: GroupSort): String? {
+        return when (sort) {
+            GroupSort.UNDEFINED -> null
+            GroupSort.BY_TITLE -> "${ContactsContract.Groups.TITLE} COLLATE LOCALIZED ASC"
+        }
     }
 
     private fun buildGroupColumn(cursor: Cursor): GroupColumn? {
@@ -78,7 +117,6 @@ internal class LoadGroupsRepositoryDelegateImpl @Inject constructor(
             accountType = cursor.getString(GROUP_ACCOUNT_TYPE),
             accountDataSet = cursor.getString(GROUP_ACCOUNT_DATA_SET),
             isReadOnly = cursor.getInt(GROUP_IS_READ_ONLY) == 1,
-            isDeleted = cursor.getInt(GROUP_DELETED) == 1,
         )
     }
 
@@ -92,7 +130,6 @@ internal class LoadGroupsRepositoryDelegateImpl @Inject constructor(
             ContactsContract.Groups.ACCOUNT_TYPE,
             ContactsContract.Groups.DATA_SET,
             ContactsContract.Groups.GROUP_IS_READ_ONLY,
-            ContactsContract.Groups.DELETED,
         )
         private const val GROUP_ID = 0
         private const val GROUP_TITLE = 1
@@ -102,6 +139,5 @@ internal class LoadGroupsRepositoryDelegateImpl @Inject constructor(
         private const val GROUP_ACCOUNT_TYPE = 5
         private const val GROUP_ACCOUNT_DATA_SET = 6
         private const val GROUP_IS_READ_ONLY = 7
-        private const val GROUP_DELETED = 8
     }
 }

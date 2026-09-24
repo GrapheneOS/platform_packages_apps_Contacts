@@ -29,7 +29,6 @@ import android.provider.ContactsContract.Groups;
 import android.text.TextUtils;
 
 import com.android.contacts.ContactsUtils;
-import com.android.contacts.GroupListLoader;
 import com.android.contacts.activities.ContactSelectionActivity;
 import com.android.contacts.list.ContactsSectionIndexer;
 import com.android.contacts.list.UiIntentActions;
@@ -65,41 +64,6 @@ public final class GroupUtil {
             new HashSet(Arrays.asList("Friends", "Family", "Coworkers"));
 
     private GroupUtil() {
-    }
-
-    /** Returns a {@link GroupListItem} read from the given cursor and position. */
-    public static GroupListItem getGroupListItem(Cursor cursor, int position) {
-        if (cursor == null || cursor.isClosed() || !cursor.moveToPosition(position)) {
-            return null;
-        }
-        String accountName = cursor.getString(GroupListLoader.ACCOUNT_NAME);
-        String accountType = cursor.getString(GroupListLoader.ACCOUNT_TYPE);
-        String dataSet = cursor.getString(GroupListLoader.DATA_SET);
-        long groupId = cursor.getLong(GroupListLoader.GROUP_ID);
-        String title = cursor.getString(GroupListLoader.TITLE);
-        int memberCount = cursor.getInt(GroupListLoader.MEMBER_COUNT);
-        boolean isReadOnly = cursor.getInt(GroupListLoader.IS_READ_ONLY) == 1;
-        String systemId = cursor.getString(GroupListLoader.SYSTEM_ID);
-
-        // Figure out if this is the first group for this account name / account type pair by
-        // checking the previous entry. This is to determine whether or not we need to display an
-        // account header in this item.
-        int previousIndex = position - 1;
-        boolean isFirstGroupInAccount = true;
-        if (previousIndex >= 0 && cursor.moveToPosition(previousIndex)) {
-            String previousGroupAccountName = cursor.getString(GroupListLoader.ACCOUNT_NAME);
-            String previousGroupAccountType = cursor.getString(GroupListLoader.ACCOUNT_TYPE);
-            String previousGroupDataSet = cursor.getString(GroupListLoader.DATA_SET);
-
-            if (TextUtils.equals(accountName, previousGroupAccountName)
-                    && TextUtils.equals(accountType, previousGroupAccountType)
-                    && TextUtils.equals(dataSet, previousGroupDataSet)) {
-                isFirstGroupInAccount = false;
-            }
-        }
-
-        return new GroupListItem(accountName, accountType, dataSet, groupId, title,
-                isFirstGroupInAccount, memberCount, isReadOnly, systemId);
     }
 
     public static List<String> getSendToDataForIds(Context context, long[] ids, String scheme) {
@@ -200,16 +164,6 @@ public final class GroupUtil {
             }
         }
         return result;
-    }
-
-    /**
-     * Returns true if it's an empty and read-only group and the system ID of
-     * the group is one of "Friends", "Family" and "Coworkers".
-     */
-    public static boolean isEmptyFFCGroup(GroupListItem groupListItem) {
-        return groupListItem.isReadOnly()
-                && isSystemIdFFC(groupListItem.getSystemId())
-                && (groupListItem.getMemberCount() <= 0);
     }
 
     public static boolean isSystemIdFFC(String systemId) {

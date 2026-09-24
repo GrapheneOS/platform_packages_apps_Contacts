@@ -18,9 +18,11 @@ import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.simimport.screen.SimImportViewModel
 import com.android.contacts.ui.simimport.screen.mapper.AccountUiModelMapperImpl
 import com.android.contacts.ui.simimport.screen.mapper.SimContactUiModelMapperImpl
+import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 import com.android.contacts.ui.simimport.screen.model.SimImportAction as Action
 import com.android.contacts.ui.simimport.screen.model.SimImportEffect as Effect
 import com.android.contacts.ui.simimport.screen.model.SimImportUiState as State
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.collections.immutable.persistentListOf
@@ -44,8 +46,19 @@ class SimImportViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    // Not mocking mappers since they hold no logic
-    private val accountUiModelMapper = AccountUiModelMapperImpl()
+    private val accountUiModelMapper = mockk<AccountUiModelMapperImpl>(relaxed = true) {
+        every { map(any<AccountDisplayModel>()) } answers {
+            val accountDisplayModel = arg<AccountDisplayModel>(0)
+            AccountUiModel(
+                account = accountDisplayModel.account,
+                name = accountDisplayModel.name,
+                type = accountDisplayModel.type,
+                iconData = accountDisplayModel.iconData,
+            )
+        }
+    }
+
+    // Not mocking SimContactUiModelMapper since it holds no logic
     private val simContactUiModelMapper = SimContactUiModelMapperImpl()
 
     @Test

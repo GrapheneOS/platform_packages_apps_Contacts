@@ -56,20 +56,14 @@
     <!-- Menu ID for Suggestions menu -->
     <item type="id" name="nav_assistant" />
 
-    <!-- Menu ID for group header -->
-    <item type="id" name="nav_groups" />
-
-    <!-- Menu ID for each group menu item -->
-    <item type="id" name="nav_group" />
-
-    <!-- Menu ID for create label menu item -->
-    <item type="id" name="nav_create_label" />
-
     <!-- Menu ID for filter header -->
     <item type="id" name="nav_filters" />
 
     <!-- Menu ID for each filter menu item -->
     <item type="id" name="nav_filter" />
+
+    <!-- Menu ID for Labels menu -->
+    <item type="id" name="nav_groups" />
 
     <!-- Menu ID for Settings menu -->
     <item type="id" name="nav_settings" />

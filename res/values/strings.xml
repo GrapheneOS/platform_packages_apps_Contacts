@@ -13,8 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Application name used in Settings/Apps. Default label for activities
          that don't specify a label. -->
@@ -390,6 +389,15 @@
 
     <!-- Hint for the custom label name input filed on dialogs [CHAR LIMIT=15] -->
     <string name="label_name_dialog_hint">Label name</string>
+
+    <!-- Message shown when the groups dialog is displayed but there are no accounts -->
+    <string name="groups_empty_accounts_message">No accounts available</string>
+
+    <!-- Message shown when the groups dialog wants to display groups that do not belong to an account -->
+    <string name="group_without_account">(no account)</string>
+
+    <!-- Content description for new group button for a specific account -->
+    <string name="new_group_content_description">Create label for %1$s</string>
 
     <!-- Generic action string for starting an audio chat. Used by AccessibilityService to announce the purpose of the view. [CHAR LIMIT=NONE] -->
     <string name="audio_chat">Voice chat</string>
