@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
+import androidx.annotation.VisibleForTesting
 import com.android.contacts.data.contacts.model.RawContact
 import com.android.contacts.data.contacts.model.RawContactsMetadata
 import com.android.contacts.di.core.IoDispatcher
@@ -149,14 +150,16 @@ internal class LoadRawContactsRepositoryDelegateImpl @Inject constructor(
     )
 
     companion object {
-        private val PROFILE_PROJECTION = arrayOf(
+        @VisibleForTesting
+        val PROFILE_PROJECTION = arrayOf(
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.IS_USER_PROFILE,
         )
         private const val CONTACT_ID = 0
         private const val IS_USER_PROFILE = 1
 
-        private val RAW_CONTACT_PROJECTION = arrayOf(
+        @VisibleForTesting
+        val RAW_CONTACT_PROJECTION = arrayOf(
             ContactsContract.RawContacts._ID,
             ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY,
             ContactsContract.RawContacts.DISPLAY_NAME_ALTERNATIVE,
@@ -165,7 +168,8 @@ internal class LoadRawContactsRepositoryDelegateImpl @Inject constructor(
             ContactsContract.RawContacts.DATA_SET,
         )
 
-        private const val RAW_CONTACT_SELECTION =
+        @VisibleForTesting
+        const val RAW_CONTACT_SELECTION =
             ContactsContract.RawContacts.CONTACT_ID + "=?"
 
         private const val RAW_CONTACT_ID = 0
@@ -175,12 +179,16 @@ internal class LoadRawContactsRepositoryDelegateImpl @Inject constructor(
         private const val ACCOUNT_TYPE = 4
         private const val DATA_SET = 5
 
-        private const val PHOTO_SELECTION_PREFIX =
+        @VisibleForTesting
+        const val PHOTO_SELECTION_PREFIX =
             ContactsContract.Data.RAW_CONTACT_ID + " IN ("
-        private const val PHOTO_SELECTION_SUFFIX =
+
+        @VisibleForTesting
+        const val PHOTO_SELECTION_SUFFIX =
             ") AND ${ContactsContract.Data.MIMETYPE}=\"${ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE}\""
 
-        private val PHOTO_PROJECTION = arrayOf(
+        @VisibleForTesting
+        val PHOTO_PROJECTION = arrayOf(
             ContactsContract.Data.RAW_CONTACT_ID,
             ContactsContract.Contacts.Photo._ID,
         )
