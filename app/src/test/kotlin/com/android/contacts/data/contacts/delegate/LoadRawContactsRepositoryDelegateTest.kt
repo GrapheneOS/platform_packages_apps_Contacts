@@ -49,13 +49,90 @@ internal class LoadRawContactsRepositoryDelegateTest {
     }
 
     @Test
-    fun withContactUri_doesNotThrowException() = runTest {
+    fun withContactUri_runsCorrectQueries() = runTest {
+        val rawContactId = 1L
+        givenQueryRows(CONTACT_URI, arrayOf(rawContactId, 0))
+        givenQueryRows(
+            ContactsContract.RawContacts.CONTENT_URI,
+            arrayOf(rawContactId, "Person", "Person Alt", "Account", "Device", null),
+        )
+
         subject.loadRawContacts(CONTACT_URI).first()
+
+        verify {
+            contentResolver.query(
+                CONTACT_URI,
+                LoadRawContactsRepositoryDelegateImpl.PROFILE_PROJECTION,
+                null,
+                null,
+                null,
+            )
+        }
+        verify {
+            contentResolver.query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                LoadRawContactsRepositoryDelegateImpl.RAW_CONTACT_PROJECTION,
+                LoadRawContactsRepositoryDelegateImpl.RAW_CONTACT_SELECTION,
+                arrayOf(rawContactId.toString()),
+                null,
+            )
+        }
+        verify {
+            contentResolver.query(
+                ContactsContract.Data.CONTENT_URI,
+                LoadRawContactsRepositoryDelegateImpl.PHOTO_PROJECTION,
+                LoadRawContactsRepositoryDelegateImpl.PHOTO_SELECTION_PREFIX +
+                    rawContactId +
+                    LoadRawContactsRepositoryDelegateImpl.PHOTO_SELECTION_SUFFIX,
+                null,
+                null,
+            )
+        }
     }
 
     @Test
-    fun withProfileUri_doesNotThrowException() = runTest {
+    fun withProfileUri_runsCorrectQueries() = runTest {
+        val rawContactId = 1L
+        givenQueryRows(PROFILE_URI, arrayOf(rawContactId, 1))
+        givenQueryRows(
+            ContactsContract.Profile.CONTENT_RAW_CONTACTS_URI,
+            arrayOf(rawContactId, "Person", "Person Alt", "Account", "Device", null),
+        )
+
         subject.loadRawContacts(PROFILE_URI).first()
+
+        verify {
+            contentResolver.query(
+                PROFILE_URI,
+                LoadRawContactsRepositoryDelegateImpl.PROFILE_PROJECTION,
+                null,
+                null,
+                null,
+            )
+        }
+        verify {
+            contentResolver.query(
+                ContactsContract.Profile.CONTENT_RAW_CONTACTS_URI,
+                LoadRawContactsRepositoryDelegateImpl.RAW_CONTACT_PROJECTION,
+                LoadRawContactsRepositoryDelegateImpl.RAW_CONTACT_SELECTION,
+                arrayOf(rawContactId.toString()),
+                null,
+            )
+        }
+        verify {
+            contentResolver.query(
+                Uri.withAppendedPath(
+                    ContactsContract.Profile.CONTENT_URI,
+                    ContactsContract.Data.CONTENT_URI.path,
+                ),
+                LoadRawContactsRepositoryDelegateImpl.PHOTO_PROJECTION,
+                LoadRawContactsRepositoryDelegateImpl.PHOTO_SELECTION_PREFIX +
+                    rawContactId +
+                    LoadRawContactsRepositoryDelegateImpl.PHOTO_SELECTION_SUFFIX,
+                null,
+                null,
+            )
+        }
     }
 
     @Test
@@ -71,9 +148,9 @@ internal class LoadRawContactsRepositoryDelegateTest {
         givenQueryRows(CONTACT_URI)
         assertNull(subject.loadRawContacts(CONTACT_URI).first())
 
-        verifyQuery(CONTACT_URI)
-        verifyQuery(ContactsContract.RawContacts.CONTENT_URI, exactly = 0)
-        verifyQuery(ContactsContract.Data.CONTENT_URI, exactly = 0)
+        verifyQueryByUri(CONTACT_URI)
+        verifyQueryByUri(ContactsContract.RawContacts.CONTENT_URI, exactly = 0)
+        verifyQueryByUri(ContactsContract.Data.CONTENT_URI, exactly = 0)
     }
 
     @Test
@@ -82,9 +159,9 @@ internal class LoadRawContactsRepositoryDelegateTest {
         givenQueryRows(ContactsContract.RawContacts.CONTENT_URI)
         assertNull(subject.loadRawContacts(CONTACT_URI).first())
 
-        verifyQuery(CONTACT_URI)
-        verifyQuery(ContactsContract.RawContacts.CONTENT_URI)
-        verifyQuery(ContactsContract.Data.CONTENT_URI, exactly = 0)
+        verifyQueryByUri(CONTACT_URI)
+        verifyQueryByUri(ContactsContract.RawContacts.CONTENT_URI)
+        verifyQueryByUri(ContactsContract.Data.CONTENT_URI, exactly = 0)
     }
 
     @Test
@@ -165,7 +242,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
             cancelAndIgnoreRemainingEvents()
         }
 
-        verifyQuery(CONTACT_URI, exactly = 2)
+        verifyQueryByUri(CONTACT_URI, exactly = 2)
     }
 
     private fun givenRegisteredContentObserver(): CapturingSlot<ContentObserver> {
@@ -197,10 +274,11 @@ internal class LoadRawContactsRepositoryDelegateTest {
         }
     }
 
-    private fun verifyQuery(uri: Uri, exactly: Int = 1) {
-        verify(exactly = exactly) {
-            contentResolver.query(uri, any(), any(), any(), any())
-        }
+    private fun verifyQueryByUri(
+        uri: Uri,
+        exactly: Int = 1,
+    ) {
+        verify(exactly = exactly) { contentResolver.query(uri, any(), any(), any(), any()) }
     }
 
     private companion object {
