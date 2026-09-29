@@ -1,4 +1,4 @@
-package com.android.contacts.data.contacts.repository
+package com.android.contacts.data.contacts.delegate
 
 import android.content.ContentResolver
 import android.database.ContentObserver
@@ -6,8 +6,6 @@ import android.database.MatrixCursor
 import android.net.Uri
 import android.provider.ContactsContract
 import app.cash.turbine.test
-import com.android.contacts.data.contacts.delegate.LoadRawContactsRepositoryDelegate
-import com.android.contacts.data.contacts.delegate.LoadRawContactsRepositoryDelegateImpl
 import com.android.contacts.data.contacts.model.ContactLookupQuery
 import com.android.contacts.data.contacts.model.ContactLookupResult
 import io.mockk.CapturingSlot
@@ -28,16 +26,13 @@ import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-class ContactsRepositoryImplTest {
+class LookupContactsRepositoryDelegateTest {
 
     private val contentResolver = mockk<ContentResolver>(relaxed = true)
-    private val loadRawContactsRepositoryDelegateImpl =
-        mockk<LoadRawContactsRepositoryDelegateImpl>(relaxed = true)
     private val uriSlot = slot<Uri>()
     private val projectionSlot = slot<Array<String>>()
 
-    private val repository = ContactsRepositoryImpl(
-        loadRawContactsRepositoryDelegateImpl = loadRawContactsRepositoryDelegateImpl,
+    private val subject = LookupContactsRepositoryDelegateImpl(
         contentResolver = contentResolver,
         ioDispatcher = UnconfinedTestDispatcher(),
     )
@@ -49,7 +44,7 @@ class ContactsRepositoryImplTest {
             resultRow(2L, "2"),
         )
 
-        repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
+        subject.lookup(ContactLookupQuery.Email("user@example.org")).test {
             assertEquals(
                 listOf(
                     ContactLookupResult(
@@ -75,7 +70,7 @@ class ContactsRepositoryImplTest {
             resultRow(2L, null),
         )
 
-        repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
+        subject.lookup(ContactLookupQuery.Email("user@example.org")).test {
             assertTrue(awaitItem()!!.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
@@ -85,7 +80,7 @@ class ContactsRepositoryImplTest {
     fun lookup_whenNoContactMatches_emitsResult() = runTest {
         givenQueryRows()
 
-        repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
+        subject.lookup(ContactLookupQuery.Email("user@example.org")).test {
             assertTrue(awaitItem()!!.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
@@ -96,7 +91,7 @@ class ContactsRepositoryImplTest {
         givenQueryRows()
         val email = "user@example.org"
 
-        repository.lookup(ContactLookupQuery.Email(email)).first()
+        subject.lookup(ContactLookupQuery.Email(email)).first()
 
         assertEquals(
             Uri.withAppendedPath(
@@ -119,7 +114,7 @@ class ContactsRepositoryImplTest {
         givenQueryRows()
         val phone = "123456789"
 
-        repository.lookup(ContactLookupQuery.Phone(phone)).first()
+        subject.lookup(ContactLookupQuery.Phone(phone)).first()
 
         assertEquals(
             Uri.withAppendedPath(
@@ -142,7 +137,7 @@ class ContactsRepositoryImplTest {
         val observerSlot = givenRegisteredContentObserver()
         givenQueryRows(resultRow(1L, "1"))
 
-        repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
+        subject.lookup(ContactLookupQuery.Email("user@example.org")).test {
             assertEquals(1L, awaitItem()!!.first().id)
 
             givenQueryRows(resultRow(2L, "2"))
@@ -157,7 +152,7 @@ class ContactsRepositoryImplTest {
     fun lookup_whenCollectionStops_unregistersObserver() = runTest {
         val observerSlot = givenRegisteredContentObserver()
 
-        repository.lookup(ContactLookupQuery.Email("user@example.org")).test {
+        subject.lookup(ContactLookupQuery.Email("user@example.org")).test {
             awaitItem()
             cancelAndIgnoreRemainingEvents()
         }
