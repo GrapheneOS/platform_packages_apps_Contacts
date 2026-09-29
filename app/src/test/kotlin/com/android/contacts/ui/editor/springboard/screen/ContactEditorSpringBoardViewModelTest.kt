@@ -302,14 +302,12 @@ internal class ContactEditorSpringBoardViewModelTest {
     private fun createViewModel(
         uri: Uri? = "content://contact/1".toUri(),
         showReadOnly: Boolean? = null,
-        result: RawContactsResult? = null,
     ): ContactEditorSpringBoardScreenModel {
         return ContactEditorSpringBoardViewModel(
             savedStateHandle = SavedStateHandle(
                 mapOf(
                     EXTRA_URI to uri,
                     EXTRA_SHOW_READ_ONLY to showReadOnly,
-                    ContactEditorSpringBoardViewModel.KEY_RESULT to result,
                 ),
             ),
             getUriType = getUriType,

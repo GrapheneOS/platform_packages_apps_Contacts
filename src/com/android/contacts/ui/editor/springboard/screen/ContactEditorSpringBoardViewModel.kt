@@ -1,10 +1,8 @@
 package com.android.contacts.ui.editor.springboard.screen
 
-import android.content.ContentUris
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,7 +18,6 @@ import com.android.contacts.ui.editor.springboard.screen.model.ContactEditorSpri
 import com.android.contacts.ui.editor.springboard.screen.model.ContactEditorSpringBoardUiState as State
 import com.android.contacts.ui.editor.springboard.screen.model.RawContactUiModel
 import com.android.contacts.util.core.GetUriType
-import com.google.i18n.phonenumbers.NumberParseException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
@@ -58,12 +55,7 @@ internal class ContactEditorSpringBoardViewModel @Inject constructor(
 
     private val uri: Uri? = savedStateHandle[EXTRA_URI] as? Uri
     private val showReadOnly: Boolean = savedStateHandle.get<Boolean>(EXTRA_SHOW_READ_ONLY) == true
-
-    private var result: RawContactsResult?
-        get() = savedStateHandle[KEY_RESULT]
-        set(value) {
-            savedStateHandle[KEY_RESULT] = value
-        }
+    private var result: RawContactsResult? = null
 
     init {
         if (uri != null) {
@@ -139,11 +131,10 @@ internal class ContactEditorSpringBoardViewModel @Inject constructor(
     }
 
     private suspend fun handleContactOrProfileUri(uri: Uri) {
-        val result = this.result
-            ?: loadRawContacts(
-                contactUri = uri,
-                onlyWritable = !showReadOnly,
-            ).first()
+        val result = loadRawContacts(
+            contactUri = uri,
+            onlyWritable = !showReadOnly,
+        ).first()
         this.result = result
 
         if (result == null) {
@@ -223,8 +214,5 @@ internal class ContactEditorSpringBoardViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "ContactEditorSpringBoardViewModel"
-
-        @VisibleForTesting
-        const val KEY_RESULT = "result"
     }
 }
