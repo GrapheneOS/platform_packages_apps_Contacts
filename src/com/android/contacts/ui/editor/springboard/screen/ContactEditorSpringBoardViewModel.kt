@@ -132,10 +132,8 @@ internal class ContactEditorSpringBoardViewModel @Inject constructor(
     }
 
     private fun parseContentUriId(uri: Uri): Long? {
-        return try {
-            ContentUris.parseId(uri).takeIf { it != -1L }
-        } catch (e: NumberParseException) {
-            Log.w(TAG, "Could not parse ContentUri ID", e)
+        return uri.lastPathSegment?.toLongOrNull() ?: run {
+            Log.w(TAG, "Could not parse ContentUri ID for $uri")
             null
         }
     }
