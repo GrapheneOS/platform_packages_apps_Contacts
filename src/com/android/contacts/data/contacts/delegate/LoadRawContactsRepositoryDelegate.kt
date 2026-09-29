@@ -124,19 +124,19 @@ internal class LoadRawContactsRepositoryDelegateImpl @Inject constructor(
             null,
         )?.use { cursor ->
             while (cursor.moveToNext()) {
-                val result = buildPhotoResult(dataUri, cursor)
-                val rawContact = rawContactsMap[result.rawContactId] ?: continue
-                rawContactsMap[result.rawContactId] = rawContact.copy(photoUri = result.photoUri)
+                val (rawContactId, photoUri) = buildPhotoResult(cursor)
+                val rawContact = rawContactsMap[rawContactId] ?: continue
+                rawContactsMap[rawContactId] = rawContact.copy(photoUri = photoUri)
             }
         }
 
         return rawContactsMap.values.toList()
     }
 
-    private fun buildPhotoResult(dataUri: Uri, cursor: Cursor): PhotoResult {
+    private fun buildPhotoResult(cursor: Cursor): PhotoResult {
         val rawContactId = cursor.getLong(PHOTO_RAW_CONTACT_ID)
         val photoId = cursor.getLong(PHOTO_ID)
-        val photoUri = Uri.withAppendedPath(dataUri, photoId.toString())
+        val photoUri = Uri.withAppendedPath(ContactsContract.Data.CONTENT_URI, photoId.toString())
         return PhotoResult(
             rawContactId = rawContactId,
             photoUri = photoUri.toString(),
