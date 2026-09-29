@@ -9,10 +9,10 @@ import app.cash.turbine.test
 import com.android.contacts.domain.contacts.model.RawContactWithAccount
 import com.android.contacts.domain.contacts.model.RawContactsResult
 import com.android.contacts.domain.contacts.usecase.LoadRawContacts
-import com.android.contacts.tests.AccountDisplayModelFactory
 import com.android.contacts.tests.MainDispatcherRule
-import com.android.contacts.tests.RawContactUiModelFactory
-import com.android.contacts.tests.RawContactWithAccountFactory
+import com.android.contacts.tests.factory.AccountDisplayModelFactory
+import com.android.contacts.tests.factory.RawContactUiModelFactory
+import com.android.contacts.tests.factory.RawContactWithAccountFactory
 import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivity.Companion.EXTRA_SHOW_READ_ONLY
 import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivity.Companion.EXTRA_URI
 import com.android.contacts.ui.editor.springboard.screen.mapper.RawContactUiModelMapper
@@ -73,7 +73,7 @@ internal class ContactEditorSpringBoardViewModelTest {
         runTest(context = mainDispatcherRule.testDispatcher) {
             val uri = mockk<Uri>(relaxed = true)
             every { uri.authority } returns ContactsContract.AUTHORITY
-            every { ContentUris.parseId(any()) } returns 123L
+            every { uri.lastPathSegment } returns "123"
             coEvery { getUriType(any()) } returns ContactsContract.RawContacts.CONTENT_ITEM_TYPE
 
             val viewModel = createViewModel(uri = uri)
@@ -239,7 +239,7 @@ internal class ContactEditorSpringBoardViewModelTest {
 
             val contact2Id = 123L
             val contact2Uri = mockk<Uri>(relaxed = true)
-            every { ContentUris.parseId(contact2Uri) } returns contact2Id
+            every { contact2Uri.lastPathSegment } returns contact2Id.toString()
 
             val viewModel = createViewModel(uri = uri, showReadOnly = true)
 

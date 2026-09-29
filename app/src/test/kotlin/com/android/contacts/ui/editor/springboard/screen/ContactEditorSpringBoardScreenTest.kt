@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import com.android.contacts.tests.RawContactUiModelFactory
+import com.android.contacts.tests.factory.RawContactUiModelFactory
 import com.android.contacts.ui.editor.springboard.screen.model.CONTACT_EDITOR_SB_ADD_BUTTON_TEST_TAG
 import com.android.contacts.ui.editor.springboard.screen.model.CONTACT_EDITOR_SB_LINKED_CONTACTS_TEST_TAG
 import com.android.contacts.ui.editor.springboard.screen.model.CONTACT_EDITOR_SB_PICK_RAW_CONTACT_TEST_TAG

@@ -5,9 +5,9 @@ import com.android.contacts.data.contacts.model.RawContactsMetadata
 import com.android.contacts.data.contacts.repository.ContactsRepository
 import com.android.contacts.domain.contacts.mapper.RawContactWithAccountMapper
 import com.android.contacts.domain.contacts.model.RawContactWithAccount
-import com.android.contacts.tests.AccountDisplayModelFactory
-import com.android.contacts.tests.RawContactFactory
-import com.android.contacts.tests.RawContactWithAccountFactory
+import com.android.contacts.tests.factory.AccountDisplayModelFactory
+import com.android.contacts.tests.factory.RawContactFactory
+import com.android.contacts.tests.factory.RawContactWithAccountFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

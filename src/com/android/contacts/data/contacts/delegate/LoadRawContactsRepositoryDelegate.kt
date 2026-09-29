@@ -124,15 +124,29 @@ internal class LoadRawContactsRepositoryDelegateImpl @Inject constructor(
             null,
         )?.use { cursor ->
             while (cursor.moveToNext()) {
-                val rawContactId = cursor.getLong(PHOTO_RAW_CONTACT_ID)
-                val photoUri = cursor.getString(PHOTO_THUMBNAIL_URI)
-                val rawContact = rawContactsMap[rawContactId] ?: continue
-                rawContactsMap[rawContactId] = rawContact.copy(photoUri = photoUri)
+                val result = buildPhotoResult(dataUri, cursor)
+                val rawContact = rawContactsMap[result.rawContactId] ?: continue
+                rawContactsMap[result.rawContactId] = rawContact.copy(photoUri = result.photoUri)
             }
         }
 
         return rawContactsMap.values.toList()
     }
+
+    private fun buildPhotoResult(dataUri: Uri, cursor: Cursor): PhotoResult {
+        val rawContactId = cursor.getLong(PHOTO_RAW_CONTACT_ID)
+        val photoId = cursor.getLong(PHOTO_ID)
+        val photoUri = Uri.withAppendedPath(dataUri, photoId.toString())
+        return PhotoResult(
+            rawContactId = rawContactId,
+            photoUri = photoUri.toString(),
+        )
+    }
+
+    private data class PhotoResult(
+        val rawContactId: Long,
+        val photoUri: String,
+    )
 
     companion object {
         private val PROFILE_PROJECTION = arrayOf(
@@ -168,9 +182,9 @@ internal class LoadRawContactsRepositoryDelegateImpl @Inject constructor(
 
         private val PHOTO_PROJECTION = arrayOf(
             ContactsContract.Data.RAW_CONTACT_ID,
-            ContactsContract.Contacts.PHOTO_THUMBNAIL_URI,
+            ContactsContract.Contacts.Photo._ID,
         )
         private const val PHOTO_RAW_CONTACT_ID = 0
-        private const val PHOTO_THUMBNAIL_URI = 1
+        private const val PHOTO_ID = 1
     }
 }

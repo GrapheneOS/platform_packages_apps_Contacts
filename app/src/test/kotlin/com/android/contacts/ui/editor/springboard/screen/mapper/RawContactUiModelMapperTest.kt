@@ -4,9 +4,9 @@ import com.android.contacts.R
 import com.android.contacts.domain.accounts.model.AccountIconData
 import com.android.contacts.model.account.GoogleAccountType
 import com.android.contacts.preference.ContactsPreferences
-import com.android.contacts.tests.AccountDisplayModelFactory
-import com.android.contacts.tests.AccountModelFactory
-import com.android.contacts.tests.RawContactWithAccountFactory
+import com.android.contacts.tests.factory.AccountDisplayModelFactory
+import com.android.contacts.tests.factory.AccountModelFactory
+import com.android.contacts.tests.factory.RawContactWithAccountFactory
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import io.mockk.every
 import io.mockk.mockk

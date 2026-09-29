@@ -120,21 +120,36 @@ internal class LoadRawContactsRepositoryDelegateTest {
 
     @Test
     fun returnsContactsWithPhotos() = runTest {
-        givenQueryRows(CONTACT_URI, arrayOf(1L, 0))
+        givenQueryRows(CONTACT_URI, arrayOf(123L, 0))
         givenQueryRows(
             ContactsContract.RawContacts.CONTENT_URI,
             arrayOf(1, "Person 1", "Person 1 Alt", "Account", "Device", null),
             arrayOf(2, "Person 2", "Person 2 Alt", "Account", "Device", null),
+            arrayOf(3, "Person 3", "Person 3 Alt", "Account", "Device", null),
         )
-        givenQueryRows(ContactsContract.Data.CONTENT_URI, arrayOf(1, "content://photos/1"))
+        givenQueryRows(
+            ContactsContract.Data.CONTENT_URI,
+            arrayOf(1, 1001),
+            arrayOf(2, 1002),
+        )
 
         val result = subject.loadRawContacts(CONTACT_URI).first()!!
         with(result.rawContacts[0]) {
             assertEquals(1L, id)
-            assertEquals("content://photos/1", photoUri)
+            assertEquals(
+                Uri.withAppendedPath(ContactsContract.Data.CONTENT_URI, "1001").toString(),
+                photoUri,
+            )
         }
         with(result.rawContacts[1]) {
             assertEquals(2L, id)
+            assertEquals(
+                Uri.withAppendedPath(ContactsContract.Data.CONTENT_URI, "1002").toString(),
+                photoUri,
+            )
+        }
+        with(result.rawContacts[2]) {
+            assertEquals(3L, id)
             assertNull(photoUri)
         }
     }
@@ -189,7 +204,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
     }
 
     private companion object {
-        val CONTACT_URI: Uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, "1")
-        val PROFILE_URI: Uri = Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI, "1")
+        val CONTACT_URI: Uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, "123")
+        val PROFILE_URI: Uri = Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI, "234")
     }
 }

@@ -5,8 +5,8 @@ import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.model.account.AccountInfo
 import com.android.contacts.model.account.AccountWithDataSet
-import com.android.contacts.tests.AccountDisplayModelFactory
-import com.android.contacts.tests.RawContactFactory
+import com.android.contacts.tests.factory.AccountDisplayModelFactory
+import com.android.contacts.tests.factory.RawContactFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
