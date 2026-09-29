@@ -51,6 +51,7 @@ class ContactEditorSpringBoardActivity : ComponentActivity() {
             AppTheme {
                 ContactEditorSpringBoardScreen(
                     effectHandler = effectHandler,
+                    screenModel = viewModel,
                 )
             }
         }
