@@ -1,4 +1,4 @@
-package com.android.contacts.ui.vcard.screen
+package com.android.contacts.ui.vcardimport.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,10 +19,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
 import com.android.contacts.ui.core.ContactsPreviewTheme
-import com.android.contacts.ui.vcard.screen.model.IMPORT_VCARD_CANCEL_TEST_TAG
-import com.android.contacts.ui.vcard.screen.model.IMPORT_VCARD_DIALOG_TEST_TAG
-import com.android.contacts.ui.vcard.screen.model.ImportVCardAction as Action
-import com.android.contacts.ui.vcard.screen.model.ImportVCardUiState as State
+import com.android.contacts.ui.vcardimport.screen.model.IMPORT_VCARD_CANCEL_TEST_TAG
+import com.android.contacts.ui.vcardimport.screen.model.IMPORT_VCARD_DIALOG_TEST_TAG
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardAction as Action
+import com.android.contacts.ui.vcardimport.screen.model.ImportVCardUiState as State
 
 @Composable
 internal fun ImportVCardDialog(
