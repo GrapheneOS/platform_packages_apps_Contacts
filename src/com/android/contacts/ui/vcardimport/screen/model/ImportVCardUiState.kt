@@ -1,4 +1,4 @@
-package com.android.contacts.ui.vcard.screen.model
+package com.android.contacts.ui.vcardimport.screen.model
 
 import androidx.compose.runtime.Immutable
 

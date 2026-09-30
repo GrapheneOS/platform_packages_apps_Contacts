@@ -104,8 +104,6 @@ public class VCardService extends Service {
 
     private MyBinder mBinder;
 
-    private String mCallingActivity;
-
     // File names currently reserved by some export job.
     private final Set<String> mReservedDestination = new HashSet<String>();
     /* ** end of vCard exporter params ** */
@@ -125,16 +123,9 @@ public class VCardService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
-        if (intent != null && intent.getExtras() != null) {
-            mCallingActivity = intent.getExtras().getString(
-                    VCardCommonArguments.ARG_CALLING_ACTIVITY);
-        } else {
-            mCallingActivity = null;
-            // The intent will be null if the service is restarted after the app
-            // is killed but the notification may still exist so remove it.
-            NotificationManager nm = getSystemService(NotificationManager.class);
-            nm.cancelAll();
-        }
+        // Remove existing notifications if the service is restarted after the app is killed.
+        NotificationManager nm = getSystemService(NotificationManager.class);
+        nm.cancelAll();
         return START_STICKY;
     }
 
@@ -190,7 +181,7 @@ public class VCardService extends Service {
 
     public synchronized void handleExportRequest(ExportRequest request,
             VCardImportExportListener listener) {
-        if (tryExecute(new ExportProcessor(this, request, mCurrentJobId, mCallingActivity))) {
+        if (tryExecute(new ExportProcessor(this, request, mCurrentJobId, null))) {
             final String path = request.destUri.getEncodedPath();
             if (DEBUG) Log.d(LOG_TAG, "Reserve the path " + path);
             if (!mReservedDestination.add(path)) {

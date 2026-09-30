@@ -1,5 +1,6 @@
-package com.android.contacts.ui.vcard.screen.model
+package com.android.contacts.ui.vcardimport.screen.model
 
+import com.android.contacts.domain.vcard.model.ImportVCardError
 import kotlinx.collections.immutable.ImmutableSet
 
 internal sealed interface ImportVCardEffect {
