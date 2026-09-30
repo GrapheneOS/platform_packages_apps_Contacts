@@ -1,13 +1,13 @@
-package com.android.contacts.ui.vcard
+package com.android.contacts.ui.vcardimport
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.android.contacts.ui.core.AppTheme
-import com.android.contacts.ui.vcard.screen.ImportVCardDialog
-import com.android.contacts.ui.vcard.screen.ImportVCardEffectHandlerImpl
-import com.android.contacts.ui.vcard.screen.ImportVCardViewModel
+import com.android.contacts.ui.vcardimport.screen.ImportVCardDialog
+import com.android.contacts.ui.vcardimport.screen.ImportVCardEffectHandlerImpl
+import com.android.contacts.ui.vcardimport.screen.ImportVCardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

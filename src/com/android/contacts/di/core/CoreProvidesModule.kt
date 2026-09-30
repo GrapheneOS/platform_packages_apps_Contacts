@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
+import android.content.res.Resources
 import android.os.PowerManager
 import android.os.UserManager
 import android.telecom.TelecomManager
@@ -19,6 +20,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -55,6 +57,17 @@ internal class CoreProvidesModule {
     @SimReadDispatcher
     fun provideSimReadDispatcher(): CoroutineDispatcher {
         return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()
+    }
+
+    // Folders
+
+    @Provides
+    @Reusable
+    @CacheDir
+    fun provideCacheDir(
+        @ApplicationContext context: Context,
+    ): File {
+        return context.cacheDir
     }
 
     // Others
@@ -140,5 +153,13 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): PowerManager {
         return context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    }
+
+    @Provides
+    @Reusable
+    fun provideResources(
+        @ApplicationContext context: Context,
+    ): Resources {
+        return context.resources
     }
 }
