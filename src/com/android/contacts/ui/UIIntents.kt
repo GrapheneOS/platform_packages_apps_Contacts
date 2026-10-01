@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
 import com.android.contacts.domain.accounts.model.AccountFilter
-import com.android.contacts.ui.interactions.account.SelectAccountActivity
-import com.android.contacts.ui.interactions.account.screen.SelectAccountViewModel
+import com.android.contacts.ui.interactions.account.select.SelectAccountActivity
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountViewModel
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.simimport.SimImportActivity
 

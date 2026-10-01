@@ -4,7 +4,7 @@ import com.android.contacts.domain.accounts.model.AccountModel
 
 internal object AccountModelFactory {
     fun build(
-        name: String = "Account",
+        name: String? = "Account",
         type: String? = null,
         dataSet: String? = null,
     ) = AccountModel(

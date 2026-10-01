@@ -10,6 +10,10 @@ import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccountImpl
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.accounts.usecase.LoadAccountsImpl
+import com.android.contacts.domain.accounts.usecase.LoadAccountsWithContactsCount
+import com.android.contacts.domain.accounts.usecase.LoadAccountsWithContactsCountImpl
+import com.android.contacts.ui.interactions.account.filter.screen.mapper.AccountFilterItemMapper
+import com.android.contacts.ui.interactions.account.filter.screen.mapper.AccountFilterItemMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
@@ -34,6 +38,12 @@ internal abstract class AccountsBindsModule {
 
     @Binds
     @Reusable
+    abstract fun bindAccountFilterItemMapper(
+        impl: AccountFilterItemMapperImpl,
+    ): AccountFilterItemMapper
+
+    @Binds
+    @Reusable
     abstract fun bindAccountModelMapper(
         impl: AccountModelMapperImpl,
     ): AccountModelMapper
@@ -49,4 +59,10 @@ internal abstract class AccountsBindsModule {
     abstract fun bindLoadAccounts(
         impl: LoadAccountsImpl,
     ): LoadAccounts
+
+    @Binds
+    @Reusable
+    abstract fun bindLoadAccountsWithContactCounts(
+        impl: LoadAccountsWithContactsCountImpl,
+    ): LoadAccountsWithContactsCount
 }

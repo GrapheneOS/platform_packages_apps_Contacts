@@ -17,9 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 internal fun interface LoadAccounts {
-    operator fun invoke(
-        filter: AccountFilter?,
-    ): Flow<List<AccountDisplayModel>>
+    operator fun invoke(filter: AccountFilter?): Flow<List<AccountDisplayModel>>
 }
 
 internal class LoadAccountsImpl @Inject constructor(
@@ -34,7 +32,7 @@ internal class LoadAccountsImpl @Inject constructor(
         filter: AccountFilter?,
     ): Flow<List<AccountDisplayModel>> {
         return buildBroadcastReceiverFlow(
-            IntentFilter(AccountTypeManager.BROADCAST_ACCOUNTS_CHANGED)
+            IntentFilter(AccountTypeManager.BROADCAST_ACCOUNTS_CHANGED),
         )
             .map { load(filter) }
             .flowOn(coroutineDispatcher)

@@ -46,6 +46,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,6 +64,7 @@ import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
 import com.android.contacts.domain.accounts.model.AccountFilter;
 import com.android.contacts.domain.accounts.model.AccountModel;
+import com.android.contacts.domain.accounts.model.ContactsAccountFilter;
 import com.android.contacts.drawer.DrawerFragment;
 import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
 import com.android.contacts.editor.ContactEditorFragment;
@@ -86,7 +88,8 @@ import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.ui.UIIntents;
 import com.android.contacts.ui.group.edit.GroupNameEditActivity;
 import com.android.contacts.ui.group.list.GroupsActivity;
-import com.android.contacts.ui.interactions.account.SelectAccountActivity;
+import com.android.contacts.ui.interactions.account.filter.AccountFilterActivity;
+import com.android.contacts.ui.interactions.account.select.SelectAccountActivity;
 import com.android.contacts.ui.settings.SettingsActivity;
 import com.android.contacts.util.AccountFilterUtil;
 import com.android.contacts.util.Constants;
@@ -141,6 +144,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     private static final int REQUEST_SELECT_ACCOUNT = 1001;
     private static final int REQUEST_GROUP_NAME_EDIT = 1002;
+    private static final int REQUEST_ACCOUNT_FILTER = 1003;
 
     private static final long DRAWER_CLOSE_DELAY = 300L;
 
@@ -1161,23 +1165,46 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != REQUEST_SELECT_ACCOUNT || resultCode != RESULT_OK || data == null) {
-            return;
-        }
 
-        AccountModel account =
-                data.getParcelableExtra(SelectAccountActivity.EXTRA_ACCOUNT, AccountModel.class);
-        if (account == null) {
-            return;
+        if (requestCode == REQUEST_SELECT_ACCOUNT) {
+            if (resultCode == RESULT_OK && data != null) {
+                AccountModel account = data.getParcelableExtra(
+                        SelectAccountActivity.EXTRA_ACCOUNT, AccountModel.class
+                );
+                if (account != null) {
+                    onAccountChosen(
+                            new AccountWithDataSet(
+                                    account.getName(),
+                                    account.getType(),
+                                    account.getDataSet()
+                            )
+                    );
+                }
+            }
+        } else if (requestCode == REQUEST_ACCOUNT_FILTER) {
+            if (resultCode == RESULT_OK && data != null) {
+                ContactsAccountFilter filter = data.getParcelableExtra(
+                        AccountFilterActivity.EXTRA_FILTER, ContactsAccountFilter.class
+                );
+                if (filter != null) {
+                    onFilterMenuItemClicked(mapToContactListFilter(filter));
+                }
+            }
         }
+    }
 
-        onAccountChosen(
-                new AccountWithDataSet(
-                        account.getName(),
-                        account.getType(),
-                        account.getDataSet()
-                )
-        );
+    @NonNull
+    private ContactListFilter mapToContactListFilter(ContactsAccountFilter filter) {
+        if (filter instanceof ContactsAccountFilter.One) {
+            AccountModel account = ((ContactsAccountFilter.One) filter).getAccount();
+            return ContactListFilter.createAccountFilter(
+                    account.getType(), account.getName(), account.getDataSet(), null
+            );
+        } else {
+            return ContactListFilter.createFilterWithType(
+                    ContactListFilter.FILTER_TYPE_ALL_ACCOUNTS
+            );
+        }
     }
 
     private void onAccountChosen(AccountWithDataSet account) {
@@ -1216,6 +1243,36 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     @Override
+    public void onOpenAccountsFilter() {
+        new Handler().postDelayed(() ->
+                        startActivityForResult(
+                                AccountFilterActivity.Companion.buildIntent$app(
+                                        PeopleActivity.this,
+                                        getCurrentAccountFilter()
+                                ),
+                                REQUEST_ACCOUNT_FILTER
+                        ),
+                DRAWER_CLOSE_DELAY
+        );
+
+    }
+
+    private ContactsAccountFilter getCurrentAccountFilter() {
+        ContactListFilter filter = mContactsListFragment.getFilter();
+        if (filter.filterType == ContactListFilter.FILTER_TYPE_ACCOUNT) {
+            return new ContactsAccountFilter.One(
+                    new AccountModel(
+                            filter.accountName,
+                            filter.accountType,
+                            filter.dataSet
+                    )
+            );
+        } else {
+            return ContactsAccountFilter.All.INSTANCE;
+        }
+    }
+
+    @Override
     public void onOpenGroups() {
         new Handler().postDelayed(() ->
                         startActivity(
@@ -1239,11 +1296,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     @Override
     public void onLaunchHelpFeedback() {
         HelpUtils.launchHelpAndFeedbackForMainScreen(this);
-    }
-
-    @Override
-    public void onAccountViewSelected(ContactListFilter filter) {
-        onFilterMenuItemClicked(filter);
     }
 
     public boolean isGroupView() {
