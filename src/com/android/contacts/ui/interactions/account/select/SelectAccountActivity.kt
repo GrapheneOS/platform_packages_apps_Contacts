@@ -1,4 +1,4 @@
-package com.android.contacts.ui.interactions.account
+package com.android.contacts.ui.interactions.account.select
 
 import android.content.Context
 import android.content.Intent
@@ -12,8 +12,8 @@ import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.ui.UIIntents
 import com.android.contacts.ui.core.AppTheme
-import com.android.contacts.ui.interactions.account.screen.SelectAccountDialog
-import com.android.contacts.ui.interactions.account.screen.SelectAccountEffectHandlerImpl
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountDialog
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountEffectHandlerImpl
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

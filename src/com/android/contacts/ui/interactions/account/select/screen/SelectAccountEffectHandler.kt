@@ -1,9 +1,9 @@
-package com.android.contacts.ui.interactions.account.screen
+package com.android.contacts.ui.interactions.account.select.screen
 
 import android.app.Activity
 import android.content.Intent
-import com.android.contacts.ui.interactions.account.SelectAccountActivity
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountEffect as Effect
+import com.android.contacts.ui.interactions.account.select.SelectAccountActivity
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountEffect as Effect
 
 internal interface SelectAccountEffectHandler {
     fun handle(effect: Effect)

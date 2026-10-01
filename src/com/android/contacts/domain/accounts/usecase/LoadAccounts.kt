@@ -17,9 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 internal fun interface LoadAccounts {
-    operator fun invoke(
-        filter: AccountFilter?,
-    ): Flow<List<AccountDisplayModel>>
+    operator fun invoke(filter: AccountFilter?): Flow<List<AccountDisplayModel>>
 }
 
 internal class LoadAccountsImpl @Inject constructor(

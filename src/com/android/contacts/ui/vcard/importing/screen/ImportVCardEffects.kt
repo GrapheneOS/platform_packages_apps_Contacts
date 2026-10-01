@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.android.contacts.R
 import com.android.contacts.domain.accounts.model.AccountFilter
-import com.android.contacts.ui.interactions.account.SelectAccountActivity
+import com.android.contacts.ui.interactions.account.select.SelectAccountActivity
 import com.android.contacts.ui.vcard.importing.screen.model.ImportVCardAction
 import com.android.contacts.ui.vcard.importing.screen.model.ImportVCardEffect
 import com.android.contacts.vcard.VCardService

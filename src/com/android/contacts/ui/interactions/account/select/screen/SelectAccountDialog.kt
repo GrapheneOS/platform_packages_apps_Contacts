@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.android.contacts.ui.interactions.account.screen
+package com.android.contacts.ui.interactions.account.select.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,8 +38,8 @@ import com.android.contacts.ui.common.components.AccountIcon
 import com.android.contacts.ui.common.components.delayedIndicator
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.core.itemClipShape
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountAction as Action
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountUiState as State
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountAction as Action
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountUiState as State
 import com.android.contacts.ui.interactions.importing.screen.model.IMPORT_PROGRESS_TEST_TAG
 import com.android.contacts.ui.simimport.screen.model.AccountUiModel
 import kotlinx.collections.immutable.ImmutableList

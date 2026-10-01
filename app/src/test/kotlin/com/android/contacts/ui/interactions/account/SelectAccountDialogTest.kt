@@ -9,11 +9,11 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.R
 import com.android.contacts.tests.factory.AccountUiModelFactory
 import com.android.contacts.tests.resources
-import com.android.contacts.ui.interactions.account.screen.SelectAccountDialog
-import com.android.contacts.ui.interactions.account.screen.SelectAccountEffectHandler
-import com.android.contacts.ui.interactions.account.screen.SelectAccountScreenModel
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountAction as Action
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountUiState as State
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountDialog
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountEffectHandler
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountScreenModel
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountAction as Action
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountUiState as State
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -55,7 +55,7 @@ class SelectAccountDialogTest {
 
         val account = AccountUiModelFactory.build(
             name = "John Smith",
-            type = "Example"
+            type = "Example",
         )
         fakeUiStateFlow.value = State(accounts = persistentListOf(account))
 
