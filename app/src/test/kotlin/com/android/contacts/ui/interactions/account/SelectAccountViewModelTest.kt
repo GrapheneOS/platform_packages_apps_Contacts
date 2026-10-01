@@ -7,9 +7,9 @@ import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
-import com.android.contacts.ui.interactions.account.screen.SelectAccountViewModel
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountAction as Action
-import com.android.contacts.ui.interactions.account.screen.model.SelectAccountEffect as Effect
+import com.android.contacts.ui.interactions.account.select.screen.SelectAccountViewModel
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountAction as Action
+import com.android.contacts.ui.interactions.account.select.screen.model.SelectAccountEffect as Effect
 import com.android.contacts.ui.simimport.screen.mapper.AccountUiModelMapperImpl
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi

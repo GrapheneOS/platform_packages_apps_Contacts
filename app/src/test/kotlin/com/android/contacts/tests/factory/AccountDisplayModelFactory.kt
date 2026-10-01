@@ -6,7 +6,7 @@ import com.android.contacts.domain.accounts.model.AccountModel
 
 internal object AccountDisplayModelFactory {
     fun build(
-        name: String = "Account",
+        name: String? = "Account",
         type: String? = null,
         account: AccountModel = AccountModelFactory.build(name = name, type = type),
         iconData: AccountIconData? = null,

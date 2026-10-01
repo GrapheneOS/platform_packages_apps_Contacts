@@ -427,6 +427,10 @@
             android:targetActivity=".ui.editor.springboard.ContactEditorSpringBoardActivity"
             />
 
+        <activity
+            android:name=".ui.interactions.account.filter.AccountFilterActivity"
+            android:theme="@style/Theme.Compose.Dialog"/>
+
         <activity android:name=".test.FragmentTestActivity"
             android:exported="true">
             <intent-filter>
@@ -508,7 +512,7 @@
             android:theme="@style/Theme.Compose.Dialog"/>
 
         <activity
-            android:name=".ui.interactions.account.SelectAccountActivity"
+            android:name=".ui.interactions.account.select.SelectAccountActivity"
             android:label="@string/select_account_dialog_title"
             android:theme="@style/Theme.Compose.Dialog"/>
 
