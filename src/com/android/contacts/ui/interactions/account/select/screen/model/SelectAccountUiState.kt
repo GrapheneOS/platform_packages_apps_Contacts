@@ -1,4 +1,4 @@
-package com.android.contacts.ui.interactions.account.screen.model
+package com.android.contacts.ui.interactions.account.select.screen.model
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable

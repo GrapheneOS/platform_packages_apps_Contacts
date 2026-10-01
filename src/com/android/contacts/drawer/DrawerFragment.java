@@ -18,8 +18,6 @@ package com.android.contacts.drawer;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.Loader;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,19 +34,11 @@ import android.widget.ListView;
 
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
-import com.android.contacts.list.ContactListFilter;
-import com.android.contacts.util.AccountFilterUtil;
 import com.android.contactsbind.ObjectFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DrawerFragment extends Fragment {
 
-    private static final int LOADER_FILTERS = 1;
-
     private static final String KEY_CONTACTS_VIEW = "contactsView";
-    private static final String KEY_SELECTED_ACCOUNT = "selectedAccount";
 
     private WelcomeContentObserver mObserver;
     private ListView mDrawerListView;
@@ -68,29 +58,6 @@ public class DrawerFragment extends Fragment {
             mDrawerAdapter.notifyDataSetChanged();
         }
     }
-
-    private final LoaderManager.LoaderCallbacks<List<ContactListFilter>> mFiltersLoaderListener =
-            new LoaderManager.LoaderCallbacks<List<ContactListFilter>> () {
-                @Override
-                public Loader<List<ContactListFilter>> onCreateLoader(int id, Bundle args) {
-                    return new AccountFilterUtil.FilterLoader(getActivity());
-                }
-
-                @Override
-                public void onLoadFinished(
-                        Loader<List<ContactListFilter>> loader, List<ContactListFilter> data) {
-                    if (data != null) {
-                        if (data == null || data.size() < 2) {
-                            mDrawerAdapter.setAccounts(new ArrayList<ContactListFilter>());
-                        } else {
-                            mDrawerAdapter.setAccounts(data);
-                        }
-                    }
-                }
-
-                public void onLoaderReset(Loader<List<ContactListFilter>> loader) {
-                }
-            };
 
     public DrawerFragment() {}
 
@@ -112,7 +79,6 @@ public class DrawerFragment extends Fragment {
         mDrawerListView = (ListView) contentView.findViewById(R.id.list);
         mDrawerAdapter = new DrawerAdapter(getActivity());
         mDrawerAdapter.setSelectedContactsView(mCurrentContactsView);
-        loadFilters();
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(mOnDrawerItemClickListener);
 
@@ -120,8 +86,6 @@ public class DrawerFragment extends Fragment {
             final ContactsView contactsView =
                     ContactsView.values()[savedInstanceState.getInt(KEY_CONTACTS_VIEW)];
             setNavigationItemChecked(contactsView);
-            final ContactListFilter filter = savedInstanceState.getParcelable(KEY_SELECTED_ACCOUNT);
-            mDrawerAdapter.setSelectedAccount(filter);
         } else {
             setNavigationItemChecked(ContactsView.ALL_CONTACTS);
         }
@@ -152,7 +116,6 @@ public class DrawerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CONTACTS_VIEW, mCurrentContactsView.ordinal());
-        outState.putParcelable(KEY_SELECTED_ACCOUNT, mDrawerAdapter.getSelectedAccount());
     }
 
     @Override
@@ -161,10 +124,6 @@ public class DrawerFragment extends Fragment {
         if (mObserver != null) {
             getActivity().getContentResolver().unregisterContentObserver(mObserver);
         }
-    }
-
-    private void loadFilters() {
-        getLoaderManager().initLoader(LOADER_FILTERS, null, mFiltersLoaderListener);
     }
 
     @Override
@@ -186,11 +145,8 @@ public class DrawerFragment extends Fragment {
             } else if (viewId == R.id.nav_assistant) {
                 mListener.onContactsViewSelected(ContactsView.ASSISTANT);
                 setNavigationItemChecked(ContactsView.ASSISTANT);
-            } else if (viewId == R.id.nav_filter) {
-                final ContactListFilter filter = (ContactListFilter) v.getTag();
-                mListener.onAccountViewSelected(filter);
-                mDrawerAdapter.setSelectedAccount(filter);
-                setNavigationItemChecked(ContactsView.ACCOUNT_VIEW);
+            } else if (viewId == R.id.nav_accounts) {
+                mListener.onOpenAccountsFilter();
             } else if (viewId == R.id.nav_groups) {
                 mListener.onOpenGroups();
             } else if (viewId == R.id.nav_settings) {
@@ -222,7 +178,7 @@ public class DrawerFragment extends Fragment {
     public interface DrawerFragmentListener {
         void onDrawerItemClicked();
         void onContactsViewSelected(ContactsView mode);
-        void onAccountViewSelected(ContactListFilter filter);
+        void onOpenAccountsFilter();
         void onOpenGroups();
         void onOpenSettings();
         void onLaunchHelpFeedback();

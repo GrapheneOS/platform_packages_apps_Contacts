@@ -29,9 +29,6 @@ import androidx.annotation.LayoutRes;
 
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
-import com.android.contacts.list.ContactListFilter;
-import com.android.contacts.model.account.AccountDisplayInfo;
-import com.android.contacts.model.account.AccountDisplayInfoFactory;
 import com.android.contacts.util.SharedPreferenceUtil;
 import com.android.contactsbind.HelpUtils;
 import com.android.contactsbind.ObjectFactory;
@@ -44,12 +41,11 @@ public class DrawerAdapter extends BaseAdapter {
     private static final int VIEW_TYPE_PRIMARY_ITEM = 0;
     private static final int VIEW_TYPE_MISC_ITEM = 1;
     private static final int VIEW_TYPE_HEADER_ITEM = 2;
-    private static final int VIEW_TYPE_ACCOUNT_ENTRY = 3;
-    private static final int VIEW_TYPE_NAV_SPACER = 4;
-    private static final int VIEW_TYPE_NAV_DIVIDER = 5;
+    private static final int VIEW_TYPE_NAV_SPACER = 3;
+    private static final int VIEW_TYPE_NAV_DIVIDER = 4;
 
     // This count must be updated if we add more view types.
-    private static final int VIEW_TYPE_COUNT = 6;
+    private static final int VIEW_TYPE_COUNT = 5;
 
     private static final int TYPEFACE_STYLE_ACTIVATE = R.style.DrawerItemTextActiveStyle;
     private static final int TYPEFACE_STYLE_INACTIVE = R.style.DrawerItemTextInactiveStyle;
@@ -58,24 +54,17 @@ public class DrawerAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ContactsView mSelectedView;
 
-    // The group/account that was last clicked.
-    private ContactListFilter mSelectedAccount;
 
     // Adapter elements, ordered in this way mItemsList. The ordering is based on:
     //  [Navigation spacer item]
     //  [Primary items] (Contacts, Suggestions)
-    //  [Account Header]
-    //  [Accounts]
-    //  [Misc items] (dividers, Labels, Settings, Help & Feedback)
+    //  [Misc items] (dividers, Accounts, Labels, Settings, Help & Feedback)
     //  [Navigation spacer item]
     private NavSpacerItem mNavSpacerItem = null;
     private List<PrimaryItem> mPrimaryItems = new ArrayList<>();
     private HeaderItem mAccountHeader = null;
-    private List<AccountEntryItem> mAccountEntries = new ArrayList<>();
     private List<BaseDrawerItem> mMiscItems = new ArrayList<>();
-
     private List<BaseDrawerItem> mItemsList = new ArrayList<>();
-    private AccountDisplayInfoFactory mAccountDisplayFactory;
 
     public DrawerAdapter(Activity activity) {
         super();
@@ -94,9 +83,9 @@ public class DrawerAdapter extends BaseAdapter {
             mPrimaryItems.add(new PrimaryItem(R.id.nav_assistant, R.string.menu_assistant,
                     R.drawable.quantum_ic_assistant_vd_theme_24, ContactsView.ASSISTANT));
         }
-        // Account Header
-        mAccountHeader = new HeaderItem(R.id.nav_filters, R.string.menu_title_filters);
-        // Misc Items
+        mMiscItems.add(new DividerItem());
+        mMiscItems.add(new MiscItem(R.id.nav_accounts, R.string.settings_accounts,
+                R.drawable.quantum_ic_person_vd_theme_24));
         mMiscItems.add(new DividerItem());
         mMiscItems.add(
                 new MiscItem(R.id.nav_groups, R.string.menu_title_groups,
@@ -116,25 +105,8 @@ public class DrawerAdapter extends BaseAdapter {
         mItemsList.clear();
         mItemsList.add(mNavSpacerItem);
         mItemsList.addAll(mPrimaryItems);
-        if (mAccountEntries.size() > 0) {
-            mItemsList.add(mAccountHeader);
-        }
-        mItemsList.addAll(mAccountEntries);
         mItemsList.addAll(mMiscItems);
         mItemsList.add(mNavSpacerItem);
-    }
-
-    public void setAccounts(List<ContactListFilter> accountFilterItems) {
-        ArrayList<AccountEntryItem> accountItems = new ArrayList<AccountEntryItem>();
-        for (ContactListFilter filter : accountFilterItems) {
-            accountItems.add(new AccountEntryItem(R.id.nav_filter, filter));
-        }
-        mAccountDisplayFactory = AccountDisplayInfoFactory.fromListFilters(mActivity,
-                accountFilterItems);
-        mAccountEntries.clear();
-        mAccountEntries.addAll(accountItems);
-        // TODO investigate performance of calling notifyDataSetChanged
-        notifyChangeAndRebuildList();
     }
 
     @Override
@@ -164,8 +136,6 @@ public class DrawerAdapter extends BaseAdapter {
                 return getPrimaryItemView((PrimaryItem) drawerItem, view, viewGroup);
             case VIEW_TYPE_HEADER_ITEM:
                 return getHeaderItemView((HeaderItem) drawerItem, view, viewGroup);
-            case VIEW_TYPE_ACCOUNT_ENTRY:
-                return getAccountItemView((AccountEntryItem) drawerItem, view, viewGroup);
             case VIEW_TYPE_MISC_ITEM:
                 return getDrawerItemView(drawerItem, view, viewGroup);
             case VIEW_TYPE_NAV_SPACER:
@@ -211,32 +181,6 @@ public class DrawerAdapter extends BaseAdapter {
         return result;
     }
 
-    private View getAccountItemView(AccountEntryItem item, View result, ViewGroup parent) {
-        if (result == null || !(result.getTag() instanceof ContactListFilter)) {
-            result = mInflater.inflate(R.layout.drawer_item, parent, false);
-            result.setId(item.id);
-        }
-        final ContactListFilter account = item.account;
-        final AccountDisplayInfo displayableAccount =
-                mAccountDisplayFactory.getAccountDisplayInfoFor(item.account);
-        final TextView textView = ((TextView) result.findViewById(R.id.title));
-        textView.setText(displayableAccount.getNameLabel());
-        final boolean activated = account.equals(mSelectedAccount)
-                && mSelectedView == ContactsView.ACCOUNT_VIEW;
-        textView.setTextAppearance(mActivity, activated
-                ? TYPEFACE_STYLE_ACTIVATE : TYPEFACE_STYLE_INACTIVE);
-
-        final ImageView icon = (ImageView) result.findViewById(R.id.icon);
-        icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        icon.setImageDrawable(displayableAccount.getIcon());
-
-        result.setTag(account);
-        result.setActivated(activated);
-        result.setContentDescription(
-                displayableAccount.getTypeLabel() + " " + item.account.accountName);
-        return result;
-    }
-
     private View getDrawerItemView(BaseDrawerItem item, View result, ViewGroup parent) {
         if (result == null) {
             result = mInflater.inflate(R.layout.drawer_item, parent, false);
@@ -278,18 +222,6 @@ public class DrawerAdapter extends BaseAdapter {
         }
         mSelectedView = contactsView;
         notifyChangeAndRebuildList();
-    }
-
-    public void setSelectedAccount(ContactListFilter filter) {
-        if (mSelectedAccount == filter) {
-            return;
-        }
-        mSelectedAccount = filter;
-        notifyChangeAndRebuildList();
-    }
-
-    public ContactListFilter getSelectedAccount() {
-        return mSelectedAccount;
     }
 
     public static class BaseDrawerItem {
@@ -342,16 +274,6 @@ public class DrawerAdapter extends BaseAdapter {
     public static class DividerItem extends BaseDrawerItem {
         public DividerItem() {
             super(VIEW_TYPE_NAV_DIVIDER, /* id */ 0, /* textResId */ 0, /* iconResId */ 0);
-        }
-    }
-
-    // Navigation drawer item for an account.
-    public static class AccountEntryItem extends BaseDrawerItem {
-        private final ContactListFilter account;
-
-        public AccountEntryItem(int id, ContactListFilter account) {
-            super(VIEW_TYPE_ACCOUNT_ENTRY, id, /* textResId */ 0, /* iconResId */ 0);
-            this.account = account;
         }
     }
 }
