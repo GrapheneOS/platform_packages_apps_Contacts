@@ -3,6 +3,7 @@ package com.android.contacts.data.contacts.delegate
 import android.content.ContentResolver
 import android.provider.ContactsContract
 import androidx.annotation.VisibleForTesting
+import com.android.contacts.data.contacts.model.ContactsCount
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.util.core.observeContentUri
@@ -13,20 +14,20 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 internal interface GetContactsCountDelegate {
-    fun getContactsCount(): Flow<Map<AccountModel, Int>?>
+    fun getContactsCount(): Flow<ContactsCount<AccountModel>?>
 }
 
 internal class GetContactsCountDelegateImpl @Inject constructor(
     private val contentResolver: ContentResolver,
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : GetContactsCountDelegate {
-    override fun getContactsCount(): Flow<Map<AccountModel, Int>?> {
+    override fun getContactsCount(): Flow<ContactsCount<AccountModel>?> {
         return observeContentUri(contentResolver, ContactsContract.RawContacts.CONTENT_URI)
             .map { get() }
             .flowOn(coroutineDispatcher)
     }
 
-    private fun get(): Map<AccountModel, Int>? {
+    private fun get(): ContactsCount<AccountModel>? {
         return contentResolver.query(
             ContactsContract.RawContacts.CONTENT_URI,
             PROJECTION,
@@ -34,7 +35,7 @@ internal class GetContactsCountDelegateImpl @Inject constructor(
             null,
             null,
         )?.use { cursor ->
-            return buildList {
+            val allContacts = buildList {
                 while (cursor.moveToNext()) {
                     val contactId = cursor.getLong(CONTACT_ID_INDEX)
                     val account = AccountModel(
@@ -45,8 +46,13 @@ internal class GetContactsCountDelegateImpl @Inject constructor(
                     add(account to contactId)
                 }
             }
-                .groupBy { (account, _) -> account }
-                .mapValues { (_, contacts) -> contacts.distinct().size }
+
+            return ContactsCount(
+                all = allContacts.distinctBy { it.second }.size,
+                byAccount = allContacts
+                    .groupBy { (account, _) -> account }
+                    .mapValues { (_, contacts) -> contacts.distinct().size }
+            )
         }
     }
 
