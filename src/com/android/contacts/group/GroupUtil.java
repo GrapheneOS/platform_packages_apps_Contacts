@@ -29,11 +29,9 @@ import android.provider.ContactsContract.Groups;
 import android.text.TextUtils;
 
 import com.android.contacts.ContactsUtils;
-import com.android.contacts.GroupListLoader;
 import com.android.contacts.activities.ContactSelectionActivity;
 import com.android.contacts.list.ContactsSectionIndexer;
 import com.android.contacts.list.UiIntentActions;
-import com.android.contacts.model.account.GoogleAccountType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,41 +64,6 @@ public final class GroupUtil {
             new HashSet(Arrays.asList("Friends", "Family", "Coworkers"));
 
     private GroupUtil() {
-    }
-
-    /** Returns a {@link GroupListItem} read from the given cursor and position. */
-    public static GroupListItem getGroupListItem(Cursor cursor, int position) {
-        if (cursor == null || cursor.isClosed() || !cursor.moveToPosition(position)) {
-            return null;
-        }
-        String accountName = cursor.getString(GroupListLoader.ACCOUNT_NAME);
-        String accountType = cursor.getString(GroupListLoader.ACCOUNT_TYPE);
-        String dataSet = cursor.getString(GroupListLoader.DATA_SET);
-        long groupId = cursor.getLong(GroupListLoader.GROUP_ID);
-        String title = cursor.getString(GroupListLoader.TITLE);
-        int memberCount = cursor.getInt(GroupListLoader.MEMBER_COUNT);
-        boolean isReadOnly = cursor.getInt(GroupListLoader.IS_READ_ONLY) == 1;
-        String systemId = cursor.getString(GroupListLoader.SYSTEM_ID);
-
-        // Figure out if this is the first group for this account name / account type pair by
-        // checking the previous entry. This is to determine whether or not we need to display an
-        // account header in this item.
-        int previousIndex = position - 1;
-        boolean isFirstGroupInAccount = true;
-        if (previousIndex >= 0 && cursor.moveToPosition(previousIndex)) {
-            String previousGroupAccountName = cursor.getString(GroupListLoader.ACCOUNT_NAME);
-            String previousGroupAccountType = cursor.getString(GroupListLoader.ACCOUNT_TYPE);
-            String previousGroupDataSet = cursor.getString(GroupListLoader.DATA_SET);
-
-            if (TextUtils.equals(accountName, previousGroupAccountName)
-                    && TextUtils.equals(accountType, previousGroupAccountType)
-                    && TextUtils.equals(dataSet, previousGroupDataSet)) {
-                isFirstGroupInAccount = false;
-            }
-        }
-
-        return new GroupListItem(accountName, accountType, dataSet, groupId, title,
-                isFirstGroupInAccount, memberCount, isReadOnly, systemId);
     }
 
     public static List<String> getSendToDataForIds(Context context, long[] ids, String scheme) {
@@ -203,18 +166,8 @@ public final class GroupUtil {
         return result;
     }
 
-    /**
-     * Returns true if it's an empty and read-only group and the system ID of
-     * the group is one of "Friends", "Family" and "Coworkers".
-     */
-    public static boolean isEmptyFFCGroup(GroupListItem groupListItem) {
-        return groupListItem.isReadOnly()
-                && isSystemIdFFC(groupListItem.getSystemId())
-                && (groupListItem.getMemberCount() <= 0);
-    }
-
-    private static boolean isSystemIdFFC(String systemId) {
-        return !TextUtils.isEmpty(systemId) && FFC_GROUPS.contains(systemId);
+    public static boolean isSystemIdFFC(String systemId) {
+        return systemId != null && !TextUtils.isEmpty(systemId) && FFC_GROUPS.contains(systemId);
     }
 
     /**
@@ -286,78 +239,5 @@ public final class GroupUtil {
             array[i] = list.get(i);
         }
         return array;
-    }
-
-    /**
-     * Stores column ordering for the projection of a query of ContactsContract.Groups
-     */
-    public static final class GroupsProjection {
-        public final int groupId;
-        public final int title;
-        public final int summaryCount;
-        public final int systemId;
-        public final int accountName;
-        public final int accountType;
-        public final int dataSet;
-        public final int autoAdd;
-        public final int favorites;
-        public final int isReadOnly;
-        public final int deleted;
-
-        public GroupsProjection(Cursor cursor) {
-            groupId = cursor.getColumnIndex(Groups._ID);
-            title = cursor.getColumnIndex(Groups.TITLE);
-            summaryCount = cursor.getColumnIndex(Groups.SUMMARY_COUNT);
-            systemId = cursor.getColumnIndex(Groups.SYSTEM_ID);
-            accountName = cursor.getColumnIndex(Groups.ACCOUNT_NAME);
-            accountType = cursor.getColumnIndex(Groups.ACCOUNT_TYPE);
-            dataSet = cursor.getColumnIndex(Groups.DATA_SET);
-            autoAdd = cursor.getColumnIndex(Groups.AUTO_ADD);
-            favorites = cursor.getColumnIndex(Groups.FAVORITES);
-            isReadOnly = cursor.getColumnIndex(Groups.GROUP_IS_READ_ONLY);
-            deleted = cursor.getColumnIndex(Groups.DELETED);
-        }
-
-        public GroupsProjection(String[] projection) {
-            List<String> list = Arrays.asList(projection);
-            groupId = list.indexOf(Groups._ID);
-            title = list.indexOf(Groups.TITLE);
-            summaryCount = list.indexOf(Groups.SUMMARY_COUNT);
-            systemId = list.indexOf(Groups.SYSTEM_ID);
-            accountName = list.indexOf(Groups.ACCOUNT_NAME);
-            accountType = list.indexOf(Groups.ACCOUNT_TYPE);
-            dataSet = list.indexOf(Groups.DATA_SET);
-            autoAdd = list.indexOf(Groups.AUTO_ADD);
-            favorites = list.indexOf(Groups.FAVORITES);
-            isReadOnly = list.indexOf(Groups.GROUP_IS_READ_ONLY);
-            deleted = list.indexOf(Groups.DELETED);
-        }
-
-        public String getTitle(Cursor cursor) {
-            return cursor.getString(title);
-        }
-
-        public long getId(Cursor cursor) {
-            return cursor.getLong(groupId);
-        }
-
-        public String getSystemId(Cursor cursor) {
-            return cursor.getString(systemId);
-        }
-
-        public int getSummaryCount(Cursor cursor) {
-            return cursor.getInt(summaryCount);
-        }
-
-        public boolean isEmptyFFCGroup(Cursor cursor) {
-            if (accountType == -1 || isReadOnly == -1 ||
-                    systemId == -1 || summaryCount == -1) {
-                throw new IllegalArgumentException("Projection is missing required columns");
-            }
-            return GoogleAccountType.ACCOUNT_TYPE.equals(cursor.getString(accountType))
-                    && cursor.getInt(isReadOnly) != 0
-                    && isSystemIdFFC(cursor.getString(systemId))
-                    && cursor.getInt(summaryCount) <= 0;
-        }
     }
 }

@@ -16,8 +16,6 @@
 
 package com.android.contacts.editor;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -39,15 +37,13 @@ import android.widget.TextView;
 
 import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.R;
-import com.android.contacts.group.GroupNameEditDialogFragment;
+import com.android.contacts.activities.ContactEditorActivity;
+import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.model.RawContactDelta;
 import com.android.contacts.model.RawContactModifier;
 import com.android.contacts.model.ValuesDelta;
-import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.model.dataitem.DataKind;
 import com.android.contacts.util.UiClosables;
-
-import com.google.common.base.Objects;
 
 import java.util.ArrayList;
 
@@ -56,7 +52,9 @@ import java.util.ArrayList;
  * brings up a dialog to change it.
  */
 public class GroupMembershipView extends LinearLayout
-        implements OnClickListener, OnItemClickListener {
+        implements OnClickListener,
+        OnItemClickListener,
+        ContactEditorActivity.NewGroupResultListener {
 
     public static final String TAG_CREATE_GROUP_FRAGMENT = "createGroupDialog";
 
@@ -163,19 +161,6 @@ public class GroupMembershipView extends LinearLayout
     private boolean mDefaultGroupVisibilityKnown;
     private boolean mDefaultGroupVisible;
     private boolean mCreatedNewGroup;
-    private GroupNameEditDialogFragment mGroupNameEditDialogFragment;
-    private GroupNameEditDialogFragment.Listener mListener =
-            new GroupNameEditDialogFragment.Listener() {
-                @Override
-                public void onGroupNameEditCancelled() {
-                }
-
-                @Override
-                public void onGroupNameEditCompleted(String name) {
-                    mCreatedNewGroup = true;
-                }
-            };
-
     private String mNoGroupString;
     private int mPrimaryTextColor;
     private int mHintTextColor;
@@ -197,15 +182,6 @@ public class GroupMembershipView extends LinearLayout
         mNoGroupString = getContext().getString(R.string.group_edit_field_hint_text);
         setFocusable(true);
         setFocusableInTouchMode(true);
-    }
-
-    private void setGroupNameEditDialogFragment() {
-        final FragmentManager fragmentManager = ((Activity) getContext()).getFragmentManager();
-        mGroupNameEditDialogFragment = (GroupNameEditDialogFragment)
-                fragmentManager.findFragmentByTag(TAG_CREATE_GROUP_FRAGMENT);
-        if (mGroupNameEditDialogFragment != null) {
-            mGroupNameEditDialogFragment.setListener(mListener);
-        }
     }
 
     @Override
@@ -263,7 +239,6 @@ public class GroupMembershipView extends LinearLayout
         mDefaultGroupVisibilityKnown = false;
         mCreatedNewGroup = false;
         updateView();
-        setGroupNameEditDialogFragment();
     }
 
     private void updateView() {
@@ -394,10 +369,21 @@ public class GroupMembershipView extends LinearLayout
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (getContext() instanceof ContactEditorActivity) {
+            ((ContactEditorActivity) getContext()).addNewGroupResultListener(this);
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         UiClosables.closeQuietly(mPopup);
         mPopup = null;
+        if (getContext() instanceof ContactEditorActivity) {
+            ((ContactEditorActivity) getContext()).removeNewGroupResultListener(this);
+        }
     }
 
     @Override
@@ -478,12 +464,16 @@ public class GroupMembershipView extends LinearLayout
     private void createNewGroup() {
         UiClosables.closeQuietly(mPopup);
         mPopup = null;
-        mGroupNameEditDialogFragment =
-                    GroupNameEditDialogFragment.newInstanceForCreation(
-                            new AccountWithDataSet(mAccountName, mAccountType, mDataSet), null);
-        mGroupNameEditDialogFragment.setListener(mListener);
-        mGroupNameEditDialogFragment.show(
-                ((Activity) getContext()).getFragmentManager(),
-                TAG_CREATE_GROUP_FRAGMENT);
+        Context context = getContext();
+        if (context instanceof ContactEditorActivity) {
+            ((ContactEditorActivity) context).openNewGroupDialog(
+                    new AccountModel(mAccountName, mAccountType, mDataSet)
+            );
+        }
+    }
+
+    @Override
+    public void onNewGroup() {
+        mCreatedNewGroup = true;
     }
 }
