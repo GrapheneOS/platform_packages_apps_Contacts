@@ -1,5 +1,6 @@
 package com.android.contacts.ui.interactions.account.filter.screen.mapper
 
+import com.android.contacts.data.contacts.model.ContactsCount
 import com.android.contacts.domain.accounts.model.AccountIconData
 import com.android.contacts.domain.accounts.model.ContactsAccountFilter
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
@@ -15,24 +16,21 @@ internal class AccountFilterItemMapperTest {
     fun withoutAccounts_returnsOnlyAll() {
         assertEquals(
             listOf(AccountFilterItem.All(0)),
-            subject.map(emptyMap()),
+            subject.map(ContactsCount(0, emptyMap())),
         )
     }
 
     @Test
-    fun withAccounts_returnsAllWithSummedCount() {
-        val account1 = AccountDisplayModelFactory.build(name = "Account 1")
-        val account2 = AccountDisplayModelFactory.build(name = "Account 2")
-
+    fun withAll_returnsAllItemWithSameValue() {
         val result = subject.map(
-            mapOf(
-                account1 to 5,
-                account2 to 10,
-            ),
+            ContactsCount(
+                all = 33,
+                byAccount = emptyMap(),
+            )
         )
 
         assertEquals(
-            AccountFilterItem.All(15),
+            AccountFilterItem.All(33),
             result.first(),
         )
     }
@@ -50,10 +48,13 @@ internal class AccountFilterItemMapperTest {
         )
 
         val result = subject.map(
-            mapOf(
-                account1 to 5,
-                account2 to 10,
-            ),
+            ContactsCount(
+                all = 0,
+                byAccount = mapOf(
+                    account1 to 5,
+                    account2 to 10,
+                ),
+            )
         )
 
         assertEquals(

@@ -1,20 +1,21 @@
 package com.android.contacts.ui.interactions.account.filter.screen.mapper
 
+import com.android.contacts.data.contacts.model.ContactsCount
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.ContactsAccountFilter
 import com.android.contacts.ui.interactions.account.filter.screen.model.AccountFilterItem
 import javax.inject.Inject
 
 internal fun interface AccountFilterItemMapper {
-    fun map(accounts: Map<AccountDisplayModel, Int>): List<AccountFilterItem>
+    fun map(accounts: ContactsCount<AccountDisplayModel>): List<AccountFilterItem>
 }
 
 internal class AccountFilterItemMapperImpl @Inject constructor() : AccountFilterItemMapper {
-    override fun map(accounts: Map<AccountDisplayModel, Int>): List<AccountFilterItem> {
+    override fun map(accounts: ContactsCount<AccountDisplayModel>): List<AccountFilterItem> {
         return buildList {
-            add(allItem(accounts.values.sum()))
+            add(allItem(accounts.all))
             addAll(
-                accounts.entries.map { (account, contactsCount) ->
+                accounts.byAccount.map { (account, contactsCount) ->
                     map(account, contactsCount)
                 },
             )

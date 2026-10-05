@@ -5,6 +5,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.android.contacts.database.SimContactDao
 import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.preference.ContactsPreferences
+import com.android.contacts.util.DeviceLocalAccountTypeFactory
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -30,6 +31,14 @@ internal class DataProvidesModule {
         @ApplicationContext context: Context,
     ): AccountTypeManager {
         return AccountTypeManager.getInstance(context)
+    }
+
+    @Provides
+    @Reusable
+    fun deviceLocalAccountTypeFactory(
+        @ApplicationContext context: Context,
+    ): DeviceLocalAccountTypeFactory {
+        return DeviceLocalAccountTypeFactory.Default(context)
     }
 
     @Provides

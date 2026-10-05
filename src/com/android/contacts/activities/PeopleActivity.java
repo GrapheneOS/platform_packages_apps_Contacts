@@ -46,7 +46,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,6 +61,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
+import com.android.contacts.domain.accounts.mapper.AccountModelMapper;
+import com.android.contacts.domain.accounts.mapper.ContactsAccountFilterMapper;
 import com.android.contacts.domain.accounts.model.AccountFilter;
 import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.domain.accounts.model.ContactsAccountFilter;
@@ -110,9 +111,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Displays a list to browse contacts.
  */
+@AndroidEntryPoint
 public class PeopleActivity extends AppCompatContactsActivity implements
         DrawerFragmentListener {
 
@@ -151,6 +157,11 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private ContactsIntentResolver mIntentResolver;
     private ContactsRequest mRequest;
     private AccountTypeManager mAccountTypeManager;
+
+    @Inject
+    ContactsAccountFilterMapper contactsAccountFilterMapper;
+    @Inject
+    AccountModelMapper accountModelMapper;
 
     private FloatingActionButtonController mFloatingActionButtonController;
     private View mFloatingActionButtonContainer;
@@ -1172,13 +1183,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                         SelectAccountActivity.EXTRA_ACCOUNT, AccountModel.class
                 );
                 if (account != null) {
-                    onAccountChosen(
-                            new AccountWithDataSet(
-                                    account.getName(),
-                                    account.getType(),
-                                    account.getDataSet()
-                            )
-                    );
+                    onAccountChosen(accountModelMapper.map(account));
                 }
             }
         } else if (requestCode == REQUEST_ACCOUNT_FILTER) {
@@ -1187,33 +1192,15 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                         AccountFilterActivity.EXTRA_FILTER, ContactsAccountFilter.class
                 );
                 if (filter != null) {
-                    onFilterMenuItemClicked(mapToContactListFilter(filter));
+                    onFilterMenuItemClicked(contactsAccountFilterMapper.map(filter));
                 }
             }
         }
     }
 
-    @NonNull
-    private ContactListFilter mapToContactListFilter(ContactsAccountFilter filter) {
-        if (filter instanceof ContactsAccountFilter.One) {
-            AccountModel account = ((ContactsAccountFilter.One) filter).getAccount();
-            return ContactListFilter.createAccountFilter(
-                    account.getType(), account.getName(), account.getDataSet(), null
-            );
-        } else {
-            return ContactListFilter.createFilterWithType(
-                    ContactListFilter.FILTER_TYPE_ALL_ACCOUNTS
-            );
-        }
-    }
-
     private void onAccountChosen(AccountWithDataSet account) {
         mNewGroupAccount = account;
-        AccountModel newGroupAccountModel = new AccountModel(
-                account.name,
-                account.type,
-                account.dataSet
-        );
+        AccountModel newGroupAccountModel = accountModelMapper.map(account);
         startActivityForResult(
                 GroupNameEditActivity.Companion.buildCreateIntent$app(
                         this,
@@ -1258,18 +1245,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     private ContactsAccountFilter getCurrentAccountFilter() {
-        ContactListFilter filter = mContactsListFragment.getFilter();
-        if (filter.filterType == ContactListFilter.FILTER_TYPE_ACCOUNT) {
-            return new ContactsAccountFilter.One(
-                    new AccountModel(
-                            filter.accountName,
-                            filter.accountType,
-                            filter.dataSet
-                    )
-            );
-        } else {
-            return ContactsAccountFilter.All.INSTANCE;
-        }
+        return contactsAccountFilterMapper.map(mContactsListFragment.getFilter());
     }
 
     @Override

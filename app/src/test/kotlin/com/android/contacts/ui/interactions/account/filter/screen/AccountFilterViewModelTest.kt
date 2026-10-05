@@ -2,6 +2,7 @@ package com.android.contacts.ui.interactions.account.filter.screen
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.android.contacts.data.contacts.model.ContactsCount
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.ContactsAccountFilter
@@ -38,8 +39,8 @@ internal class AccountFilterViewModelTest {
 
     @Test
     fun mapsItemsToState() = runTest {
-        val accountsMap = onAccountsMap(mapOf())
-        val item = AccountFilterItem.All(1)
+        val accountsMap = onAccountsMap()
+        val item = AccountFilterItem.All(0)
         onItems(listOf(item))
 
         createViewModel().uiState.test {
@@ -65,7 +66,7 @@ internal class AccountFilterViewModelTest {
     @Test
     fun selectedSelectedAccount() = runTest {
         val account = AccountDisplayModelFactory.build()
-        val accountsMap = onAccountsMap(mapOf(account to 1))
+        val accountsMap = onAccountsMap(all = 1, mapOf(account to 1))
         val allItem = AccountFilterItem.All(1)
         val accountFilter = ContactsAccountFilter.One(account.account)
         val accountItem = AccountFilterItem.One(
@@ -141,10 +142,15 @@ internal class AccountFilterViewModelTest {
     }
 
     private fun onAccountsMap(
+        all: Int = 0,
         accountsMap: Map<AccountDisplayModel, Int> = emptyMap(),
-    ): Map<AccountDisplayModel, Int> {
-        every { loadAccountsWithContactsCount(any()) } returns flowOf(accountsMap)
-        return accountsMap
+    ): ContactsCount<AccountDisplayModel> {
+        val counts = ContactsCount(
+            all = all,
+            byAccount = accountsMap,
+        )
+        every { loadAccountsWithContactsCount(any()) } returns flowOf(counts)
+        return counts
     }
 
     private fun onItems(
