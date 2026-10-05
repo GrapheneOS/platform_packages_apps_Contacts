@@ -33,12 +33,21 @@ class GetContactsCountDelegateTest {
     )
 
     @Test
-    fun whenEmptyRows_returnsEmptyMap() = runTest {
+    fun whenEmptyRows_returnsEmptyAccountsMap() = runTest {
         givenQueryRows()
 
         val result = subject.getContactsCount().first()!!
 
-        assertEquals(emptyMap<AccountModel, Int>(), result)
+        assertEquals(emptyMap<AccountModel, Int>(), result.byAccount)
+    }
+
+    @Test
+    fun whenEmptyRows_returnsZeroAll() = runTest {
+        givenQueryRows()
+
+        val result = subject.getContactsCount().first()!!
+
+        assertEquals(0, result.all)
     }
 
     @Test
@@ -51,7 +60,8 @@ class GetContactsCountDelegateTest {
 
         val result = subject.getContactsCount().first()!!
 
-        assertEquals(1, result[account])
+        assertEquals(1, result.all)
+        assertEquals(1, result.byAccount[account])
     }
 
     @Test
@@ -65,7 +75,8 @@ class GetContactsCountDelegateTest {
 
         val result = subject.getContactsCount().first()!!
 
-        assertEquals(3, result[account])
+        assertEquals(3, result.all)
+        assertEquals(3, result.byAccount[account])
     }
 
     @Test
@@ -80,8 +91,25 @@ class GetContactsCountDelegateTest {
 
         val result = subject.getContactsCount().first()!!
 
-        assertEquals(1, result[account1])
-        assertEquals(2, result[account2])
+        assertEquals(3, result.all)
+        assertEquals(1, result.byAccount[account1])
+        assertEquals(2, result.byAccount[account2])
+    }
+
+    @Test
+    fun withDuplicatedContactsOnDifferentAccounts_countDistinctForAll() = runTest {
+        val account1 = AccountModelFactory.build(name = "Account 1")
+        val account2 = AccountModelFactory.build(name = "Account 2")
+        givenQueryRows(
+            arrayOf(1L, account1.name, account1.type, account1.dataSet),
+            arrayOf(1L, account2.name, account2.type, account2.dataSet),
+        )
+
+        val result = subject.getContactsCount().first()!!
+
+        assertEquals(1, result.all)
+        assertEquals(1, result.byAccount[account1])
+        assertEquals(1, result.byAccount[account2])
     }
 
     @Test

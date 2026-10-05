@@ -3,6 +3,7 @@ package com.android.contacts.ui.interactions.account.filter.screen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.contacts.data.contacts.model.ContactsCount
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.ContactsAccountFilter
@@ -70,7 +71,7 @@ internal class AccountFilterViewModel @Inject constructor(
     }
 
     private fun buildItems(
-        accounts: Map<AccountDisplayModel, Int>,
+        accounts: ContactsCount<AccountDisplayModel>,
     ): ImmutableList<SelectableItem<AccountFilterItem>> {
         val items = accountFilterItemMapper.map(accounts)
         return items.map {
