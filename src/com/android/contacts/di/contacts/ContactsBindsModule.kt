@@ -2,6 +2,8 @@ package com.android.contacts.di.contacts
 
 import com.android.contacts.data.contacts.repository.ContactsRepository
 import com.android.contacts.data.contacts.repository.ContactsRepositoryImpl
+import com.android.contacts.domain.accounts.mapper.ContactsAccountFilterMapper
+import com.android.contacts.domain.accounts.mapper.ContactsAccountFilterMapperImpl
 import com.android.contacts.domain.contacts.mapper.RawContactWithAccountMapper
 import com.android.contacts.domain.contacts.mapper.RawContactWithAccountMapperImpl
 import com.android.contacts.domain.contacts.usecase.LoadRawContacts
@@ -17,6 +19,12 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class ContactsBindsModule {
+
+    @Binds
+    @Reusable
+    abstract fun bindContactsAccountFilterMapper(
+        impl: ContactsAccountFilterMapperImpl,
+    ): ContactsAccountFilterMapper
 
     @Binds
     @Reusable
