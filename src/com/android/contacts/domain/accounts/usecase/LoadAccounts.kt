@@ -17,12 +17,14 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 internal fun interface LoadAccounts {
-    operator fun invoke(filter: AccountFilter?): Flow<List<AccountDisplayModel>>
+    operator fun invoke(
+        filter: AccountFilter?,
+    ): Flow<List<AccountDisplayModel>>
 }
 
 internal class LoadAccountsImpl @Inject constructor(
-    private val accountFilterMapper: AccountFilterMapper,
     private val buildBroadcastReceiverFlow: BuildBroadcastReceiverFlow,
+    private val accountFilterMapper: AccountFilterMapper,
     private val accountTypeManager: AccountTypeManager,
     private val accountDisplayModelMapper: AccountDisplayModelMapper,
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,

@@ -44,7 +44,7 @@ internal class RawContactWithAccountMapperTest {
             accountTypeManager.getAccountInfoForAccount(capture(accountSlot))
         } returns accountInfo
         val accountDisplayModel = AccountDisplayModelFactory.build()
-        every { accountDisplayModelMapper.map(any()) } returns accountDisplayModel
+        every { accountDisplayModelMapper.map(any<AccountInfo>()) } returns accountDisplayModel
 
         val result = subject.map(rawContact)!!
 

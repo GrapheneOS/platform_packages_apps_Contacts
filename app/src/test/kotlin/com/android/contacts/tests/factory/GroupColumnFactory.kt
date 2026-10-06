@@ -12,7 +12,6 @@ internal object GroupColumnFactory {
         accountType: String? = null,
         accountDataSet: String? = null,
         isReadOnly: Boolean = false,
-        isDeleted: Boolean = false,
     ) = GroupColumn(
         id = id,
         title = title,
@@ -22,6 +21,5 @@ internal object GroupColumnFactory {
         accountType = accountType,
         accountDataSet = accountDataSet,
         isReadOnly = isReadOnly,
-        isDeleted = isDeleted,
     )
 }
