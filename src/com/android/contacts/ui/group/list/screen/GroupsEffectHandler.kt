@@ -40,7 +40,6 @@ internal class GroupsEffectHandlerImpl(
             ),
             GroupsActivity.REQUEST_CREATE_GROUP,
         )
-        close()
     }
 
     private fun openGroup(groupUri: Uri) {

@@ -562,7 +562,6 @@
 
         <activity
             android:name=".ui.group.list.GroupsActivity"
-            android:exported="true"
             android:theme="@style/Theme.Compose.Dialog"/>
 
         <activity

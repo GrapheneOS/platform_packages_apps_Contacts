@@ -9,7 +9,7 @@ internal object GroupFactory {
         name: String = "Group",
         summaryCount: Int = 0,
         systemId: String? = null,
-        account: AccountModel? = null,
+        account: AccountModel = AccountModelFactory.build(),
         isReadOnly: Boolean = false,
     ) = Group(
         id = id,

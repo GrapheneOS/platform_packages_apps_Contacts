@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
+import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.groups.model.Group
 import com.android.contacts.domain.groups.model.GroupFilter
 import com.android.contacts.domain.groups.model.GroupSort
@@ -22,7 +24,6 @@ import com.android.contacts.ui.group.list.screen.model.GroupsEffect as Effect
 import com.android.contacts.ui.group.list.screen.model.GroupsUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -43,6 +44,7 @@ internal interface GroupsScreenModel {
 internal class GroupsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getGroups: GetGroups,
+    loadAccounts: LoadAccounts,
     private val groupsUiMapper: GroupsUiMapper,
     private val getDefaultAccount: GetDefaultAccount,
     private val accountDisplayModelMapper: AccountDisplayModelMapper,
@@ -61,7 +63,8 @@ internal class GroupsViewModel @Inject constructor(
                 filters = groupFilters(),
                 sort = GroupSort.BY_TITLE,
             ),
-            loadDefaultAccount(),
+            loadAccounts(AccountFilter.GROUPS_INSERTABLE),
+            flowOf(account ?: getDefaultAccount()),
             ::buildState,
         )
             .stateIn(
@@ -72,28 +75,23 @@ internal class GroupsViewModel @Inject constructor(
 
     private fun buildState(
         groups: List<Group>?,
-        defaultAccount: AccountDisplayModel?,
+        insertableAccounts: List<AccountDisplayModel>,
+        defaultAccount: AccountModel?,
     ): State {
+        if (groups == null) {
+            Log.w(TAG, "Failed to load groups")
+            emitEffect(Effect.Close)
+            return State.Loading
+        }
+
+        val accountGroups = groupsUiMapper.map(groups, insertableAccounts, defaultAccount)
+        val onlyOneNullAccount = accountGroups.all { it.account.isNullAccount }
         return when {
-            groups == null -> {
-                Log.w(TAG, "Failed to load groups")
-                emitEffect(Effect.Close)
-                State.Loading
-            }
-            groups.isEmpty() && defaultAccount == null -> {
-                State.WithoutAccounts
-            }
-            else -> {
-                val accountGroups = when {
-                    groups.isEmpty() -> persistentListOf(groupsUiMapper.map(defaultAccount))
-                    else -> groupsUiMapper.map(groups)
-                }
-                val onlyOneNullAccount = accountGroups.all { it.account == null }
-                State.WithAccounts(
-                    groups = accountGroups,
-                    showAccountHeaders = account == null && !onlyOneNullAccount,
-                )
-            }
+            accountGroups.isEmpty() -> State.WithoutAccounts
+            else -> State.WithAccounts(
+                groups = accountGroups,
+                showAccountHeaders = account == null && !onlyOneNullAccount,
+            )
         }
     }
 

@@ -393,9 +393,6 @@
     <!-- Message shown when the groups dialog is displayed but there are no accounts -->
     <string name="groups_empty_accounts_message">No accounts available</string>
 
-    <!-- Message shown when the groups dialog wants to display groups that do not belong to an account -->
-    <string name="group_without_account">(no account)</string>
-
     <!-- Content description for new group button for a specific account -->
     <string name="new_group_content_description">Create label for %1$s</string>
 

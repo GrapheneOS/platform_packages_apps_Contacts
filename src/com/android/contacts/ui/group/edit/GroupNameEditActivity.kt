@@ -37,7 +37,7 @@ class GroupNameEditActivity : ComponentActivity() {
         const val EXTRA_GROUP_NAME = "group_name"
         const val EXTRA_ACCOUNT = "account"
         const val EXTRA_CALLBACK_ACTIVITY = "callback_activity"
-        const val EXTRA_CALLBACK_ACTION = "calvlback_action"
+        const val EXTRA_CALLBACK_ACTION = "callback_action"
 
         internal fun buildCreateIntent(
             context: Context,

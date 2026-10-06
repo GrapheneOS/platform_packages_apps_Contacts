@@ -9,12 +9,12 @@ internal data class Group(
     val name: String,
     val summaryCount: Int,
     val systemId: String?,
-    val account: AccountModel?,
+    val account: AccountModel,
     val isReadOnly: Boolean,
 ) {
     val isEmptyFFCGroup: Boolean
         get() {
-            return GoogleAccountType.ACCOUNT_TYPE == account?.type &&
+            return GoogleAccountType.ACCOUNT_TYPE == account.type &&
                 isReadOnly &&
                 summaryCount <= 0 &&
                 GroupUtil.isSystemIdFFC(systemId)

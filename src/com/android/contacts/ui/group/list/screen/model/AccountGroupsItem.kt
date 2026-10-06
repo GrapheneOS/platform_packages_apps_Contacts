@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
 internal data class AccountGroupsItem(
-    val account: AccountModel?,
+    val account: AccountModel,
     val accountName: String,
     val canCreateGroup: Boolean,
     val groups: ImmutableList<GroupUiItem>,

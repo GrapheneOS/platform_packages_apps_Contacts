@@ -7,7 +7,9 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
+import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
+import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.groups.model.Group
 import com.android.contacts.domain.groups.model.GroupFilter
 import com.android.contacts.domain.groups.model.GroupSort
@@ -51,6 +53,7 @@ internal class GroupsViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val getGroups = mockk<GetGroups>(relaxed = true)
+    private val loadAccounts = mockk<LoadAccounts>(relaxed = true)
     private val groupsUiMapper = mockk<GroupsUiMapper>(relaxed = true)
     private val getDefaultAccount = mockk<GetDefaultAccount>(relaxed = true)
     private val accountDisplayModelMapper = mockk<AccountDisplayModelMapper>(relaxed = true)
@@ -59,8 +62,11 @@ internal class GroupsViewModelTest {
     fun setUp() {
         mockkStatic(ContentUris::class)
         every { getGroups(any(), any()) } returns emptyFlow()
-        every { groupsUiMapper.map(any<List<Group>>()) } returns persistentListOf()
-        every { groupsUiMapper.map(any(), any()) } returns mockk<AccountGroupsItem>(relaxed = true)
+        every { loadAccounts(any()) } returns emptyFlow()
+        every { getDefaultAccount() } returns DEFAULT_ACCOUNT
+        every {
+            groupsUiMapper.map(any(), any(), any())
+        } returns persistentListOf()
     }
 
     @After
@@ -72,6 +78,7 @@ internal class GroupsViewModelTest {
     fun whenGroupsFailToLoad_close() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             every { getGroups(any(), any()) } returns flowOf(null)
+            every { loadAccounts(any()) } returns flowOf(emptyList())
             val viewModel = createViewModel()
 
             viewModel.uiState.test {
@@ -85,7 +92,7 @@ internal class GroupsViewModelTest {
         }
 
     @Test
-    fun whenGroupsAreLoading_stateIsLoading() =
+    fun whenGroupsAndAccountsAreLoading_stateIsLoading() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             val viewModel = createViewModel()
 
@@ -95,10 +102,9 @@ internal class GroupsViewModelTest {
         }
 
     @Test
-    fun whenThereAreNotAccounts_stateIsWithoutAccounts() =
+    fun whenThereAreNoGroupItems_stateIsWithoutAccounts() =
         runTest(context = mainDispatcherRule.testDispatcher) {
-            givenGroups(emptyList())
-            givenDefaultAccount(null)
+            givenAccountGroups(emptyList())
             val viewModel = createViewModel()
 
             viewModel.uiState.test {
@@ -108,7 +114,7 @@ internal class GroupsViewModelTest {
         }
 
     @Test
-    fun whenThereAreGroups_stateIsWithAccounts() =
+    fun whenThereAreGroupItems_stateIsWithAccounts() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             val accountGroups = givenAccountGroups(listOf(ACCOUNT_GROUPS))
             val viewModel = createViewModel()
@@ -148,41 +154,51 @@ internal class GroupsViewModelTest {
 
             val filters = slot<List<GroupFilter>>()
             verify { getGroups(capture(filters), GroupSort.BY_TITLE) }
-            assertTrue(filters.captured.contains(GroupFilter.ByAccount(ACCOUNT_GROUPS.account!!)))
+            assertTrue(filters.captured.contains(GroupFilter.ByAccount(ACCOUNT_GROUPS.account)))
             assertTrue(filters.captured.contains(GroupFilter.Favorites(false)))
             assertTrue(filters.captured.contains(GroupFilter.AutoAdd(false)))
         }
 
     @Test
-    fun whenOnlyAccountIsNull_showAccountHeadersIsFalse() =
+    fun whenAccountIsProvided_useItAsTheMapperDefaultAccount() =
         runTest(context = mainDispatcherRule.testDispatcher) {
-            val accountGroups = givenAccountGroups(listOf(ACCOUNT_GROUPS.copy(account = null)))
+            givenAccountGroups(listOf(ACCOUNT_GROUPS))
+            val viewModel = createViewModel(
+                initialState = mapOf(
+                    GroupsActivity.EXTRA_ACCOUNT to ACCOUNT_GROUPS.account,
+                ),
+            )
+
+            viewModel.uiState.test {
+                advanceUntilIdle()
+                cancelAndIgnoreRemainingEvents()
+            }
+
+            verify { groupsUiMapper.map(any(), any(), ACCOUNT_GROUPS.account) }
+        }
+
+    @Test
+    fun whenNoAccountIsProvided_mapWithTheDefaultAccount() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            givenAccountGroups(listOf(ACCOUNT_GROUPS))
             val viewModel = createViewModel()
 
             viewModel.uiState.test {
                 advanceUntilIdle()
-                assertEquals(
-                    State.WithAccounts(
-                        groups = accountGroups,
-                        showAccountHeaders = false,
-                    ),
-                    expectMostRecentItem(),
-                )
+                cancelAndIgnoreRemainingEvents()
             }
+
+            verify { groupsUiMapper.map(any(), any(), DEFAULT_ACCOUNT) }
         }
 
     @Test
-    fun whenThereAreNoGroupsAndThereIsADefaultAccount_showDefaultAccountWithNoGroups() =
+    fun whenThereIsOnlyOneNullAccount_showAccountHeadersIsFalse() =
         runTest(context = mainDispatcherRule.testDispatcher) {
-            val accountGroups = givenAccountGroups(emptyList())
-            val defaultAccount = givenDefaultAccount(AccountDisplayModelFactory.build())!!
-            val accountGroup = AccountGroupsItem(
-                account = defaultAccount.account,
-                accountName = defaultAccount.name!!,
-                groups = persistentListOf(),
-                canCreateGroup = true,
+            val accountGroups = givenAccountGroups(
+                listOf(
+                    ACCOUNT_GROUPS.copy(account = AccountModel(null, null, null)),
+                ),
             )
-            givenSingleAccountGroups(accountGroup)
             val viewModel = createViewModel()
 
             viewModel.uiState.test {
@@ -232,6 +248,7 @@ internal class GroupsViewModelTest {
         return GroupsViewModel(
             savedStateHandle = SavedStateHandle(initialState),
             getGroups = getGroups,
+            loadAccounts = loadAccounts,
             groupsUiMapper = groupsUiMapper,
             getDefaultAccount = getDefaultAccount,
             accountDisplayModelMapper = accountDisplayModelMapper,
@@ -243,29 +260,21 @@ internal class GroupsViewModelTest {
         return groups
     }
 
+    private fun givenInsertableAccounts(
+        accounts: List<AccountDisplayModel>,
+    ): List<AccountDisplayModel> {
+        every { loadAccounts(any()) } returns flowOf(accounts)
+        return accounts
+    }
+
     private fun givenAccountGroups(
         accountGroups: List<AccountGroupsItem>,
     ): ImmutableList<AccountGroupsItem> {
         val groups = givenGroups(listOf(GroupFactory.build()))
-        every { groupsUiMapper.map(groups) } returns accountGroups.toImmutableList()
+        val accounts = givenInsertableAccounts(listOf(AccountDisplayModelFactory.build()))
+        every { groupsUiMapper.map(groups, accounts, any()) } returns
+            accountGroups.toImmutableList()
         return accountGroups.toImmutableList()
-    }
-
-    private fun givenSingleAccountGroups(
-        accountGroup: AccountGroupsItem,
-    ): AccountGroupsItem {
-        every { groupsUiMapper.map(any(), any()) } returns accountGroup
-        return accountGroup
-    }
-
-    private fun givenDefaultAccount(
-        account: AccountDisplayModel? = AccountDisplayModelFactory.build(),
-    ): AccountDisplayModel? {
-        every { getDefaultAccount() } returns account?.account
-        if (account != null) {
-            every { accountDisplayModelMapper.map(account.account) } returns account
-        }
-        return account
     }
 
     companion object {
@@ -281,5 +290,6 @@ internal class GroupsViewModelTest {
             groups = persistentListOf(GROUP),
             canCreateGroup = true,
         )
+        private val DEFAULT_ACCOUNT = AccountModelFactory.build(name = "Default")
     }
 }
