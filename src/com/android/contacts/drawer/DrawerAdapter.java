@@ -63,6 +63,7 @@ public class DrawerAdapter extends BaseAdapter {
     private NavSpacerItem mNavSpacerItem = null;
     private List<PrimaryItem> mPrimaryItems = new ArrayList<>();
     private HeaderItem mAccountHeader = null;
+    private List<BaseDrawerItem> mAccountsItems = new ArrayList<>();
     private List<BaseDrawerItem> mMiscItems = new ArrayList<>();
     private List<BaseDrawerItem> mItemsList = new ArrayList<>();
 
@@ -84,9 +85,6 @@ public class DrawerAdapter extends BaseAdapter {
                     R.drawable.quantum_ic_assistant_vd_theme_24, ContactsView.ASSISTANT));
         }
         mMiscItems.add(new DividerItem());
-        mMiscItems.add(new MiscItem(R.id.nav_accounts, R.string.settings_accounts,
-                R.drawable.quantum_ic_person_vd_theme_24));
-        mMiscItems.add(new DividerItem());
         mMiscItems.add(
                 new MiscItem(R.id.nav_groups, R.string.menu_title_groups,
                         R.drawable.quantum_ic_label_vd_theme_24)
@@ -105,6 +103,7 @@ public class DrawerAdapter extends BaseAdapter {
         mItemsList.clear();
         mItemsList.add(mNavSpacerItem);
         mItemsList.addAll(mPrimaryItems);
+        mItemsList.addAll(mAccountsItems);
         mItemsList.addAll(mMiscItems);
         mItemsList.add(mNavSpacerItem);
     }
@@ -209,6 +208,16 @@ public class DrawerAdapter extends BaseAdapter {
         } else {
             imageView.clearColorFilter();
         }
+    }
+
+    public void setIsAccountSwitcherVisible(boolean isVisible) {
+        mAccountsItems.clear();
+        if (isVisible) {
+            mAccountsItems.add(new DividerItem());
+            mAccountsItems.add(new MiscItem(R.id.nav_accounts, R.string.settings_accounts,
+                    R.drawable.quantum_ic_person_vd_theme_24));
+        }
+        notifyChangeAndRebuildList();
     }
 
     private void notifyChangeAndRebuildList() {

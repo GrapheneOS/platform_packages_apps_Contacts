@@ -6,6 +6,8 @@ import com.android.contacts.domain.accounts.mapper.AccountFilterMapper
 import com.android.contacts.domain.accounts.mapper.AccountFilterMapperImpl
 import com.android.contacts.domain.accounts.mapper.AccountModelMapper
 import com.android.contacts.domain.accounts.mapper.AccountModelMapperImpl
+import com.android.contacts.domain.accounts.usecase.CanSwitchAccounts
+import com.android.contacts.domain.accounts.usecase.CanSwitchAccountsImpl
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccountImpl
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
@@ -47,6 +49,12 @@ internal abstract class AccountsBindsModule {
     abstract fun bindAccountModelMapper(
         impl: AccountModelMapperImpl,
     ): AccountModelMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindCanSwitchAccounts(
+        impl: CanSwitchAccountsImpl,
+    ): CanSwitchAccounts
 
     @Binds
     @Reusable

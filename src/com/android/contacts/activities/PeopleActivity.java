@@ -66,6 +66,7 @@ import com.android.contacts.domain.accounts.mapper.ContactsAccountFilterMapper;
 import com.android.contacts.domain.accounts.model.AccountFilter;
 import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.domain.accounts.model.ContactsAccountFilter;
+import com.android.contacts.domain.accounts.usecase.CanSwitchAccounts;
 import com.android.contacts.drawer.DrawerFragment;
 import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
 import com.android.contacts.editor.ContactEditorFragment;
@@ -114,6 +115,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
 
 /**
  * Displays a list to browse contacts.
@@ -162,6 +164,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     ContactsAccountFilterMapper contactsAccountFilterMapper;
     @Inject
     AccountModelMapper accountModelMapper;
+    @Inject
+    CanSwitchAccounts canSwitchAccounts;
 
     private FloatingActionButtonController mFloatingActionButtonController;
     private View mFloatingActionButtonContainer;
@@ -444,6 +448,13 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             Log.d(Constants.PERFORMANCE_TAG, "PeopleActivity.onCreate finish");
         }
         getWindow().setBackgroundDrawable(null);
+
+        canSwitchAccounts.invokeWithCallback((canSwitchAccounts) -> {
+            runOnUiThread(() ->
+                    mDrawerFragment.setIsAccountSwitcherVisible(canSwitchAccounts.booleanValue())
+            );
+            return Unit.INSTANCE;
+        });
     }
 
     @SuppressWarnings("MissingSuperCall") // TODO: Fix me
