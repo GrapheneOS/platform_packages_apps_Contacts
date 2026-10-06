@@ -77,6 +77,9 @@
     <!-- Menu ID for help & feedback  menu -->
     <item type="id" name="nav_help" />
 
+    <!-- Menu ID for Debug menu -->
+    <item type="id" name="nav_debug" />
+
     <!-- For vcard.ImportVCardActivity -->
     <item type="id" name="dialog_cache_vcard"/>
     <item type="id" name="dialog_error_with_message"/>

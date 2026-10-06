@@ -63,6 +63,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.contacts.AppCompatContactsActivity;
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.R;
+import com.android.contacts.domain.accounts.model.AccountFilter;
 import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.drawer.DrawerFragment;
 import com.android.contacts.drawer.DrawerFragment.DrawerFragmentListener;
@@ -87,6 +88,7 @@ import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.account.AccountInfo;
 import com.android.contacts.model.account.AccountWithDataSet;
 import com.android.contacts.ui.UIIntents;
+import com.android.contacts.ui.debug.DebugOptionsMenu;
 import com.android.contacts.ui.interactions.account.SelectAccountActivity;
 import com.android.contacts.ui.settings.SettingsActivity;
 import com.android.contacts.util.AccountFilterUtil;
@@ -108,9 +110,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
+
+import dagger.Lazy;
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Displays a list to browse contacts.
  */
+@AndroidEntryPoint
 public class PeopleActivity extends AppCompatContactsActivity implements
         DrawerFragmentListener {
 
@@ -202,6 +210,9 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private Object mStatusChangeListenerHandle;
 
     private final Handler mHandler = new Handler();
+
+    @Inject
+    Lazy<DebugOptionsMenu> debugOptionsMenu;
 
     private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
         public void onStatusChanged(int which) {
@@ -1169,7 +1180,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 UIIntents.INSTANCE.getSelectAccountDialogIntent(
                         this,
                         Integer.valueOf(R.string.dialog_new_group_account),
-                        AccountTypeManager.AccountFilter.GROUPS_INSERTABLE
+                        AccountFilter.GROUPS_WRITABLE
                 ),
                 REQUEST_SELECT_ACCOUNT
         );
@@ -1242,6 +1253,11 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     @Override
+    public void onShowDebugOptions() {
+        debugOptionsMenu.get().show(this);
+    }
+
+    @Override
     public void onGroupViewSelected(GroupListItem groupListItem) {
         onGroupMenuItemClicked(groupListItem.getGroupId());
     }
@@ -1307,6 +1323,4 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 ContactEditorFragment.INTENT_EXTRA_NEW_LOCAL_PROFILE);
         return intent;
     }
-
-
 }

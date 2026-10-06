@@ -17,6 +17,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -122,5 +123,11 @@ internal class CoreProvidesModule {
     @Provides
     fun provideBidiFormatter(): BidiFormatter {
         return BidiFormatter.getInstance()
+    }
+
+    @Provides
+    @Reusable
+    fun provideRandom(): Random {
+        return Random
     }
 }
