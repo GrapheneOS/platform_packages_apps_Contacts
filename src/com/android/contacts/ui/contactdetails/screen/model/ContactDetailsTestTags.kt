@@ -1,0 +1,23 @@
+package com.android.contacts.ui.contactdetails.screen.model
+
+internal const val CONTACT_DETAILS_HEADER_TEST_TAG = "contact_details_header"
+internal const val CONTACT_DETAILS_TITLE_TEST_TAG = "contact_details_title"
+internal const val CONTACT_DETAILS_GROUPS_TEST_TAG = "contact_details_groups"
+internal const val CONTACT_DETAILS_QUICK_ACTIONS_TEST_TAG = "contact_details_quick_actions"
+internal const val CONTACT_DETAILS_QUICK_ACTION_TEST_TAG_PREFIX = "contact_details_quick_action_"
+internal const val CONTACT_DETAILS_CONTACT_CARD_TEST_TAG = "contact_details_contact_card"
+internal const val CONTACT_DETAILS_NOTES_TEST_TAG = "contact_details_notes"
+internal const val CALLING_SIM_DIALOG_TEST_TAG = "contact_details_calling_sim_dialog"
+internal const val CONTACT_DETAILS_RECENT_CALLS_TEST_TAG = "contact_details_recent_calls"
+internal const val CONTACT_DETAILS_CONNECTED_APPS_TEST_TAG = "contact_details_connected_apps"
+internal const val CONTACT_DETAILS_SETTINGS_TEST_TAG = "contact_details_settings"
+internal const val CONTACT_DETAILS_ACCOUNTS_TEST_TAG = "contact_details_accounts"
+internal const val CONTACT_DETAILS_SETTING_TEST_TAG_PREFIX = "contact_details_setting_"
+internal const val CONTACT_DETAILS_EMPTY_PROMPT_TEST_TAG = "contact_details_empty_prompt"
+internal const val CONTACT_DETAILS_ENTRY_TEST_TAG_PREFIX = "contact_details_entry_"
+internal const val CONTACT_DETAILS_ALTERNATE_ACTION_TEST_TAG_PREFIX = "contact_details_alternate_"
+internal const val CONTACT_DETAILS_ENHANCED_CALL_ACTION_TEST_TAG_PREFIX =
+    "contact_details_enhanced_call_"
+internal const val CONTACT_DETAILS_STAR_TEST_TAG = "contact_details_star"
+internal const val CONTACT_DETAILS_EDIT_TEST_TAG = "contact_details_edit"
+internal const val CONTACT_DETAILS_PROGRESS_DIALOG_TEST_TAG = "contact_details_progress_dialog"

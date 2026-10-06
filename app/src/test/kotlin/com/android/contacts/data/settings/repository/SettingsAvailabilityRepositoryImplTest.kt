@@ -6,7 +6,6 @@ import android.provider.BlockedNumberContract
 import android.provider.ContactsContract.ProviderStatus
 import android.telephony.TelephonyManager
 import com.android.contacts.R
-import com.android.contacts.compat.TelephonyManagerCompat
 import com.android.contacts.list.ProviderStatusWatcher
 import com.android.contactsbind.HelpUtils
 import io.mockk.every
@@ -42,7 +41,6 @@ class SettingsAvailabilityRepositoryImplTest {
 
     @Before
     fun setUp() {
-        mockkStatic(TelephonyManagerCompat::class)
         mockkStatic(BlockedNumberContract::class)
         mockkStatic(HelpUtils::class)
         every { context.resources } returns resources
@@ -123,7 +121,7 @@ class SettingsAvailabilityRepositoryImplTest {
         isVoiceCapable: Boolean,
         canBlockNumbers: Boolean,
     ) {
-        every { TelephonyManagerCompat.isVoiceCapable(telephonyManager) } returns isVoiceCapable
+        every { telephonyManager.isDeviceVoiceCapable } returns isVoiceCapable
         every { BlockedNumberContract.canCurrentUserBlockNumbers(context) } returns canBlockNumbers
     }
 }

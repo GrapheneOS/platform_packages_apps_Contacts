@@ -2,10 +2,8 @@ package com.android.contacts.quickcontact;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.provider.ContactsContract.CommonDataKinds.GroupMembership;
 
-import com.android.contacts.ContactSaveService;
 import com.android.contacts.group.GroupMetaData;
 import com.android.contacts.model.AccountTypeManager;
 import com.android.contacts.model.Contact;
@@ -67,20 +65,6 @@ public class InvisibleContactUtil {
         }
 
         return !isInDefaultGroup;
-    }
-
-    public static void addToDefaultGroup(Contact contactData, Context context) {
-        final RawContactDeltaList contactDeltaList = contactData.createRawContactDeltaList();
-        if (markAddToDefaultGroup(contactData, contactDeltaList, context)) {
-            // Fire off the intent. we don't need a callback, as the database listener
-            // should update the ui
-            final Intent intent = ContactSaveService.createSaveContactIntent(
-                    context,
-                    contactDeltaList, "", 0, false, QuickContactActivity.class,
-                    Intent.ACTION_VIEW, null, /* joinContactIdExtraKey =*/ null,
-                /* joinContactId =*/ null);
-            ContactSaveService.startService(context, intent);
-        }
     }
 
     public static boolean markAddToDefaultGroup(Contact contactData,

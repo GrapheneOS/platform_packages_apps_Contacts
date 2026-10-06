@@ -19,9 +19,6 @@
     <color name="text_color_secondary">#89000000</color>
     <color name="hint_text_color">#61000000</color>
 
-    <color name="quickcontact_entry_sub_header_text_color">#737373</color>
-    <color name="quickcontact_entry_header_text_color">#202020</color>
-
     <color name="action_bar_background">#2a56c6</color>
 
     <color name="nav_item_selected_background">#0f000000</color>
@@ -47,12 +44,6 @@
 
     <!-- Horizontal separator line should be 12% dark in the light theme. -->
     <color name="divider_line_color_light">#e0e0e0</color>
-
-    <!-- Color of the text on an ExpandingEntryCard button -->
-    <color name="expanding_entry_card_button_text_color">@android:color/black</color>
-
-    <!-- Background color for an ExpandingEntryCard -->
-    <color name="expanding_entry_card_background_color">#ffffff</color>
 
     <!-- Color of the margin for cards -->
     <color name="card_margin_color">#f4f4f4</color>
@@ -159,16 +150,12 @@
             this is Blue Grey 700 -->
     <color name="quickcontact_default_photo_tint_color_dark">#455A64</color>
 
-
     <color name="letter_tile_default_color">#cccccc</color>
 
     <color name="letter_tile_font_color">#ffffff</color>
 
     <!-- Color for icons in the actionbar -->
     <color name="actionbar_icon_color">#ffffff</color>
-
-    <!-- Color of the title to the Frequently Contacted section -->
-    <color name="frequently_contacted_title_color">@color/actionbar_background_color</color>
 
     <!-- Color of action bar text. Ensure this stays in sync with packages/Telephony
     phone_settings_actionbar_text_color-->
