@@ -8,6 +8,8 @@ import com.android.contacts.domain.accounts.mapper.AccountIconDataMapper
 import com.android.contacts.domain.accounts.mapper.AccountIconDataMapperImpl
 import com.android.contacts.domain.accounts.mapper.AccountModelMapper
 import com.android.contacts.domain.accounts.mapper.AccountModelMapperImpl
+import com.android.contacts.domain.accounts.usecase.CanSwitchAccounts
+import com.android.contacts.domain.accounts.usecase.CanSwitchAccountsImpl
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccountImpl
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
@@ -55,6 +57,12 @@ internal abstract class AccountsBindsModule {
     abstract fun bindAccountIconDataMapper(
         impl: AccountIconDataMapperImpl,
     ): AccountIconDataMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindCanSwitchAccounts(
+        impl: CanSwitchAccountsImpl,
+    ): CanSwitchAccounts
 
     @Binds
     @Reusable

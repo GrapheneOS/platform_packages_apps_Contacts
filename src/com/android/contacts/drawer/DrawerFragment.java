@@ -169,6 +169,10 @@ public class DrawerFragment extends Fragment {
         }
     }
 
+    public void setIsAccountSwitcherVisible(boolean isVisible) {
+        mDrawerAdapter.setIsAccountSwitcherVisible(isVisible);
+    }
+
     private void applyTopInset(int insetTop) {
         // set height of the scrim
         mScrimDrawable.setIntrinsicHeight(insetTop);
