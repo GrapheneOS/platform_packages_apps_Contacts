@@ -4,8 +4,8 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.usecase.LoadAccounts
-import com.android.contacts.model.AccountTypeManager
 import com.android.contacts.ui.interactions.account.screen.model.SelectAccountAction as Action
 import com.android.contacts.ui.interactions.account.screen.model.SelectAccountEffect as Effect
 import com.android.contacts.ui.interactions.account.screen.model.SelectAccountUiState as State
@@ -39,8 +39,8 @@ internal class SelectAccountViewModel @Inject constructor(
     private val _effects = MutableSharedFlow<Effect>(extraBufferCapacity = 1)
     override val effects: Flow<Effect> = _effects.asSharedFlow()
 
-    private val accountFilter: AccountTypeManager.AccountFilter =
-        savedStateHandle[KEY_LIST_FILTER] ?: AccountTypeManager.AccountFilter.ALL
+    private val accountFilter: AccountFilter =
+        savedStateHandle[KEY_LIST_FILTER] ?: AccountFilter.ALL
 
     @StringRes
     private val titleResId: Int? = savedStateHandle[KEY_TITLE_RES_ID]
