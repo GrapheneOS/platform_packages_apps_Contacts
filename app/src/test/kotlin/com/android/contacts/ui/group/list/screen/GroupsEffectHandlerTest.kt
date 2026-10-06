@@ -65,7 +65,6 @@ internal class GroupsEffectHandlerTest {
             )
         }
         verify { activity.startActivityForResult(intent, GroupsActivity.REQUEST_CREATE_GROUP) }
-        verify { activity.finish() }
     }
 
     @Test

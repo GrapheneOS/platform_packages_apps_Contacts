@@ -4,6 +4,7 @@ package com.android.contacts.ui.group.list.screen
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -142,7 +143,7 @@ private fun GroupsList(
     onGroupClick: (GroupUiItem) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.padding(bottom = 16.dp),
+        contentPadding = PaddingValues(bottom = 16.dp),
     ) {
         groups.forEach { accountGroup ->
             if (showAccountHeaders) {

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.android.contacts.ContactSaveService
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.group.GroupUtil
 import com.android.contacts.ui.core.AppTheme
@@ -16,13 +17,16 @@ import com.android.contacts.ui.group.list.screen.model.GroupsEffect as Effect
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GroupsActivity : ComponentActivity() {
+class GroupsActivity :
+    ComponentActivity(),
+    ContactSaveService.Listener {
 
     private var effectHandler: GroupsEffectHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        ContactSaveService.registerListener(this)
 
         val effectHandler = GroupsEffectHandlerImpl(
             activity = this,
@@ -38,8 +42,13 @@ class GroupsActivity : ComponentActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
+    override fun onDestroy() {
+        ContactSaveService.unregisterListener(this)
+        super.onDestroy()
+    }
+
+    override fun onServiceCompleted(callbackIntent: Intent?) {
+        val intent = callbackIntent ?: return
         if (intent.action == GroupUtil.ACTION_CREATE_GROUP) {
             intent.data?.let { groupUri ->
                 effectHandler?.handle(Effect.OpenGroup(groupUri))
