@@ -155,8 +155,10 @@ internal class ImportVCardViewModel @Inject constructor(
     }
 
     private fun onCancelClicked() {
-        if (importJob != null) {
-            importJob?.cancel()
+        val job = importJob
+        if (job?.isActive == true) {
+            job.cancel()
+            importJob = null
         } else {
             emitEffect(Effect.Close)
         }
@@ -173,7 +175,6 @@ internal class ImportVCardViewModel @Inject constructor(
             .onEach { emitEffect(Effect.ShowImportError(it)) }
             .onCompletion { emitEffect(Effect.Close) }
             .launchIn(viewModelScope)
-        importJob = null
     }
 
     companion object {
