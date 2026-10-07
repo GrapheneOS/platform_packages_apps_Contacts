@@ -72,6 +72,7 @@ internal class ContactsRepositoryImpl @Inject constructor(
     }
 
     private fun queryContacts(query: ContactLookupQuery): List<ContactLookupResult>? {
+        @Suppress("TooGenericExceptionCaught")
         return try {
             contentResolver.query(
                 getQueryUri(query),
