@@ -141,10 +141,6 @@ internal fun ImportDialogContent(
             }
         },
     )
-    // Workaround to ensure the sheet is always expanded, even when the content changes
-    LaunchedEffect(uiState.isVCardImportAvailable, uiState.simCardOptions) {
-        sheetState.expand()
-    }
 }
 
 @Composable
