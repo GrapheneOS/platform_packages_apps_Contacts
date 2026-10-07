@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
 import com.android.contacts.domain.accounts.model.AccountModel
+import com.android.contacts.ui.common.components.delayedIndicator
 import com.android.contacts.ui.common.util.messageFormatResource
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.core.itemClipShape
@@ -117,6 +118,7 @@ internal fun ImportDialogContent(
                                     .align(Alignment.Center)
                                     .padding(32.dp)
                                     .size(32.dp)
+                                    .delayedIndicator()
                                     .testTag(IMPORT_PROGRESS_TEST_TAG),
                             )
                         }
