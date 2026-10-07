@@ -270,9 +270,9 @@
             android:theme="@style/PeopleActivityTheme"/>
 
         <activity
-            android:name=".activities.ShowOrCreateActivity"
+            android:name=".ui.interactions.showorcreate.ShowOrCreateActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar">
+            android:theme="@style/Theme.Compose.Dialog">
 
             <intent-filter>
                 <action android:name="com.android.contacts.action.SHOW_OR_CREATE_CONTACT"/>
@@ -282,6 +282,11 @@
                 <data android:scheme="tel"/>
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".activities.ShowOrCreateActivity"
+            android:exported="true"
+            android:targetActivity=".ui.interactions.showorcreate.ShowOrCreateActivity" />
 
         <activity
             android:name=".quickcontact.QuickContactActivity"
