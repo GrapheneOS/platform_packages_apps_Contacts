@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.RawContactsEntity;
@@ -61,7 +62,7 @@ public class ExportProcessor extends ProcessorBase {
     private volatile boolean mDone;
 
     private final int SHOW_READY_TOAST = 1;
-    private final Handler handler = new Handler() {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             if (msg.arg1 == SHOW_READY_TOAST) {
                 // This message is long, so we set the duration to LENGTH_LONG.
@@ -290,8 +291,11 @@ public class ExportProcessor extends ProcessorBase {
 
     private void doFinishNotification(final String title, final String description) {
         if (DEBUG) Log.d(LOG_TAG, "send finish notification: " + title + ", " + description);
-        final Intent intent = new Intent();
-        intent.setClassName(mService, mCallingActivity);
+        Intent intent = null;
+        if (mCallingActivity != null) {
+            intent = new Intent();
+            intent.setClassName(mService, mCallingActivity);
+        }
         final Notification notification =
                 NotificationImportExportListener.constructFinishNotification(mService, title,
                         description, intent);

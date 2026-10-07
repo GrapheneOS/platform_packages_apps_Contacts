@@ -12,10 +12,8 @@ import android.provider.ContactsContract.Settings as ContactsContractSettings
 import android.provider.Settings
 import android.telecom.TelecomManager
 import android.util.Log
-import com.android.contacts.interactions.ExportDialogFragment
 import com.android.contacts.logging.ScreenEvent.ScreenType
 import com.android.contacts.ui.UIIntents
-import com.android.contacts.ui.settings.SettingsActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import com.android.contacts.util.ImplicitIntentsUtil
 
@@ -77,11 +75,7 @@ internal class SettingsEffectHandlerImpl(
     }
 
     private fun showExportDialog() {
-        ExportDialogFragment.show(
-            activity.fragmentManager,
-            SettingsActivity::class.java,
-            ExportDialogFragment.EXPORT_MODE_ALL_CONTACTS,
-        )
+        startActivity(UIIntents.getExportVCardIntent(activity))
     }
 
     private fun openBlockedNumbers() {
