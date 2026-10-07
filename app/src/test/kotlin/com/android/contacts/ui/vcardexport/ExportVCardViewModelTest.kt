@@ -10,6 +10,7 @@ import com.android.contacts.domain.vcard.usecase.GetExportConfig
 import com.android.contacts.domain.vcard.usecase.ResolveFileDisplayName
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.ui.vcardexport.screen.ExportVCardViewModel
+import com.android.contacts.ui.vcardexport.screen.ExportVCardViewModel.Step
 import com.android.contacts.ui.vcardexport.screen.model.ExportMode
 import com.android.contacts.ui.vcardexport.screen.model.ExportVCardAction as Action
 import com.android.contacts.ui.vcardexport.screen.model.ExportVCardEffect as Effect
@@ -108,8 +109,6 @@ class ExportVCardViewModelTest {
             val viewModel = createViewModel(
                 isPermissionGranted = { false },
             )
-            viewModel.onResume()
-            advanceUntilIdle()
 
             viewModel.effects.test {
                 viewModel.onResume()
@@ -270,6 +269,83 @@ class ExportVCardViewModelTest {
 
                 assertEquals(Effect.Close, awaitItem())
             }
+        }
+
+    @Test
+    fun whenRequestingPermissions_onProcessRestartFollowingResponse_moveToSelectingMode() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val savedStateHandle = SavedStateHandle(
+                mapOf(ExportVCardViewModel.KEY_STEP to Step.REQUESTING_PERMISSIONS),
+            )
+            val viewModel = createViewModel(
+                savedStateHandle = savedStateHandle,
+                isPermissionGranted = { true },
+            )
+
+            viewModel.uiState.test {
+                viewModel.onAction(Action.PermissionRequestFinished)
+                viewModel.onResume()
+                advanceUntilIdle()
+
+                assertTrue(expectMostRecentItem().showModeDialog)
+                assertEquals(
+                    Step.SELECTING_MODE,
+                    savedStateHandle[ExportVCardViewModel.KEY_STEP],
+                )
+            }
+        }
+
+    @Test
+    fun whenSelectingMode_onProcessRestart_isStillSelectingMode() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val savedStateHandle = SavedStateHandle(
+                mapOf(ExportVCardViewModel.KEY_STEP to Step.SELECTING_MODE),
+            )
+            val viewModel = createViewModel(
+                savedStateHandle = savedStateHandle,
+                isPermissionGranted = { true },
+            )
+
+            viewModel.uiState.test {
+                viewModel.onResume()
+                advanceUntilIdle()
+
+                assertTrue(expectMostRecentItem().showModeDialog)
+                assertEquals(
+                    Step.SELECTING_MODE,
+                    savedStateHandle[ExportVCardViewModel.KEY_STEP],
+                )
+            }
+        }
+
+    @Test
+    fun whenSelectingFile_onProcessRestartAndResponse_startsExport() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val savedStateHandle = SavedStateHandle(
+                mapOf(ExportVCardViewModel.KEY_STEP to Step.SELECTING_FILE),
+            )
+            val filename = "test.vcf"
+            val fileUri = Uri.fromFile(File(filename))
+            val exportRequestSlot = slot<ExportRequest>()
+            val exportVCard = mockk<ExportVCard> {
+                every { this@mockk.invoke(capture(exportRequestSlot)) } returns emptyFlow()
+            }
+            val viewModel = createViewModel(
+                savedStateHandle = savedStateHandle,
+                isPermissionGranted = { true },
+                resolveFileDisplayName = { filename },
+                exportVCard = exportVCard,
+            )
+
+            viewModel.onAction(Action.FileSelected(fileUri))
+            viewModel.onResume()
+            advanceUntilIdle()
+
+            verify { exportVCard(any()) }
+
+            val request = exportRequestSlot.captured
+            assertEquals(fileUri, request.destUri)
+            assertEquals(filename, request.displayName)
         }
 
     private fun createViewModel(

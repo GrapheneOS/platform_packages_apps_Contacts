@@ -43,7 +43,7 @@ internal interface ExportVCardScreenModel {
 
 @HiltViewModel
 internal class ExportVCardViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val getExportConfig: GetExportConfig,
     private val isPermissionGranted: IsPermissionGranted,
     private val createTempExportFile: CreateTempExportFile,
@@ -70,36 +70,47 @@ internal class ExportVCardViewModel @Inject constructor(
     )
     override val uiState = _uiState.asStateFlow()
 
-    private var mode: ExportMode?
-        get() = savedStateHandle[KEY_MODE]
-        set(value) {
-            savedStateHandle[KEY_MODE] = value
-        }
-
-    private var hasResumedOnce: Boolean = false
+    private val step = savedStateHandle.getMutableStateFlow(KEY_STEP, Step.START)
 
     override fun onResume() {
-        if (hasResumedOnce) return
-        hasResumedOnce = true
-
         if (_uiState.value.availableModes.isEmpty()) {
             Log.i(TAG, "No export modes available")
             emitEffect(Effect.Close)
             return
         }
 
-        if (arePermissionsGranted()) {
-            onPermissionsGranted()
-        } else {
-            emitEffect(Effect.RequestPermissions(PERMISSIONS_REQUIRED))
-        }
+        step
+            .onEach { step ->
+                when (step) {
+                    Step.START -> {
+                        this.step.value = when {
+                            !arePermissionsGranted() -> Step.REQUESTING_PERMISSIONS
+                            else -> Step.SELECTING_MODE
+                        }
+                    }
+                    Step.REQUESTING_PERMISSIONS -> {
+                        emitEffect(Effect.RequestPermissions(PERMISSIONS_REQUIRED))
+                    }
+                    Step.SELECTING_MODE -> {
+                        _uiState.update { it.copy(showModeDialog = true) }
+                    }
+                    Step.SELECTING_FILE -> {
+                        _uiState.update { it.copy(showModeDialog = false) }
+                        emitEffect(Effect.SelectFile)
+                    }
+                    Step.EXPORTING -> {
+                        _uiState.update { it.copy(showModeDialog = false) }
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     override fun onAction(action: Action) {
         when (action) {
             Action.PermissionRequestFinished -> onPermissionRequestFinished()
             is Action.ModeSelected -> onModeSelected(action.mode)
-            is Action.FileSelected -> onFileSelected(action.uri)
+            is Action.FileSelected -> startExport(action.uri)
         }
     }
 
@@ -112,51 +123,42 @@ internal class ExportVCardViewModel @Inject constructor(
     }
 
     private fun onPermissionRequestFinished() {
-        if (arePermissionsGranted()) {
-            onPermissionsGranted()
-        } else {
-            emitEffect(Effect.Close)
+        when {
+            step.value != Step.REQUESTING_PERMISSIONS -> return
+            !arePermissionsGranted() -> emitEffect(Effect.Close)
+            else -> step.value = Step.SELECTING_MODE
         }
-    }
-
-    private fun onPermissionsGranted() {
-        mode?.let {
-            onModeSelected(it)
-            return
-        }
-        _uiState.update { it.copy(showModeDialog = true) }
     }
 
     private fun onModeSelected(mode: ExportMode?) {
-        if (mode == null) {
+        if (step.value != Step.SELECTING_MODE || mode == null) {
             emitEffect(Effect.Close)
             return
         }
 
-        this.mode = mode
-        _uiState.update { it.copy(showModeDialog = false) }
         when (mode) {
-            ExportMode.VCARD_FILE -> emitEffect(Effect.SelectFile)
+            ExportMode.VCARD_FILE -> {
+                step.value = Step.SELECTING_FILE
+            }
             ExportMode.SHARE_ALL -> viewModelScope.launch {
                 val fileUri = createTempExportFile()
-                onFileSelected(fileUri)
+                startExport(fileUri)
             }
         }
     }
 
-    private fun onFileSelected(uri: Uri?) {
-        if (uri == null) {
+    private fun startExport(fileUri: Uri?) {
+        if (fileUri == null) {
             emitEffect(Effect.Close)
             return
         }
 
-        // Start Export
-
+        step.value = Step.EXPORTING
         exportVCard(
             ExportRequest(
-                uri,
+                fileUri,
                 null,
-                resolveFileDisplayName(uri),
+                resolveFileDisplayName(fileUri),
             ),
         )
             .onEach { isSuccessful ->
@@ -168,11 +170,20 @@ internal class ExportVCardViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    @VisibleForTesting
+    enum class Step {
+        START,
+        REQUESTING_PERMISSIONS,
+        SELECTING_MODE,
+        SELECTING_FILE,
+        EXPORTING,
+    }
+
     companion object {
         private const val TAG = "ExportVCardViewModel"
 
         @VisibleForTesting
-        const val KEY_MODE = "mode"
+        const val KEY_STEP = "step"
 
         @VisibleForTesting
         val PERMISSIONS_REQUIRED = persistentSetOf(
