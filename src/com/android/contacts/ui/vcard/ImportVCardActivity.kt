@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ImportVCardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setHideOverlayWindows(true)
         enableEdgeToEdge()
 
         intent.putExtra(ImportVCardViewModel.KEY_INITIAL_FILE, intent.data)
