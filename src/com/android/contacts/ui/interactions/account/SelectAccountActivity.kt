@@ -21,6 +21,7 @@ class SelectAccountActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setHideOverlayWindows(true)
         enableEdgeToEdge()
 
         val effectHandler = SelectAccountEffectHandlerImpl(
