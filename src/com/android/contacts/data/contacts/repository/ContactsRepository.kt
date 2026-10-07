@@ -3,9 +3,7 @@ package com.android.contacts.data.contacts.repository
 import android.content.ContentResolver
 import android.database.ContentObserver
 import android.database.Cursor
-import android.database.sqlite.SQLiteException
 import android.net.Uri
-import android.os.OperationCanceledException
 import android.provider.ContactsContract
 import android.util.Log
 import com.android.contacts.data.contacts.model.ContactLookupQuery
@@ -83,12 +81,9 @@ internal class ContactsRepositoryImpl @Inject constructor(
                 null,
             )
                 ?.use(::toLookupResults)
-        } catch (e: SecurityException) {
-            failedLookup(e)
-        } catch (e: SQLiteException) {
-            failedLookup(e)
-        } catch (e: OperationCanceledException) {
-            failedLookup(e)
+        } catch (e: RuntimeException) {
+            Log.w(TAG, "Could not lookup contacts", e)
+            return null
         }
     }
 
@@ -112,11 +107,6 @@ internal class ContactsRepositoryImpl @Inject constructor(
                     uri = uri,
                 )
             }
-    }
-
-    private fun failedLookup(cause: Exception): List<ContactLookupResult>? {
-        Log.w(TAG, "Could not lookup contacts", cause)
-        return null
     }
 
     private companion object {

@@ -79,12 +79,18 @@ internal class ShowOrCreateViewModel @Inject constructor(
     }
 
     private fun buildQuery(): ContactLookupQuery? {
-        return when (scheme) {
-            ContactsUtils.SCHEME_MAILTO -> {
-                ContactLookupQuery.Email(schemeSpecificPart.orEmpty())
+        val value = schemeSpecificPart.orEmpty().trim()
+        return when {
+            value.isEmpty() -> {
+                Log.w(TAG, "Invalid data: $data")
+                emitEffect(Effect.Close)
+                null
             }
-            PhoneAccount.SCHEME_TEL -> {
-                ContactLookupQuery.Phone(schemeSpecificPart.orEmpty())
+            scheme == ContactsUtils.SCHEME_MAILTO -> {
+                ContactLookupQuery.Email(value)
+            }
+            scheme == PhoneAccount.SCHEME_TEL -> {
+                ContactLookupQuery.Phone(value)
             }
             else -> {
                 Log.w(TAG, "Invalid intent scheme: $scheme")
