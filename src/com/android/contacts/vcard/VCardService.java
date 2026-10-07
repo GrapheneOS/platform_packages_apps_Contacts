@@ -123,9 +123,12 @@ public class VCardService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
-        // Remove existing notifications if the service is restarted after the app is killed.
-        NotificationManager nm = getSystemService(NotificationManager.class);
-        nm.cancelAll();
+        if (intent == null) {
+            // The intent will be null if the service is restarted after the app
+            // is killed but the notification may still exist so remove it.
+            NotificationManager nm = getSystemService(NotificationManager.class);
+            nm.cancelAll();
+        }
         return START_STICKY;
     }
 
