@@ -1,7 +1,6 @@
 package com.android.contacts.ui.vcardexport.screen
 
 import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import com.android.contacts.R
 import com.android.contacts.ui.vcardexport.screen.model.ExportVCardEffect as Effect
@@ -15,7 +14,6 @@ internal class ExportVCardEffectHandlerImpl(
 ) : ExportVCardEffectHandler {
 
     override fun handle(effect: Effect.OneOff) {
-        Log.i("EXPORT", "handle $effect")
         when (effect) {
             Effect.ShowError -> {
                 Toast.makeText(

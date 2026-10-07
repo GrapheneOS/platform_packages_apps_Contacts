@@ -13,13 +13,13 @@ import com.android.vcard.exception.VCardException
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.take
 
 internal fun interface ImportVCards {
     operator fun invoke(account: AccountModel, sources: List<Source>): Flow<Error>
@@ -50,29 +50,43 @@ internal class ImportVCardsImpl @Inject constructor(
                     return@withWakeLock
                 }
 
-                // Start a new coroutine so we can cancel it in isolation
-                CoroutineScope(coroutineDispatcher).launch {
-                    vCardServiceRunner().collect { vCardService ->
-                        try {
-                            vCardService.handleImportRequest(
-                                requests,
-                                notificationImportExportListener,
-                            )
-                        } catch (e: OutOfMemoryError) {
-                            Log.e(TAG, "OutOfMemoryError occured during caching vCard", e)
-                            System.gc()
-                            emit(Error.OutOfMemory)
-                        } catch (e: IOException) {
-                            Log.e(TAG, "IOException during caching vCard", e)
-                            emit(Error.Io)
-                        }
+                var requestHandled = false
 
-                        // Cancel to unbind service
-                        this.coroutineContext.job.cancel()
+                vCardServiceRunner()
+                    .take(1)
+                    .collect { vCardService ->
+                        vCardService.handleImportRequest(
+                            requests,
+                            notificationImportExportListener,
+                        )
+                        requestHandled = true
                     }
-                }.join()
+
+                if (!requestHandled) {
+                    emit(Error.Unknown)
+                }
             }
-        }.flowOn(coroutineDispatcher)
+        }
+            .catch {
+                when (it) {
+                    is CancellationException -> {
+                        throw it
+                    }
+                    is OutOfMemoryError -> {
+                        System.gc()
+                        emit(Error.OutOfMemory)
+                    }
+                    is IOException -> {
+                        emit(Error.Io)
+                    }
+                    else -> {
+                        emit(Error.Unknown)
+                    }
+                }
+
+                Log.w(TAG, "Error importing vCards", it)
+            }
+            .flowOn(coroutineDispatcher)
     }
 
     private suspend fun <T> withWakeLock(callback: suspend () -> T) {

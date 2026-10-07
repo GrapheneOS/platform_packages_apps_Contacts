@@ -24,6 +24,7 @@ internal class ImportVCardEffectHandlerImpl(
                             Error.OutOfMemory -> R.string.fail_reason_low_memory_during_import
                             Error.Io -> R.string.fail_reason_io_error
                             Error.NotSupported -> R.string.fail_reason_not_supported
+                            Error.Unknown -> R.string.fail_reason_unknown
                         },
                     ),
                     Toast.LENGTH_LONG,
