@@ -99,6 +99,26 @@ class ShowOrCreateViewModelTest {
         }
 
     @Test
+    fun whenExtraCreateDescriptionIsNotAString_doNotCrash() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            createViewModel(
+                savedState = mapOf(
+                    ContactsContract.Intents.EXTRA_CREATE_DESCRIPTION to 1234,
+                ),
+            )
+        }
+
+    @Test
+    fun whenExtraForceCreateIsNotABoolean_doNotCrash() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            createViewModel(
+                savedState = mapOf(
+                    ContactsContract.Intents.EXTRA_FORCE_CREATE to "invalid",
+                ),
+            )
+        }
+
+    @Test
     fun whenOneContactIsFound_openIt() =
         runTest(mainDispatcherRule.testDispatcher) {
             val contactUri = mockk<Uri>()

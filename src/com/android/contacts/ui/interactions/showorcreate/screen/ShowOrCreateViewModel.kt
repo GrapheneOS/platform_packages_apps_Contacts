@@ -51,7 +51,8 @@ internal class ShowOrCreateViewModel @Inject constructor(
     private val schemeSpecificPart: String? =
         data?.schemeSpecificPart
     private val createDescription: String? =
-        savedStateHandle[ContactsContract.Intents.EXTRA_CREATE_DESCRIPTION] ?: schemeSpecificPart
+        savedStateHandle[ContactsContract.Intents.EXTRA_CREATE_DESCRIPTION] as? String
+            ?: schemeSpecificPart
     private val forceCreate: Boolean? =
         savedStateHandle[ContactsContract.Intents.EXTRA_FORCE_CREATE] as? Boolean
 
