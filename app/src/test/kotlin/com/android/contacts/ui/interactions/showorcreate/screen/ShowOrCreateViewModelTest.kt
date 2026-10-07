@@ -71,6 +71,20 @@ class ShowOrCreateViewModelTest {
         }
 
     @Test
+    fun whenTheUriIsMissingThePart_close() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            val subject = createViewModel(
+                savedState = mapOf(
+                    ShowOrCreateViewModel.EXTRA_DATA to "tel:".toUri(),
+                ),
+            )
+            subject.effects.test {
+                advanceUntilIdle()
+                assertEquals(ShowOrCreateEffect.Close, awaitItem())
+            }
+        }
+
+    @Test
     fun whenTelSchemeIsProvided_lookupContactsByPhone() =
         runTest(mainDispatcherRule.testDispatcher) {
             every { contactsRepository.lookup(any()) } returns flowOf(emptyList())
