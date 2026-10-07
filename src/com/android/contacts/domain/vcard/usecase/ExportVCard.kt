@@ -7,20 +7,16 @@ import com.android.contacts.vcard.NotificationImportExportListener
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.take
 
 internal fun interface ExportVCard {
     operator fun invoke(request: ExportRequest): Flow<Boolean>
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class ExportVCardImpl @Inject constructor(
     private val deleteExportFiles: DeleteExportFiles,
     private val vCardServiceRunner: VCardServiceRunner,
@@ -32,19 +28,19 @@ internal class ExportVCardImpl @Inject constructor(
         return flow {
             deleteExportFiles()
 
-            CoroutineScope(coroutineDispatcher).launch {
-                vCardServiceRunner().collect { vCardService ->
+            var requestHandled = false
+
+            vCardServiceRunner()
+                .take(1)
+                .collect { vCardService ->
                     vCardService.handleExportRequest(
                         request,
                         notificationImportExportListener,
                     )
-
-                    // Cancel to unbind service
-                    this.coroutineContext.job.cancel()
+                    requestHandled = true
                 }
-            }.join()
 
-            emit(true)
+            emit(requestHandled)
         }
             .catch {
                 if (it is CancellationException) {
