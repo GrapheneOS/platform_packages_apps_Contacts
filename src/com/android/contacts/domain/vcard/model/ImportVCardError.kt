@@ -4,4 +4,5 @@ internal enum class ImportVCardError {
     OutOfMemory,
     Io,
     NotSupported,
+    Unknown,
 }
