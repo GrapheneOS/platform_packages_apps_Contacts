@@ -29,6 +29,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,6 +41,14 @@ class ExportVCardViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    private val exportVCard = mockk<ExportVCard>()
+    private val exportRequestSlot = slot<ExportRequest>()
+
+    @Before
+    fun setUp() {
+        every { exportVCard(capture(exportRequestSlot)) } returns emptyFlow()
+    }
 
     @Test
     fun close_whenNoModesAvailable() =
@@ -148,15 +157,10 @@ class ExportVCardViewModelTest {
         runTest(context = mainDispatcherRule.testDispatcher) {
             val filename = "test.vcf"
             val fileUri = Uri.fromFile(File(filename))
-            val exportRequestSlot = slot<ExportRequest>()
-            val exportVCard = mockk<ExportVCard> {
-                every { this@mockk.invoke(capture(exportRequestSlot)) } returns emptyFlow()
-            }
             val viewModel = createViewModel(
                 isPermissionGranted = { true },
                 createTempExportFile = { fileUri },
                 resolveFileDisplayName = { filename },
-                exportVCard = exportVCard,
             )
 
             viewModel.onResume()
@@ -169,6 +173,27 @@ class ExportVCardViewModelTest {
             val request = exportRequestSlot.captured
             assertEquals(fileUri, request.destUri)
             assertEquals(filename, request.displayName)
+        }
+
+    @Test
+    fun whenShareModeIsSelectedMultipleTimes_onlyStartOneExport() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val filename = "test.vcf"
+            val fileUri = Uri.fromFile(File(filename))
+            val viewModel = createViewModel(
+                isPermissionGranted = { true },
+                createTempExportFile = { fileUri },
+                resolveFileDisplayName = { filename },
+            )
+
+            viewModel.onResume()
+            advanceUntilIdle()
+            repeat(3) {
+                viewModel.onAction(Action.ModeSelected(ExportMode.SHARE_ALL))
+            }
+            advanceUntilIdle()
+
+            verify(exactly = 1) { exportVCard(any()) }
         }
 
     @Test
@@ -197,14 +222,9 @@ class ExportVCardViewModelTest {
         runTest(context = mainDispatcherRule.testDispatcher) {
             val filename = "test.vcf"
             val fileUri = Uri.fromFile(File(filename))
-            val exportRequestSlot = slot<ExportRequest>()
-            val exportVCard = mockk<ExportVCard> {
-                every { this@mockk.invoke(capture(exportRequestSlot)) } returns emptyFlow()
-            }
             val viewModel = createViewModel(
                 isPermissionGranted = { true },
                 resolveFileDisplayName = { filename },
-                exportVCard = exportVCard,
             )
 
             viewModel.onResume()
@@ -225,14 +245,11 @@ class ExportVCardViewModelTest {
         runTest(context = mainDispatcherRule.testDispatcher) {
             val filename = "test.vcf"
             val fileUri = Uri.fromFile(File(filename))
-            val exportVCard = mockk<ExportVCard> {
-                every { this@mockk.invoke(any()) } returns flowOf(false)
-            }
+            givenExportResponse(false)
             val viewModel = createViewModel(
                 isPermissionGranted = { true },
                 createTempExportFile = { fileUri },
                 resolveFileDisplayName = { filename },
-                exportVCard = exportVCard,
             )
 
             viewModel.effects.test {
@@ -251,14 +268,11 @@ class ExportVCardViewModelTest {
         runTest(context = mainDispatcherRule.testDispatcher) {
             val filename = "test.vcf"
             val fileUri = Uri.fromFile(File(filename))
-            val exportVCard = mockk<ExportVCard> {
-                every { this@mockk.invoke(any()) } returns flowOf(true)
-            }
+            givenExportResponse(true)
             val viewModel = createViewModel(
                 isPermissionGranted = { true },
                 createTempExportFile = { fileUri },
                 resolveFileDisplayName = { filename },
-                exportVCard = exportVCard,
             )
 
             viewModel.effects.test {
@@ -326,15 +340,10 @@ class ExportVCardViewModelTest {
             )
             val filename = "test.vcf"
             val fileUri = Uri.fromFile(File(filename))
-            val exportRequestSlot = slot<ExportRequest>()
-            val exportVCard = mockk<ExportVCard> {
-                every { this@mockk.invoke(capture(exportRequestSlot)) } returns emptyFlow()
-            }
             val viewModel = createViewModel(
                 savedStateHandle = savedStateHandle,
                 isPermissionGranted = { true },
                 resolveFileDisplayName = { filename },
-                exportVCard = exportVCard,
             )
 
             viewModel.onAction(Action.FileSelected(fileUri))
@@ -348,6 +357,27 @@ class ExportVCardViewModelTest {
             assertEquals(filename, request.displayName)
         }
 
+    @Test
+    fun whenSelectingMode_onMultipleResumes_onlyTriggerOneEffectEach() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val savedStateHandle = SavedStateHandle(
+                mapOf(ExportVCardViewModel.KEY_STEP to Step.SELECTING_MODE),
+            )
+            val viewModel = createViewModel(
+                savedStateHandle = savedStateHandle,
+                isPermissionGranted = { true },
+            )
+
+            viewModel.effects.test {
+                repeat(3) {
+                    viewModel.onResume()
+                    advanceUntilIdle()
+                }
+                viewModel.onAction(Action.ModeSelected(ExportMode.VCARD_FILE))
+                assertEquals(Effect.SelectFile, awaitItem())
+            }
+        }
+
     private fun createViewModel(
         savedStateHandle: SavedStateHandle = SavedStateHandle(),
         getExportConfig: GetExportConfig = {
@@ -359,7 +389,6 @@ class ExportVCardViewModelTest {
         isPermissionGranted: IsPermissionGranted = { true },
         createTempExportFile: CreateTempExportFile = { null },
         resolveFileDisplayName: ResolveFileDisplayName = { "" },
-        exportVCard: ExportVCard = { emptyFlow() },
     ): ExportVCardViewModel = ExportVCardViewModel(
         savedStateHandle = savedStateHandle,
         getExportConfig = getExportConfig,
@@ -368,4 +397,8 @@ class ExportVCardViewModelTest {
         resolveFileDisplayName = resolveFileDisplayName,
         exportVCard = exportVCard,
     )
+
+    private fun givenExportResponse(response: Boolean) {
+        every { exportVCard(capture(exportRequestSlot)) } returns flowOf(response)
+    }
 }
