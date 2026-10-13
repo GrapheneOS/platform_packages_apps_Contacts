@@ -22,10 +22,9 @@ class ShowOrCreateActivity : FragmentActivity() {
             return
         }
 
-        val originalExtras = intent.extras?.deepCopy() ?: Bundle()
         val effectHandler = ShowOrCreateEffectHandlerImpl(
             activity = this,
-            originalExtras = originalExtras,
+            intentExtras = intent.extras,
         )
 
         intent.putExtra(ShowOrCreateViewModel.EXTRA_DATA, intent.data)
