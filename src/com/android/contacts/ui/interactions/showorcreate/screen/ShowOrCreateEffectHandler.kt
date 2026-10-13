@@ -16,8 +16,13 @@ internal interface ShowOrCreateEffectHandler {
 
 internal class ShowOrCreateEffectHandlerImpl(
     private val activity: Activity,
-    private val originalExtras: Bundle,
+    intentExtras: Bundle?,
 ) : ShowOrCreateEffectHandler {
+
+    private val originalExtras = intentExtras?.deepCopy()
+        ?.also { it.remove(ShowOrCreateViewModel.EXTRA_DATA) }
+        ?: Bundle()
+
     override fun handle(effect: Effect) {
         when (effect) {
             Effect.Close -> {

@@ -127,6 +127,6 @@ internal class ShowOrCreateViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "ShowOrCreateViewModel"
-        const val EXTRA_DATA = "data"
+        const val EXTRA_DATA = "internal_data"
     }
 }
