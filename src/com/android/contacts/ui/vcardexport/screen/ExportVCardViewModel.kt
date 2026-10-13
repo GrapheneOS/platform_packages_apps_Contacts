@@ -21,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -70,7 +71,8 @@ internal class ExportVCardViewModel @Inject constructor(
     )
     override val uiState = _uiState.asStateFlow()
 
-    private val step = savedStateHandle.getMutableStateFlow(KEY_STEP, Step.START)
+    private val step = savedStateHandle.getMutableStateFlow(KEY_STEP, initialStep())
+    private var stepsJob: Job? = null
 
     override fun onResume() {
         if (_uiState.value.availableModes.isEmpty()) {
@@ -79,15 +81,10 @@ internal class ExportVCardViewModel @Inject constructor(
             return
         }
 
-        step
+        stepsJob?.cancel()
+        stepsJob = step
             .onEach { step ->
                 when (step) {
-                    Step.START -> {
-                        this.step.value = when {
-                            !arePermissionsGranted() -> Step.REQUESTING_PERMISSIONS
-                            else -> Step.SELECTING_MODE
-                        }
-                    }
                     Step.REQUESTING_PERMISSIONS -> {
                         emitEffect(Effect.RequestPermissions(PERMISSIONS_REQUIRED))
                     }
@@ -110,12 +107,19 @@ internal class ExportVCardViewModel @Inject constructor(
         when (action) {
             Action.PermissionRequestFinished -> onPermissionRequestFinished()
             is Action.ModeSelected -> onModeSelected(action.mode)
-            is Action.FileSelected -> startExport(action.uri)
+            is Action.FileSelected -> onFileSelected(action.uri)
         }
     }
 
     private fun emitEffect(effect: Effect) {
         _effects.trySend(effect)
+    }
+
+    private fun initialStep(): Step {
+        return when {
+            !arePermissionsGranted() -> Step.REQUESTING_PERMISSIONS
+            else -> Step.SELECTING_MODE
+        }
     }
 
     private fun arePermissionsGranted(): Boolean {
@@ -140,10 +144,19 @@ internal class ExportVCardViewModel @Inject constructor(
             ExportMode.VCARD_FILE -> {
                 step.value = Step.SELECTING_FILE
             }
-            ExportMode.SHARE_ALL -> viewModelScope.launch {
-                val fileUri = createTempExportFile()
-                startExport(fileUri)
+            ExportMode.SHARE_ALL -> {
+                step.value = Step.EXPORTING
+                viewModelScope.launch {
+                    val fileUri = createTempExportFile()
+                    startExport(fileUri)
+                }
             }
+        }
+    }
+
+    private fun onFileSelected(uri: Uri?) {
+        if (step.value == Step.SELECTING_FILE) {
+            startExport(uri)
         }
     }
 
@@ -153,7 +166,6 @@ internal class ExportVCardViewModel @Inject constructor(
             return
         }
 
-        step.value = Step.EXPORTING
         exportVCard(
             ExportRequest(
                 fileUri,
@@ -172,7 +184,6 @@ internal class ExportVCardViewModel @Inject constructor(
 
     @VisibleForTesting
     enum class Step {
-        START,
         REQUESTING_PERMISSIONS,
         SELECTING_MODE,
         SELECTING_FILE,
