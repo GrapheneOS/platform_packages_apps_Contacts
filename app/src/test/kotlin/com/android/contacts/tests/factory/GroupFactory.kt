@@ -1,4 +1,4 @@
-package com.android.contacts.tests
+package com.android.contacts.tests.factory
 
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.groups.model.Group

@@ -1,4 +1,4 @@
-package com.android.contacts.data.groups.delegate
+package com.android.contacts.data.groups.repository
 
 import android.content.ContentResolver
 import android.database.ContentObserver
@@ -26,11 +26,11 @@ import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-internal class LoadRawContactsRepositoryDelegateTest {
+internal class GroupsRepositoryTest {
 
     private val contentResolver = mockk<ContentResolver>(relaxed = true)
 
-    private val subject: LoadGroupsRepositoryDelegate = LoadGroupsRepositoryDelegateImpl(
+    private val subject: GroupsRepository = GroupsRepositoryImpl(
         contentResolver = contentResolver,
         coroutineDispatcher = UnconfinedTestDispatcher(),
     )
@@ -39,7 +39,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
     fun whenEmptyRows_returnsEmptyList() = runTest {
         givenQueryRows()
 
-        val result = subject.loadGroups(null).first()!!
+        val result = subject.loadGroups(AccountModel.NULL).first()!!
 
         assertEquals(emptyList<GroupColumn>(), result)
     }
@@ -60,7 +60,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
             ),
         )
 
-        val result = subject.loadGroups(null).first()!!
+        val result = subject.loadGroups(AccountModel.NULL).first()!!
 
         assertEquals(1, result.size)
         with(result.first()) {
@@ -73,21 +73,6 @@ internal class LoadRawContactsRepositoryDelegateTest {
             assertNull(accountDataSet)
             assertFalse(isReadOnly)
             assertTrue(isDeleted)
-        }
-    }
-
-    @Test
-    fun withoutAccount_querySelectionIsNull() = runTest {
-        subject.loadGroups(null).first()
-
-        verify {
-            contentResolver.query(
-                ContactsContract.Groups.CONTENT_SUMMARY_URI,
-                any(),
-                null,
-                null,
-                any(),
-            )
         }
     }
 
@@ -117,7 +102,7 @@ internal class LoadRawContactsRepositoryDelegateTest {
     fun whenObserverTriggers_loadsDataAgain() = runTest {
         val observerSlot = givenRegisteredContentObserver()
 
-        subject.loadGroups(null).test {
+        subject.loadGroups(AccountModel.NULL).test {
             awaitItem()
             observerSlot.captured.onChange(false)
             awaitItem()
