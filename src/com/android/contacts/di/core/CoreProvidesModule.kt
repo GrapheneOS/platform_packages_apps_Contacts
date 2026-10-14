@@ -5,7 +5,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
-import android.content.res.Resources
 import android.os.PowerManager
 import android.os.UserManager
 import android.telecom.TelecomManager
@@ -106,14 +105,6 @@ internal class CoreProvidesModule {
         @ApplicationContext context: Context,
     ): ContentResolver {
         return context.contentResolver
-    }
-
-    @Provides
-    @Reusable
-    fun provideResources(
-        @ApplicationContext context: Context,
-    ): Resources {
-        return context.resources
     }
 
     @Provides

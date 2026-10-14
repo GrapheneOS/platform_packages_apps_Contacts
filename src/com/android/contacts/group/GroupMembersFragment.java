@@ -90,8 +90,6 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
     private static final String KEY_GROUP_URI = "groupUri";
     private static final String KEY_GROUP_METADATA = "groupMetadata";
 
-    public static final int REQUEST_GROUP_NAME_EDIT = 1001;
-
     private static final String ARG_GROUP_URI = "groupUri";
 
     private static final int LOADER_GROUP_METADATA = 100;
@@ -479,7 +477,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
             sendToGroup(ids, ContactsUtils.SCHEME_SMSTO,
                     getString(R.string.menu_sendMessageOption));
         } else if (id == R.id.menu_rename_group) {
-            mActivity.startActivityForResult(
+            mActivity.startActivity(
                     GroupNameEditActivity.Companion.buildEditIntent$app(
                             getContext(),
                             mGroupMetaData.groupId,
@@ -491,8 +489,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
                             ),
                             PeopleActivity.class,
                             GroupUtil.ACTION_UPDATE_GROUP
-                    ),
-                    REQUEST_GROUP_NAME_EDIT
+                    )
             );
         } else if (id == R.id.menu_delete_group) {
             deleteGroup();

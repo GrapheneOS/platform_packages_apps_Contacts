@@ -43,6 +43,7 @@ import com.android.contacts.model.RawContactDelta;
 import com.android.contacts.model.RawContactModifier;
 import com.android.contacts.model.ValuesDelta;
 import com.android.contacts.model.dataitem.DataKind;
+import com.android.contacts.ui.group.edit.screen.model.OpenNewGroupDialogListener;
 import com.android.contacts.util.UiClosables;
 
 import java.util.ArrayList;
@@ -55,8 +56,6 @@ public class GroupMembershipView extends LinearLayout
         implements OnClickListener,
         OnItemClickListener,
         ContactEditorActivity.NewGroupResultListener {
-
-    public static final String TAG_CREATE_GROUP_FRAGMENT = "createGroupDialog";
 
     private static final int CREATE_NEW_GROUP_GROUP_ID = 133;
 
@@ -105,7 +104,7 @@ public class GroupMembershipView extends LinearLayout
 
         public boolean getItemIsCheckable(int position) {
             // Item is checkable if it is NOT the last one in the list
-            return position != getCount()-1;
+            return position != getCount() - 1;
         }
 
         @Override
@@ -127,7 +126,7 @@ public class GroupMembershipView extends LinearLayout
 
             // Hide the checkable drawable.  This assumes that the item views
             // are CheckedTextView objects
-            final CheckedTextView checkedTextView = (CheckedTextView)itemView;
+            final CheckedTextView checkedTextView = (CheckedTextView) itemView;
             if (!getItemIsCheckable(position)) {
                 checkedTextView.setCheckMarkDrawable(null);
             }
@@ -218,7 +217,9 @@ public class GroupMembershipView extends LinearLayout
         }
     }
 
-    /** Whether {@link #setGroupMetaData} has been invoked yet. */
+    /**
+     * Whether {@link #setGroupMetaData} has been invoked yet.
+     */
     public boolean wasGroupMetaDataBound() {
         return mGroupMetaData != null;
     }
@@ -264,7 +265,7 @@ public class GroupMembershipView extends LinearLayout
                         && mGroupMetaData.getInt(GroupMetaDataLoader.FAVORITES) != 0) {
                     mFavoritesGroupId = groupId;
                 } else if (!mGroupMetaData.isNull(GroupMetaDataLoader.AUTO_ADD)
-                            && mGroupMetaData.getInt(GroupMetaDataLoader.AUTO_ADD) != 0) {
+                        && mGroupMetaData.getInt(GroupMetaDataLoader.AUTO_ADD) != 0) {
                     mDefaultGroupId = groupId;
                 } else {
                     mAccountHasGroups = true;
@@ -465,10 +466,9 @@ public class GroupMembershipView extends LinearLayout
         UiClosables.closeQuietly(mPopup);
         mPopup = null;
         Context context = getContext();
-        if (context instanceof ContactEditorActivity) {
-            ((ContactEditorActivity) context).openNewGroupDialog(
-                    new AccountModel(mAccountName, mAccountType, mDataSet)
-            );
+        if (context instanceof OpenNewGroupDialogListener) {
+            AccountModel account = new AccountModel(mAccountName, mAccountType, mDataSet);
+            ((OpenNewGroupDialogListener) context).openNewGroupDialog(account);
         }
     }
 

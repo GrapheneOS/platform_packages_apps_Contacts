@@ -3,7 +3,6 @@ package com.android.contacts.ui.group.edit.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
@@ -14,12 +13,10 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import com.android.contacts.R
 import com.android.contacts.tests.targetContext
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_CANCEL_TEST_TAG
-import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_DIALOG_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_DIALOG_TITLE_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_FIELD_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_OK_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GroupNameEditAction as Action
-import com.android.contacts.ui.group.edit.screen.model.GroupNameEditInputError as InputError
 import com.android.contacts.ui.group.edit.screen.model.GroupNameEditUiState as State
 import io.mockk.every
 import io.mockk.mockk
@@ -36,16 +33,8 @@ internal class GroupNameEditScreenTest {
     private val screenModel = mockk<GroupNameEditScreenModel>(relaxed = true)
 
     @Test
-    fun whenLoading_doNotShowDialog() = runComposeUiTest {
-        withState(State.Loading)
-        setContent { Screen() }
-
-        onNodeWithTag(GROUP_NAME_EDIT_DIALOG_TEST_TAG).assertIsNotDisplayed()
-    }
-
-    @Test
     fun whenCreating_showCorrectTitle() = runComposeUiTest {
-        withState(State.Ready(isEdit = false, name = "", maxLenght = 40))
+        withState(State(isEdit = false, name = ""))
         setContent { Screen() }
 
         onNodeWithTag(GROUP_NAME_EDIT_DIALOG_TITLE_TEST_TAG)
@@ -54,7 +43,7 @@ internal class GroupNameEditScreenTest {
 
     @Test
     fun whenEditing_showCorrectTitle() = runComposeUiTest {
-        withState(State.Ready(isEdit = true, name = "", maxLenght = 40))
+        withState(State(isEdit = true, name = ""))
         setContent { Screen() }
 
         onNodeWithTag(GROUP_NAME_EDIT_DIALOG_TITLE_TEST_TAG)
@@ -63,7 +52,7 @@ internal class GroupNameEditScreenTest {
 
     @Test
     fun whenNameIsProvided_setIt() = runComposeUiTest {
-        withState(State.Ready(name = "Group Name", maxLenght = 40))
+        withState(State(name = "Group Name"))
         setContent { Screen() }
 
         onNodeWithText("Group Name")
@@ -72,7 +61,7 @@ internal class GroupNameEditScreenTest {
 
     @Test
     fun whenNameIsEmpty_okIsDisabled() = runComposeUiTest {
-        withState(State.Ready(name = "", maxLenght = 40))
+        withState(State(name = ""))
         setContent { Screen() }
 
         onNodeWithTag(GROUP_NAME_EDIT_OK_TEST_TAG)
@@ -81,7 +70,7 @@ internal class GroupNameEditScreenTest {
 
     @Test
     fun whenNameIsChanged_sendAction() = runComposeUiTest {
-        withState(State.Ready(name = "Old Name", maxLenght = 40))
+        withState(State(name = "Old Name"))
         setContent { Screen() }
 
         onNodeWithTag(GROUP_NAME_EDIT_FIELD_TEST_TAG)
@@ -92,7 +81,7 @@ internal class GroupNameEditScreenTest {
 
     @Test
     fun whenCancelIsClicked_sendAction() = runComposeUiTest {
-        withState(State.Ready(name = "Group Name", maxLenght = 40))
+        withState(State(name = "Group Name"))
         setContent { Screen() }
 
         onNodeWithTag(GROUP_NAME_EDIT_CANCEL_TEST_TAG)
@@ -103,7 +92,7 @@ internal class GroupNameEditScreenTest {
 
     @Test
     fun whenOkIsClicked_sendAction() = runComposeUiTest {
-        withState(State.Ready(name = "Group Name", maxLenght = 40))
+        withState(State(name = "Group Name"))
         setContent { Screen() }
 
         onNodeWithTag(GROUP_NAME_EDIT_OK_TEST_TAG)
@@ -113,12 +102,11 @@ internal class GroupNameEditScreenTest {
     }
 
     @Test
-    fun whenThereIsAnInputError_showErrorAndDisbleOk() = runComposeUiTest {
+    fun whenTheNameAlreadyExists_showErrorAndDisbleOk() = runComposeUiTest {
         withState(
-            State.Ready(
+            State(
                 name = "Group Name",
-                maxLenght = 40,
-                inputError = InputError.DUPLICATED_NAME,
+                isDuplicatedName = true,
             ),
         )
         setContent { Screen() }

@@ -41,6 +41,7 @@ import com.android.contacts.editor.PhotoSourceDialogFragment;
 import com.android.contacts.interactions.ContactDeletionInteraction;
 import com.android.contacts.model.RawContactDeltaList;
 import com.android.contacts.ui.group.edit.GroupNameEditActivity;
+import com.android.contacts.ui.group.edit.screen.model.OpenNewGroupDialogListener;
 import com.android.contacts.util.DialogManager;
 import com.android.contacts.util.ImplicitIntentsUtil;
 
@@ -50,13 +51,15 @@ import java.util.List;
 
 /** Contact editor with only the most important fields displayed initially. */
 public class ContactEditorActivity extends AppCompatContactsActivity
-        implements PhotoSourceDialogFragment.Listener, DialogManager.DialogShowingViewActivity {
+        implements PhotoSourceDialogFragment.Listener,
+        DialogManager.DialogShowingViewActivity,
+        OpenNewGroupDialogListener {
     private static final String TAG = "ContactEditorActivity";
 
     public static final String ACTION_JOIN_COMPLETED = "joinCompleted";
     public static final String ACTION_SAVE_COMPLETED = "saveCompleted";
 
-    private static final int REQUEST_GROUP_NAME_EDIT = 1001;
+    private static final int REQUEST_GROUP_NAME_EDIT = 1010;
 
     public static final int RESULT_CODE_SPLIT = 2;
     // 3 used for ContactDeletionInteraction.RESULT_CODE_DELETED
@@ -476,6 +479,7 @@ public class ContactEditorActivity extends AppCompatContactsActivity
 
     private List<NewGroupResultListener> newGroupResultListeners = new ArrayList();
 
+    @Override
     public void openNewGroupDialog(AccountModel account) {
         startActivityForResult(
                 GroupNameEditActivity.Companion.buildCreateIntent$app(

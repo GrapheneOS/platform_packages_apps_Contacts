@@ -13,5 +13,9 @@ internal data class AccountModel(
     val dataSet: String? = null,
 ) : Parcelable {
     val isNullAccount
-        get() = name == null && type == null && dataSet == null
+        get() = this == NULL
+
+    companion object {
+        val NULL = AccountModel(null, null, null)
+    }
 }
