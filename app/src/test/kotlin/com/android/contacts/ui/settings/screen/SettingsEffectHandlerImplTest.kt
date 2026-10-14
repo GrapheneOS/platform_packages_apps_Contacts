@@ -10,11 +10,6 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Settings as ContactsContractSettings
 import android.provider.Settings
 import android.telecom.TelecomManager
-<<<<<<< HEAD
-import com.android.contacts.interactions.ExportDialogFragment
-=======
-import com.android.contacts.logging.ScreenEvent.ScreenType
->>>>>>> f0359978e (Rewrite Export VCard)
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
 import com.android.contacts.ui.vcardexport.ExportVCardActivity

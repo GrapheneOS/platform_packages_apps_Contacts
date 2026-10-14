@@ -378,6 +378,22 @@ class ExportVCardViewModelTest {
             }
         }
 
+    @Test
+    fun whenFinishing_close() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val viewModel = createViewModel(
+                savedStateHandle = SavedStateHandle(
+                    mapOf(ExportVCardViewModel.KEY_STEP to Step.FINISHING),
+                ),
+            )
+
+            viewModel.effects.test {
+                viewModel.onResume()
+                advanceUntilIdle()
+                assertEquals(Effect.Close, awaitItem())
+            }
+        }
+
     private fun createViewModel(
         savedStateHandle: SavedStateHandle = SavedStateHandle(),
         getExportConfig: GetExportConfig = {
