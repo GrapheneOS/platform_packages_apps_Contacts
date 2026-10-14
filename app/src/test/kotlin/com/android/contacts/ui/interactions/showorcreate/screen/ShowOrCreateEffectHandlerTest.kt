@@ -61,7 +61,6 @@ class ShowOrCreateEffectHandlerTest {
     fun showContactList_startsSearchIntentAndFinishesActivity() {
         val extras = Bundle().apply {
             putString("key", "value")
-            putParcelable(ShowOrCreateViewModel.EXTRA_DATA, Bundle())
         }
         val query = ContactLookupQuery.Phone("123456789")
         buildSubject(extras).handle(Effect.ShowContactList(query))
@@ -81,7 +80,6 @@ class ShowOrCreateEffectHandlerTest {
     fun createContact_startsInsertIntentAndFinishesActivity() {
         val extras = Bundle().apply {
             putString("key", "value")
-            putParcelable(ShowOrCreateViewModel.EXTRA_DATA, Bundle())
         }
         val query = ContactLookupQuery.Email("user@example.org")
         buildSubject(extras).handle(Effect.CreateContact(query))
@@ -102,7 +100,6 @@ class ShowOrCreateEffectHandlerTest {
     fun createOrEditContact_startsInsertOrEditIntentAndFinishesActivity() {
         val extras = Bundle().apply {
             putString("key", "value")
-            putParcelable(ShowOrCreateViewModel.EXTRA_DATA, Bundle())
         }
         val query = ContactLookupQuery.Email("user@example.org")
         buildSubject(extras).handle(Effect.CreateOrEditContact(query))
