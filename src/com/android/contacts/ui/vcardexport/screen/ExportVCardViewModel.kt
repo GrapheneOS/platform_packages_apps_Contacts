@@ -77,7 +77,7 @@ internal class ExportVCardViewModel @Inject constructor(
     override fun onResume() {
         if (_uiState.value.availableModes.isEmpty()) {
             Log.i(TAG, "No export modes available")
-            emitEffect(Effect.Close)
+            close()
             return
         }
 
@@ -97,6 +97,9 @@ internal class ExportVCardViewModel @Inject constructor(
                     }
                     Step.EXPORTING -> {
                         _uiState.update { it.copy(showModeDialog = false) }
+                    }
+                    Step.FINISHING -> {
+                        close()
                     }
                 }
             }
@@ -129,14 +132,14 @@ internal class ExportVCardViewModel @Inject constructor(
     private fun onPermissionRequestFinished() {
         when {
             step.value != Step.REQUESTING_PERMISSIONS -> return
-            !arePermissionsGranted() -> emitEffect(Effect.Close)
+            !arePermissionsGranted() -> step.value = Step.FINISHING
             else -> step.value = Step.SELECTING_MODE
         }
     }
 
     private fun onModeSelected(mode: ExportMode?) {
         if (step.value != Step.SELECTING_MODE || mode == null) {
-            emitEffect(Effect.Close)
+            step.value = Step.FINISHING
             return
         }
 
@@ -155,14 +158,14 @@ internal class ExportVCardViewModel @Inject constructor(
     }
 
     private fun onFileSelected(uri: Uri?) {
-        if (step.value == Step.SELECTING_FILE) {
-            startExport(uri)
-        }
+        if (step.value != Step.SELECTING_FILE) return
+        step.value = Step.EXPORTING
+        startExport(uri)
     }
 
     private fun startExport(fileUri: Uri?) {
         if (fileUri == null) {
-            emitEffect(Effect.Close)
+            step.value = Step.FINISHING
             return
         }
 
@@ -178,8 +181,12 @@ internal class ExportVCardViewModel @Inject constructor(
                     emitEffect(Effect.ShowError)
                 }
             }
-            .onCompletion { emitEffect(Effect.Close) }
+            .onCompletion { step.value = Step.FINISHING }
             .launchIn(viewModelScope)
+    }
+
+    private fun close() {
+        emitEffect(Effect.Close)
     }
 
     @VisibleForTesting
@@ -188,6 +195,7 @@ internal class ExportVCardViewModel @Inject constructor(
         SELECTING_MODE,
         SELECTING_FILE,
         EXPORTING,
+        FINISHING,
     }
 
     companion object {
