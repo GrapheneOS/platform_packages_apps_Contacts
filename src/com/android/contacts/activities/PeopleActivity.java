@@ -146,10 +146,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     private static final String KEY_GROUP_URI = "groupUri";
     private static final String KEY_CONTACTS_VIEW = "contactsView";
-    private static final String KEY_NEW_GROUP_ACCOUNT = "newGroupAccount";
 
     private static final int REQUEST_SELECT_ACCOUNT = 1001;
-    private static final int REQUEST_GROUP_NAME_EDIT = 1002;
 
     private static final long DRAWER_CLOSE_DELAY = 300L;
 
@@ -202,9 +200,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private DrawerFragment mDrawerFragment;
     private ContactsActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
-
-    // The account the new group will be created under.
-    private AccountWithDataSet mNewGroupAccount;
 
     private Object mStatusChangeListenerHandle;
 
@@ -415,11 +410,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             mCurrentView = ContactsView.values()[savedState.getInt(KEY_CONTACTS_VIEW)];
         } else {
             mCurrentView = ContactsView.ALL_CONTACTS;
-        }
-
-        if (savedState != null && savedState.containsKey(KEY_NEW_GROUP_ACCOUNT)) {
-            mNewGroupAccount = AccountWithDataSet.unstringify(
-                    savedState.getString(KEY_NEW_GROUP_ACCOUNT));
         }
 
         mContactListFilterController.addListener(mFilterListener);
@@ -929,9 +919,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mNewGroupAccount != null) {
-            outState.putString(KEY_NEW_GROUP_ACCOUNT, mNewGroupAccount.stringify());
-        }
         outState.putInt(KEY_CONTACTS_VIEW, mCurrentView.ordinal());
         outState.putParcelable(KEY_GROUP_URI, mGroupUri);
         outState.putBoolean(KEY_LAUNCHED_INTO_GROUP_VIEW, mIsLaunchedIntoGroupView);
@@ -1207,20 +1194,18 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     private void onAccountChosen(AccountWithDataSet account) {
-        mNewGroupAccount = account;
         AccountModel newGroupAccountModel = new AccountModel(
                 account.name,
                 account.type,
                 account.dataSet
         );
-        startActivityForResult(
+        startActivity(
                 GroupNameEditActivity.Companion.buildCreateIntent$app(
                         this,
                         newGroupAccountModel,
                         PeopleActivity.class,
                         GroupUtil.ACTION_CREATE_GROUP
-                ),
-                REQUEST_GROUP_NAME_EDIT
+                )
         );
     }
 

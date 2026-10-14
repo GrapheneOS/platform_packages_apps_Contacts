@@ -7,13 +7,17 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
+import com.android.contacts.domain.groups.model.GROUP_NAME_MAX_LENGTH
 import com.android.contacts.ui.core.ContactsPreviewDialog
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_CANCEL_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_DIALOG_TEST_TAG
@@ -21,7 +25,6 @@ import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_DIALOG_TI
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_FIELD_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GROUP_NAME_EDIT_OK_TEST_TAG
 import com.android.contacts.ui.group.edit.screen.model.GroupNameEditAction as Action
-import com.android.contacts.ui.group.edit.screen.model.GroupNameEditInputError
 import com.android.contacts.ui.group.edit.screen.model.GroupNameEditUiState as State
 
 @Composable
@@ -49,8 +52,6 @@ internal fun GroupNameEditContent(
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (uiState !is State.Ready) return
-
     AlertDialog(
         onDismissRequest = { onAction(Action.Dismissed) },
         dismissButton = {
@@ -64,7 +65,7 @@ internal fun GroupNameEditContent(
         confirmButton = {
             TextButton(
                 onClick = { onAction(Action.OkClicked) },
-                enabled = uiState.isOkEnabled,
+                enabled = uiState.isSaveEnabled,
                 modifier = Modifier.testTag(GROUP_NAME_EDIT_OK_TEST_TAG),
             ) {
                 Text(stringResource(android.R.string.ok))
@@ -84,7 +85,7 @@ internal fun GroupNameEditContent(
         text = {
             GroupNameEditField(
                 name = uiState.name,
-                inputError = uiState.inputError,
+                isDuplicatedName = uiState.isDuplicatedName,
                 onNameChange = { onAction(Action.NameChanged(it)) },
             )
         },
@@ -95,39 +96,59 @@ internal fun GroupNameEditContent(
 @Composable
 private fun GroupNameEditField(
     name: String,
-    inputError: GroupNameEditInputError?,
+    isDuplicatedName: Boolean,
     onNameChange: (String) -> Unit,
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     OutlinedTextField(
         value = name,
-        onValueChange = onNameChange,
-        label = { Text(stringResource(R.string.group_name_dialog_hint)) },
-        isError = inputError != null,
-        supportingText = {
-            inputError?.let { inputError ->
-                Text(
-                    stringResource(
-                        when (inputError) {
-                            GroupNameEditInputError.DUPLICATED_NAME ->
-                                R.string.groupExistsErrorMessage
-                        },
-                    ),
-                )
+        onValueChange = {
+            if (it.length <= GROUP_NAME_MAX_LENGTH) {
+                onNameChange(it)
             }
         },
-        modifier = Modifier.testTag(GROUP_NAME_EDIT_FIELD_TEST_TAG),
+        label = { Text(stringResource(R.string.group_name_dialog_hint)) },
+        singleLine = true,
+        isError = isDuplicatedName,
+        supportingText = {
+            if (isDuplicatedName) {
+                Text(stringResource(R.string.groupExistsErrorMessage))
+            }
+        },
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .testTag(GROUP_NAME_EDIT_FIELD_TEST_TAG),
     )
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 }
 
 @PreviewLightDark
 @Composable
-private fun GroupNameEditScreenLoadingPreview() {
+private fun GroupNameEditScreenCreatePreview() {
     ContactsPreviewDialog {
         GroupNameEditContent(
-            uiState = State.Ready(
+            uiState = State(
+                isEdit = false,
+                name = "Group Name",
+            ),
+            onAction = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun GroupNameEditScreenEditWithErrorPreview() {
+    ContactsPreviewDialog {
+        GroupNameEditContent(
+            uiState = State(
                 isEdit = true,
-                name = "GroupName",
-                maxLenght = 40,
+                name = "Group Name",
+                isDuplicatedName = true,
             ),
             onAction = {},
         )
