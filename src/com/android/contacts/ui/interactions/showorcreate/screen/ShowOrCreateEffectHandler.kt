@@ -19,9 +19,7 @@ internal class ShowOrCreateEffectHandlerImpl(
     intentExtras: Bundle?,
 ) : ShowOrCreateEffectHandler {
 
-    private val originalExtras = intentExtras?.deepCopy()
-        ?.also { it.remove(ShowOrCreateViewModel.EXTRA_DATA) }
-        ?: Bundle()
+    private val originalExtras = intentExtras?.deepCopy() ?: Bundle()
 
     override fun handle(effect: Effect) {
         when (effect) {
