@@ -16,6 +16,7 @@
 
 package com.android.contacts.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -33,24 +34,32 @@ import com.android.contacts.MoreContactUtils;
 import com.android.contacts.MoreContactUtils.EdgeToEdgeInsetHandler;
 import com.android.contacts.R;
 import com.android.contacts.detail.PhotoSelectionHandler;
+import com.android.contacts.domain.accounts.model.AccountModel;
 import com.android.contacts.editor.ContactEditorFragment;
 import com.android.contacts.editor.EditorIntents;
 import com.android.contacts.editor.PhotoSourceDialogFragment;
 import com.android.contacts.interactions.ContactDeletionInteraction;
 import com.android.contacts.model.RawContactDeltaList;
+import com.android.contacts.ui.group.edit.GroupNameEditActivity;
+import com.android.contacts.ui.group.edit.screen.model.OpenNewGroupDialogListener;
 import com.android.contacts.util.DialogManager;
 import com.android.contacts.util.ImplicitIntentsUtil;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Contact editor with only the most important fields displayed initially. */
 public class ContactEditorActivity extends AppCompatContactsActivity
-        implements PhotoSourceDialogFragment.Listener, DialogManager.DialogShowingViewActivity {
+        implements PhotoSourceDialogFragment.Listener,
+        DialogManager.DialogShowingViewActivity,
+        OpenNewGroupDialogListener {
     private static final String TAG = "ContactEditorActivity";
 
     public static final String ACTION_JOIN_COMPLETED = "joinCompleted";
     public static final String ACTION_SAVE_COMPLETED = "saveCompleted";
+
+    private static final int REQUEST_GROUP_NAME_EDIT = 1010;
 
     public static final int RESULT_CODE_SPLIT = 2;
     // 3 used for ContactDeletionInteraction.RESULT_CODE_DELETED
@@ -397,6 +406,15 @@ public class ContactEditorActivity extends AppCompatContactsActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_GROUP_NAME_EDIT) {
+            if (resultCode == Activity.RESULT_OK) {
+                for (NewGroupResultListener listener : newGroupResultListeners) {
+                    listener.onNewGroup();
+                }
+            }
+            return;
+        }
+
         if (mPhotoSelectionHandler == null) {
             mPhotoSelectionHandler = (EditorPhotoSelectionHandler) getPhotoSelectionHandler();
         }
@@ -455,5 +473,34 @@ public class ContactEditorActivity extends AppCompatContactsActivity
 
     private ContactEditorFragment getEditorFragment() {
         return (ContactEditorFragment) mFragment;
+    }
+
+    // Temporary seam to interact with GroupMembershipView
+
+    private List<NewGroupResultListener> newGroupResultListeners = new ArrayList();
+
+    @Override
+    public void openNewGroupDialog(AccountModel account) {
+        startActivityForResult(
+                GroupNameEditActivity.Companion.buildCreateIntent$app(
+                        this,
+                        account,
+                        ContactEditorActivity.class,
+                        null
+                ),
+                REQUEST_GROUP_NAME_EDIT
+        );
+    }
+
+    public void addNewGroupResultListener(NewGroupResultListener listener) {
+        newGroupResultListeners.add(listener);
+    }
+
+    public void removeNewGroupResultListener(NewGroupResultListener listener) {
+        newGroupResultListeners.remove(listener);
+    }
+
+    public interface NewGroupResultListener {
+        void onNewGroup();
     }
 }

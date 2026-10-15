@@ -11,4 +11,11 @@ internal data class AccountModel(
     val name: String?,
     val type: String? = null,
     val dataSet: String? = null,
-) : Parcelable
+) : Parcelable {
+    val isNullAccount
+        get() = this == NULL
+
+    companion object {
+        val NULL = AccountModel(null, null, null)
+    }
+}
