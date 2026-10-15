@@ -454,7 +454,7 @@
 
         <!-- vCard related -->
         <activity
-            android:name=".ui.vcardimport.ImportVCardActivity"
+            android:name=".ui.vcard.importing.ImportVCardActivity"
             android:exported="true"
             android:theme="@style/Theme.Compose.Dialog">
             <intent-filter>
@@ -485,16 +485,16 @@
         </activity>
 
         <activity
-            android:name=".vcard.CancelActivity"
-            android:theme="@style/BackgroundOnlyTheme"/>
+            android:name=".ui.vcard.export.ExportVCardActivity"
+            android:theme="@style/Theme.Compose.Dialog"/>
+
+        <activity
+            android:name=".ui.vcard.cancel.CancelImportExportActivity"
+            android:theme="@style/Theme.Compose.Dialog"/>
 
         <activity
             android:name=".vcard.SelectAccountActivity"
             android:theme="@style/BackgroundOnlyTheme"/>
-
-        <activity
-            android:name=".ui.vcardexport.ExportVCardActivity"
-            android:theme="@style/Theme.Compose.Dialog"/>
 
         <activity
             android:name=".ui.interactions.importing.ImportActivity"

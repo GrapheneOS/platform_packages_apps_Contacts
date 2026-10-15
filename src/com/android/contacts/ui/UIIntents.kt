@@ -8,8 +8,8 @@ import com.android.contacts.ui.interactions.account.SelectAccountActivity
 import com.android.contacts.ui.interactions.account.screen.SelectAccountViewModel
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.simimport.SimImportActivity
-import com.android.contacts.ui.vcardexport.ExportVCardActivity
-import com.android.contacts.ui.vcardimport.ImportVCardActivity
+import com.android.contacts.ui.vcard.export.ExportVCardActivity
+import com.android.contacts.ui.vcard.importing.ImportVCardActivity
 
 internal object UIIntents {
     const val EXTRA_SUBSCRIPTION_ID: String = "extraSubscriptionId"

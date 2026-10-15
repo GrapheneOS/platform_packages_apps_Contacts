@@ -2,6 +2,8 @@ package com.android.contacts.di.vcard
 
 import com.android.contacts.domain.vcard.usecase.BuildVCardSource
 import com.android.contacts.domain.vcard.usecase.BuildVCardSourceImpl
+import com.android.contacts.domain.vcard.usecase.CancelVCardImportExport
+import com.android.contacts.domain.vcard.usecase.CancelVCardImportExportImpl
 import com.android.contacts.domain.vcard.usecase.CreateTempExportFile
 import com.android.contacts.domain.vcard.usecase.CreateTempExportFileImpl
 import com.android.contacts.domain.vcard.usecase.DeleteExportFiles
@@ -33,6 +35,12 @@ internal abstract class VCardBindsModule {
     abstract fun bindBuildVCardSource(
         impl: BuildVCardSourceImpl,
     ): BuildVCardSource
+
+    @Binds
+    @Reusable
+    abstract fun bindCancelVCardImportExport(
+        impl: CancelVCardImportExportImpl,
+    ): CancelVCardImportExport
 
     @Binds
     @Reusable

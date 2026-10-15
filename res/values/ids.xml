@@ -77,14 +77,6 @@
     <!-- Menu ID for help & feedback  menu -->
     <item type="id" name="nav_help" />
 
-    <!-- For vcard.ImportVCardActivity -->
-    <item type="id" name="dialog_cache_vcard"/>
-    <item type="id" name="dialog_error_with_message"/>
-
-    <!-- For vcard.CancelActivity -->
-    <item type="id" name="dialog_cancel_confirmation"/>
-    <item type="id" name="dialog_cancel_failed"/>
-
     <!-- For Debug Purpose -->
     <item type="id" name="cliv_name_textview"/>
     <item type="id" name="cliv_phoneticname_textview"/>

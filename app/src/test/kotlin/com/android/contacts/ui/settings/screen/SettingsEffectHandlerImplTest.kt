@@ -12,7 +12,7 @@ import android.provider.Settings
 import android.telecom.TelecomManager
 import com.android.contacts.ui.interactions.importing.ImportActivity
 import com.android.contacts.ui.settings.screen.model.SettingsEffect as Effect
-import com.android.contacts.ui.vcardexport.ExportVCardActivity
+import com.android.contacts.ui.vcard.export.ExportVCardActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import io.mockk.every
 import io.mockk.mockk
