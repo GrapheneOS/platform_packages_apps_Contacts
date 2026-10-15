@@ -34,6 +34,8 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 
 import com.android.contacts.R;
+import com.android.contacts.ui.vcard.cancel.CancelImportExportActivity;
+import com.android.contacts.ui.vcard.cancel.screen.model.VCardOperationType;
 import com.android.contacts.util.ContactsNotificationChannelsUtil;
 import com.android.vcard.VCardEntry;
 
@@ -211,22 +213,18 @@ public class NotificationImportExportListener implements VCardImportExportListen
     static Notification constructProgressNotification(
             Context context, int type, String description, String tickerText,
             int jobId, String displayName, int totalCount, int currentCount) {
-        // Note: We cannot use extra values here (like setIntExtra()), as PendingIntent doesn't
-        // preserve them across multiple Notifications. PendingIntent preserves the first extras
-        // (when flag is not set), or update them when PendingIntent#getActivity() is called
-        // (See PendingIntent#FLAG_UPDATE_CURRENT). In either case, we cannot preserve extras as we
-        // expect (for each vCard import/export request).
-        //
-        // We use query parameter in Uri instead.
-        // Scheme and Authority is arbitorary, assuming CancelActivity never refers them.
-        final Intent intent = new Intent(context, CancelActivity.class);
-        final Uri uri = (new Uri.Builder())
-                .scheme("invalidscheme")
-                .authority("invalidauthority")
-                .appendQueryParameter(CancelActivity.JOB_ID, String.valueOf(jobId))
-                .appendQueryParameter(CancelActivity.DISPLAY_NAME, displayName)
-                .appendQueryParameter(CancelActivity.TYPE, String.valueOf(type)).build();
-        intent.setData(uri);
+        final VCardOperationType operationType;
+        if (type == VCardService.TYPE_IMPORT) {
+            operationType = VCardOperationType.IMPORT;
+        } else {
+            operationType = VCardOperationType.EXPORT;
+        }
+        final Intent intent = CancelImportExportActivity.Companion.getIntent(
+                context,
+                jobId,
+                displayName,
+                operationType
+        );
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setOngoing(true)
