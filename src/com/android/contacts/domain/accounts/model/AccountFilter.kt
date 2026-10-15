@@ -6,4 +6,5 @@ enum class AccountFilter {
     CONTACTS_INSERTABLE,
     DRAWER_DISPLAYABLE,
     GROUPS_WRITABLE,
+    GROUPS_INSERTABLE,
 }
