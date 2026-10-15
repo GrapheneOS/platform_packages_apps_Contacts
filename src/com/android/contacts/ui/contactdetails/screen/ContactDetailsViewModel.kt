@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
@@ -333,14 +334,16 @@ internal class ContactDetailsViewModel @Inject constructor(
     }
 
     private fun joinContact(targetContactId: Long) {
-        val details = contentDelegate.loadedDetails.value ?: return
         val callbackActivity = callbackActivity() ?: return
-
-        linkDelegate.joinContacts(
-            contactId = details.contactId,
-            otherContactId = targetContactId,
-            callbackActivity = callbackActivity,
-        )
+        viewModelScope.launch {
+            // The activity could have restarted by then, let's wait for the details to be loaded
+            val details = contentDelegate.loadedDetails.filterNotNull().first()
+            linkDelegate.joinContacts(
+                contactId = details.contactId,
+                otherContactId = targetContactId,
+                callbackActivity = callbackActivity,
+            )
+        }
     }
 
     private fun sendEffect(effect: Effect) {

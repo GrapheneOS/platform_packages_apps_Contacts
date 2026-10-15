@@ -130,10 +130,16 @@ internal abstract class BaseContactDetailsViewModelTest {
         val viewModel = createViewModel().bindContact()
 
         viewModel.uiState.launchIn(backgroundScope)
-        results.tryEmit(ContactDetailsResult.Loaded(details, loadedContact))
-        advanceUntilIdle()
+        emitContactDetailsResult(details)
 
         return viewModel
+    }
+
+    protected fun TestScope.emitContactDetailsResult(
+        details: ContactDetails = contactDetails(lookupUri = LOOKUP_URI),
+    ) {
+        results.tryEmit(ContactDetailsResult.Loaded(details, loadedContact))
+        advanceUntilIdle()
     }
 
     protected fun ContactDetailsViewModel.bindContact(): ContactDetailsViewModel {
