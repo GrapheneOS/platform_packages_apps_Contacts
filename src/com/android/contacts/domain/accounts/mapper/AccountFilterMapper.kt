@@ -29,6 +29,8 @@ internal class AccountFilterMapperImpl @Inject constructor(
                 AccountTypeManager.AccountFilter.DRAWER_DISPLAYABLE
             AccountFilter.GROUPS_WRITABLE ->
                 AccountTypeManager.AccountFilter.GROUPS_WRITABLE
+            AccountFilter.GROUPS_INSERTABLE ->
+                AccountTypeManager.groupInsertableFilter(context)
         }
     }
 }

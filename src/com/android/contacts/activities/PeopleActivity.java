@@ -1179,7 +1179,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 UIIntents.INSTANCE.getSelectAccountDialogIntent(
                         this,
                         Integer.valueOf(R.string.dialog_new_group_account),
-                        AccountFilter.GROUPS_WRITABLE
+                        AccountFilter.GROUPS_INSERTABLE
                 ),
                 REQUEST_SELECT_ACCOUNT
         );
