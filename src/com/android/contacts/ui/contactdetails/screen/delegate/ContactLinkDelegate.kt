@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 internal interface ContactLinkDelegate {
     val progress: StateFlow<ContactLinkOperation?>
@@ -21,7 +20,7 @@ internal interface ContactLinkDelegate {
 
     fun bind(scope: CoroutineScope)
 
-    fun joinContacts(
+    suspend fun joinContacts(
         contactId: Long,
         otherContactId: Long,
         callbackActivity: Class<out Activity>,
@@ -38,34 +37,24 @@ internal class ContactLinkDelegateImpl @Inject constructor(
     private val _unlinked = Channel<Unit>(Channel.BUFFERED)
     override val unlinked: Flow<Unit> = _unlinked.receiveAsFlow()
 
-    private var boundScope: CoroutineScope? = null
-
     override fun bind(scope: CoroutineScope) {
-        if (boundScope != null) {
-            return
-        }
-
-        boundScope = scope
-
         contactActionsRepository.observeLinkOperations()
             .onEach { operation -> onLinkOperation(operation) }
             .launchIn(scope)
     }
 
-    override fun joinContacts(
+    override suspend fun joinContacts(
         contactId: Long,
         otherContactId: Long,
         callbackActivity: Class<out Activity>,
     ) {
         _progress.value = ContactLinkOperation.LINK
 
-        boundScope?.launch {
-            contactActionsRepository.joinContacts(
-                contactId = contactId,
-                otherContactId = otherContactId,
-                callbackActivity = callbackActivity,
-            )
-        }
+        contactActionsRepository.joinContacts(
+            contactId = contactId,
+            otherContactId = otherContactId,
+            callbackActivity = callbackActivity,
+        )
     }
 
     private fun onLinkOperation(operation: ContactLinkOperation) {

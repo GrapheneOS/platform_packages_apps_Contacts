@@ -19,6 +19,7 @@ import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -392,6 +393,29 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
 
         viewModel.onAction(ContactDetailsAction.JoinTargetPicked(11L))
         advanceUntilIdle()
+
+        coVerify {
+            contactActionsRepository.joinContacts(
+                contactId = CONTACT_ID_UNDER_TEST,
+                otherContactId = 11L,
+                callbackActivity = ContactDetailsActivity::class.java,
+            )
+        }
+    }
+
+    @Test
+    fun onProcessRestart_withAJoinTargetPicked_waitsForLoadAndJoinsTheContacts() = runTest {
+        val viewModel = createViewModel().bindContact()
+        viewModel.uiState.launchIn(backgroundScope)
+
+        viewModel.onAction(ContactDetailsAction.JoinTargetPicked(11L))
+        advanceUntilIdle()
+
+        coVerify(exactly = 0) {
+            contactActionsRepository.joinContacts(any(), any(), any())
+        }
+
+        emitContactDetailsResult()
 
         coVerify {
             contactActionsRepository.joinContacts(
