@@ -5,7 +5,6 @@ import android.net.Uri
 import android.provider.ContactsContract
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.accounts.usecase.GetDefaultAccount
@@ -56,7 +55,6 @@ internal class GroupsViewModelTest {
     private val loadAccounts = mockk<LoadAccounts>(relaxed = true)
     private val groupsUiMapper = mockk<GroupsUiMapper>(relaxed = true)
     private val getDefaultAccount = mockk<GetDefaultAccount>(relaxed = true)
-    private val accountDisplayModelMapper = mockk<AccountDisplayModelMapper>(relaxed = true)
 
     @Before
     fun setUp() {
@@ -254,7 +252,7 @@ internal class GroupsViewModelTest {
             loadAccounts = loadAccounts,
             groupsUiMapper = groupsUiMapper,
             getDefaultAccount = getDefaultAccount,
-            accountDisplayModelMapper = accountDisplayModelMapper,
+            ioDispatcher = mainDispatcherRule.testDispatcher,
         )
     }
 

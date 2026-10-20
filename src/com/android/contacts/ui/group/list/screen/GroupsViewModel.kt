@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
+import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.domain.accounts.model.AccountDisplayModel
 import com.android.contacts.domain.accounts.model.AccountFilter
 import com.android.contacts.domain.accounts.model.AccountModel
@@ -24,12 +24,14 @@ import com.android.contacts.ui.group.list.screen.model.GroupsEffect as Effect
 import com.android.contacts.ui.group.list.screen.model.GroupsUiState as State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 
@@ -46,8 +48,8 @@ internal class GroupsViewModel @Inject constructor(
     getGroups: GetGroups,
     loadAccounts: LoadAccounts,
     private val groupsUiMapper: GroupsUiMapper,
-    private val getDefaultAccount: GetDefaultAccount,
-    private val accountDisplayModelMapper: AccountDisplayModelMapper,
+    getDefaultAccount: GetDefaultAccount,
+    @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel(),
     GroupsScreenModel {
 
@@ -64,9 +66,10 @@ internal class GroupsViewModel @Inject constructor(
                 sort = GroupSort.BY_TITLE,
             ),
             loadAccounts(AccountFilter.GROUPS_INSERTABLE),
-            flowOf(account ?: getDefaultAccount()),
+            flow { emit(account ?: getDefaultAccount()) },
             ::buildState,
         )
+            .flowOn(ioDispatcher)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STATEFLOW_STOP_TIMEOUT_MILLIS),
@@ -108,13 +111,6 @@ internal class GroupsViewModel @Inject constructor(
             account?.let(GroupFilter::ByAccount),
             GroupFilter.AutoAdd(false),
             GroupFilter.Favorites(false),
-        )
-    }
-
-    private fun loadDefaultAccount(): Flow<AccountDisplayModel?> {
-        return flowOf(
-            getDefaultAccount()
-                ?.let(accountDisplayModelMapper::map),
         )
     }
 

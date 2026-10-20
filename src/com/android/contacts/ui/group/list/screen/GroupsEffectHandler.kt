@@ -31,14 +31,13 @@ internal class GroupsEffectHandlerImpl(
     }
 
     private fun createNewGroup(account: AccountModel) {
-        activity.startActivityForResult(
+        activity.startActivity(
             GroupNameEditActivity.buildCreateIntent(
                 activity,
                 account,
                 GroupsActivity::class.java,
                 GroupUtil.ACTION_CREATE_GROUP,
             ),
-            GroupsActivity.REQUEST_CREATE_GROUP,
         )
     }
 

@@ -219,7 +219,7 @@ public class NotificationImportExportListener implements VCardImportExportListen
         } else {
             operationType = VCardOperationType.EXPORT;
         }
-        final Intent intent = CancelImportExportActivity.Companion.getIntent(
+        final Intent intent = CancelImportExportActivity.getIntent(
                 context,
                 jobId,
                 displayName,

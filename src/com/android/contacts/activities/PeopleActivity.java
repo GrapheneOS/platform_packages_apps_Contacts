@@ -1183,7 +1183,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 account.dataSet
         );
         startActivity(
-                GroupNameEditActivity.Companion.buildCreateIntent$app(
+                GroupNameEditActivity.buildCreateIntent$app(
                         this,
                         newGroupAccountModel,
                         PeopleActivity.class,
@@ -1213,7 +1213,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     public void onOpenGroups() {
         new Handler().postDelayed(() ->
                         startActivity(
-                                GroupsActivity.Companion.buildIntent$app(PeopleActivity.this, null)
+                                GroupsActivity.buildIntent$app(PeopleActivity.this, null)
                         ),
                 DRAWER_CLOSE_DELAY
         );

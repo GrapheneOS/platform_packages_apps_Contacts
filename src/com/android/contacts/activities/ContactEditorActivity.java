@@ -482,7 +482,7 @@ public class ContactEditorActivity extends AppCompatContactsActivity
     @Override
     public void openNewGroupDialog(AccountModel account) {
         startActivityForResult(
-                GroupNameEditActivity.Companion.buildCreateIntent$app(
+                GroupNameEditActivity.buildCreateIntent$app(
                         this,
                         account,
                         ContactEditorActivity.class,
