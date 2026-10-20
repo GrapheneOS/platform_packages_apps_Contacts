@@ -216,6 +216,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private Object mStatusChangeListenerHandle;
 
     private final Handler mHandler = new Handler();
+    private CanSwitchAccounts.Cancellable canSwitchAccountsJob;
 
     @Inject
     Lazy<DebugOptionsMenu> debugOptionsMenu;
@@ -444,10 +445,12 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         }
         getWindow().setBackgroundDrawable(null);
 
-        canSwitchAccounts.invokeWithCallback((canSwitchAccounts) -> {
-            runOnUiThread(() ->
-                    mDrawerFragment.setIsAccountSwitcherVisible(canSwitchAccounts.booleanValue())
-            );
+        canSwitchAccountsJob = canSwitchAccounts.invokeWithCallback((canSwitchAccounts) -> {
+            runOnUiThread(() -> {
+                if (!isFinishing() && !isDestroyed()) {
+                    mDrawerFragment.setIsAccountSwitcherVisible(canSwitchAccounts.booleanValue());
+                }
+            });
             return Unit.INSTANCE;
         });
     }
@@ -693,6 +696,10 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     protected void onDestroy() {
         mProviderStatusWatcher.removeListener(mProviderStatusListener);
         mContactListFilterController.removeListener(mFilterListener);
+        if (canSwitchAccountsJob != null) {
+            canSwitchAccountsJob.cancel();
+            canSwitchAccountsJob = null;
+        }
         super.onDestroy();
     }
 
@@ -1233,7 +1240,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     public void onOpenAccountsFilter() {
         new Handler().postDelayed(() ->
                         startActivityForResult(
-                                AccountFilterActivity.Companion.buildIntent$app(
+                                AccountFilterActivity.buildIntent$app(
                                         PeopleActivity.this,
                                         getCurrentAccountFilter()
                                 ),
