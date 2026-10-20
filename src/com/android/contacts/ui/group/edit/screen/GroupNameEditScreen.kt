@@ -103,11 +103,7 @@ private fun GroupNameEditField(
 
     OutlinedTextField(
         value = name,
-        onValueChange = {
-            if (it.length <= GROUP_NAME_MAX_LENGTH) {
-                onNameChange(it)
-            }
-        },
+        onValueChange = { onNameChange(it.take(GROUP_NAME_MAX_LENGTH)) },
         label = { Text(stringResource(R.string.group_name_dialog_hint)) },
         singleLine = true,
         isError = isDuplicatedName,
