@@ -187,6 +187,35 @@ internal class GroupNameEditViewModelTest {
         }
 
     @Test
+    fun onEdit_useInitialTrimmedNameAndCompareTrimmed() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            val account = AccountModelFactory.build()
+            val savedStateHandle = SavedStateHandle(
+                mapOf(
+                    GroupNameEditActivity.EXTRA_GROUP_ID to 123L,
+                    GroupNameEditActivity.EXTRA_GROUP_NAME to " Name ",
+                    GroupNameEditActivity.EXTRA_ACCOUNT to account,
+                ),
+            )
+            val viewModel = createViewModel(savedStateHandle)
+
+            viewModel.uiState.test {
+                assertEquals(
+                    State(isEdit = true, name = "Name"),
+                    awaitItem(),
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+
+            viewModel.effects.test {
+                viewModel.onAction(Action.NameChanged("Name  "))
+                viewModel.onAction(Action.OkClicked)
+                advanceUntilIdle()
+                assertEquals(Effect.Close(isSuccessful = true), awaitItem())
+            }
+        }
+
+    @Test
     fun whenNameMatchesExisting_setInputError() =
         runTest(context = mainDispatcherRule.testDispatcher) {
             givenCheckIfGroupNameExists(true)

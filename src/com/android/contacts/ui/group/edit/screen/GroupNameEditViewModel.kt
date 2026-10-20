@@ -44,7 +44,7 @@ internal class GroupNameEditViewModel @Inject constructor(
     private val groupId: Long? =
         savedStateHandle.get<Long>(GroupNameEditActivity.EXTRA_GROUP_ID)
     private val groupName: String? =
-        savedStateHandle.get<String>(GroupNameEditActivity.EXTRA_GROUP_NAME)
+        savedStateHandle.get<String>(GroupNameEditActivity.EXTRA_GROUP_NAME)?.trim()
     private val account: AccountModel =
         savedStateHandle.get<AccountModel>(GroupNameEditActivity.EXTRA_ACCOUNT) ?: AccountModel.NULL
 
@@ -92,7 +92,7 @@ internal class GroupNameEditViewModel @Inject constructor(
                     emitEffect(Effect.Close(isSuccessful = true))
                 }
                 checkIfGroupNameExists(account, name) -> {
-                    _uiState.value = state.copy(isDuplicatedName = true)
+                    _uiState.update { it.copy(isDuplicatedName = true) }
                     isCreatingOrEditing = false
                 }
                 else -> {
