@@ -12,7 +12,9 @@ import com.android.contacts.ui.group.edit.screen.model.GroupNameEditUiState as S
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -80,6 +82,36 @@ internal class GroupNameEditViewModelTest {
                     expectMostRecentItem(),
                 )
             }
+        }
+
+    @Test
+    fun whenOkClickedTwice_groupIsOnlyCreatedOnce() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            coEvery { checkIfGroupNameExists(any(), any()) } coAnswers {
+                delay(100.milliseconds)
+                false
+            }
+            val account = AccountModelFactory.build()
+            val savedStateHandle = SavedStateHandle(
+                mapOf(GroupNameEditActivity.EXTRA_ACCOUNT to account),
+            )
+            val viewModel = createViewModel(savedStateHandle)
+
+            viewModel.effects.test {
+                viewModel.onAction(Action.NameChanged("Name"))
+                advanceUntilIdle()
+                viewModel.onAction(Action.OkClicked)
+                viewModel.onAction(Action.OkClicked)
+                assertEquals(
+                    Effect.CreateGroup(
+                        account = account,
+                        groupName = "Name",
+                    ),
+                    awaitItem(),
+                )
+                expectNoEvents()
+            }
+            coVerify(exactly = 1) { checkIfGroupNameExists(account, "Name") }
         }
 
     @Test
@@ -185,6 +217,36 @@ internal class GroupNameEditViewModelTest {
                 expectNoEvents()
             }
             coVerify { checkIfGroupNameExists(account, "Existing Name") }
+        }
+
+    @Test
+    fun whenNameMatchesExisting_allowRetry() =
+        runTest(context = mainDispatcherRule.testDispatcher) {
+            givenCheckIfGroupNameExists(true)
+            val account = AccountModelFactory.build()
+            val viewModel = createViewModel(
+                savedStateHandle = SavedStateHandle(
+                    mapOf(GroupNameEditActivity.EXTRA_ACCOUNT to account),
+                ),
+            )
+
+            viewModel.effects.test {
+                viewModel.onAction(Action.NameChanged("Existing Name"))
+                viewModel.onAction(Action.OkClicked)
+                advanceUntilIdle()
+                expectNoEvents()
+                givenCheckIfGroupNameExists(false)
+                viewModel.onAction(Action.NameChanged("New Name"))
+                viewModel.onAction(Action.OkClicked)
+                advanceUntilIdle()
+                assertEquals(
+                    Effect.CreateGroup(
+                        account = account,
+                        groupName = "New Name",
+                    ),
+                    awaitItem(),
+                )
+            }
         }
 
     @Test

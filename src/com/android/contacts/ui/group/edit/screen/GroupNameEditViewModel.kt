@@ -59,6 +59,8 @@ internal class GroupNameEditViewModel @Inject constructor(
     private val _effects = Channel<Effect>(Channel.BUFFERED)
     override val effects: Flow<Effect> = _effects.receiveAsFlow()
 
+    private var isCreatingOrEditing: Boolean = false
+
     override fun onAction(action: Action) {
         when (action) {
             Action.Dismissed -> emitEffect(Effect.Close(isSuccessful = false))
@@ -79,6 +81,8 @@ internal class GroupNameEditViewModel @Inject constructor(
     }
 
     private fun onOkClick() {
+        if (isCreatingOrEditing) return
+        isCreatingOrEditing = true
         val state = uiState.value
         val name = state.name.trim()
 
@@ -89,6 +93,7 @@ internal class GroupNameEditViewModel @Inject constructor(
                 }
                 checkIfGroupNameExists(account, name) -> {
                     _uiState.value = state.copy(isDuplicatedName = true)
+                    isCreatingOrEditing = false
                 }
                 else -> {
                     createOrEdit(name)
