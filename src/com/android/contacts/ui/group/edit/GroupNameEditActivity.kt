@@ -62,6 +62,7 @@ class GroupNameEditActivity : ComponentActivity() {
         private const val EXTRA_CALLBACK_ACTIVITY = "callback_activity"
         private const val EXTRA_CALLBACK_ACTION = "callback_action"
 
+        @JvmStatic
         internal fun buildCreateIntent(
             context: Context,
             account: AccountModel,
@@ -72,6 +73,7 @@ class GroupNameEditActivity : ComponentActivity() {
                 .putCommonExtras(account, callbackActivity, callbackAction)
         }
 
+        @JvmStatic
         internal fun buildEditIntent(
             context: Context,
             groupId: Long,

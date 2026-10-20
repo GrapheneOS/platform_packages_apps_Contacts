@@ -111,8 +111,8 @@ internal class GroupsRepositoryImpl @Inject constructor(
     private fun buildGroupColumn(cursor: Cursor): GroupColumn? {
         return GroupColumn(
             id = cursor.getLong(GROUP_ID),
-            title = cursor.getString(GROUP_TITLE).takeIf { it.isNotEmpty() } ?: return null,
-            summaryCount = cursor.getInt(GROUP_SUMMARY_COUNT),
+            title = cursor.getString(GROUP_TITLE)?.takeIf { it.isNotEmpty() } ?: return null,
+            summaryCount = cursor.getInt(GROUP_SUMMARY_COUNT).coerceAtLeast(0),
             systemId = cursor.getString(GROUP_SYSTEM_ID),
             accountName = cursor.getString(GROUP_ACCOUNT_NAME),
             accountType = cursor.getString(GROUP_ACCOUNT_TYPE),

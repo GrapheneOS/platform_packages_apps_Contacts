@@ -478,7 +478,7 @@ public class GroupMembersFragment extends MultiSelectContactsListFragment<GroupM
                     getString(R.string.menu_sendMessageOption));
         } else if (id == R.id.menu_rename_group) {
             mActivity.startActivity(
-                    GroupNameEditActivity.Companion.buildEditIntent$app(
+                    GroupNameEditActivity.buildEditIntent$app(
                             getContext(),
                             mGroupMetaData.groupId,
                             mGroupMetaData.groupName,

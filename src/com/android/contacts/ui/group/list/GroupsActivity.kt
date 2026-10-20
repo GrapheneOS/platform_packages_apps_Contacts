@@ -58,8 +58,8 @@ class GroupsActivity :
 
     companion object {
         const val EXTRA_ACCOUNT = "account"
-        const val REQUEST_CREATE_GROUP = 1001
 
+        @JvmStatic
         internal fun buildIntent(
             context: Context,
             account: AccountModel? = null,

@@ -49,6 +49,7 @@ class CancelImportExportActivity : ComponentActivity() {
         }
 
     internal companion object {
+        @JvmStatic
         fun getIntent(
             context: Context,
             jobId: Int,
