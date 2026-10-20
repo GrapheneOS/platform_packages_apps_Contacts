@@ -32,6 +32,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
 import com.android.contactsbind.ObjectFactory;
@@ -39,11 +41,13 @@ import com.android.contactsbind.ObjectFactory;
 public class DrawerFragment extends Fragment {
 
     private static final String KEY_CONTACTS_VIEW = "contactsView";
+    private static final String KEY_IS_ACCOUNT_SWITCHER_VISIBLE = "accountSwitcherVisible";
 
     private WelcomeContentObserver mObserver;
     private ListView mDrawerListView;
     private DrawerAdapter mDrawerAdapter;
     private ContactsView mCurrentContactsView;
+    private boolean mIsAccountSwitcherVisible;
     private DrawerFragmentListener mListener;
     // Transparent scrim drawn at the top of the drawer fragment.
     private ScrimDrawable mScrimDrawable;
@@ -59,7 +63,8 @@ public class DrawerFragment extends Fragment {
         }
     }
 
-    public DrawerFragment() {}
+    public DrawerFragment() {
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -73,12 +78,22 @@ public class DrawerFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mIsAccountSwitcherVisible =
+                    savedInstanceState.getBoolean(KEY_IS_ACCOUNT_SWITCHER_VISIBLE);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         final View contentView = inflater.inflate(R.layout.drawer_fragment, null);
         mDrawerListView = (ListView) contentView.findViewById(R.id.list);
         mDrawerAdapter = new DrawerAdapter(getActivity());
         mDrawerAdapter.setSelectedContactsView(mCurrentContactsView);
+        mDrawerAdapter.setIsAccountSwitcherVisible(mIsAccountSwitcherVisible);
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(mOnDrawerItemClickListener);
 
@@ -116,6 +131,7 @@ public class DrawerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CONTACTS_VIEW, mCurrentContactsView.ordinal());
+        outState.putBoolean(KEY_IS_ACCOUNT_SWITCHER_VISIBLE, mIsAccountSwitcherVisible);
     }
 
     @Override
@@ -170,7 +186,10 @@ public class DrawerFragment extends Fragment {
     }
 
     public void setIsAccountSwitcherVisible(boolean isVisible) {
-        mDrawerAdapter.setIsAccountSwitcherVisible(isVisible);
+        mIsAccountSwitcherVisible = isVisible;
+        if (mDrawerAdapter != null) {
+            mDrawerAdapter.setIsAccountSwitcherVisible(isVisible);
+        }
     }
 
     private void applyTopInset(int insetTop) {
@@ -183,11 +202,17 @@ public class DrawerFragment extends Fragment {
 
     public interface DrawerFragmentListener {
         void onDrawerItemClicked();
+
         void onContactsViewSelected(ContactsView mode);
+
         void onOpenAccountsFilter();
+
         void onOpenGroups();
+
         void onOpenSettings();
+
         void onLaunchHelpFeedback();
+
         void onShowDebugOptions();
     }
 

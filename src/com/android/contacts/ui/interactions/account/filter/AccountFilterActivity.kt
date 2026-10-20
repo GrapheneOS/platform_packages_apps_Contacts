@@ -35,6 +35,7 @@ class AccountFilterActivity : ComponentActivity() {
     internal companion object {
         const val EXTRA_FILTER = "filter"
 
+        @JvmStatic
         internal fun buildIntent(context: Context, currentFilter: ContactsAccountFilter): Intent {
             return Intent(context, AccountFilterActivity::class.java)
                 .putExtra(EXTRA_FILTER, currentFilter)

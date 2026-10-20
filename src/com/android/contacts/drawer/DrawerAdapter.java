@@ -61,7 +61,8 @@ public class DrawerAdapter extends BaseAdapter {
     // Adapter elements, ordered in this way mItemsList. The ordering is based on:
     //  [Navigation spacer item]
     //  [Primary items] (Contacts, Suggestions)
-    //  [Misc items] (dividers, Accounts, Labels, Settings, Help & Feedback)
+    //  [Account items] (Account filter dialog)
+    //  [Misc items] (dividers, Labels, Settings, Help & Feedback)
     //  [Navigation spacer item]
     private NavSpacerItem mNavSpacerItem = null;
     private List<PrimaryItem> mPrimaryItems = new ArrayList<>();
