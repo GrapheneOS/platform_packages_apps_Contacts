@@ -75,7 +75,7 @@ class GroupNameEditActivity : ComponentActivity() {
         internal fun buildEditIntent(
             context: Context,
             groupId: Long,
-            groupName: String,
+            groupName: String?,
             account: AccountModel,
             callbackActivity: Class<out Activity>,
             callbackAction: String? = null,
