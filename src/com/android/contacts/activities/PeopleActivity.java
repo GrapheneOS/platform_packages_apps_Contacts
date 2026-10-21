@@ -1200,7 +1200,9 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 ContactsAccountFilter filter = data.getParcelableExtra(
                         AccountFilterActivity.EXTRA_FILTER, ContactsAccountFilter.class
                 );
-                if (filter != null) {
+                if (filter instanceof ContactsAccountFilter.All) {
+                    switchToAllContacts();
+                } else if (filter != null) {
                     onFilterMenuItemClicked(contactsAccountFilterMapper.map(filter));
                 }
             }

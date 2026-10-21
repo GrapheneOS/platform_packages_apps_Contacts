@@ -66,7 +66,6 @@ public class DrawerAdapter extends BaseAdapter {
     //  [Navigation spacer item]
     private NavSpacerItem mNavSpacerItem = null;
     private List<PrimaryItem> mPrimaryItems = new ArrayList<>();
-    private HeaderItem mAccountHeader = null;
     private List<BaseDrawerItem> mAccountsItems = new ArrayList<>();
     private List<BaseDrawerItem> mMiscItems = new ArrayList<>();
     private List<BaseDrawerItem> mItemsList = new ArrayList<>();
