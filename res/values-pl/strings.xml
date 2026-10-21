@@ -263,9 +263,6 @@
     <string name="sms_assistant" msgid="245045451580096547">"SMS – <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Tekst – wiadomość MMS"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Rozpocznij rozmowę wideo"</string>
-    <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Wyczyścić częste kontakty?"</string>
-    <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Wyczyścisz listę częstych kontaktów w aplikacjach Kontakty i Telefon. Aplikacje pocztowe będą musiały od nowa poznać Twoje preferencje adresowe."</string>
-    <string name="clearFrequentsProgress_title" msgid="8271935295080659743">"Czyszczę częste kontakty…"</string>
     <string name="status_available" msgid="8081626460682959098">"Dostępny"</string>
     <string name="status_away" msgid="2677693194455091315">"Nieobecny"</string>
     <string name="status_busy" msgid="2759339190187696727">"Zajęty"</string>
