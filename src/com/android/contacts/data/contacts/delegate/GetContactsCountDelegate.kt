@@ -31,7 +31,7 @@ internal class GetContactsCountDelegateImpl @Inject constructor(
         return contentResolver.query(
             ContactsContract.RawContacts.CONTENT_URI,
             PROJECTION,
-            null,
+            SELECTION,
             null,
             null,
         )?.use { cursor ->
@@ -51,7 +51,7 @@ internal class GetContactsCountDelegateImpl @Inject constructor(
                 all = allContacts.distinctBy { it.second }.size,
                 byAccount = allContacts
                     .groupBy { (account, _) -> account }
-                    .mapValues { (_, contacts) -> contacts.distinct().size }
+                    .mapValues { (_, contacts) -> contacts.distinct().size },
             )
         }
     }
@@ -64,6 +64,9 @@ internal class GetContactsCountDelegateImpl @Inject constructor(
             ContactsContract.RawContacts.ACCOUNT_TYPE,
             ContactsContract.RawContacts.DATA_SET,
         )
+
+        @VisibleForTesting
+        val SELECTION = ContactsContract.RawContacts.DELETED + "=0"
         const val CONTACT_ID_INDEX = 0
         const val ACCOUNT_NAME_INDEX = 1
         const val ACCOUNT_TYPE_INDEX = 2

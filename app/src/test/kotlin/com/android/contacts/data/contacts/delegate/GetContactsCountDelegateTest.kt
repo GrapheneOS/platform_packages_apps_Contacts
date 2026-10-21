@@ -127,7 +127,7 @@ class GetContactsCountDelegateTest {
             contentResolver.query(
                 ContactsContract.RawContacts.CONTENT_URI,
                 GetContactsCountDelegateImpl.PROJECTION,
-                null,
+                GetContactsCountDelegateImpl.SELECTION,
                 null,
                 null,
             )
