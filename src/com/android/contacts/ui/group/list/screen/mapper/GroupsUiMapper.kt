@@ -37,9 +37,9 @@ internal class GroupsUiMapperImpl @Inject constructor(
 
         // The default account should always be available to add a new group,
         // if there is a default account and it can create groups
+        val groupsIncludeDefaultAccount = groupsMap.keys.any { it.account == defaultAccount }
         val groupsMapWithDefault = when {
-            defaultAccountDisplay == null ||
-                groupsMap.keys.any { it.account == defaultAccount } -> {
+            defaultAccountDisplay == null || groupsIncludeDefaultAccount -> {
                 groupsMap
             }
             else -> {
