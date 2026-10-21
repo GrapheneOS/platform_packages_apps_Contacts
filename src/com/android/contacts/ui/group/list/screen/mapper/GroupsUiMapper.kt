@@ -27,13 +27,10 @@ internal class GroupsUiMapperImpl @Inject constructor(
         insertableAccounts: List<AccountDisplayModel>,
         defaultAccount: AccountModel?,
     ): ImmutableList<AccountGroupsItem> {
-        val groupsMap = groups
-            .groupBy { accountDisplayModelMapper.map(it.account) }
-            .filterKeysNotNull()
+        val groupsMap = groups.groupBy { accountDisplayModelMapper.map(it.account) }
 
         val defaultAccountDisplay = defaultAccount
-            ?.takeIf { insertableAccounts.any { it.account == defaultAccount } }
-            ?.let(accountDisplayModelMapper::map)
+            ?.let { insertableAccounts.find { it.account == defaultAccount } }
 
         // The default account should always be available to add a new group,
         // if there is a default account and it can create groups
@@ -77,9 +74,5 @@ internal class GroupsUiMapperImpl @Inject constructor(
             name = group.name.trim(),
             summaryCount = group.summaryCount,
         )
-    }
-
-    private fun <K : Any, V : Any> Map<K?, V>.filterKeysNotNull(): Map<K, V> {
-        return filterKeys { it != null }.mapKeys { (key, _) -> key!! }
     }
 }
