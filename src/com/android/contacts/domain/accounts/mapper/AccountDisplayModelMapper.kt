@@ -7,7 +7,7 @@ import com.android.contacts.model.account.AccountInfo
 import javax.inject.Inject
 
 internal interface AccountDisplayModelMapper {
-    fun map(accountModel: AccountModel): AccountDisplayModel?
+    fun map(accountModel: AccountModel): AccountDisplayModel
     fun map(accountInfo: AccountInfo): AccountDisplayModel
 }
 
@@ -17,10 +17,10 @@ internal class AccountDisplayModelMapperImpl @Inject constructor(
     private val accountTypeManager: AccountTypeManager,
 ) : AccountDisplayModelMapper {
 
-    override fun map(accountModel: AccountModel): AccountDisplayModel? {
+    override fun map(accountModel: AccountModel): AccountDisplayModel {
         val accountWithDataSet = accountModelMapper.map(accountModel)
         val accountInfo = accountTypeManager.getAccountInfoForAccount(accountWithDataSet)
-        return accountInfo?.let(::map)
+        return map(accountInfo)
     }
 
     override fun map(accountInfo: AccountInfo): AccountDisplayModel {
