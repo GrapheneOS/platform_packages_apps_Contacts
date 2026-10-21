@@ -263,9 +263,6 @@
     <string name="sms_assistant" msgid="245045451580096547">"Tuma ujumbe kwa <xliff:g id="ASSISTANT">%s</xliff:g>"</string>
     <string name="sms_mms" msgid="7395133080765833725">"Tuma maandishi ya MMS"</string>
     <string name="description_video_call" msgid="4956825008907720371">"Piga Hangout ya Video"</string>
-    <string name="clearFrequentsConfirmation_title" msgid="9194415661170740437">"Futa uliowasiliana nao mara kwa mara?"</string>
-    <string name="clearFrequentsConfirmation" msgid="2120741757522063938">"Utafuta orodha ya unaowasiliana nao mara kwa mara katika programu ya Anwani na ya Simu, na kulazimisha programu za barua pepe zitambue mapendeleo yako ya anwani kutoka mwanzo."</string>
-    <string name="clearFrequentsProgress_title" msgid="8271935295080659743">"Inafuta uliowasiliana nao mara kwa mara..."</string>
     <string name="status_available" msgid="8081626460682959098">"Nipo"</string>
     <string name="status_away" msgid="2677693194455091315">"Mbali"</string>
     <string name="status_busy" msgid="2759339190187696727">"Ana shughuli"</string>
