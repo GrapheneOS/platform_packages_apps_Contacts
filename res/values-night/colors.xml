@@ -14,14 +14,9 @@
      limitations under the License.
 -->
 <resources>
-    <color name="fab_icon_color">#191919</color>
     <color name="text_color">#DDFFFFFF</color>
     <color name="text_color_secondary">#D9FFFFFF</color>
     <color name="hint_text_color">#61FFFFFF</color>
-
-    <color name="action_bar_background">#CC2A56C6</color>
-
-    <color name="nav_item_selected_background">#99FFFFFF</color>
 
     <color name="actionbar_background_color">@color/primary_color</color>
 
@@ -35,15 +30,6 @@
     <color name="group_primary_color_dark">#546E7A</color>
     <color name="group_primary_color">#607D8B</color>
 
-    <!-- Horizontal separator line should be 12% dark in the light theme. -->
-    <color name="divider_line_color_light">#525252</color>
-
-    <!-- Color of the margin for cards -->
-    <color name="card_margin_color">#252323</color>
-
-    <color name="call_arrow_green">#2aad6f</color>
-    <color name="call_arrow_red">#ff2e58</color>
-
     <!-- Background color of pinned header items. -->
     <color name="list_item_pinned_header_color">@color/background_primary</color>
 
@@ -52,12 +38,6 @@
 
     <!-- Color of disabled text and unfocused hint text inside the contact editor. 25% black. -->
     <color name="editor_disabled_text_color">#E0B0AEAE</color>
-
-    <!-- Color of text on disabled link contacts button, 25% black. -->
-    <color name="disabled_button_text">#40CBCBCB</color>
-
-    <!-- Color of background of disabled link contacts button, 15% black. -->
-    <color name="disabled_button_background">#26C1C1C1</color>
 
     <!-- Color of text of people names in contact list when item is disabled. 30% black -->
     <color name="disabled_contact_list_name_text">#4DC6C6C6</color>
@@ -86,9 +66,6 @@
     <color name="dialtacts_secondary_text_color">#C8C8C8</color>
 
     <color name="shortcut_overlay_text_background">#7FFFFFFF</color>
-
-    <color name="textColorIconOverlay">#060606</color>
-    <color name="textColorIconOverlayShadow">#FFF</color>
 
     <!-- Background colors for LetterTileDrawables. This set of colors is a subset of
         https://spec.googleplex.com/quantumpalette#extended which passes Google Accessibility
@@ -176,18 +153,12 @@
 
     <!-- Background color for the call subject history view. -->
     <color name="call_subject_history_background">#000000</color>
-    <color name="search_video_call_icon_tint">@color/searchbox_hint_text_color</color>
 
     <!-- Text color for an action in a snackbar. -->
     <color name="snackbar_action_text">#000000</color>
-    <!-- Background color for a snackbar. -->
-    <color name="snackbar_background">#9C9C9C</color>
 
     <!-- Primary text color in Contacts app -->
     <color name="contacts_text_color">#EAEAEA</color>
-
-    <!-- tint color for device account icons -->
-    <color name="device_account_tint_color">#7f7f7f</color>
 
     <!-- Background color for sync-off alert. -->
     <color name="alert_background">#585858</color>

@@ -61,11 +61,6 @@
     <!-- Menu item used to remove a star from a contact, making the contact no longer show up at the top of favorites -->
     <string name="menu_removeStar">Remove from favorites</string>
 
-    <!-- Description of what happens when you click on the unstar MenuItem. [CHAR LIMIT=NONE] -->
-    <string name="description_action_menu_remove_star">Removed from favorites</string>
-    <!-- Description of what happens when you click on the star MenuItem. [CHAR LIMIT=NONE] -->
-    <string name="description_action_menu_add_star">Added to favorites</string>
-
     <!-- Menu item used to edit a specific contact -->
     <string name="menu_editContact">Edit</string>
 
@@ -193,12 +188,6 @@
 
     <!-- Menu item to set ring tone for a given contact [CHAR LIMIT=15] -->
     <string name="menu_set_ring_tone">Set ringtone</string>
-
-    <!-- Menu item to route all calls from a given contact to voice mail [CHAR LIMIT=30] -->
-    <string name="menu_redirect_calls_to_vm">Route to voicemail</string>
-
-    <!-- Menu item to unroute all calls from a given contact to voice mail [CHAR LIMIT=30] -->
-    <string name="menu_unredirect_calls_to_vm">Unroute to voicemail</string>
 
     <!-- Warning dialog contents after users select to delete a ReadOnly contact. [CHAR LIMIT=NONE] -->
     <string name="readOnlyContactWarning">This contact is read-only. It can\'t be deleted, but you can hide it.</string>
@@ -459,11 +448,6 @@
     <!-- Content description for new group button for a specific account -->
     <string name="new_group_content_description">Create label for %1$s</string>
 
-    <!-- Generic action string for starting an audio chat. Used by AccessibilityService to announce the purpose of the view. [CHAR LIMIT=NONE] -->
-    <string name="audio_chat">Voice chat</string>
-    <!-- Generic action string for starting a video chat. Used by AccessibilityService to announce the purpose of the view. [CHAR LIMIT=NONE] -->
-    <string name="video_chat">Video chat</string>
-
     <!-- String describing which account type a contact came from when editing it -->
     <string name="account_type_format"><xliff:g example="Gmail" id="source">%1$s</xliff:g> contact</string>
 
@@ -614,15 +598,6 @@
     <!-- Header label in the contact editor for a profile that comes from an external third-party app whose name is given by source [CHAR LIMIT=20] -->
     <string name="external_profile_title">My <xliff:g id="external_source">%1$s</xliff:g> profile</string>
 
-    <!-- Message in the contact editor prompt that notifies the user that the newly created contact will not be saved to any account, and prompts addition of an account [CHAR LIMIT=NONE] -->
-    <string name="contact_editor_prompt_zero_accounts">Take a minute to add an account that will back up your contacts.</string>
-
-    <!-- Message in the contact editor prompt that asks the user if it's okay to save the newly created contact to the account shown. [CHAR LIMIT=NONE] -->
-    <string name="contact_editor_prompt_one_account">New contacts will be saved to <xliff:g id="account_name">%1$s</xliff:g>.</string>
-
-    <!-- Message in the contact editor prompt that asks the user which account they want to save the newly created contact to. [CHAR LIMIT=NONE] -->
-    <string name="contact_editor_prompt_multiple_accounts">Choose a default account for new contacts:</string>
-
     <!-- Title of the editor activity when creating a new contact. The char
          limit is short and cannot be increased, since this needs to be displayed in a single line
          at a pre-determined text size. [CHAR LIMIT=20] -->
@@ -650,21 +625,12 @@
     <!-- Dialog button label to prompt user to unlinked the contact they're looking at to it's constituent parts. [CHAR LIMIT=15] -->
     <string name="contact_editor_unlink_contacts">Unlink</string>
 
-    <!-- Button label to prompt the user to add an account (when there are 0 existing accounts on the device) [CHAR LIMIT=30] -->
-    <string name="add_account">Add account</string>
-
-    <!-- Button label to prompt the user to add another account (when there are already existing accounts on the device) [CHAR LIMIT=30] -->
-    <string name="add_new_account">Add new account</string>
-
     <!-- Menu item shown only when the special debug mode is enabled, which is used to send all contacts database files via email.  [CHAR LIMIT=NONE] -->
     <string name="menu_export_database">Export database files</string>
 
     <!-- Content description for the button that adds a new contact
          [CHAR LIMIT=NONE] -->
     <string name="action_menu_add_new_contact_button">Create new contact</string>
-
-    <!-- Title of about card. [CHAR LIMIT=40] -->
-    <string name="about_card_title">About</string>
 
     <!-- Name of the button in the date/time picker to accept the date/time change [CHAR LIMIT=15] -->
     <string name="date_time_set">Set</string>
@@ -714,15 +680,6 @@
     <!-- Label for the account selector to indicate the current information (name, phone number, email etc.) about the contact comes from a read-only account. [CHAR LIMIT=55] -->
     <string name="editor_account_selector_read_only_title">Contact info from <xliff:g id="account">%s</xliff:g> is not editable</string>
 
-    <!-- "This contact" title showing in suggestion card in Quick contact. [CHAR LIMIT=30]-->
-    <string name="suggestion_card_this_contact_title">This contact</string>
-
-    <!-- "Duplicates" title showing in suggestion card in Quick contact. [CHAR LIMIT=30]-->
-    <string name="suggestion_card_duplicates_title">Possible duplicates</string>
-
-    <!-- Help message showing in suggestion card in Quick contact. [CHAR LIMIT=NONE]-->
-    <string name="suggestion_card_help_message">These contacts might be the same person. You can link them together as a single contact.</string>
-
     <!-- Content description of delete button to the right of each section in editor, including
     data type. For example: Delete Home Phone, Delete Work Email, etc [CHAR LIMIT=30]-->
     <string name="editor_delete_view_description">Delete <xliff:g id="data_type">%1$s </xliff:g><xliff:g id="data_kind">%2$s</xliff:g></string>
@@ -743,19 +700,8 @@
     <!-- Close drawer content descriptions [CHAR LIMIT=40] -->
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <!-- Content description of label name in navigation drawer. For example: Coworker Label, Friends Label [CHAR LIMIT=30] -->
-    <string name="navigation_drawer_label"><xliff:g id="label_name">%s</xliff:g> label</string>
-
     <!-- Menu section title of "labels" [CHAR LIMIT=20] -->
     <string name="menu_title_groups">Labels</string>
-
-    <!-- Menu section title of "accounts" [CHAR LIMIT=20] -->
-    <string name="menu_title_filters">Accounts</string>
-
-    <!-- The header text for hamburger promo [CHAR LIMIT=60]-->
-    <string name="hamburger_feature_highlight_header">Suggestions</string>
-    <!-- The body text for hamburger promo [CHAR LIMIT=200]-->
-    <string name="hamburger_feature_highlight_body">Keep your contacts organized and useful</string>
 
     <!-- The label for the action shown in a snackbar after an operation that modifies some data is performed.
          The user can click on the action to rollback the modification-->
@@ -890,9 +836,6 @@
 
     <!-- Shown as the display name for a person when the name is missing or unknown. [CHAR LIMIT=18]-->
     <string name="missing_name">(No name)</string>
-
-    <!-- The text displayed on the divider for the Favorites tab in People app indicating that items below it are frequently contacted [CHAR LIMIT = 39] -->
-    <string name="favoritesFrequentContacted">Frequently contacted</string>
 
     <!-- Contact list filter selection indicating that the list shows all contacts with phone numbers [CHAR LIMIT=64] -->
     <string name="list_filter_phones">All contacts with phone numbers</string>
@@ -1076,12 +1019,6 @@
     <!-- Content description for the collapse name fields button. [CHAR LIMIT=NONE] -->
     <string name="collapse_name_fields_description">Collapse name fields</string>
 
-    <!-- Content description for the expand phonetic name fields button. [CHAR LIMIT=NONE] -->
-    <string name="expand_phonetic_name_fields_description">Show more phonetic name fields</string>
-
-    <!-- Content description for the collapse phonetic name fields button. [CHAR LIMIT=NONE] -->
-    <string name="collapse_phonetic_name_fields_description">Collapse phonetic name fields</string>
-
     <!-- Content description for a generic expand fields button. [CHAR LIMIT=NONE] -->
     <string name="expand_fields_description">Expand</string>
 
@@ -1213,9 +1150,6 @@
          The argument is the name of a contact which is being read.
          [CHAR LIMIT=20] -->
     <string name="importing_vcard_description">Importing <xliff:g example="Joe Due" id="name">%s</xliff:g></string>
-
-    <!-- Dialog title shown when reading vCard data failed [CHAR LIMIT=40] -->
-    <string name="reading_vcard_failed_title">Couldn\'t read vCard data</string>
 
     <!-- The title shown when reading vCard finished
          The argument is file name the user imported.
@@ -1417,17 +1351,8 @@
     <!-- Open source licenses summary in About preference. [CHAR LIMIT=NONE] -->
     <string name="about_open_source_licenses_summary">License details for open source software</string>
 
-    <!-- Privacy policy title in About preference. [CHAR LIMIT=40]-->
-    <string name="about_privacy_policy">Privacy policy</string>
-
-    <!-- Terms of service title in about preference. [CHAR LIMIT=60]-->
-    <string name="about_terms_of_service">Terms of service</string>
-
     <!-- Title for the activity that displays licenses for open source libraries. [CHAR LIMIT=100]-->
     <string name="activity_title_licenses">Open source licenses</string>
-
-    <!-- Toast message showing when failed to open the url. [CHAR LIMIT=100]-->
-    <string name="url_open_error_toast">Failed to open the url.</string>
 
     <!-- Description string for an action button to initiate a video call from search results.
          Note: AccessibilityServices use this attribute to announce what the view represents.
