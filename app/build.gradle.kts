@@ -112,8 +112,16 @@ android {
     // }
 
     lint {
-        abortOnError = false
-        disable += setOf("UnusedResources", "UnusedIds")
+        val isRelease = gradle.startParameter.taskNames
+            //noinspection WrongGradleMethod
+            .any { it.contains("Release", ignoreCase = true) }
+        baseline = file(if (isRelease) "lint-baseline-release.xml" else "lint-baseline-debug.xml")
+        warningsAsErrors = true
+        informational += setOf(
+            "AndroidGradlePluginVersion",
+            "GradleDependency",
+            "NewerVersionAvailable",
+        )
     }
 }
 
