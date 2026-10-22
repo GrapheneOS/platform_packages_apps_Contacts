@@ -561,14 +561,9 @@
         </activity>
 
         <activity
-            android:name="com.android.contacts.dialog.CallSubjectDialog"
-            android:theme="@style/Theme.CallSubjectDialogTheme"
-            android:exported="false"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-            </intent-filter>
-        </activity>
+            android:name="com.android.contacts.ui.interactions.callsubject.CallSubjectActivity"
+            android:theme="@style/Theme.Compose.Dialog"
+            android:exported="false"/>
 
         <activity
             android:name=".ui.group.list.GroupsActivity"

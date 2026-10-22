@@ -21,7 +21,6 @@ import com.android.contacts.activities.ContactSelectionActivity
 import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
-import com.android.contacts.dialog.CallSubjectDialog
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
 import com.android.contacts.editor.ContactEditorFragment
 import com.android.contacts.editor.EditorIntents
@@ -30,6 +29,7 @@ import com.android.contacts.interactions.ContactDeletionInteraction
 import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
+import com.android.contacts.ui.interactions.callsubject.CallSubjectActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import java.util.Locale
 
@@ -179,18 +179,8 @@ internal class ContactDetailsEffectHandlerImpl(
     }
 
     private fun callWithNote(effect: Effect.CallWithNote) {
-        CallSubjectDialog.start(
-            activity,
-            effect.photoId,
-            effect.photoUri?.let(Uri::parse),
-            effect.lookupUri,
-            effect.displayName,
-            false,
-            effect.number,
-            effect.displayNumber,
-            effect.numberLabel,
-            null,
-        )
+        val intent = CallSubjectActivity.getIntent(activity, effect.arguments)
+        activity.startActivity(intent)
     }
 
     private fun copyToClipboard(

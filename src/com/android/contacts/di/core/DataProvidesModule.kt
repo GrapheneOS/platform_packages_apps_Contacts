@@ -1,6 +1,8 @@
 package com.android.contacts.di.core
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.android.contacts.DynamicShortcuts
 import com.android.contacts.database.SimContactDao
@@ -64,5 +66,14 @@ internal class DataProvidesModule {
         @ApplicationContext context: Context,
     ): LocalBroadcastManager {
         return LocalBroadcastManager.getInstance(context)
+    }
+
+    @Provides
+    @Reusable
+    fun sharedPreferences(
+        @ApplicationContext context: Context,
+    ): SharedPreferences {
+        @Suppress("DEPRECATION")
+        return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }

@@ -21,6 +21,8 @@ import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivity
+import com.android.contacts.ui.interactions.callsubject.screen.CallSubjectViewModel
+import com.android.contacts.ui.interactions.callsubject.screen.model.CallSubjectArguments
 import com.android.contacts.util.ImplicitIntentsUtil
 import io.mockk.every
 import io.mockk.mockk
@@ -266,6 +268,22 @@ internal class ContactDetailsEffectHandlerImplTest {
         handler.handle(Effect.PerformEntryAction(action))
 
         verify { ImplicitIntentsUtil.startActivityInAppIfPossible(activity, any()) }
+    }
+
+    @Test
+    fun callWithNote_launchesCallSubjectActivity() {
+        val args = CallSubjectArguments(nameOrNumber = "Name", number = "12345")
+        handler.handle(Effect.CallWithNote(args))
+
+        val intent = startedIntent()
+
+        assertEquals(
+            args,
+            intent.getParcelableExtra(
+                CallSubjectViewModel.EXTRA_ARGUMENTS,
+                CallSubjectArguments::class.java,
+            ),
+        )
     }
 
     private fun givenDefaultDialer(packageName: String) {

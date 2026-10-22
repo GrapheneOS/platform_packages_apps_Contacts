@@ -1403,6 +1403,9 @@
     <!-- Hint text shown in the call subject dialog. [CHAR LIMIT=255] -->
     <string name="call_subject_hint">Type a note to send with call&#8230;</string>
 
+    <!-- Content descriptor for button to show the last used call subjects -->
+    <string name="call_subject_history">Recent call notes used</string>
+
     <!-- Button used to start a new call with the user entered subject. [CHAR LIMIT=32] -->
     <string name="send_and_call_button">SEND &amp; CALL</string>
 
