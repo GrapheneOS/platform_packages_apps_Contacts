@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# සම්බන්ධතාවයක්}one{සම්බන්ධතා #ක්}other{සම්බන්ධතා #ක්}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf ගොනුව"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"ආයාත කිරීමට කිසිවක් නැත"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"vCard වෙතින් සම්බන්ධතා ආයාත කරන්න"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"<xliff:g id="FILENAME">%s</xliff:g> ආයාත කිරීම අවලංගු කරන්නද?"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"<xliff:g id="FILENAME">%s</xliff:g> නිර්යාත කිරීම අවලංගු කරන්නද?"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"vCard ආයාත/නිර්යාත කිරීම අවලංගු කළ නොහැක"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"සෙවීම අවසන් කරන්න"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"සෙවීම හිස් කරන්න"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"ගිණුම"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"ඇමතුම් සඳහා මෙය සැමවිට භාවිත කරන්න"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"සටහනක් සමගින් අමතන්න"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"ඇමතුම සමග යැවීමට සටහනක් ටයිප් කරන්න…"</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"යවන්න සහ අමතන්න"</string>

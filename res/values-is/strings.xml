@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# tengiliður}one{# tengiliður}other{# tengiliðir}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf-skrá"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"Ekkert til að flytja inn"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"Flytja inn tengiliði af vCard?"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"Hætta við innflutning á <xliff:g id="FILENAME">%s</xliff:g>?"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"Hætta við útflutning á <xliff:g id="FILENAME">%s</xliff:g>?"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"Ekki tókst að hætta við flutning vCard"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"hætta leit"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"Hreinsa leit"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"Reikningur"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"Nota þetta alltaf fyrir símtöl"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"Símtal með texta"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"Sláðu inn texta til að senda með símtalinu..."</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"SENDA OG HRINGJA"</string>

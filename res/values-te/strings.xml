@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# కాంటాక్ట్}other{# కాంటాక్ట్‌లు}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf ఫైల్"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"దిగుమతి చేయడానికి ఏవీ లేవు"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"vCard నుండి కాంటాక్ట్‌లను దిగుమతి చేయాలా?"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"<xliff:g id="FILENAME">%s</xliff:g> యొక్క దిగుమతిని రద్దు చేయాలా?"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"<xliff:g id="FILENAME">%s</xliff:g> యొక్క ఎగుమతిని రద్దు చేయాలా?"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"vCard దిగుమతి/ఎగుమతిని రద్దు చేయడం సాధ్యపడలేదు"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"సెర్చ్ చేయడం ఆపివేస్తుంది"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"సెర్చ్‌ను క్లియర్ చేయండి"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"ఖాతా"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"కాల్స్‌ల కోసం ఎప్పుడూ ఇది ఉపయోగించండి"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"గమనికతో కాల్ చేయి"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"కాల్‌తో పాటు పంపడానికి గమనికను టైప్ చేయండి…"</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"పంపు &amp; కాల్ చేయి"</string>

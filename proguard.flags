@@ -36,7 +36,6 @@
 -keep class com.android.contacts.list.ContactsSectionIndexer { *; }
 -keep class com.android.contacts.location.CountryDetector { *; }
 -keep class com.android.contacts.model.account.AccountDisplayInfo { *; }
--keep class com.android.contacts.model.account.AccountDisplayInfoFactory { *; }
 -keep class com.android.contacts.model.account.AccountInfo { *; }
 -keep class com.android.contacts.model.account.AccountType { *; }
 -keep class com.android.contacts.model.account.AccountType$* { *; }
@@ -92,7 +91,6 @@
 -keep class com.android.contacts.util.SearchUtil { *; }
 -keep class com.android.contacts.util.SearchUtil$* { *; }
 -keep class com.android.contacts.util.SyncUtil { *; }
--keep class com.android.contacts.widget.CompositeListAdapter { *; }
 -keep class com.google.common.base.Function { *; }
 -keep class com.google.common.base.Functions { *; }
 -keep class com.google.common.base.Objects { *; }
