@@ -14,12 +14,6 @@
      limitations under the License.
 -->
 <resources>
-    <!-- Layout weight of space elements in PeopleActivity for favorites list and all
-    contacts list-->
-    <integer name="contact_list_space_layout_weight">1</integer>
-    <!-- Layout weight of ListViews in PeopleActivityfor tile favorites list and all
-         contacts list in PeopleActivity -->
-    <integer name="contact_list_card_layout_weight">6</integer>
 
     <!-- Top margin ratio for the image for empty group view -->
     <integer name="empty_group_view_image_margin_divisor">8</integer>

@@ -112,8 +112,8 @@ android {
     // }
 
     lint {
-        abortOnError = false
-        disable += setOf("UnusedResources", "UnusedIds")
+        baseline = file("lint-baseline.xml")
+        warningsAsErrors = true
     }
 }
 
