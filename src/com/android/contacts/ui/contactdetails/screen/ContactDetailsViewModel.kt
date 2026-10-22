@@ -1,8 +1,10 @@
 package com.android.contacts.ui.contactdetails.screen
 
 import android.app.Activity
+import android.content.ContentUris
 import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.core.os.BundleCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -22,6 +24,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsArgumen
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsNavEvent as NavEvent
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState as State
+import com.android.contacts.ui.interactions.callsubject.screen.model.CallSubjectArguments
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -303,15 +306,23 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private fun callWithNoteEffect(action: ContactEntryAction.CallWithNote): Effect? {
         val details = contentDelegate.loadedDetails.value ?: return null
+        val thumbnailUri = when {
+            details.photo as? ContactPhoto.Uri != null ->
+                details.photo.value
+            details.photoId > 0L ->
+                ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, details.photoId)
+                    .toString()
+            else -> null
+        }
 
         return Effect.CallWithNote(
-            number = action.number,
-            displayNumber = action.formattedNumber,
-            numberLabel = action.numberLabel,
-            lookupUri = details.lookupUri,
-            displayName = details.displayName,
-            photoId = details.photoId,
-            photoUri = (details.photo as? ContactPhoto.Uri)?.value,
+            arguments = CallSubjectArguments(
+                thumbnailPhotoUri = thumbnailUri,
+                nameOrNumber = details.displayName ?: action.formattedNumber ?: action.number,
+                number = action.number,
+                displayNumber = action.formattedNumber,
+                numberLabel = action.numberLabel,
+            ),
         )
     }
 

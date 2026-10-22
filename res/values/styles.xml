@@ -369,21 +369,6 @@ background and text color. See also android:style/Widget.Holo.TextView.ListSepar
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <style name="Theme.CallSubjectDialogTheme" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-
-        <!-- No backgrounds, titles or window float -->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowElevation">0dp</item>
-    </style>
-
     <!-- Transparent/blank activity -->
     <style name="TransparentThemeAppCompat" parent="@style/PeopleActivityTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
