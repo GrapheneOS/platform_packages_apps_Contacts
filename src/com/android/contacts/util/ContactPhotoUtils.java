@@ -57,14 +57,14 @@ public class ContactPhotoUtils {
      */
     public static Uri generateTempImageUri(Context context) {
         final String  fileProviderAuthority = context.getResources().getString(
-                R.string.photo_file_provider_authority);
+                R.string.contacts_file_provider_authority);
         return FileProvider.getUriForFile(context, fileProviderAuthority,
                 new File(pathForTempPhoto(context, generateTempPhotoFileName())));
     }
 
     public static Uri generateTempCroppedImageUri(Context context) {
         final String  fileProviderAuthority = context.getResources().getString(
-                R.string.photo_file_provider_authority);
+                R.string.contacts_file_provider_authority);
         return FileProvider.getUriForFile(context, fileProviderAuthority,
                 new File(pathForTempPhoto(context, generateTempCroppedPhotoFileName())));
     }
