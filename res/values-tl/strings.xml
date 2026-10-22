@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# contact}one{# contact}other{# na contact}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf na file"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"Walang i-import"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"I-import ang mga contact mula sa vCard?"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"Kanselahin ang pag-import ng <xliff:g id="FILENAME">%s</xliff:g>?"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"Kanselahin ang pag-export ng <xliff:g id="FILENAME">%s</xliff:g>?"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"Di makansela pag-import/pag-export vCard"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"ihinto ang paghahanap"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"I-clear ang paghahanap"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"Account"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"Gamitin ito palagi sa mga tawag"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"Tumawag nang may kasamang tala"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"Mag-type ng isang tala na ipadadala kasama ng tawag …"</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"IPADALA &amp; TUMAWAG"</string>

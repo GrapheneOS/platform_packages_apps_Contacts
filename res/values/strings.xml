@@ -1120,9 +1120,6 @@
     <!-- Message shown on Import from dialog when there is nothing available to import (no .vcf option or SIM cards) [CHAR LIMIT=NONE] -->
     <string name="nothing_to_import_message">Nothing to import</string>
 
-    <!-- Dialog message asking the user for confirmation before starting to import contacts from a .vcf file. [CHAR LIMIT=NONE] -->
-    <string name="import_from_vcf_file_confirmation_message">Import contacts from vCard?</string>
-
     <!-- Message shown in a Dialog confirming a user's cancel request toward existing vCard import.
          The argument is file name for the vCard import the user wants to cancel.
          [CHAR LIMIT=128] -->
@@ -1391,9 +1388,6 @@
 
     <!-- Title for Select Account Dialog [CHAR LIMIT=30] -->
     <string name="select_account_dialog_title">Account</string>
-
-    <!-- Label for the check box to toggle default sim card setting [CHAR LIMIT=35]-->
-    <string name="set_default_account">Always use this for calls</string>
 
     <!-- String used for actions in the dialer call log and the quick contact card to initiate
          a call to an individual.  The user is prompted to enter a note which is sent along with

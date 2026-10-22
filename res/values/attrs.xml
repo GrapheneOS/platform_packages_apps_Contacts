@@ -34,21 +34,6 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="InterpolatingLayout_Layout">
-        <attr name="layout_narrowParentWidth" format="dimension"/>
-        <attr name="layout_narrowWidth" format="dimension"/>
-        <attr name="layout_narrowMarginLeft" format="dimension"/>
-        <attr name="layout_narrowMarginRight" format="dimension"/>
-        <attr name="layout_narrowPaddingLeft" format="dimension"/>
-        <attr name="layout_narrowPaddingRight" format="dimension"/>
-        <attr name="layout_wideParentWidth" format="dimension"/>
-        <attr name="layout_wideWidth" format="dimension"/>
-        <attr name="layout_wideMarginLeft" format="dimension"/>
-        <attr name="layout_wideMarginRight" format="dimension"/>
-        <attr name="layout_widePaddingLeft" format="dimension"/>
-        <attr name="layout_widePaddingRight" format="dimension"/>
-    </declare-styleable>
-
     <declare-styleable name="Theme">
         <attr name="android:textColorSecondary" />
     </declare-styleable>
@@ -64,9 +49,6 @@
         <attr name="android:detailColumn" />
         <!-- Flag indicating that detail should be built from SocialProvider. -->
         <attr name="android:detailSocialSummary" />
-        <!-- Resource representing the term "All Contacts" (e.g. "All Friends" or
-        "All connections"). Optional (Default is "All Contacts"). -->
-        <attr name="android:allContactsName" />
     </declare-styleable>
 
     <declare-styleable name="ContactListItemView">

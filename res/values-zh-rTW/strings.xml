@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# 筆聯絡人資料}other{# 筆聯絡人資料}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf 檔案"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"沒有任何可匯入的資料"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"要從 vCard 匯入聯絡人嗎？"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"確定要取消匯入 <xliff:g id="FILENAME">%s</xliff:g>？"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"確定要取消匯出 <xliff:g id="FILENAME">%s</xliff:g>？"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"無法取消匯入/匯出 vCard"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"停止搜尋"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"清除搜尋"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"帳戶"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"一律使用這張 SIM 卡通話"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"撥號時傳送備註"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"輸入可在撥號時傳送的備註..."</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"傳送並撥號"</string>
