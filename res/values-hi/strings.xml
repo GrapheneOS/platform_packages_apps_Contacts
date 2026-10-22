@@ -29,8 +29,6 @@
     <string name="searchHint" msgid="1487501532610025473">"संपर्क खोजें"</string>
     <string name="menu_addStar" msgid="4903812703386825130">"पसंदीदा में जोड़ें"</string>
     <string name="menu_removeStar" msgid="3707373931808303701">"पसंदीदा से निकालें"</string>
-    <string name="description_action_menu_remove_star" msgid="4044390281910122890">"पसंदीदा से निकाल दिया गया"</string>
-    <string name="description_action_menu_add_star" msgid="7316521132809388851">"पसंदीदा में जोड़ा गया"</string>
     <string name="menu_editContact" msgid="5039663761025630208">"बदलाव करें"</string>
     <string name="menu_deleteContact" msgid="15161764025276217">"मिटाएं"</string>
     <string name="menu_change_photo" msgid="4911246106907208055">"फ़ोटो बदलें"</string>
@@ -70,8 +68,6 @@
     <string name="title_from_google" msgid="2554633992366572820">"Google से"</string>
     <string name="title_from_other_accounts" msgid="7813596336566711843">"<xliff:g id="ACCOUNT">%s</xliff:g> से"</string>
     <string name="menu_set_ring_tone" msgid="8876328286439724181">"रिंगटोन सेट करें"</string>
-    <string name="menu_redirect_calls_to_vm" msgid="3027178444991878913">"वॉइसमेल पर डायरेक्ट करें"</string>
-    <string name="menu_unredirect_calls_to_vm" msgid="2294919685954790892">"वॉइसमेल से रूट हटाएं"</string>
     <string name="readOnlyContactWarning" msgid="4158660823025751201">"यह संपर्क केवल पढ़ने के लिए है. इसे हटाया नहीं जा सकता है, लेकिन आप इसे छिपा सकते हैं."</string>
     <string name="readOnlyContactWarning_positive_button" msgid="2602676689104338036">"संपर्क छिपाएं"</string>
     <string name="readOnlyContactDeleteConfirmation" msgid="2759786078454970110">"इस संपर्क के उन खातों को बस छिपाया जाएगा जो सिर्फ़ पढ़ने के लिए हैं, हटाया नहीं जाएगा."</string>
@@ -129,8 +125,6 @@
     <string name="group_name_dialog_update_title" msgid="3955919589366745101">"लेबल का नाम बदलें"</string>
     <string name="group_name_dialog_hint" msgid="6023999218213062973">"लेबल का नाम"</string>
     <string name="label_name_dialog_hint" msgid="7027635439255596191">"लेबल का नाम"</string>
-    <string name="audio_chat" msgid="5921525823973697372">"ध्वनि बातचीत"</string>
-    <string name="video_chat" msgid="2477295971622477433">"वीडियो बातचीत"</string>
     <string name="account_type_format" msgid="4926968760755013450">"<xliff:g id="SOURCE">%1$s</xliff:g> संपर्क"</string>
     <string name="google_account_type_format" msgid="4046692740262396811">"<xliff:g id="SOURCE">%1$s</xliff:g> खाता"</string>
     <string name="take_photo" msgid="820071555236547516">"फ़ोटो लें"</string>
@@ -171,9 +165,6 @@
     <string name="title_edit_group" msgid="4246193439931854759">"संपर्क निकालें"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"मेरी स्थानीय प्रोफ़ाइल"</string>
     <string name="external_profile_title" msgid="2706282819025406927">"मेरी <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> प्रोफ़ाइल"</string>
-    <string name="contact_editor_prompt_zero_accounts" msgid="4468363031413457746">"कुछ समय निकालें और Google में आपके संपर्कों का बैकअप लेने के लिए एक खाता जोड़ें."</string>
-    <string name="contact_editor_prompt_one_account" msgid="765343809177951169">"नए संपर्कों को <xliff:g id="ACCOUNT_NAME">%1$s</xliff:g> में सहेजा जाएगा."</string>
-    <string name="contact_editor_prompt_multiple_accounts" msgid="1543322760761168351">"नए संपर्कों के लिए डिफ़ॉल्ट खाता चुनें:"</string>
     <string name="contact_editor_title_new_contact" msgid="7534775011591770343">"नया संपर्क बनाएं"</string>
     <string name="contact_editor_title_existing_contact" msgid="3647774955741654029">"संपर्क में बदलाव करें"</string>
     <string name="contact_editor_title_read_only_contact" msgid="5494810291515292596">"केवल देखने के लिए"</string>
@@ -181,11 +172,8 @@
     <string name="contact_editor_pick_linked_contact_dialog_title" msgid="3332134735168016293">"लिंक किए गए संपर्क"</string>
     <string name="contact_editor_add_linked_contact" msgid="2895453741206196138">"जोड़ें"</string>
     <string name="contact_editor_unlink_contacts" msgid="8399419729744305687">"अनलिंक करें"</string>
-    <string name="add_account" msgid="3071396624500839020">"खाता जोड़ें"</string>
-    <string name="add_new_account" msgid="573368229646104110">"नया खाता जोड़ें"</string>
     <string name="menu_export_database" msgid="1658249125751926885">"डेटाबेस फ़ाइलें निर्यात करें"</string>
     <string name="action_menu_add_new_contact_button" msgid="1201339383074001291">"नया संपर्क बनाएं"</string>
-    <string name="about_card_title" msgid="6635849009952435700">"संक्षिप्त विवरण"</string>
     <string name="date_time_set" msgid="8526160894146496334">"सेट करें"</string>
     <string name="header_im_entry" msgid="3581797653862294826">"आईएम"</string>
     <string name="header_organization_entry" msgid="7428066442988227441">"संगठन का नाम"</string>
@@ -205,20 +193,13 @@
     <string name="editor_failed_to_load" msgid="2328074829787373644">"संपादक को खोलने में विफल रहा."</string>
     <string name="editor_account_selector_title" msgid="3190515989740696043">"इसमें सहेजा जा रहा है"</string>
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> की संपर्क जानकारी में बदलाव नहीं किया जा सकता है"</string>
-    <string name="suggestion_card_this_contact_title" msgid="8851257599121989253">"यह संपर्क"</string>
-    <string name="suggestion_card_duplicates_title" msgid="2623890874933696454">"संभावित कॉपी"</string>
-    <string name="suggestion_card_help_message" msgid="8367379652312412794">"हो सकता है कि ये संपर्क एक ही व्‍यक्‍ति हो. आप उन्हें एक ही संपर्क के रूप में एक साथ लिंक कर सकते हैं."</string>
     <string name="editor_delete_view_description" msgid="4549610631864383156">"<xliff:g id="DATA_TYPE">%1$s </xliff:g><xliff:g id="DATA_KIND">%2$s</xliff:g> हटाएं"</string>
     <string name="editor_delete_view_description_short" msgid="6471032197042328181">"<xliff:g id="DATA_KIND">%s</xliff:g> हटाएं"</string>
     <string name="menu_assistant" msgid="3980364519724237934">"सुझाव"</string>
     <string name="menu_assistant_new_badge" msgid="1992049406019853898">"नया"</string>
     <string name="navigation_drawer_open" msgid="3428713515765555712">"मार्गदर्शक ड्रॉवर खोलें"</string>
     <string name="navigation_drawer_close" msgid="3052989100471689722">"मार्गदर्शक ड्रॉवर बंद करें"</string>
-    <string name="navigation_drawer_label" msgid="8391863484838783638">"<xliff:g id="LABEL_NAME">%s</xliff:g> लेबल"</string>
     <string name="menu_title_groups" msgid="3722199658759568221">"लेबल"</string>
-    <string name="menu_title_filters" msgid="349866121417914494">"खाते"</string>
-    <string name="hamburger_feature_highlight_header" msgid="1786641424099282909">"सुझाव"</string>
-    <string name="hamburger_feature_highlight_body" msgid="782935036630531528">"अपने संपर्कों को व्यवस्थित और उपयोगी बनाए रखें"</string>
     <string name="undo" msgid="2446931036220975026">"पहले जैसा करें"</string>
     <string name="call_custom" msgid="2844900154492073207">"<xliff:g id="CUSTOM_LABEL">%s</xliff:g> पर कॉल करें"</string>
     <string name="call_home" msgid="2443904771140750492">"घर के फ़ोन नंबर पर कॉल करें"</string>
@@ -272,7 +253,6 @@
     <string name="local_search_label" msgid="6692495405531144805">"सभी संपर्क"</string>
     <string name="description_quick_contact_for" msgid="6364906818231956042">"<xliff:g id="NAME">%1$s</xliff:g> के लिए त्‍वरित संपर्क"</string>
     <string name="missing_name" msgid="7970183292521946492">"(कोई नाम नहीं)"</string>
-    <string name="favoritesFrequentContacted" msgid="2885862854079966676">"बार-बार संपर्क किया गया"</string>
     <string name="list_filter_phones" msgid="6839133198968393843">"फ़ोन नंबरों वाले सभी संपर्क."</string>
     <string name="list_filter_phones_work" msgid="5583425697781385616">"वर्क प्रोफ़ाइल के संपर्क"</string>
     <string name="view_updates_from_group" msgid="6233444629074835594">"नई जानकारी देखें"</string>
@@ -333,8 +313,6 @@
     <string name="description_minus_button" msgid="1305985971158054217">"मिटाएं"</string>
     <string name="expand_name_fields_description" msgid="6059558159338959487">"ज़्यादा नाम फ़ील्ड दिखाएं"</string>
     <string name="collapse_name_fields_description" msgid="7950435675716414477">"नाम फ़ील्ड संक्षिप्त करें"</string>
-    <string name="expand_phonetic_name_fields_description" msgid="7414340689396399173">"ज़्यादा फ़ोनेटिक नाम फ़ील्ड दिखाएं"</string>
-    <string name="collapse_phonetic_name_fields_description" msgid="4614902922362144094">"फ़ोनेटिक नाम फ़ील्ड संक्षिप्त करें"</string>
     <string name="expand_fields_description" msgid="8604448646798943909">"विस्तृत करें"</string>
     <string name="collapse_fields_description" msgid="3213872920491992960">"संक्षिप्त करें"</string>
     <string name="announce_expanded_fields" msgid="8410808184164186871">"विस्तृत किया गया"</string>
@@ -370,7 +348,6 @@
     <string name="composer_not_initialized" msgid="3861391548605450184">"vCard कंपोज़र ठीक से शुरू नहीं हुआ."</string>
     <string name="exporting_contact_failed_title" msgid="9003659313161289860">"निर्यात नहीं कर सका"</string>
     <string name="importing_vcard_description" msgid="6982207216746936735">"<xliff:g id="NAME">%s</xliff:g> आयात कर रहा है"</string>
-    <string name="reading_vcard_failed_title" msgid="1230432142768184978">"vCard डेटा नहीं पढ़ा जा सका"</string>
     <string name="importing_vcard_finished_title" msgid="2274644947000264322">"vCard <xliff:g id="FILENAME">%s</xliff:g> इंपोर्ट पूरा हुआ"</string>
     <string name="importing_vcard_canceled_title" msgid="8165471996631186776">"<xliff:g id="FILENAME">%s</xliff:g> को आयात करना रद्द किया गया"</string>
     <string name="vcard_import_will_start_message" msgid="4514702035621833178">"<xliff:g id="FILENAME">%s</xliff:g> को जल्‍दी ही आयात किया जाएगा."</string>
@@ -421,10 +398,7 @@
     <string name="about_build_version" msgid="5870642814752351712">"बिल्ड वर्शन"</string>
     <string name="about_open_source_licenses" msgid="1617836621315557445">"ओपन सोर्स लाइसेंस"</string>
     <string name="about_open_source_licenses_summary" msgid="4843627659117423491">"ओपन सोर्स सॉफ़्टवेयर के लाइसेंस वि‍वरण"</string>
-    <string name="about_privacy_policy" msgid="4581488375200402678">"निजता नीति"</string>
-    <string name="about_terms_of_service" msgid="7419670771785057738">"सेवा की शर्तें"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"ओपन सोर्स लाइसेंस"</string>
-    <string name="url_open_error_toast" msgid="4885855620824048385">"url खोलने में विफल रहा."</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"वीडियो कॉल करें"</string>
     <string name="description_delete_contact" msgid="8110643050235441400">"मिटाएं\\"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"पदलोप चिह्न"</string>
