@@ -59,9 +59,6 @@
     <!-- Color of image view placeholder. -->
     <color name="image_placeholder">#393838</color>
 
-    <!-- Primary text color in the Phone app -->
-    <color name="dialtacts_primary_text_color">#D5D5D5</color>
-
     <!-- Secondary text color in the Phone app -->
     <color name="dialtacts_secondary_text_color">#C8C8C8</color>
 

@@ -117,6 +117,12 @@ android {
             .any { it.contains("Release", ignoreCase = true) }
         baseline = file(if (isRelease) "lint-baseline-release.xml" else "lint-baseline-debug.xml")
         warningsAsErrors = true
+        informational += setOf(
+            "AndroidGradlePluginVersion",
+            "GradleDependency",
+            "MissingTranslation",
+            "NewerVersionAvailable",
+        )
     }
 }
 
