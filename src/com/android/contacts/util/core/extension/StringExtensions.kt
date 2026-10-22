@@ -9,7 +9,7 @@ internal fun String.trimmedOrNull(): String? {
 internal fun String.limit(limit: Int, encoding: Charset?): String {
     return when {
         encoding != null -> limitByEncoding(limit, encoding)
-        else -> take(limit)
+        else -> limitByCharacters(limit)
     }
 }
 
@@ -21,4 +21,12 @@ private fun String.limitByEncoding(limit: Int, encoding: Charset): String {
         index = next
     }
     return substring(0, index)
+}
+
+private fun String.limitByCharacters(limit: Int): String {
+    val limited = take(limit)
+    return when {
+        limited.lastOrNull()?.isHighSurrogate() == true -> limited.dropLast(1)
+        else -> limited
+    }
 }
