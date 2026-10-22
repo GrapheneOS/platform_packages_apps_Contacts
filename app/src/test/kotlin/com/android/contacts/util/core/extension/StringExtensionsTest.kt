@@ -1,7 +1,6 @@
 package com.android.contacts.util.core.extension
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 internal class StringExtensionsTest {
@@ -27,6 +26,11 @@ internal class StringExtensionsTest {
     }
 
     @Test
+    fun limit_withoutEncoding_doesNotSplitUtf16Characters() {
+        assertEquals("a", "a😐".limit(limit = 2, encoding = null))
+    }
+
+    @Test
     fun limit_withUtf8_countsBytesNotCharacters() {
         // "é" is 2 bytes in UTF-8
         assertEquals("éé", "ééé".limit(limit = 4, encoding = Charsets.UTF_8))
@@ -35,5 +39,10 @@ internal class StringExtensionsTest {
     @Test
     fun limit_withUtf8_doesNotSplitAMultiByteCharacter() {
         assertEquals("a", "aé".limit(limit = 2, encoding = Charsets.UTF_8))
+    }
+
+    @Test
+    fun limit_withUtf8_doesNotSplitAnEmoji() {
+        assertEquals("a", "a😐".limit(limit = 2, encoding = Charsets.UTF_8))
     }
 }
