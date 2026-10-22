@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# 位联系人}other{# 位联系人}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf 文件"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"没有可导入的对象"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"要从 vCard 中导入联系人吗？"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"要取消导入 <xliff:g id="FILENAME">%s</xliff:g> 吗​​？"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"要取消导出 <xliff:g id="FILENAME">%s</xliff:g> 吗​​？"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"无法取消导入/导出 vCard"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"停止搜索"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"清除搜索内容"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"账号"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"一律使用这张卡进行通话"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"拨打电话并发送备注"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"输入要在拨打电话时发送的备注…"</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"发送并拨打电话"</string>

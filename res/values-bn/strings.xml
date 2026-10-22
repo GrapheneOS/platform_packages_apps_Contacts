@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{#টি পরিচিতি}one{#টি পরিচিতি}other{#টি পরিচিতি}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf ফাইল"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"আমদানি করার জন্য কিছুই নেই"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"vCard থেকে পরিচিতিগুলি আমদানি করবেন?"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"<xliff:g id="FILENAME">%s</xliff:g> এর আমদানি বাতিল করবেন?"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"<xliff:g id="FILENAME">%s</xliff:g> এর রপ্তানি বাতিল করবেন?"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"vCard এর আমদানি/রপ্তানি বাতিল করা যায়নি"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"সার্চ বন্ধ করুন"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"সার্চ সাফ করুন"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"অ্যাকাউন্ট"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"কলের জন্য সবসময় এটি ব্যবহার করুন"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"একটি নোট সহ কল করুন"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"কলের সাথে পাঠানোর জন্য একটি নোট লিখুন…"</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"পাঠান এবং কল করুন"</string>

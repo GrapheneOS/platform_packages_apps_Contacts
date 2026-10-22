@@ -346,7 +346,6 @@
     <string name="import_from_sim_secondary_contact_count_fmt" msgid="4406774701661271748">"{count,plural, =1{# névjegy}other{# névjegy}}"</string>
     <string name="import_from_vcf_file" msgid="6776403212804361301">".vcf-fájl"</string>
     <string name="nothing_to_import_message" msgid="2594519620375509783">"Nincs importálható névjegy"</string>
-    <string name="import_from_vcf_file_confirmation_message" msgid="8579284961401472204">"Importálja a vCard-névjegyeit?"</string>
     <string name="cancel_import_confirmation_message" msgid="1007412828398265611">"Megszakítja <xliff:g id="FILENAME">%s</xliff:g> importálását?"</string>
     <string name="cancel_export_confirmation_message" msgid="370693160959236239">"Megszakítja <xliff:g id="FILENAME">%s</xliff:g> exportálását?"</string>
     <string name="cancel_vcard_import_or_export_failed" msgid="3041814872516288484">"vCard imp./exp. megszakítása sikertelen"</string>
@@ -414,7 +413,6 @@
     <string name="action_menu_back_from_search" msgid="683765774264585732">"keresés leállítása"</string>
     <string name="description_clear_search" msgid="1852934085825794095">"Keresés törlése"</string>
     <string name="select_account_dialog_title" msgid="5047523441152129207">"Fiók"</string>
-    <string name="set_default_account" msgid="9194321110211682396">"Mindig ezt használja hívásokhoz"</string>
     <string name="call_with_a_note" msgid="2463785820399287281">"Hívás üzenettel"</string>
     <string name="call_subject_hint" msgid="7056652101889538157">"Írjon üzenetet, amelyet elküldhetünk a hívással együtt…"</string>
     <string name="send_and_call_button" msgid="4851257959568592699">"KÜLDÉS és HÍVÁS"</string>
