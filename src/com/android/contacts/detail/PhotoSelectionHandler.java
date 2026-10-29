@@ -244,10 +244,20 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
         final Intent intent = getCropImageIntent(inputUri, outputUri);
         final ResolveInfo intentHandler = getIntentHandler(intent);
         if (intentHandler == null) {
+            // No activity supports the crop action, so scale and crop the photo ourselves.
+            // Passing the original on would make the editor decode and draw it at full
+            // resolution, which crashes for very large (e.g. 50 MP) images.
+            if (!ContactPhotoUtils.scalePhotoFromUriToUri(mContext, inputUri, outputUri,
+                    mPhotoPickSize)) {
+                Toast.makeText(mContext, R.string.contactPhotoSavedErrorToast,
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+            mContext.getContentResolver().delete(mTempPhotoUri, null, null);
             try {
-                getListener().onPhotoSelected(inputUri);
+                getListener().onPhotoSelected(outputUri);
             } catch (FileNotFoundException e) {
-                Log.e(TAG, "Cannot save uncropped photo", e);
+                Log.e(TAG, "Cannot save photo", e);
                 Toast.makeText(mContext, R.string.contactPhotoSavedErrorToast,
                         Toast.LENGTH_LONG).show();
             }

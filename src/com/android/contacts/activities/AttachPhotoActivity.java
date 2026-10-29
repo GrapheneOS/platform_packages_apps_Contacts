@@ -195,9 +195,14 @@ public class AttachPhotoActivity extends ContactsActivity {
             ContactPhotoUtils.addCropExtras(intent, mPhotoDim != 0 ? mPhotoDim : mDefaultPhotoDim);
             final ResolveInfo intentHandler = getIntentHandler(intent);
             if (intentHandler == null) {
-                // No activity supports the crop action. So skip cropping and set the photo
-                // without performing any cropping.
-                mCroppedPhotoUri = mTempPhotoUri;
+                // No activity supports the crop action, so scale and crop the photo ourselves
+                // rather than decoding the full-resolution image later.
+                if (!ContactPhotoUtils.scalePhotoFromUriToUri(this, mTempPhotoUri,
+                        mCroppedPhotoUri, mPhotoDim != 0 ? mPhotoDim : mDefaultPhotoDim)) {
+                    finish();
+                    return;
+                }
+                getContentResolver().delete(mTempPhotoUri, null, null);
                 mContactUri = result.getData();
                 loadContact(
                         mContactUri,

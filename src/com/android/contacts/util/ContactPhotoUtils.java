@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.core.content.FileProvider;
@@ -36,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -173,6 +175,47 @@ public class ContactPhotoUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Decodes the photo at {@code inputUri}, center-crops it to a square no larger than
+     * {@code maxDim} pixels and writes it to {@code outputUri} as a JPEG. This is used in place
+     * of the crop activity when none is available, so that the editor is never handed a
+     * full-resolution image (which can exceed the maximum bitmap size that can be drawn).
+     */
+    public static boolean scalePhotoFromUriToUri(Context context, Uri inputUri, Uri outputUri,
+            int maxDim) {
+        if (inputUri == null || outputUri == null || isFilePathAndNotStorage(inputUri)) {
+            return false;
+        }
+        final Bitmap bitmap;
+        try {
+            final ImageDecoder.Source source =
+                    ImageDecoder.createSource(context.getContentResolver(), inputUri);
+            final Bitmap decoded = ImageDecoder.decodeBitmap(source, (decoder, info, src) -> {
+                decoder.setAllocator(ImageDecoder.ALLOCATOR_SOFTWARE);
+                final int width = info.getSize().getWidth();
+                final int height = info.getSize().getHeight();
+                final float scale = (float) maxDim / Math.min(width, height);
+                if (scale < 1f) {
+                    decoder.setTargetSize(Math.max(1, Math.round(width * scale)),
+                            Math.max(1, Math.round(height * scale)));
+                }
+            });
+            final int size = Math.min(decoded.getWidth(), decoded.getHeight());
+            bitmap = Bitmap.createBitmap(decoded, (decoded.getWidth() - size) / 2,
+                    (decoded.getHeight() - size) / 2, size, size);
+        } catch (IOException | SecurityException e) {
+            Log.e(TAG, "Failed to decode photo: " + inputUri + " because: " + e);
+            return false;
+        }
+        try (OutputStream outputStream = context.getContentResolver()
+                .openAssetFileDescriptor(outputUri, "wt").createOutputStream()) {
+            return bitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
+        } catch (IOException | NullPointerException e) {
+            Log.e(TAG, "Failed to write photo: " + outputUri + " because: " + e);
+            return false;
+        }
     }
 
     /**
