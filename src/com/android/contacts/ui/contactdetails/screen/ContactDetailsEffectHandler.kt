@@ -17,7 +17,6 @@ import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
 import com.android.contacts.R
-import com.android.contacts.activities.ContactSelectionActivity
 import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
@@ -30,6 +29,7 @@ import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.interactions.callsubject.CallSubjectActivity
+import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import java.util.Locale
 

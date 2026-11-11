@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Переименовать ярлык"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Удалить ярлык"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Добавить контакт"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Выбрать контакты"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Добавить контакты"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Снять ярлык"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Создать ярлык"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Связать контакты"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Выберите, какой контакт связать с \"<xliff:g id="NAME">%s</xliff:g>\":"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Предлагаемые контакты"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Все контакты"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"Контакт <xliff:g id="NAME">%s</xliff:g> связан"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Контакты связаны"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g>: контакт удален."</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Отправить письмо"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Отправить SMS"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Выбор контактов"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Отправить"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Нет контактов"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Добавить в контакты <xliff:g id="EMAIL">%s</xliff:g>?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Имена контактов"</string>

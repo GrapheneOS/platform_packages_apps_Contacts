@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Qamba kabusha ilebula"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Susa ilebula"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Engeza oxhumana naye"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Khetha oxhumana nabo"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Engeza oxhumana nabo"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Susa kusuka kulebula"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Dala ilebula"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Xhumanisa oxhumana nabo"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Khetha oxhumana naye ofuna ukumxhuma no-<xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Othintana nabo abasikiselwayo"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Bonke othintana nabo"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> uxhunyiwe"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Oxhumana nabo baxhunyiwe"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> kususiwe"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Thumela i-imeyli"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Thumela umlayezo"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Khetha Oxhumana Nabo"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Thumela"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Abekho oxhumana nabo"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Faka  \"<xliff:g id="EMAIL">%s</xliff:g>\"  kothintana nabo?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Amagama othintana nabo"</string>

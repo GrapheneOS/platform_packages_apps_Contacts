@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"መሰየሚያውን ዳግም ሰይም"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"መሰየሚያውን ሰርዝ"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"እውቂያ ያክሉ"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"እውቂያዎች ምረጥ"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"እውቂያዎችን አክል"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"ከመሰየሚያ አስወግድ"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"መሰየሚያ ፍጠር"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"ዕውቂያዎችን አገናኝ"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"ከ<xliff:g id="NAME">%s</xliff:g> ጋር ሊያገናኙት የሚፈለጉት እውቂያ ይምረጡ፦"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"አስተያየት የተሰጠባቸው እውቅያዎች"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"ሁሉም እውቅያዎች"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> ተገናኝቷል"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"ዕውቂያዎች ተገናኝተዋል"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> ተሰርዟል"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ኢሜይል ላክ"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"መልዕክት ላክ"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"እውቅያዎችን ምረጥ"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"ላክ"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"እውቅያዎች የሉም"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"<xliff:g id="EMAIL">%s</xliff:g> ወደ እውቅያዎች ዝርዝር ይታከል"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"የዕውቂያዎችዎ ስሞች"</string>

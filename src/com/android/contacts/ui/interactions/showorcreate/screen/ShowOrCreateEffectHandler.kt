@@ -75,6 +75,7 @@ internal class ShowOrCreateEffectHandlerImpl(
             is ContactLookupQuery.Phone -> {
                 putExtra(ContactsContract.Intents.Insert.PHONE, query.value)
             }
+            else -> this
         }
     }
 }

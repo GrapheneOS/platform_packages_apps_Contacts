@@ -14,9 +14,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.ui.common.components.TwoLineListItem
-import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.core.itemClipShape
 
 @Composable
 internal fun ContactDetailsActionRow(
@@ -57,7 +57,7 @@ internal fun ContactDetailsActionRow(
         },
         modifier = modifier,
         trailingContent = trailingContent,
-        shape = cellShape(
+        shape = itemClipShape(
             isFirst = isFirst,
             isLast = isLast,
         ),

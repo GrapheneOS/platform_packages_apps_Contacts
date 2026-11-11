@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
+private val InnerCornerSize = CornerSize(2.dp)
+
 /*
  * Shape for LazyColumn items that:
  * - rounds the top corners of the first item
@@ -23,14 +25,13 @@ internal fun itemClipShape(
 ): Shape {
     // All corners are the same in our shapes, so let's just pick a random one
     val cornerSize = shape.topStart
-    val defaultCornerSize = CornerSize(2.dp)
     val topCornerSize = when {
         isFirst || isSelected -> cornerSize
-        else -> defaultCornerSize
+        else -> InnerCornerSize
     }
     val bottomCornerSize = when {
         isLast || isSelected -> cornerSize
-        else -> defaultCornerSize
+        else -> InnerCornerSize
     }
     return RoundedCornerShape(
         topStart = topCornerSize,

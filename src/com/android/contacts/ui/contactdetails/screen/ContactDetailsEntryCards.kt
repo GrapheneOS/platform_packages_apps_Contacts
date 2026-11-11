@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsConnectedAppRow
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.common.ContactEntryCard
@@ -18,6 +17,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactConnectedAppUi
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEmptyPromptUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
+import com.android.contacts.ui.core.itemClipShape
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -95,7 +95,7 @@ internal fun ContactDetailsEmptyPrompt(
         prompt.entries.forEachIndexed { index, entry ->
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                shape = cellShape(
+                shape = itemClipShape(
                     isFirst = index == 0,
                     isLast = index == prompt.entries.lastIndex,
                 ),
