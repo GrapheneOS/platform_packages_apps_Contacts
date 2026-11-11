@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Преименуј ознаку"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Избриши ознаку"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Додај контакт"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Изабери контакте"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Додај контакте"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Уклони из ознаке"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Направи ознаку"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Обједините контакте"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Изаберите контакт који желите да обједините са контактом <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Предложени контакти"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Сви контакти"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"Контакти су повезани са <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Контакти су обједињени"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> је избрисан/а"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Пошаљи имејл"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Пошаљи поруку"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Изаберите контакте"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Пошаљи"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Нема контаката"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Желите ли да додате имејл адресу „<xliff:g id="EMAIL">%s</xliff:g>“ у контакте?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Имена контаката"</string>

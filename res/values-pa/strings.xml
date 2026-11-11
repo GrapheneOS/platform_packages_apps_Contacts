@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"ਲੇਬਲ ਦਾ ਨਾਮ ਬਦਲੋ"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"ਲੇਬਲ ਮਿਟਾਓ"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"ਸੰਪਰਕ ਸ਼ਾਮਲ ਕਰੋ"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"ਸੰਪਰਕ ਚੁਣੋ"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"ਸੰਪਰਕ ਸ਼ਾਮਲ ਕਰੋ"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"ਲੇਬਲ ਤੋਂ ਹਟਾਓ"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"ਲੇਬਲ ਬਣਾਓ"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"ਸੰਪਰਕ ਲਿੰਕ ਕਰੋ"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"<xliff:g id="NAME">%s</xliff:g> ਨਾਲ ਲਿੰਕ ਕਰਨ ਲਈ ਸੰਪਰਕ ਚੁਣੋ:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"ਸੁਝਾਏ ਗਏ ਸੰਪਰਕ"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"ਸਾਰੇ ਸੰਪਰਕ"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> ਲਿੰਕ ਕੀਤਾ ਗਿਆ"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"ਸੰਪਰਕ ਲਿੰਕ ਕੀਤੇ ਗਏ"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> ਨੂੰ ਮਿਟਾਇਆ ਗਿਆ"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ਈਮੇਲ ਭੇਜੋ"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"ਸੁਨੇਹਾ ਭੇਜੋ"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"ਸੰਪਰਕਾਂ ਨੂੰ ਚੁਣੋ"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"ਭੇਜੋ"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"ਕੋਈ ਸੰਪਰਕ ਨਹੀਂ"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"ਕੀ \"<xliff:g id="EMAIL">%s</xliff:g>\" ਨੂੰ ਸੰਪਰਕਾਂ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰਨਾ ਹੈ?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ਤੁਹਾਡੇ ਸੰਪਰਕਾਂ ਦੇ ਨਾਮ"</string>

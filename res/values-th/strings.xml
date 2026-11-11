@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"เปลี่ยนชื่อป้ายกำกับ"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"ลบป้ายกำกับ"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"เพิ่มผู้ติดต่อ"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"เลือกรายชื่อติดต่อ"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"เพิ่มรายชื่อติดต่อ"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"นำออกจากป้ายกำกับ"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"สร้างป้ายกำกับ"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"ลิงก์รายชื่อติดต่อ"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"เลือกรายชื่อติดต่อที่คุณต้องการลิงก์กับ <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"รายชื่อที่แนะนำ"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"รายชื่อติดต่อทั้งหมด"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"ลิงก์ <xliff:g id="NAME">%s</xliff:g> แล้ว"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"ลิงก์รายชื่อติดต่อแล้ว"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"ลบ <xliff:g id="NAME">%1$s</xliff:g> แล้ว"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ส่งอีเมล"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"ส่งข้อความ"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"เลือกรายชื่อติดต่อ"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"ส่ง"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"ไม่มีรายชื่อติดต่อ"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"เพิ่ม \"<xliff:g id="EMAIL">%s</xliff:g>\" ในสมุดโทรศัพท์หรือไม่"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ชื่อของรายชื่อในสมุดโทรศัพท์ของคุณ"</string>

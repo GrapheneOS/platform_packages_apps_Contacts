@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"အညွှန်းအမည်ပြောင်းပါ"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"အညွှန်းကိုဖျက်ပါ"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"အဆက်အသွယ်ထည့်ပါ"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"အဆက်အသွယ်များရွေးရန်"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"အဆက်အသွယ်များထည့်ရန်"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"အညွှန်းမှဖယ်ရှားပါ"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"အညွှန်း ပြုလုပ်ရန်"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"အဆက်အသွယ်များ ချိတ်ဆက်ရန်"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"<xliff:g id="NAME">%s</xliff:g> နှင့်ချိတ်လိုသည့် အဆက်အသွယ်ကို ရွေးပါ −"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"အကြုံပြုလိုသော အဆက်အသွယ်များ"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"လိပ်စာများအားလုံး"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> ကို လင့်ခ်ချိတ်လိုက်ပါပြီ"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"ကွင်းဆက်ထားသည့် အဆက်အသွယ်များ"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> ကို ဖျက်ပြီး"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"အီးမေးလ် ပို့ရန်"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"မက်ဆေ့ဂျ် ပို့ရန်"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"အဆက်အသွယ်များ ရွေးရန်"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"ပို့ရန်"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"အဆက်အသွယ်များမရှိ"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" ကို လိပ်စာထဲ ထည့်မလား?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"အဆက်အသွယ်များ၏နာမည်များ"</string>

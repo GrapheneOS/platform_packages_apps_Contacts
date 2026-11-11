@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"लेबलको नाम बदल्नुहोस्"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"लेबल मेटाउनुहोस"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"सम्पर्क थप्नुहोस्"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"कन्ट्याक्टहरू चयन गर्नुहोस्"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"कन्ट्याक्टहरू थप्नुहोस्"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"लेबलबाट हटाउनुहोस्"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"लेबल सिर्जना गर्नुहोस्"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"कन्ट्याक्टहरू लिंक गर्नुहोस्"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"तपाईँले <xliff:g id="NAME">%s</xliff:g> मा लिंक हुन चाहनु भएको सम्पर्क ठेगाना चयन गर्नुहोस्:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"सुझाव गरिएका कन्ट्याक्टहरू"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"सबै कन्ट्याक्टहरू"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> लिङ्क गरियो"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"कन्ट्याक्टहरू लिंक गरियो"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> मेटाइयो"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"इमेल पठाउनुहोस्"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"म्यासेज पठाउनुहोस्"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"कन्ट्याक्टहरू छान्नुहोस्"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"पठाउनुहोस्"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"कुनै कन्ट्याक्टहरू छैनन्।"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" लाई सम्पर्कमा थप्ने?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"तपाईँका सम्पर्कहरूका नामहरू"</string>

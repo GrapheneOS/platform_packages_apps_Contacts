@@ -180,12 +180,9 @@
         </activity>
 
         <activity
-            android:name=".activities.ContactSelectionActivity"
+            android:name=".ui.selection.ContactSelectionActivity"
             android:clearTaskOnLaunch="true"
-            android:launchMode="singleTop"
-            android:theme="@style/ContactPickerTheme"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Compose"
             android:exported="true"
             android:visibleToInstantApps="true">
             <meta-data android:name="android.app.shortcuts.new_config"
@@ -230,6 +227,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".activities.ContactSelectionActivity"
+            android:exported="true"
+            android:targetActivity=".ui.selection.ContactSelectionActivity" />
 
         <!-- Backwards compatibility: somebody may have hard coded this activity name -->
         <activity-alias
@@ -336,7 +338,7 @@
             android:icon="@drawable/logo_quick_contacts_color_44in48dp"
             android:label="@string/shortcutContact"
             android:exported="true"
-            android:targetActivity=".activities.ContactSelectionActivity">
+            android:targetActivity=".ui.selection.ContactSelectionActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
@@ -350,7 +352,7 @@
             android:icon="@drawable/logo_quick_contacts_dialer_color_44in48dp"
             android:label="@string/shortcutDialContact"
             android:exported="true"
-            android:targetActivity=".activities.ContactSelectionActivity">
+            android:targetActivity=".ui.selection.ContactSelectionActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
@@ -366,7 +368,7 @@
             android:icon="@drawable/logo_quick_contacts_mail_color_44in48dp"
             android:label="@string/shortcutMessageContact"
             android:exported="true"
-            android:targetActivity=".activities.ContactSelectionActivity">
+            android:targetActivity=".ui.selection.ContactSelectionActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>

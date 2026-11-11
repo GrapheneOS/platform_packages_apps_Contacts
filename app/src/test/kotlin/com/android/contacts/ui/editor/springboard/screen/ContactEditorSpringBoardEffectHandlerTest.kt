@@ -10,11 +10,11 @@ import com.android.contacts.ContactSaveService
 import com.android.contacts.ContactSaveService.createJoinContactsIntent
 import com.android.contacts.R
 import com.android.contacts.activities.ContactEditorActivity
-import com.android.contacts.activities.ContactSelectionActivity
 import com.android.contacts.editor.EditorIntents
 import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity
 import com.android.contacts.ui.editor.springboard.screen.model.ContactEditorSpringBoardEffect as Effect
+import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import io.mockk.every
 import io.mockk.mockk

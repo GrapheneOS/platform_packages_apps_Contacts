@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalInspectionMode
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 
@@ -17,6 +18,8 @@ internal val LOADING_INDICATOR_DELAY = 500.milliseconds
 
 @Composable
 internal fun rememberIsLoadingIndicatorVisible(isLoading: Boolean): Boolean {
+    if (LocalInspectionMode.current) return true
+
     var isVisible by remember(isLoading) { mutableStateOf(false) }
 
     LaunchedEffect(isLoading) {

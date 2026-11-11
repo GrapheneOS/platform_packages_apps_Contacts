@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Promijeni naziv oznake"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Izbriši oznaku"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Dodaj kontakt"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Odaberite kontakte"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Dodaj kontakte"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Ukloni iz oznake"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Napravi oznaku"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Poveži kontakte"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Odaberite kontakt koji želite povezati s kontaktom <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Predloženi kontakti"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Svi kontakti"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> je povezan"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Kontakti su povezani"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"Kontakt <xliff:g id="NAME">%1$s</xliff:g> je izbrisan"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Pošalji e-poruku"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Pošalji poruku"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Odaberite kontakte"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Pošalji"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Nema kontakata"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Dodati \"<xliff:g id="EMAIL">%s</xliff:g>\" u kontakte?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Imena kontakata"</string>

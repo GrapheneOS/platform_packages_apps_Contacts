@@ -12,7 +12,6 @@ import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Intents
 import android.telecom.TelecomManager
 import androidx.activity.result.ActivityResultLauncher
-import com.android.contacts.activities.ContactSelectionActivity
 import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
@@ -23,6 +22,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect 
 import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivity
 import com.android.contacts.ui.interactions.callsubject.screen.CallSubjectViewModel
 import com.android.contacts.ui.interactions.callsubject.screen.model.CallSubjectArguments
+import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import io.mockk.every
 import io.mockk.mockk

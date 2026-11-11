@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"ປ່ຽນຊື່ປ້າຍກຳກັບ"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"ລຶບປ້າຍກຳກັບ"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"ເພີ່ມເປັນລາຍຊື່ຜູ້ຕິດຕໍ່"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"ເລືອກລາຍຊື່ຜູ້ຕິດຕໍ່"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"ເພີ່ມລາຍຊື່ຜູ້ຕິດຕໍ່"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"ລຶບອອກຈາກປ້າຍກຳກັບ"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"ສ້າງປ້າຍກຳກັບ"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"ລິ້ງ​ລາຍ​ຊື່​​ຜູ້ຕິດ​ຕໍ່"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"ເລືອກລາຍຊື່ຜູ້ຕິດຕໍ່ທີ່ທ່ານຕ້ອງການລິ້ງກັບ <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"ລາຍຊື່ຜູ້ຕິດຕໍ່ທີ່ແນະນຳ"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"ລາຍຊື່ຜູ້ຕິດຕໍ່ທັງໝົດ"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"ເຊື່ອມໂຍງ <xliff:g id="NAME">%s</xliff:g> ແລ້ວ"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"ລາຍ​ຊື່​ຕິດ​ຕໍ່​ລິ້ງ​ແລ້ວ"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"ລຶບ <xliff:g id="NAME">%1$s</xliff:g> ອອກແລ້ວ"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ສົ່ງອີເມວ"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"ສົ່ງຂໍ້ຄວາມ"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"ເລືອກລາຍຊື່ຜູ້ຕິດຕໍ່"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"ສົ່ງ"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"ບໍ່ມີລາຍຊື່ຜູ້ຕິດຕໍ່"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"ເພີ່ມ \"<xliff:g id="EMAIL">%s</xliff:g>\" ໃສ່ລາຍຊື່ຜູ່ຕິດຕໍ່?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ຊື່ຂອງລາຍຊື່ຜູ່ຕິດຕໍ່ຂອງທ່ານ"</string>

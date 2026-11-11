@@ -27,8 +27,6 @@ internal fun LicensesScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
-
     Scaffold(
         topBar = {
             SettingsTopAppBar(
@@ -41,12 +39,7 @@ internal fun LicensesScreen(
         AndroidView(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    start = contentPadding.calculateStartPadding(layoutDirection),
-                    end = contentPadding.calculateEndPadding(layoutDirection),
-                    top = contentPadding.calculateTopPadding(),
-                    bottom = contentPadding.calculateBottomPadding(),
-                ),
+                .padding(contentPadding),
             factory = { context ->
                 WebView(context).apply {
                     loadUrl(LICENSE_FILE)

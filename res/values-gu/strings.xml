@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"લેબલનું નામ બદલો"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"લેબલ કાઢી નાખો"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"સંપર્ક ઉમેરો"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"સંપર્કો પસંદ કરો"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"સંપર્કો ઉમેરો"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"લેબલમાંથી દૂર કરો"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"લેબલ બનાવો"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"સંપર્કો લિંક કરો"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"તમે <xliff:g id="NAME">%s</xliff:g> સાથે લિંક કરવા માંગતા હોય તે સંપર્ક પસંદ કરો:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"સૂચવેલા સંપર્કો"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"તમામ સંપર્કો"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> ને લિંક કર્યાં"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"સંપર્કો લિંક કર્યાં"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> ને કાઢી નાખ્યાં"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ઇમેઇલ મોકલો"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"મેસેજ મોકલો"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"સંપર્કો પસંદ કરો"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"મોકલો"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"સંપર્કો નથી"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" ને સંપર્કોમાં ઉમેરીએ?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"તમારા સંપર્કોના નામ"</string>

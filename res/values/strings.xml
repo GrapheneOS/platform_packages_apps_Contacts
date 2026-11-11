@@ -49,6 +49,15 @@
     <!-- Activity title when the user is selecting a new label member. [CHAR LIMIT=128] -->
     <string name="groupMemberPickerActivityTitle">Select</string>
 
+    <!-- Contact selection screen title when contacts are selected -->
+    <plurals name="contactPickerSelectedTitle">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> selected</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> selected</item>
+    </plurals>
+
+    <!-- Contact selection submit button when multiple selection is available -->
+    <string name="contactPickerDoneButton">Done</string>
+
     <!-- Entry that prompts user to select a newly created contact.  [CHAR LIMIT=30] -->
     <string name="header_entry_contact_list_adapter_header_title">Create new contact</string>
 
@@ -87,9 +96,6 @@
 
     <!-- Menu item to search for contacts to add to the currently selected label. CHAR LIMIT=30] -->
     <string name="menu_addToGroup">Add contact</string>
-
-    <!-- Menu item to select multiple contacts to add to the currently selected label. CHAR LIMIT=30] -->
-    <string name="menu_selectForGroup">Select contacts</string>
 
     <!-- Menu item to add selected contacts to the currently selected label. CHAR LIMIT=30] -->
     <string name="menu_addContactsToGroup">Add contacts</string>
@@ -143,9 +149,6 @@
 
     <!-- List separator for the Join Contact list: Suggestions -->
     <string name="separatorJoinAggregateSuggestions">Suggested contacts</string>
-
-    <!-- List separator for the Join Contact list: A-Z -->
-    <string name="separatorJoinAggregateAll">All contacts</string>
 
     <!-- Toast shown after two contacts have been linked by a user action with a name. [CHAR LIMIT=NONE] -->
     <string name="contactsJoinedNamedMessage"><xliff:g id="name">%s</xliff:g> linked</string>
@@ -321,9 +324,6 @@
 
     <!-- Activity title when the user is selecting items [CHAR LIMIT=40] -->
     <string name="pickerSelectContactsActivityTitle">Choose Contacts</string>
-
-    <!-- The menu item to send the currently selected contacts to selected items [CHAR LIMIT=10] -->
-    <string name="send_to_selection">Send</string>
 
     <!-- Displayed at the top of the contacts showing the zero total number of contacts found when "Only contacts with phones" not selected. [CHAR LIMIT=30] -->
     <string name="listFoundAllContactsZero">No contacts</string>
@@ -1474,7 +1474,5 @@
 
     <!-- The label to display as a section header in the contact list for an SDN directory [CHAR LIMIT=40] -->
     <string name="sdn_contacts_directory_search_label">Carrier service numbers</string>
-
-    <string name="multi_picker_select_action">Select</string>
 
 </resources>

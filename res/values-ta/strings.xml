@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"லேபிளின் பெயரை மாற்று"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"லேபிளை நீக்கு"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"தொடர்பைச் சேர்"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"தொடர்புகளைத் தேர்ந்தெடு"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"தொடர்புகளைச் சேர்"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"லேபிளிலிருந்து அகற்று"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"லேபிளை உருவாக்கு"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"தொடர்புகளை இணைத்தல்"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"<xliff:g id="NAME">%s</xliff:g> உடன் இணைக்க விரும்பும் தொடர்பைத் தேர்வுசெய்க:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"பரிந்துரைக்கப்படும் தொடர்புகள்"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"எல்லா தொடர்புகளும்"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> இணைக்கப்பட்டது"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"தொடர்புகள் இணைக்கப்பட்டன"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> நீக்கப்பட்டது"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"மின்னஞ்சல் அனுப்பு"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"செய்தி அனுப்பு"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"தொடர்புகளைத் தேர்வுசெய்"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"அனுப்பு"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"தொடர்புகள் எதுவும் இல்லை"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\" ஐத் தொடர்புகளில் சேர்க்கவா?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"உங்கள் தொடர்புகளின் பெயர்கள்"</string>

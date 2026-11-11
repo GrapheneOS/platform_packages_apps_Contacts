@@ -1,5 +1,7 @@
 package com.android.contacts.di.util
 
+import com.android.contacts.ui.interactions.shortcut.BuildShortcutIntent
+import com.android.contacts.ui.interactions.shortcut.BuildShortcutIntentImpl
 import com.android.contacts.util.core.AcquireWakeLock
 import com.android.contacts.util.core.AcquireWakeLockImpl
 import com.android.contacts.util.core.BuildBroadcastReceiverFlow
@@ -31,6 +33,12 @@ internal abstract class UtilCoreBindsModule {
     abstract fun bindBuildBroadcastReceiverFlow(
         impl: BuildBroadcastReceiverFlowImpl,
     ): BuildBroadcastReceiverFlow
+
+    @Binds
+    @Reusable
+    abstract fun bindBuildShortcutIntent(
+        impl: BuildShortcutIntentImpl,
+    ): BuildShortcutIntent
 
     @Binds
     @Reusable
