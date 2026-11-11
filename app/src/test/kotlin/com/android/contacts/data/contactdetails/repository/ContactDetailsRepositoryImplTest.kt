@@ -270,6 +270,34 @@ internal class ContactDetailsRepositoryImplTest {
     }
 
     @Test
+    fun getDirectoryContactPrefill_withAnyAccountDirectoryButNoAccount_returnsNoAccount() =
+        runTest {
+            val contact = loadedContact(
+                exportSupport = Directory.EXPORT_SUPPORT_ANY_ACCOUNT,
+                accountName = null,
+                accountType = null,
+            )
+
+            withPrefill(contact) { prefill ->
+                assertNull(prefill.account)
+            }
+        }
+
+    @Test
+    fun getDirectoryContactPrefill_withASameAccountOnlyDirectoryButNoAccount_returnsNoAccount() =
+        runTest {
+            val contact = loadedContact(
+                exportSupport = Directory.EXPORT_SUPPORT_SAME_ACCOUNT_ONLY,
+                accountName = null,
+                accountType = null,
+            )
+
+            withPrefill(contact) { prefill ->
+                assertNull(prefill.account)
+            }
+        }
+
+    @Test
     fun addToDefaultGroup_startsTheSaveService() = runTest {
         givenTheContactCanBeAdded(canBeAdded = true)
 
@@ -364,6 +392,8 @@ internal class ContactDetailsRepositoryImplTest {
         displayNameSource: Int = DisplayNameSources.STRUCTURED_NAME,
         exportSupport: Int = Directory.EXPORT_SUPPORT_ANY_ACCOUNT,
         dataSet: String? = null,
+        accountName: String? = "directory@example.org",
+        accountType: String? = "com.example.directory",
     ): Contact {
         return contact(
             isLoaded = true,
@@ -371,6 +401,8 @@ internal class ContactDetailsRepositoryImplTest {
             displayNameSource = displayNameSource,
             exportSupport = exportSupport,
             dataSet = dataSet,
+            accountName = accountName,
+            accountType = accountType,
         )
     }
 
@@ -382,6 +414,8 @@ internal class ContactDetailsRepositoryImplTest {
         displayNameSource: Int = DisplayNameSources.STRUCTURED_NAME,
         exportSupport: Int = Directory.EXPORT_SUPPORT_ANY_ACCOUNT,
         dataSet: String? = null,
+        accountName: String? = "directory@example.org",
+        accountType: String? = "com.example.directory",
     ): Contact {
         val rawContact = mockk<RawContact>(relaxed = true)
         every { rawContact.dataSet } returns dataSet
@@ -393,8 +427,8 @@ internal class ContactDetailsRepositoryImplTest {
         every { contact.displayName } returns displayName
         every { contact.displayNameSource } returns displayNameSource
         every { contact.directoryExportSupport } returns exportSupport
-        every { contact.directoryAccountName } returns "directory@example.org"
-        every { contact.directoryAccountType } returns "com.example.directory"
+        every { contact.directoryAccountName } returns accountName
+        every { contact.directoryAccountType } returns accountType
         every { contact.rawContacts } returns ImmutableList.of(rawContact)
         every { contact.contentValues } returns arrayListOf(ContentValues())
         return contact
