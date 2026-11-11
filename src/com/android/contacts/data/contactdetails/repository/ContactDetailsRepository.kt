@@ -88,10 +88,14 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         val sameAccountOnly =
             contact.directoryExportSupport == Directory.EXPORT_SUPPORT_SAME_ACCOUNT_ONLY
 
+        val account = when {
+            sameAccountOnly -> directoryAccount(contact)
+            else -> null
+        }
         return DirectoryContactPrefill(
             name = prefillName(contact),
             values = values,
-            account = directoryAccount(contact).takeIf { sameAccountOnly },
+            account = account,
             dataSet = contact.rawContacts.firstOrNull()?.dataSet.takeIf { sameAccountOnly },
         )
     }
@@ -192,8 +196,13 @@ internal class ContactDetailsRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun directoryAccount(contact: Contact): Account {
-        return Account(contact.directoryAccountName, contact.directoryAccountType)
+    private fun directoryAccount(contact: Contact): Account? {
+        val name = contact.directoryAccountName
+        val type = contact.directoryAccountType
+        return when {
+            !name.isNullOrEmpty() && !type.isNullOrEmpty() -> Account(name, type)
+            else -> null
+        }
     }
 
     private fun organizationValues(displayName: String?): ContentValues {
