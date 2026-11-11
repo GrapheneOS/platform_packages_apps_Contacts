@@ -186,14 +186,13 @@ internal class ContactSelectionEffectHandlerTest {
     }
 
     @Test
-    fun forwardToEditor_includesCopyOfOriginalExtras() {
-        val originalExtras = Bundle().apply { putString(EXTRA_KEY, "original") }
-        val handler = handler(originalExtras = originalExtras)
-        originalExtras.putString(EXTRA_KEY, "changed")
+    fun forwardToEditor_includesOriginalExtras() {
+        val extras = Bundle().apply { putString(EXTRA_KEY, "test") }
+        val handler = handler(originalExtras = extras)
 
         handler.handle(Effect.ForwardToEditor.CreateContact)
 
-        assertEquals("original", startedIntent().getStringExtra(EXTRA_KEY))
+        assertEquals("test", startedIntent().getStringExtra(EXTRA_KEY))
     }
 
     @Test

@@ -16,10 +16,8 @@ internal interface ShowOrCreateEffectHandler {
 
 internal class ShowOrCreateEffectHandlerImpl(
     private val activity: Activity,
-    intentExtras: Bundle?,
+    private val originalExtras: Bundle,
 ) : ShowOrCreateEffectHandler {
-
-    private val originalExtras = intentExtras?.deepCopy() ?: Bundle()
 
     override fun handle(effect: Effect) {
         when (effect) {
