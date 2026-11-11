@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"ラベル名を変更"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"ラベルを削除"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"連絡先を追加"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"連絡先を選択"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"連絡先を追加"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"ラベルから削除"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"ラベルを作成"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"連絡先をリンク"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"<xliff:g id="NAME">%s</xliff:g>さんとリンクする連絡先を選択してください。"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"連絡先候補"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"すべての連絡先"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> さんが連絡先をリンクしました"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"連絡先をリンクしました"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> さんを削除しました"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"メールを送信"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"メッセージを送信"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"連絡先を選択"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"送信"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"連絡先はありません"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"<xliff:g id="EMAIL">%s</xliff:g> を連絡先に追加しますか？"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"連絡先の名前"</string>

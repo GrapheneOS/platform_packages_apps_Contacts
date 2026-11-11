@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"ប្ដូរឈ្មោះស្លាក"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"លុបស្លាក"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"បញ្ចូល​ទំនាក់ទំនង"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"ជ្រើស​រើសទំនាក់ទំនង"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"បញ្ចូល​​ទំនាក់ទំនង"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"លុប​ចេញ​ពី​ស្លាក"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"បង្កើតស្លាក"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"តភ្ជាប់ទំនាក់ទំនង"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"ជ្រើសរើសទំនាក់ទំនងដែលអ្នកចង់តភ្ជាប់ជាមួយ <xliff:g id="NAME">%s</xliff:g>៖"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"ទំនាក់ទំនង​ដែល​បាន​ស្នើ"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"ទំនាក់ទំនង​ទាំងអស់"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"បាន​ចូលចិត្ត <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"បានតភ្ជាប់ទំនាក់ទំនង"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"បាន​លុប <xliff:g id="NAME">%1$s</xliff:g>"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ផ្ញើ​អ៊ីមែល"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"ផ្ញើ​សារ"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"ជ្រើសរើស​​ទំនាក់ទំនង"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"ផ្ញើ"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"មិន​មាន​ទំនាក់ទំនង"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"បញ្ចូល \"<xliff:g id="EMAIL">%s</xliff:g>\" ទៅ​ក្នុង​ទំនាក់ទំនង?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ឈ្មោះ​នៃ​ទំនាក់ទំនង​របស់​អ្នក"</string>

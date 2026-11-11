@@ -29,7 +29,7 @@ import android.provider.ContactsContract.Groups;
 import android.text.TextUtils;
 
 import com.android.contacts.ContactsUtils;
-import com.android.contacts.activities.ContactSelectionActivity;
+import com.android.contacts.ui.selection.ContactSelectionActivity;
 import com.android.contacts.list.ContactsSectionIndexer;
 import com.android.contacts.list.UiIntentActions;
 

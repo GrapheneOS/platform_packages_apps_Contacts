@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Canvia el nom de l\'etiqueta"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Suprimeix l\'etiqueta"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Afegeix un contacte"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Selecciona contactes"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Afegeix contactes"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Suprimeix de l\'etiqueta"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Crea una etiqueta"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Enllaça els contactes"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Tria el contacte que vols enllaçar amb <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Contactes suggerits"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Tots els contactes"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> s\'ha enllaçat"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Contactes enllaçats"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"S\'ha suprimit <xliff:g id="NAME">%1$s</xliff:g>"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Envia un correu electrònic"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Envia un missatge"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Tria contactes"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Envia"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"No hi ha cap contacte"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Voleu afegir \"<xliff:g id="EMAIL">%s</xliff:g>\" als contactes?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Noms dels contactes"</string>

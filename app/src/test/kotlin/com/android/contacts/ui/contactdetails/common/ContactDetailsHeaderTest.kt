@@ -63,18 +63,11 @@ internal class ContactDetailsHeaderTest {
     }
 
     @Test
-    fun withoutAPhoto_showsTheFirstLetterOfTheName() = runComposeUiTest {
+    fun withoutAPhoto_doesNotExposeTheFallbackLetterToAccessibility() = runComposeUiTest {
         setHeaderContent(contactHeaderUiModel(displayName = "alex doe"))
 
-        onNodeWithText("A").assertIsDisplayed()
-    }
-
-    @Test
-    fun forAPhoneNumberName_showsNoFallbackLetter() = runComposeUiTest {
-        setHeaderContent(contactHeaderUiModel(displayName = "+1 555 0001"))
-
-        onNodeWithText("+1 555 0001", substring = true).assertIsDisplayed()
-        onNodeWithText("5").assertDoesNotExist()
+        onNodeWithText("alex doe", substring = true).assertIsDisplayed()
+        onNodeWithText("A").assertDoesNotExist()
     }
 
     @Test

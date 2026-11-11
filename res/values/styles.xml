@@ -184,9 +184,6 @@
         <item name="android:tint">@color/action_bar_button_text_color</item>
     </style>
 
-    <style name="ContactPickerTheme" parent="PeopleActivityTheme">
-    </style>
-
     <style name="NonPhoneActivityTheme" parent="@android:Theme.Translucent.NoTitleBar">
     </style>
 

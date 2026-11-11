@@ -111,7 +111,7 @@ internal class SimImportViewModel @Inject constructor(
                 simContacts.value = result.contacts
                 existingContacts.value = result.existingContactsInAccounts
                     .mapValues { (_, set) ->
-                        set.map { it.recordNumber }.distinct().toSet()
+                        set.map { it.recordNumber }.toSet()
                     }
             }
             .launchIn(viewModelScope)

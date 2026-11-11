@@ -1,6 +1,7 @@
 package com.android.contacts.data.contacts.delegate
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.database.ContentObserver
 import android.database.MatrixCursor
 import android.net.Uri
@@ -130,6 +131,56 @@ class LookupContactsRepositoryDelegateTest {
             ),
             projectionSlot.captured,
         )
+    }
+
+    @Test
+    fun lookup_whenQueryById_usesCorrespodingUriAndProjection() = runTest {
+        givenQueryRows()
+
+        subject.lookup(ContactLookupQuery.Id(42L)).first()
+
+        assertEquals(
+            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, 42L),
+            uriSlot.captured,
+        )
+        assertArrayEquals(
+            arrayOf(
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.LOOKUP_KEY,
+            ),
+            projectionSlot.captured,
+        )
+    }
+
+    @Test
+    fun lookup_whenQueryById_emitsResult() = runTest {
+        givenQueryRows(resultRow(42L, "key"))
+
+        val result = subject.lookup(ContactLookupQuery.Id(42L)).first()
+
+        assertEquals(
+            listOf(
+                ContactLookupResult(
+                    42L,
+                    "key",
+                    ContactsContract.Contacts.getLookupUri(42L, "key"),
+                ),
+            ),
+            result,
+        )
+    }
+
+    @Test
+    fun lookup_observesQueryUri() = runTest {
+        val observedUriSlot = slot<Uri>()
+        every {
+            contentResolver.registerContentObserver(capture(observedUriSlot), true, any())
+        } returns Unit
+        givenQueryRows()
+
+        subject.lookup(ContactLookupQuery.Id(42L)).first()
+
+        assertEquals(uriSlot.captured, observedUriSlot.captured)
     }
 
     @Test

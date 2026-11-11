@@ -66,7 +66,7 @@ import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.R;
 import com.android.contacts.activities.ContactEditorActivity;
 import com.android.contacts.activities.ContactEditorActivity.ContactEditor;
-import com.android.contacts.activities.ContactSelectionActivity;
+import com.android.contacts.ui.selection.ContactSelectionActivity;
 import com.android.contacts.activities.RequestPermissionsActivity;
 import com.android.contacts.editor.AggregationSuggestionEngine.Suggestion;
 import com.android.contacts.group.GroupUtil;

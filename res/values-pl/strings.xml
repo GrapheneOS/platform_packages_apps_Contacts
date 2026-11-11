@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Zmień nazwę etykiety"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Usuń etykietę"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Dodaj kontakt"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Wybierz kontakty"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Dodaj kontakty"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Usuń z etykiety"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Utwórz etykietę"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Połącz kontakty"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Wybierz kontakt, który chcesz połączyć z: <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Sugerowane kontakty"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Wszystkie kontakty"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> – połączono"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Kontakty zostały połączone"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"Kontakt <xliff:g id="NAME">%1$s</xliff:g> usunięty"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Wyślij e-maila"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Wyślij wiadomość"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Wybierz kontakty"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Wyślij"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Brak kontaktów"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Czy dodać adres „<xliff:g id="EMAIL">%s</xliff:g>” do kontaktów?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Imiona i nazwiska oraz nazwy w Twoich kontaktach"</string>

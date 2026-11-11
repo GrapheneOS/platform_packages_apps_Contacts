@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Pervardyti etiketę"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Ištrinti etiketę"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Pridėti kontaktą"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Pasirinkti kontaktus"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Pridėti kontaktų"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Pašalinti iš etiketės grupės"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Sukurti etiketę"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Kontaktų susiejimas"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Pasirinkite kontaktą, kurį norite susieti su <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Siūlomi adresatai"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Visi kontaktai"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> susietas (-a)"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Kontaktai susieti"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> ištrintas (-a)"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Siųsti el. laišką"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Siųsti pranešimą"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Kontaktų pasirinkimas"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Siųsti"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Kontaktų nėra"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Pridėti „<xliff:g id="EMAIL">%s</xliff:g>“ prie adresatų?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Kontaktų vardai"</string>

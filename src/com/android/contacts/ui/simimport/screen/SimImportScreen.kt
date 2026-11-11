@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,6 +48,7 @@ import com.android.contacts.domain.accounts.model.AccountIconData
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.ui.common.model.SelectableItem
 import com.android.contacts.ui.core.ContactsPreviewTheme
+import com.android.contacts.ui.core.scrollingScreenPadding
 import com.android.contacts.ui.simimport.common.SimContactCell
 import com.android.contacts.ui.simimport.common.SimContactSelectableCell
 import com.android.contacts.ui.simimport.common.SimImportAccountPicker
@@ -102,11 +101,7 @@ internal fun SimImportContent(
         modifier = modifier,
     ) { contentPadding ->
         Column(
-            Modifier.padding(
-                top = contentPadding.calculateTopPadding(),
-                start = contentPadding.calculateStartPadding(layoutDirection),
-                end = contentPadding.calculateEndPadding(layoutDirection),
-            ),
+            Modifier.padding(scrollingScreenPadding(contentPadding)),
         ) {
             if (uiState is State.WithAccounts) {
                 SimImportAccountPicker(
