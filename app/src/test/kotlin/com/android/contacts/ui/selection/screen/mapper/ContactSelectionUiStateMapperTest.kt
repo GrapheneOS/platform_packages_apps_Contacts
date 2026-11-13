@@ -12,7 +12,6 @@ import com.android.contacts.domain.contacts.model.ContactDirectoryResult
 import com.android.contacts.domain.contacts.model.ContactItem
 import com.android.contacts.domain.contacts.model.ContactItemKey
 import com.android.contacts.domain.contacts.model.GetContactsForSelectionResult
-import com.android.contacts.model.Contact
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
 import com.android.contacts.tests.factory.AccountModelFactory
 import com.android.contacts.tests.targetContext
@@ -588,7 +587,7 @@ internal class ContactSelectionUiStateMapperTest {
         state: ContactSelectionState = ContactSelectionState(searchState = SearchState.Regular),
         contacts: GetContactsForSelectionResult? = result(),
         query: String? = null,
-        joinTarget: Contact? = null,
+        joinTarget: ContactItem? = null,
     ): ContactSelectionUiState {
         return subject.map(
             request = ContactSelectionRequest(mode = mode, titleOverride = titleOverride),
@@ -639,9 +638,7 @@ internal class ContactSelectionUiStateMapperTest {
 
     private fun uiModel(id: Long, name: String) = ContactUiModel(key = local(id), name = name)
 
-    private fun contact(displayName: String?): Contact = mockk {
-        every { this@mockk.displayName } returns displayName
-    }
+    private fun contact(name: String): ContactItem = ContactItem(key = local(1L), name = name)
 
     private companion object {
         val ADD_GROUP_MEMBERS = Mode.AddGroupMembers(

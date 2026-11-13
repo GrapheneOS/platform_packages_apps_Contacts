@@ -10,6 +10,7 @@ import com.android.contacts.data.contacts.model.LegacyContactsKind
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.domain.contacts.model.ContactItem
 import com.android.contacts.domain.contacts.model.ContactItemKey
+import com.android.contacts.tests.factory.contactDetails
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -266,6 +267,50 @@ internal class ContactItemMapperTest {
         val column = LegacyContactColumn(id = 4L, kind = LegacyContactsKind.PEOPLE, value = "")
 
         assertNull(subject.map(column).field)
+    }
+
+    // ContactDetails
+
+    @Test
+    fun mapContactDetails_mapsAllFields() {
+        val details = contactDetails(
+            contactId = 5L,
+            displayName = "John Smith",
+            alternativeDisplayName = "Smith, John",
+            photo = PHOTO,
+            isStarred = true,
+        )
+
+        val result = subject.map(details, DisplayOrder.GIVEN_NAME_FIRST)
+
+        assertEquals(
+            ContactItem(
+                key = ContactItemKey.Local(5L),
+                name = "John Smith",
+                contactPhoto = PHOTO,
+                isFavorite = true,
+            ),
+            result,
+        )
+    }
+
+    @Test
+    fun mapContactDetails_withFamilyNameFirst_usesAlternativeName() {
+        val details = contactDetails(
+            displayName = "John Smith",
+            alternativeDisplayName = "Smith, John",
+        )
+
+        val result = subject.map(details, DisplayOrder.FAMILY_NAME_FIRST)
+
+        assertEquals("Smith, John", result.name)
+    }
+
+    @Test
+    fun mapContactDetails_withoutNames_usesEmptyName() {
+        val details = contactDetails(displayName = null, alternativeDisplayName = null)
+
+        assertEquals("", subject.map(details, DisplayOrder.FAMILY_NAME_FIRST).name)
     }
 
     companion object {

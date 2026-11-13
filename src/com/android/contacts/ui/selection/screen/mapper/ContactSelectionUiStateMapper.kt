@@ -14,7 +14,6 @@ import com.android.contacts.domain.contacts.model.ContactDirectory
 import com.android.contacts.domain.contacts.model.ContactItem
 import com.android.contacts.domain.contacts.model.ContactItemKey
 import com.android.contacts.domain.contacts.model.GetContactsForSelectionResult
-import com.android.contacts.model.Contact
 import com.android.contacts.ui.common.components.ContactAvatarImage
 import com.android.contacts.ui.common.util.getMessageFormat
 import com.android.contacts.ui.selection.screen.model.ContactListSection as Section
@@ -37,7 +36,7 @@ internal fun interface ContactSelectionUiStateMapper {
         request: ContactSelectionRequest,
         state: ContactSelectionState,
         contactsResultWithQuery: Pair<String?, GetContactsForSelectionResult>?,
-        joinTarget: Contact?,
+        joinTarget: ContactItem?,
     ): ContactSelectionUiState
 }
 
@@ -51,7 +50,7 @@ internal class ContactSelectionUiStateMapperImpl @Inject constructor(
         request: ContactSelectionRequest,
         state: ContactSelectionState,
         contactsResultWithQuery: Pair<String?, GetContactsForSelectionResult>?,
-        joinTarget: Contact?,
+        joinTarget: ContactItem?,
     ): ContactSelectionUiState {
         val mode = request.mode
         val ongoingSearchQuery = (state.searchState as? SearchState.Searching)?.effectiveQuery
@@ -109,12 +108,10 @@ internal class ContactSelectionUiStateMapperImpl @Inject constructor(
 
     private fun description(
         mode: Mode,
-        joinTarget: Contact?,
+        joinTarget: ContactItem?,
     ): String? {
         if (mode !is Mode.Join || joinTarget == null) return null
-        val name = joinTarget.displayName?.takeIf { it.isNotBlank() }
-            ?: resources.getString(R.string.missing_name)
-        return resources.getString(R.string.blurbJoinContactDataWith, name)
+        return resources.getString(R.string.blurbJoinContactDataWith, joinTarget.displayName())
     }
 
     private fun listHeader(

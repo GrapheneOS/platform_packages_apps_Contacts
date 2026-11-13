@@ -1,5 +1,6 @@
 package com.android.contacts.domain.contacts.mapper
 
+import com.android.contacts.data.contactdetails.model.ContactDetails
 import com.android.contacts.data.contacts.model.ContactColumn
 import com.android.contacts.data.contacts.model.ContactDataColumn
 import com.android.contacts.data.contacts.model.ContactDataKind
@@ -16,6 +17,7 @@ internal interface ContactItemMapper {
     fun map(column: ContactDataColumn, displayOrder: DisplayOrder): ContactItem
     fun map(column: DirectoryContactColumn, displayOrder: DisplayOrder): ContactItem
     fun map(column: LegacyContactColumn): ContactItem
+    fun map(details: ContactDetails, displayOrder: DisplayOrder): ContactItem
 }
 
 internal class ContactItemMapperImpl @Inject constructor() : ContactItemMapper {
@@ -81,6 +83,19 @@ internal class ContactItemMapperImpl @Inject constructor() : ContactItemMapper {
                 label = column.label,
             ),
             isFavorite = column.isStarred,
+        )
+    }
+
+    override fun map(details: ContactDetails, displayOrder: DisplayOrder): ContactItem {
+        return ContactItem(
+            key = ContactItemKey.Local(details.contactId),
+            name = displayName(
+                displayOrder = displayOrder,
+                primary = details.displayName,
+                alternative = details.alternativeDisplayName,
+            ),
+            contactPhoto = details.photo,
+            isFavorite = details.isStarred,
         )
     }
 

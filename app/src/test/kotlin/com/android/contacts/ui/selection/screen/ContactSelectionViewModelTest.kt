@@ -8,7 +8,6 @@ import com.android.contacts.domain.contacts.model.ContactSelectionFilter
 import com.android.contacts.domain.contacts.model.GetContactsForSelectionResult
 import com.android.contacts.domain.contacts.usecase.GetContact
 import com.android.contacts.domain.contacts.usecase.GetContactsForSelection
-import com.android.contacts.model.Contact
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.ui.selection.screen.ContactSelectionViewModel.Companion.SEARCH_DEBOUNCE_MILLIS
@@ -174,7 +173,7 @@ internal class ContactSelectionViewModelTest {
     @Test
     fun contacts_afterSubscriptionRestart_keepLatestResults() =
         runTest(mainDispatcherRule.testDispatcher) {
-            val contact = mockk<Contact>()
+            val contact = ContactItem(key = ContactItemKey.Local(7L), name = "Jane Doe")
             every { getContact(7L) } returns flowOf(contact)
             val subject = createViewModel(Mode.Join(targetContactId = 7L))
             val job = backgroundScope.launch { subject.uiState.collect {} }
@@ -267,7 +266,7 @@ internal class ContactSelectionViewModelTest {
 
     @Test
     fun join_loadsTargetContact() = runTest(mainDispatcherRule.testDispatcher) {
-        val contact = mockk<Contact>()
+        val contact = ContactItem(key = ContactItemKey.Local(7L), name = "Jane Doe")
         every { getContact(7L) } returns flowOf(contact)
 
         collectUiState(createViewModel(Mode.Join(targetContactId = 7L)))
@@ -473,7 +472,7 @@ internal class ContactSelectionViewModelTest {
         val request: ContactSelectionRequest,
         val state: ContactSelectionState,
         val contacts: Pair<String?, GetContactsForSelectionResult>?,
-        val joinTarget: Contact?,
+        val joinTarget: ContactItem?,
     )
 
     private companion object {
