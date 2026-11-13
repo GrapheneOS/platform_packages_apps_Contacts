@@ -530,17 +530,6 @@
     </issue>
 
     <issue
-        id="AppLinkUrlError"
-        message="Activity supporting ACTION_VIEW is not exported"
-        errorLine1="        &lt;activity"
-        errorLine2="        ^">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*manifest*0}"
-            line="563"
-            column="9"/>
-    </issue>
-
-    <issue
         id="FragmentTagUsage"
         message="Replace the &lt;fragment> tag with FragmentContainerView."
         errorLine1="    &lt;fragment"
@@ -791,17 +780,6 @@
             file="${:app*release*MAIN*sourceProvider*0*manifest*0}"
             line="29"
             column="22"/>
-    </issue>
-
-    <issue
-        id="AndroidGradlePluginVersion"
-        message="A newer version of Gradle than 9.8.1 is available: 9.8.2"
-        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-9.8.1-bin.zip"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="$HOME/Android/graphene-contacts/gradle/wrapper/gradle-wrapper.properties"
-            line="4"
-            column="17"/>
     </issue>
 
     <issue
@@ -1214,17 +1192,6 @@
     <issue
         id="UseAppTint"
         message="Must use `app:tint` instead of `android:tint`"
-        errorLine1="                    android:tint=&quot;@color/call_subject_history_icon&quot;"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="131"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="UseAppTint"
-        message="Must use `app:tint` instead of `android:tint`"
         errorLine1="        android:tint=&quot;@color/hint_text_color&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -1445,294 +1412,6 @@
             line="1130"
             column="5"
             message="This definition does not require arguments"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-af/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-b+sr+Latn/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-en-rXC/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-hu/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-lv/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-ru/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-uk/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #1 in `call_subject_limit`: conversion is `s`, received `int` (argument #2 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                       ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="56"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1339"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-af/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-b+sr+Latn/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-en-rXC/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-hu/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-lv/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-ru/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values-uk/strings.xml"
-            line="396"
-            column="5"
-            message="Conflicting argument declaration here"/>
-    </issue>
-
-    <issue
-        id="StringFormatMatches"
-        message="Suspicious argument type for formatting argument #2 in `call_subject_limit`: conversion is `s`, received `int` (argument #3 in method call) (Did you mean formatting character `d`, &apos;o&apos; or `x`?)"
-        errorLine1="                getString(R.string.call_subject_limit, length, mLimit));"
-        errorLine2="                                                               ~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/dialog/CallSubjectDialog.java"
-            line="370"
-            column="64"/>
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1339"
-            column="5"
-            message="Conflicting argument declaration here"/>
     </issue>
 
     <issue
@@ -4934,17 +4613,6 @@
 
     <issue
         id="ObsoleteLayoutParam"
-        message="Invalid layout param in a `LinearLayout`: `layout_below`"
-        errorLine1="        android:layout_below=&quot;@id/dialog_view&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="154"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="ObsoleteLayoutParam"
         message="Invalid layout param in a `LinearLayout`: `layout_alignParentEnd`"
         errorLine1="        android:layout_alignParentEnd=&quot;true&quot;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -5347,17 +5015,6 @@
             file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/contact_editor_fragment.xml"
             line="25"
             column="6"/>
-    </issue>
-
-    <issue
-        id="UselessParent"
-        message="This `LinearLayout` layout or its `RelativeLayout` parent is possibly unnecessary; transfer the `background` attribute to the other view"
-        errorLine1="        &lt;LinearLayout"
-        errorLine2="         ~~~~~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="32"
-            column="10"/>
     </issue>
 
     <issue
@@ -6766,17 +6423,6 @@
     </issue>
 
     <issue
-        id="TextFields"
-        message="This text field does not specify an `inputType`"
-        errorLine1="            &lt;EditText"
-        errorLine2="             ~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="85"
-            column="14"/>
-    </issue>
-
-    <issue
         id="Autofill"
         message="Missing `autofillHints` attribute"
         errorLine1="    &lt;EditText"
@@ -6785,17 +6431,6 @@
             file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/contact_editor_label_name_dialog.xml"
             line="25"
             column="6"/>
-    </issue>
-
-    <issue
-        id="Autofill"
-        message="Missing `autofillHints` attribute"
-        errorLine1="            &lt;EditText"
-        errorLine2="             ~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="85"
-            column="14"/>
     </issue>
 
     <issue
@@ -6917,17 +6552,6 @@
             file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/contacts_unavailable_fragment_content.xml"
             line="23"
             column="6"/>
-    </issue>
-
-    <issue
-        id="ContentDescription"
-        message="Missing `contentDescription` attribute on image"
-        errorLine1="                &lt;ImageView"
-        errorLine2="                 ~~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="126"
-            column="18"/>
     </issue>
 
     <issue
@@ -7071,17 +6695,6 @@
             file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/photo_editor_view.xml"
             line="37"
             column="6"/>
-    </issue>
-
-    <issue
-        id="RelativeOverlap"
-        message="`@id/send_and_call_button` can overlap `@id/history_button` if @string/send_and_call_button grows due to localized text expansion"
-        errorLine1="                &lt;TextView"
-        errorLine2="                 ~~~~~~~~">
-        <location
-            file="${:app*release*MAIN*sourceProvider*0*resDir*1}/layout/dialog_call_subject.xml"
-            line="135"
-            column="18"/>
     </issue>
 
     <issue

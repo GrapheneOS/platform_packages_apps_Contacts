@@ -451,10 +451,11 @@
 
         <!-- Attaches a photo to a contact. Started from external applications -->
         <activity
-            android:name=".activities.AttachPhotoActivity"
+            android:name=".ui.interactions.attachphoto.AttachPhotoActivity"
             android:label="@string/attach_photo_dialog_title"
             android:exported="true"
-            android:taskAffinity="">
+            android:taskAffinity=""
+            android:theme="@style/Theme.Compose.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.ATTACH_DATA"/>
                 <data android:mimeType="image/*"/>
