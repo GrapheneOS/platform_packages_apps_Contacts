@@ -6,6 +6,8 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactPhoto
+import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.ACCOUNT_WITHOUT_DATA_SET_SELECTION
+import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.ACCOUNT_WITH_DATA_SET_SELECTION
 import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.EXCLUDE_CONTACT_SELECTION
 import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.LOCAL_ACCOUNT_SELECTION
 import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.PROJECTION
@@ -97,7 +99,7 @@ class QueryContactsRepositoryDelegateTest {
     }
 
     @Test
-    fun queryContacts_withAccount_appendsAccountParameters() = runTest {
+    fun queryContacts_withAccount_selectsAccountContacts() = runTest {
         val queries = contentResolver.givenQueryRows()
         val account = AccountModelFactory.build(
             name = "user@example.org",
@@ -107,46 +109,74 @@ class QueryContactsRepositoryDelegateTest {
 
         subject.queryContacts(null, SortOrder.GIVEN_NAME_FIRST, account = account).first()
 
-        val uri = queries.single().uri
-        assertEquals(
-            account.name,
-            uri.getQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME),
+        val query = queries.single()
+        assertAccountParametersAbsent(query.uri)
+        assertEquals("($ACCOUNT_WITH_DATA_SET_SELECTION)", query.selection)
+        assertArrayEquals(
+            arrayOf("user@example.org", "com.example", "plus"),
+            query.selectionArgs,
         )
-        assertEquals(
-            account.type,
-            uri.getQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE),
-        )
-        assertEquals(
-            account.dataSet,
-            uri.getQueryParameter(ContactsContract.RawContacts.DATA_SET),
-        )
-        assertNull(queries.single().selection)
     }
 
     @Test
-    fun queryContacts_withAccountWithoutDataSet_doesNotAppendDataSet() = runTest {
+    fun queryContacts_withAccountWithoutDataSet_selectsNullDataSet() = runTest {
         val queries = contentResolver.givenQueryRows()
         val account = AccountModelFactory.build(name = "user@example.org", type = "com.example")
 
         subject.queryContacts(null, SortOrder.GIVEN_NAME_FIRST, account = account).first()
 
-        val uri = queries.single().uri
-        assertEquals(
-            account.name,
-            uri.getQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME),
-        )
-        assertNull(uri.getQueryParameter(ContactsContract.RawContacts.DATA_SET))
+        val query = queries.single()
+        assertEquals("($ACCOUNT_WITHOUT_DATA_SET_SELECTION)", query.selection)
+        assertArrayEquals(arrayOf("user@example.org", "com.example"), query.selectionArgs)
     }
 
     @Test
-    fun queryContacts_withAccountWithoutName_doesNotAppendAccountParameters() = runTest {
+    fun queryContacts_withSearchQueryAndAccount_selectsAccountContacts() = runTest {
+        val queries = contentResolver.givenQueryRows()
+        val account = AccountModelFactory.build(name = "user@example.org", type = "com.example")
+
+        subject.queryContacts(
+            searchQuery = "alice",
+            sortOrder = SortOrder.GIVEN_NAME_FIRST,
+            account = account,
+            excludedContactId = 42L,
+        ).first()
+
+        val query = queries.single()
+        assertAccountParametersAbsent(query.uri)
+        assertEquals(
+            "($ACCOUNT_WITHOUT_DATA_SET_SELECTION) AND ($EXCLUDE_CONTACT_SELECTION)",
+            query.selection,
+        )
+        assertArrayEquals(
+            arrayOf("user@example.org", "com.example", "42"),
+            query.selectionArgs,
+        )
+    }
+
+    @Test
+    fun queryContacts_withAccountWithoutName_doesNotFilterByAccount() = runTest {
         val queries = contentResolver.givenQueryRows()
         val account = AccountModelFactory.build(name = null, type = "com.example")
 
         subject.queryContacts(null, SortOrder.GIVEN_NAME_FIRST, account = account).first()
 
-        assertAccountParametersAbsent(queries.single().uri)
-        assertNull(queries.single().selection)
+        val query = queries.single()
+        assertAccountParametersAbsent(query.uri)
+        assertNull(query.selection)
+        assertNull(query.selectionArgs)
+    }
+
+    @Test
+    fun queryContacts_withAccountWithoutType_doesNotFilterByAccount() = runTest {
+        val queries = contentResolver.givenQueryRows()
+        val account = AccountModelFactory.build(name = "user@example.org", type = null)
+
+        subject.queryContacts(null, SortOrder.GIVEN_NAME_FIRST, account = account).first()
+
+        val query = queries.single()
+        assertNull(query.selection)
+        assertNull(query.selectionArgs)
     }
 
     @Test

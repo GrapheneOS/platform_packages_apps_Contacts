@@ -5,7 +5,6 @@ import android.net.Uri
 import android.provider.ContactsContract
 import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.settings.model.SortOrder
-import com.android.contacts.domain.accounts.model.AccountModel
 
 internal fun Uri.Builder.appendAddressBookIndex(): Uri.Builder {
     return appendQueryParameter(ContactsContract.Contacts.EXTRA_ADDRESS_BOOK_INDEX, "true")
@@ -16,17 +15,6 @@ internal fun Uri.Builder.appendDefaultDirectory(): Uri.Builder {
         ContactsContract.DIRECTORY_PARAM_KEY,
         ContactsContract.Directory.DEFAULT.toString(),
     )
-}
-
-internal fun Uri.Builder.appendAccount(account: AccountModel?): Uri.Builder {
-    if (account != null && !account.isNullAccount && account.name != null) {
-        appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME, account.name)
-        appendQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE, account.type)
-        if (account.dataSet != null) {
-            appendQueryParameter(ContactsContract.RawContacts.DATA_SET, account.dataSet)
-        }
-    }
-    return this
 }
 
 internal fun SortOrder.toSortKeyColumn(): String {
