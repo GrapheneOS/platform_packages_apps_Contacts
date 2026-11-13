@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -105,16 +104,16 @@ internal class ContactSelectionViewModel @Inject constructor(
             .distinctUntilChanged()
             .flatMapLatest { searchQuery ->
                 getContactsForSelection(filter, searchQuery)
-                    .map { searchQuery to it }
+                    .map<_, Pair<String?, GetContactsForSelectionResult>?> { searchQuery to it }
             }
-            .onStart<Pair<String?, GetContactsForSelectionResult>?> { emit(null) }
+            .retainLatestState()
     }
 
     private fun getJoinTarget(): Flow<Contact?> {
         return when {
             mode is Mode.Join -> {
-                flow { emit(getContact(mode.targetContactId).first()) }
-                    .onStart<Contact?> { emit(null) }
+                flow<Contact?> { emit(getContact(mode.targetContactId).first()) }
+                    .retainLatestState()
             }
             else -> flowOf(null)
         }
@@ -209,6 +208,14 @@ internal class ContactSelectionViewModel @Inject constructor(
         _effects.trySend(effect)
     }
 
+    private fun <T> Flow<T?>.retainLatestState(): StateFlow<T?> {
+        return stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = null,
+        )
+    }
+
     @OptIn(FlowPreview::class)
     private fun Flow<String?>.debounceSearch(): Flow<String?> {
         return withIndex()
@@ -223,7 +230,9 @@ internal class ContactSelectionViewModel @Inject constructor(
 
     companion object {
         private const val KEY_STATE = "state"
-        private const val STATE_TIMEOUT_MILLIS = 5_000L
+
+        @VisibleForTesting
+        const val STATE_TIMEOUT_MILLIS = 5_000L
 
         @VisibleForTesting
         const val SEARCH_DEBOUNCE_MILLIS = 200L
