@@ -4,11 +4,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.contacts.domain.contacts.model.ContactItem
 import com.android.contacts.domain.contacts.model.ContactItemKey
 import com.android.contacts.domain.contacts.model.GetContactsForSelectionResult
 import com.android.contacts.domain.contacts.usecase.GetContact
 import com.android.contacts.domain.contacts.usecase.GetContactsForSelection
-import com.android.contacts.model.Contact
 import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.ui.selection.screen.mapper.ContactSelectionEffectMapper
 import com.android.contacts.ui.selection.screen.mapper.ContactSelectionFilterMapper
@@ -109,10 +109,10 @@ internal class ContactSelectionViewModel @Inject constructor(
             .retainLatestState()
     }
 
-    private fun getJoinTarget(): Flow<Contact?> {
+    private fun getJoinTarget(): Flow<ContactItem?> {
         return when {
             mode is Mode.Join -> {
-                flow<Contact?> { emit(getContact(mode.targetContactId).first()) }
+                flow<ContactItem?> { emit(getContact(mode.targetContactId).first()) }
                     .retainLatestState()
             }
             else -> flowOf(null)
