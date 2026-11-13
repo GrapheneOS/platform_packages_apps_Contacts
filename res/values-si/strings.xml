@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"ලේබලය නැවත නම් කරන්න"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"ලේබලය මකන්න"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"සම්බන්ධතාව එක් කරන්න"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"සම්බන්ධතා තෝරන්න"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"සම්බන්ධතා එක් කරන්න"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"ලේබලයෙන් ඉවත් කරන්න"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"ලේබලය තනන්න"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"සම්බන්ධතා සබැඳි කරන්න"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"ඔබට <xliff:g id="NAME">%s</xliff:g> සමඟ සබැඳි කිරීමට අවශ්‍ය සම්බන්ධතාව තෝරන්න:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"යෝජිත සම්බන්ධතා"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"සියලුම සම්බන්ධතා"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g> සම්බන්ධ කරන ලදී"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"සම්බන්ධතා සබැඳි කරන ලදී"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g> මකන ලදී"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"ඊ-තැපෑල යවන්න"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"පණිවිඩය යවන්න"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"සම්බන්ධතා තෝරන්න"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"යවන්න"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"සම්බන්ධතා නැත"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"සම්බන්ධතා වලට \"<xliff:g id="EMAIL">%s</xliff:g>\" එක් කරන්නද?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"ඔබගේ සම්බන්ධතා වල නම්"</string>

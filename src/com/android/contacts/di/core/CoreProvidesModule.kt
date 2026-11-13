@@ -55,6 +55,13 @@ internal class CoreProvidesModule {
 
     @Provides
     @Reusable
+    @MainImmediateDispatcher
+    fun provideMainImmediateDispatcher(): CoroutineDispatcher {
+        return Dispatchers.Main.immediate
+    }
+
+    @Provides
+    @Reusable
     @SimReadDispatcher
     fun provideSimReadDispatcher(): CoroutineDispatcher {
         return ContactsExecutors.getSimReadExecutor().asCoroutineDispatcher()

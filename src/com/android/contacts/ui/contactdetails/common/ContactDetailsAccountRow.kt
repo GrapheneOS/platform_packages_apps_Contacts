@@ -17,10 +17,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.R
 import com.android.contacts.ui.common.components.AccountIcon
-import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.ContactAccountUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.core.itemClipShape
 
 @Composable
 internal fun ContactDetailsAccountRow(
@@ -33,7 +33,7 @@ internal fun ContactDetailsAccountRow(
 
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerLow,
-        shape = cellShape(
+        shape = itemClipShape(
             isFirst = isFirst,
             isLast = isLast,
         ),

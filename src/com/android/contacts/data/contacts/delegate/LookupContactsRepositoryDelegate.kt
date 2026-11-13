@@ -1,7 +1,7 @@
 package com.android.contacts.data.contacts.delegate
 
 import android.content.ContentResolver
-import android.database.ContentObserver
+import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
@@ -9,11 +9,10 @@ import android.util.Log
 import com.android.contacts.data.contacts.model.ContactLookupQuery
 import com.android.contacts.data.contacts.model.ContactLookupResult
 import com.android.contacts.di.core.IoDispatcher
+import com.android.contacts.util.core.observeContentUri
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -27,30 +26,19 @@ internal class LookupContactsRepositoryDelegateImpl @Inject constructor(
 ) : LookupContactsRepositoryDelegate {
 
     override fun lookup(query: ContactLookupQuery): Flow<List<ContactLookupResult>?> {
-        return observeUri(getQueryUri(query))
-            .map { queryContacts(query) }
+        val uri = getQueryUri(query)
+        return observeContentUri(contentResolver, uri)
+            .map { queryContacts(query, uri) }
             .flowOn(ioDispatcher)
-    }
-
-    private fun observeUri(uri: Uri): Flow<Unit> {
-        return callbackFlow {
-            val observer = object : ContentObserver(null) {
-                override fun onChange(selfChange: Boolean) {
-                    trySend(Unit)
-                }
-            }
-
-            contentResolver.registerContentObserver(uri, true, observer)
-            trySend(Unit)
-
-            awaitClose {
-                contentResolver.unregisterContentObserver(observer)
-            }
-        }
     }
 
     private fun getQueryUri(query: ContactLookupQuery): Uri {
         return when (query) {
+            is ContactLookupQuery.Id ->
+                ContentUris.withAppendedId(
+                    ContactsContract.Contacts.CONTENT_URI,
+                    query.value
+                )
             is ContactLookupQuery.Email ->
                 Uri.withAppendedPath(
                     ContactsContract.CommonDataKinds.Email.CONTENT_FILTER_URI,
@@ -67,16 +55,17 @@ internal class LookupContactsRepositoryDelegateImpl @Inject constructor(
 
     private fun getQueryProjection(query: ContactLookupQuery): Array<String> {
         return when (query) {
+            is ContactLookupQuery.Id -> LOOKUP_WITH_ID_PROJECTION
             is ContactLookupQuery.Email -> LOOKUP_WITH_EMAIL_PROJECTION
             is ContactLookupQuery.Phone -> LOOKUP_WITH_PHONE_PROJECTION
         }
     }
 
-    private fun queryContacts(query: ContactLookupQuery): List<ContactLookupResult>? {
+    private fun queryContacts(query: ContactLookupQuery, uri: Uri): List<ContactLookupResult>? {
         @Suppress("TooGenericExceptionCaught")
         return try {
             contentResolver.query(
-                getQueryUri(query),
+                uri,
                 getQueryProjection(query),
                 null,
                 null,
@@ -113,6 +102,11 @@ internal class LookupContactsRepositoryDelegateImpl @Inject constructor(
 
     private companion object {
         const val TAG = "LookupContactsRepositoryDelegate"
+
+        val LOOKUP_WITH_ID_PROJECTION = arrayOf(
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
+        )
 
         val LOOKUP_WITH_EMAIL_PROJECTION = arrayOf(
             ContactsContract.CommonDataKinds.Email.CONTACT_ID,

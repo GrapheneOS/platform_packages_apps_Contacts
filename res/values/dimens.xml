@@ -86,12 +86,6 @@
     <!-- Custom dialog layout dimens -->
     <dimen name="custom_dialog_layout">4dip</dimen>
 
-    <!-- For join screen. Mainly for tablet. -->
-    <dimen name="join_header_left_margin">@dimen/contact_browser_list_header_left_margin</dimen>
-    <dimen name="join_header_right_margin">@dimen/contact_browser_list_header_right_margin</dimen>
-    <dimen name="join_header_top_margin">12dip</dimen>
-    <dimen name="join_header_bottom_margin">12dip</dimen>
-
     <dimen name="contact_filter_header_min_height">24dip</dimen>
 
     <!-- Size of the title text for a ExpandingEntryCardView -->
@@ -171,7 +165,6 @@
     <dimen name="contact_browser_list_header_icon_right_margin">14dp</dimen>
     <dimen name="contact_browser_list_header_icon_left_margin_alt">18dp</dimen>
     <dimen name="contact_browser_list_header_icon_right_margin_alt">16dp</dimen>
-    <dimen name="contact_browser_list_header_left_margin">16dip</dimen>
     <dimen name="contact_browser_list_header_right_margin">@dimen/list_visible_scrollbar_padding</dimen>
     <dimen name="contact_browser_list_item_text_indent">8dip</dimen>
     <dimen name="contact_browser_list_header_height">48dp</dimen>

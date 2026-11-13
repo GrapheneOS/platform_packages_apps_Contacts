@@ -16,6 +16,10 @@ annotation class MainDispatcher
 
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
+annotation class MainImmediateDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
 annotation class SimReadDispatcher
 
 @Retention(AnnotationRetention.BINARY)

@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Шошгын нэрийг өөрчлөх"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Шошго устгах"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Харилцагч нэмэх"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Харилцагчдыг сонгох"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Харилцагч нэмэх"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Шошгоос хасах"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Шошго үүсгэх"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Харилцагчийн жагсаалтыг холбох"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"<xliff:g id="NAME">%s</xliff:g> харилцагчтай холбохыг хүсэж буй харилцагчийг сонгоно уу:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Санал болгосон харилцагчид"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Бүх харилцагчид"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"<xliff:g id="NAME">%s</xliff:g>-г холбосон"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Холбосон харилцагчид"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"<xliff:g id="NAME">%1$s</xliff:g>-г устгасан"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Имэйл илгээх"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Мессеж илгээх"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Харилцагчдыг сонгоно уу"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Илгээх"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Харилцагч байхгүй"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"\"<xliff:g id="EMAIL">%s</xliff:g>\"-г харилцагчдад нэмэх үү?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Таны харилцагчдын нэрс"</string>

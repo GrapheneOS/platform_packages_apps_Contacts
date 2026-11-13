@@ -118,7 +118,7 @@ class ShowOrCreateEffectHandlerTest {
     private fun buildSubject(extras: Bundle = Bundle()): ShowOrCreateEffectHandler {
         return ShowOrCreateEffectHandlerImpl(
             activity = activity,
-            intentExtras = extras,
+            originalExtras = extras,
         )
     }
 }

@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"重命名标签"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"删除标签"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"添加联系人"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"选择联系人"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"添加联系人"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"从标签中移除"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"创建标签"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"关联联系人"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"选择您想与<xliff:g id="NAME">%s</xliff:g>关联的联系人："</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"建议的联系人"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"所有联系人"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"已关联<xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"联系人已关联"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"已删除<xliff:g id="NAME">%1$s</xliff:g>"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"发送电子邮件"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"发送信息"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"选择联系人"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"发送"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"没有联系人"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"将“<xliff:g id="EMAIL">%s</xliff:g>”添加到通讯录？"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"联系人姓名"</string>

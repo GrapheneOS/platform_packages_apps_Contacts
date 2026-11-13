@@ -10,12 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
-import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryActionUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryGroupUiModel
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryIcon
 import com.android.contacts.ui.contactdetails.screen.model.ContactEntryUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.core.itemClipShape
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -41,7 +41,7 @@ internal fun ContactEntryCard(
             ContactEntryCell(
                 entry = cell.entry,
                 isIconVisible = cell.isIconVisible,
-                shape = cellShape(
+                shape = itemClipShape(
                     isFirst = isTopRounded && index == 0,
                     isLast = index == cells.lastIndex,
                 ),

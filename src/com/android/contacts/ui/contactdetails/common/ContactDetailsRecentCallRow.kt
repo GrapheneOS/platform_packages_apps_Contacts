@@ -25,11 +25,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.android.contacts.ui.common.components.TwoLineListItem
-import com.android.contacts.ui.common.components.cellShape
 import com.android.contacts.ui.contactdetails.common.ContactDetailsTokens as Tokens
 import com.android.contacts.ui.contactdetails.screen.model.RecentCallDirection
 import com.android.contacts.ui.contactdetails.screen.model.RecentCallUiModel
 import com.android.contacts.ui.core.ContactsPreviewColumn
+import com.android.contacts.ui.core.itemClipShape
 
 @Composable
 internal fun ContactDetailsRecentCallRow(
@@ -66,7 +66,7 @@ internal fun ContactDetailsRecentCallRow(
         modifier = modifier.semantics {
             contentDescription = recentCall.contentDescription
         },
-        shape = cellShape(
+        shape = itemClipShape(
             isFirst = false,
             isLast = isLast,
         ),

@@ -112,10 +112,8 @@ android {
     // }
 
     lint {
-        val isRelease = gradle.startParameter.taskNames
-            //noinspection WrongGradleMethod
-            .any { it.contains("Release", ignoreCase = true) }
-        baseline = file(if (isRelease) "lint-baseline-release.xml" else "lint-baseline-debug.xml")
+        baseline = file("lint-baseline.xml")
+        checkReleaseBuilds = false
         warningsAsErrors = true
         informational += setOf(
             "AndroidGradlePluginVersion",

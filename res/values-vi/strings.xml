@@ -38,7 +38,6 @@
     <string name="menu_renameGroup" msgid="2685886609399776475">"Đổi tên nhãn"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Xóa nhãn"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Thêm người liên hệ"</string>
-    <string name="menu_selectForGroup" msgid="6386553337569514850">"Chọn liên hệ"</string>
     <string name="menu_addContactsToGroup" msgid="4549318978482280577">"Thêm người liên hệ"</string>
     <string name="menu_removeFromGroup" msgid="8753799091967887958">"Xóa khỏi nhãn"</string>
     <string name="menu_new_group_action_bar" msgid="1670312283925872483">"Tạo nhãn"</string>
@@ -56,7 +55,6 @@
     <string name="titleJoinContactDataWith" msgid="7342386037654890242">"Liên kết liên hệ"</string>
     <string name="blurbJoinContactDataWith" msgid="132105056919797709">"Chọn liên hệ bạn muốn liên kết với <xliff:g id="NAME">%s</xliff:g>:"</string>
     <string name="separatorJoinAggregateSuggestions" msgid="8347769365870796983">"Liên hệ được đề xuất"</string>
-    <string name="separatorJoinAggregateAll" msgid="5378346138684490784">"Tất cả người liên hệ"</string>
     <string name="contactsJoinedNamedMessage" msgid="8732933595873458166">"Đã liên kết <xliff:g id="NAME">%s</xliff:g>"</string>
     <string name="contactsJoinedMessage" msgid="7605856897709458707">"Đã liên kết liên hệ"</string>
     <string name="contacts_deleted_one_named_toast" msgid="2707266264779781309">"Đã xóa <xliff:g id="NAME">%1$s</xliff:g>"</string>
@@ -109,7 +107,6 @@
     <string name="menu_sendEmailOption" msgid="8600335923636486825">"Gửi email"</string>
     <string name="menu_sendMessageOption" msgid="8051852013078110910">"Gửi tin nhắn"</string>
     <string name="pickerSelectContactsActivityTitle" msgid="8265907544009447967">"Chọn liên hệ"</string>
-    <string name="send_to_selection" msgid="3655197947726443720">"Gửi"</string>
     <string name="listFoundAllContactsZero" msgid="1933842282916988563">"Không có địa chỉ liên hệ nào"</string>
     <string name="add_contact_dlg_message_fmt" msgid="7498024710169591375">"Thêm \"<xliff:g id="EMAIL">%s</xliff:g>\" vào danh bạ?"</string>
     <string name="search_settings_description" msgid="5630675648560839920">"Tên danh bạ của bạn"</string>
