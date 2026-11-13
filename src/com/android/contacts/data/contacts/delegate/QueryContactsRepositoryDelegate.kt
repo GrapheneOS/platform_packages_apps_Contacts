@@ -7,11 +7,11 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts
 import androidx.annotation.VisibleForTesting
 import com.android.contacts.data.contacts.delegate.util.addressBookSectionLabels
-import com.android.contacts.data.contacts.delegate.util.appendAccount
 import com.android.contacts.data.contacts.delegate.util.appendAddressBookIndex
 import com.android.contacts.data.contacts.delegate.util.appendDefaultDirectory
 import com.android.contacts.data.contacts.delegate.util.getContactPhoto
 import com.android.contacts.data.contacts.delegate.util.toSortKeyColumn
+import com.android.contacts.data.contacts.model.AccountQuerySelection
 import com.android.contacts.data.contacts.model.ContactColumn
 import com.android.contacts.data.settings.model.SortOrder
 import com.android.contacts.di.core.IoDispatcher
@@ -45,43 +45,70 @@ internal class QueryContactsRepositoryDelegateImpl @Inject constructor(
     ): Flow<List<ContactColumn>> {
         return observeContentUri(contentResolver, Contacts.CONTENT_URI)
             .map {
+                val accountSelection = AccountQuerySelection.forAccount(account)
                 query(
-                    uri = buildUri(searchQuery, account),
-                    selection = selection(account, excludedContactId),
-                    selectionArgs = selectionArgs(excludedContactId),
+                    uri = buildUri(searchQuery),
+                    selection = selection(accountSelection, excludedContactId),
+                    selectionArgs = selectionArgs(accountSelection, excludedContactId),
                     sortOrder = sortOrder,
                 )
             }
             .flowOn(ioDispatcher)
     }
 
-    private fun buildUri(searchQuery: String?, account: AccountModel?): Uri {
+    private fun buildUri(searchQuery: String?): Uri {
         val builder = when (searchQuery) {
             null -> Contacts.CONTENT_URI.buildUpon().appendAddressBookIndex()
             else -> Contacts.ENTERPRISE_CONTENT_FILTER_URI.buildUpon().appendPath(searchQuery)
         }
         return builder
             .appendDefaultDirectory()
-            .appendAccount(account)
             .build()
     }
 
     private fun selection(
-        account: AccountModel?,
+        accountQuerySelection: AccountQuerySelection,
         excludedContactId: Long?,
     ): String? {
         return listOfNotNull(
-            LOCAL_ACCOUNT_SELECTION.takeIf { account?.isNullAccount == true },
+            accountSelection(accountQuerySelection),
             EXCLUDE_CONTACT_SELECTION.takeIf { excludedContactId != null },
         )
             .takeIf { it.isNotEmpty() }
             ?.joinToString(" AND ") { "($it)" }
     }
 
+    private fun accountSelection(account: AccountQuerySelection): String? {
+        return when (account) {
+            AccountQuerySelection.None -> null
+            AccountQuerySelection.Local -> LOCAL_ACCOUNT_SELECTION
+            is AccountQuerySelection.WithDataSet -> ACCOUNT_WITH_DATA_SET_SELECTION
+            is AccountQuerySelection.WithoutDataSet -> ACCOUNT_WITHOUT_DATA_SET_SELECTION
+        }
+    }
+
     private fun selectionArgs(
+        account: AccountQuerySelection,
         excludedContactId: Long?,
     ): Array<String>? {
-        return excludedContactId?.let { arrayOf(it.toString()) }
+        val accountArgs = when (account) {
+            AccountQuerySelection.Local,
+            AccountQuerySelection.None,
+            -> emptyList()
+            is AccountQuerySelection.WithoutDataSet -> listOf(
+                account.name,
+                account.type,
+            )
+            is AccountQuerySelection.WithDataSet -> listOf(
+                account.name,
+                account.type,
+                account.dataSet,
+            )
+        }
+        return (accountArgs + excludedContactId?.toString())
+            .filterNotNull()
+            .takeIf { it.isNotEmpty() }
+            ?.toTypedArray()
     }
 
     private fun query(
@@ -125,6 +152,19 @@ internal class QueryContactsRepositoryDelegateImpl @Inject constructor(
                 ContactsContract.RawContacts.ACCOUNT_NAME + " IS NULL AND " +
                 ContactsContract.RawContacts.DATA_SET + " IS NULL" +
                 ")"
+
+        private const val ACCOUNT_SELECTION_PREFIX =
+            Contacts._ID + " IN (" +
+                "SELECT ${ContactsContract.RawContacts.CONTACT_ID} FROM view_raw_contacts WHERE " +
+                ContactsContract.RawContacts.ACCOUNT_NAME + "=? AND " +
+                ContactsContract.RawContacts.ACCOUNT_TYPE + "=? AND " +
+                ContactsContract.RawContacts.DATA_SET
+
+        @VisibleForTesting
+        const val ACCOUNT_WITHOUT_DATA_SET_SELECTION = "$ACCOUNT_SELECTION_PREFIX IS NULL)"
+
+        @VisibleForTesting
+        const val ACCOUNT_WITH_DATA_SET_SELECTION = "$ACCOUNT_SELECTION_PREFIX=?)"
 
         internal fun Cursor.toContactColumns(): List<ContactColumn> {
             val sectionLabels = addressBookSectionLabels()
