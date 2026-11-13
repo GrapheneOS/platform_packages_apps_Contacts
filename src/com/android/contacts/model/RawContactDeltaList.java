@@ -341,12 +341,6 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
         return -1;
     }
 
-    /**  Return the first RawContactDelta corresponding to a writable raw-contact, or null. */
-    public RawContactDelta getFirstWritableRawContact(Context context) {
-        final int index = indexOfFirstWritableRawContact(context);
-        return (index == -1) ? null : get(index);
-    }
-
     public ValuesDelta getSuperPrimaryEntry(final String mimeType) {
         ValuesDelta primary = null;
         ValuesDelta randomEntry = null;

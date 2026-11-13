@@ -16,6 +16,8 @@ import com.android.contacts.domain.accounts.usecase.LoadAccounts
 import com.android.contacts.domain.accounts.usecase.LoadAccountsImpl
 import com.android.contacts.domain.accounts.usecase.LoadAccountsWithContactsCount
 import com.android.contacts.domain.accounts.usecase.LoadAccountsWithContactsCountImpl
+import com.android.contacts.domain.accounts.usecase.ShouldPromptForDefaultAccount
+import com.android.contacts.domain.accounts.usecase.ShouldPromptForDefaultAccountImpl
 import com.android.contacts.ui.interactions.account.filter.screen.mapper.AccountFilterItemMapper
 import com.android.contacts.ui.interactions.account.filter.screen.mapper.AccountFilterItemMapperImpl
 import dagger.Binds
@@ -81,4 +83,10 @@ internal abstract class AccountsBindsModule {
     abstract fun bindLoadAccountsWithContactCounts(
         impl: LoadAccountsWithContactsCountImpl,
     ): LoadAccountsWithContactsCount
+
+    @Binds
+    @Reusable
+    abstract fun bindShouldPromptForDefaultAccount(
+        impl: ShouldPromptForDefaultAccountImpl,
+    ): ShouldPromptForDefaultAccount
 }
