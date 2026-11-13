@@ -12,6 +12,7 @@ import com.android.contacts.model.Contact
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.ui.selection.screen.ContactSelectionViewModel.Companion.SEARCH_DEBOUNCE_MILLIS
+import com.android.contacts.ui.selection.screen.ContactSelectionViewModel.Companion.STATE_TIMEOUT_MILLIS
 import com.android.contacts.ui.selection.screen.mapper.ContactSelectionEffectMapper
 import com.android.contacts.ui.selection.screen.mapper.ContactSelectionFilterMapper
 import com.android.contacts.ui.selection.screen.mapper.ContactSelectionUiStateMapper
@@ -30,7 +31,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
@@ -167,6 +170,30 @@ internal class ContactSelectionViewModelTest {
 
         assertNull(lastUiMapperCall.contacts)
     }
+
+    @Test
+    fun contacts_afterSubscriptionRestart_keepLatestResults() =
+        runTest(mainDispatcherRule.testDispatcher) {
+            val contact = mockk<Contact>()
+            every { getContact(7L) } returns flowOf(contact)
+            val subject = createViewModel(Mode.Join(targetContactId = 7L))
+            val job = backgroundScope.launch { subject.uiState.collect {} }
+            advanceUntilIdle()
+            job.cancel()
+            advanceTimeBy(STATE_TIMEOUT_MILLIS + 1)
+            runCurrent()
+
+            every { getContactsForSelection(any(), any()) } returns emptyFlow()
+            every { getContact(7L) } returns flow { awaitCancellation() }
+            uiMapperCalls.clear()
+            backgroundScope.launch { subject.uiState.collect {} }
+            runCurrent()
+
+            verify(exactly = 2) { getContactsForSelection(FILTER, null) }
+            assertTrue(uiMapperCalls.isNotEmpty())
+            assertTrue(uiMapperCalls.all { it.contacts == (null to RESULT) })
+            assertTrue(uiMapperCalls.all { it.joinTarget === contact })
+        }
 
     @Test
     fun searchQueryChange_updatesStateRightAway() = runTest(mainDispatcherRule.testDispatcher) {
