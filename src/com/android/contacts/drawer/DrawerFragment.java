@@ -18,10 +18,7 @@ package com.android.contacts.drawer;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.database.ContentObserver;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,14 +33,12 @@ import androidx.annotation.Nullable;
 
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
-import com.android.contactsbind.ObjectFactory;
 
 public class DrawerFragment extends Fragment {
 
     private static final String KEY_CONTACTS_VIEW = "contactsView";
     private static final String KEY_IS_ACCOUNT_SWITCHER_VISIBLE = "accountSwitcherVisible";
 
-    private WelcomeContentObserver mObserver;
     private ListView mDrawerListView;
     private DrawerAdapter mDrawerAdapter;
     private ContactsView mCurrentContactsView;
@@ -51,17 +46,6 @@ public class DrawerFragment extends Fragment {
     private DrawerFragmentListener mListener;
     // Transparent scrim drawn at the top of the drawer fragment.
     private ScrimDrawable mScrimDrawable;
-
-    private final class WelcomeContentObserver extends ContentObserver {
-        private WelcomeContentObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            mDrawerAdapter.notifyDataSetChanged();
-        }
-    }
 
     public DrawerFragment() {
     }
@@ -117,29 +101,10 @@ public class DrawerFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // todo double check on the new Handler() thing
-        final Uri uri = ObjectFactory.getWelcomeUri();
-        if (uri != null) {
-            mObserver = new WelcomeContentObserver(new Handler());
-            getActivity().getContentResolver().registerContentObserver(uri, false, mObserver);
-        }
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_CONTACTS_VIEW, mCurrentContactsView.ordinal());
         outState.putBoolean(KEY_IS_ACCOUNT_SWITCHER_VISIBLE, mIsAccountSwitcherVisible);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mObserver != null) {
-            getActivity().getContentResolver().unregisterContentObserver(mObserver);
-        }
     }
 
     @Override
@@ -158,9 +123,6 @@ public class DrawerFragment extends Fragment {
             if (viewId == R.id.nav_all_contacts) {
                 mListener.onContactsViewSelected(ContactsView.ALL_CONTACTS);
                 setNavigationItemChecked(ContactsView.ALL_CONTACTS);
-            } else if (viewId == R.id.nav_assistant) {
-                mListener.onContactsViewSelected(ContactsView.ASSISTANT);
-                setNavigationItemChecked(ContactsView.ASSISTANT);
             } else if (viewId == R.id.nav_accounts) {
                 mListener.onOpenAccountsFilter();
             } else if (viewId == R.id.nav_groups) {

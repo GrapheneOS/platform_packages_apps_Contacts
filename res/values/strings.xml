@@ -688,12 +688,6 @@
     type. For example: Delete Website, Delete SIP, etc [CHAR LIMIT=30]-->
     <string name="editor_delete_view_description_short">Delete <xliff:g id="data_kind">%s</xliff:g></string>
 
-    <!-- Left drawer menu item to open contacts assistant/suggestion cards. [CHAR LIMIT=20]-->
-    <string name="menu_assistant">Suggestions</string>
-
-    <!-- Badge shown next to Suggestions in left drawer menu when user has not visited it yet. [CHAR LIMIT=10] -->
-    <string name="menu_assistant_new_badge">New</string>
-
     <!-- Open drawer content descriptions [CHAR LIMIT=40] -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
 

@@ -195,8 +195,6 @@
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"ข้อมูลติดต่อจาก <xliff:g id="ACCOUNT">%s</xliff:g> ไม่สามารถแก้ไขได้"</string>
     <string name="editor_delete_view_description" msgid="4549610631864383156">"ลบ<xliff:g id="DATA_TYPE">%1$s </xliff:g><xliff:g id="DATA_KIND">%2$s</xliff:g>"</string>
     <string name="editor_delete_view_description_short" msgid="6471032197042328181">"ลบ <xliff:g id="DATA_KIND">%s</xliff:g>"</string>
-    <string name="menu_assistant" msgid="3980364519724237934">"คำแนะนำ"</string>
-    <string name="menu_assistant_new_badge" msgid="1992049406019853898">"ใหม่"</string>
     <string name="navigation_drawer_open" msgid="3428713515765555712">"เปิดลิ้นชักการนำทาง"</string>
     <string name="navigation_drawer_close" msgid="3052989100471689722">"ปิดลิ้นชักการนำทาง"</string>
     <string name="menu_title_groups" msgid="3722199658759568221">"ป้ายกำกับ"</string>

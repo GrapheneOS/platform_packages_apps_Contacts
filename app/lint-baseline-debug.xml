@@ -4820,6 +4820,17 @@
     </issue>
 
     <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="&lt;LinearLayout"
+        errorLine2=" ~~~~~~~~~~~~">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/drawer_primary_item.xml"
+            line="18"
+            column="2"/>
+    </issue>
+
+    <issue
         id="ViewHolder"
         message="Unconditional layout inflation from view adapter: Should use View Holder pattern (use recycled view passed into this method as the second parameter) for smoother scrolling"
         errorLine1="                            mLayoutInflater.inflate(R.layout.aggregation_suggestions_item, null);"

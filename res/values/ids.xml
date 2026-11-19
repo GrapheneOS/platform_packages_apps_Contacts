@@ -53,9 +53,6 @@
     <!-- Menu ID for Contacts menu -->
     <item type="id" name="nav_all_contacts" />
 
-    <!-- Menu ID for Suggestions menu -->
-    <item type="id" name="nav_assistant" />
-
     <!-- Menu ID for Labels menu -->
     <item type="id" name="nav_groups" />
 
