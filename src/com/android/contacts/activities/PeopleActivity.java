@@ -105,7 +105,6 @@ import com.android.contacts.util.ViewUtil;
 import com.android.contacts.widget.FloatingActionButtonController;
 import com.android.contactsbind.FeatureHighlightHelper;
 import com.android.contactsbind.HelpUtils;
-import com.android.contactsbind.ObjectFactory;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.Futures;
 
@@ -132,7 +131,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     public enum ContactsView {
         NONE,
         ALL_CONTACTS,
-        ASSISTANT,
         GROUP_VIEW,
         ACCOUNT_VIEW,
     }
@@ -141,10 +139,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     private static final String TAG_ALL = "contacts-all";
     private static final String TAG_UNAVAILABLE = "contacts-unavailable";
     private static final String TAG_GROUP_VIEW = "contacts-groups";
-    public static final String TAG_ASSISTANT = "contacts-assistant";
     public static final String TAG_SECOND_LEVEL = "second-level";
-    public static final String TAG_THIRD_LEVEL = "third-level";
-    public static final String TAG_ASSISTANT_HELPER = "assistant-helper";
     public static final String TAG_DUPLICATES = "DuplicatesFragment";
     public static final String TAG_DUPLICATES_UTIL = "DuplicatesUtilFragment";
 
@@ -194,8 +189,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
      * True if this activity instance is a re-created one.  i.e. set true after orientation change.
      */
     private boolean mIsRecreatedInstance;
-
-    private boolean mShouldSwitchToAllContacts;
 
     /**
      * Sequential ID assigned to each instance; used for logging
@@ -655,10 +648,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             updateStatusBarBackground();
         }
 
-        if (mShouldSwitchToAllContacts) {
-            switchToAllContacts();
-        }
-
         mProviderStatusWatcher.start();
         updateViewConfiguration(true);
 
@@ -852,11 +841,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             return;
         }
 
-        if (isAssistantView()) {
-            onBackPressedAssistantView();
-            return;
-        }
-
         // If feature highlight is present, let it handle the back event before
         // mContactsListFragment.
         if (FeatureHighlightHelper.tryRemoveHighlight(this)) {
@@ -881,15 +865,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             mMembersFragment.getActionBarAdapter().setSearchMode(false);
         } else {
             switchToAllContacts();
-        }
-    }
-
-    private void onBackPressedAssistantView() {
-        if (!isInThirdLevel()) {
-            switchToAllContacts();
-        } else {
-            setDrawerLockMode(/* enabled */ true);
-            super.onBackPressed();
         }
     }
 
@@ -1022,10 +997,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         }
     }
 
-    protected void launchAssistant() {
-        switchView(ContactsView.ASSISTANT);
-    }
-
     private void switchView(ContactsView contactsView) {
         mCurrentView = contactsView;
 
@@ -1036,17 +1007,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
             mMembersFragment = GroupMembersFragment.newInstance(mGroupUri);
             transaction.replace(
                     R.id.contacts_list_container, mMembersFragment, TAG_GROUP_VIEW);
-        } else if (isAssistantView()) {
-            Fragment uiFragment = fragmentManager.findFragmentByTag(TAG_ASSISTANT);
-            Fragment unavailableFragment = fragmentManager.findFragmentByTag(TAG_UNAVAILABLE);
-            if (uiFragment == null) {
-                uiFragment = ObjectFactory.getAssistantFragment();
-            }
-            if (unavailableFragment != null) {
-                transaction.remove(unavailableFragment);
-            }
-            transaction.replace(R.id.contacts_list_container, uiFragment, TAG_ASSISTANT);
-            resetToolBarStatusBarColor();
         }
         transaction.addToBackStack(TAG_SECOND_LEVEL);
         transaction.commit();
@@ -1057,7 +1017,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     public void switchToAllContacts() {
         popSecondLevel();
-        mShouldSwitchToAllContacts = false;
         mCurrentView = ContactsView.ALL_CONTACTS;
         mDrawerFragment.setNavigationItemChecked(ContactsView.ALL_CONTACTS);
         showFabWithAnimation(/* showFab */ true);
@@ -1095,33 +1054,9 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     private void handleFilterChangeForActivity(ContactListFilter filter) {
-        // The filter was changed while this activity was in the background. If we're in the
-        // assistant view Switch to the main contacts list when we resume to prevent
-        // b/31838582 and b/31829161
-        // TODO: this is a hack; we need to do some cleanup of the contact list filter stuff
-        if (isAssistantView() && filter.isContactsFilterType()) {
-            mShouldSwitchToAllContacts = true;
-        }
-
         getWindow().getDecorView()
                 .sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         invalidateOptionsMenu();
-    }
-
-    public void setDrawerLockMode(boolean enabled) {
-        // Prevent drawer from being opened by sliding from the start of screen.
-        mDrawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED
-                : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-        // Order of these statements matter.
-        // Display back button and disable drawer indicator.
-        if (enabled) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            mToggle.setDrawerIndicatorEnabled(true);
-        } else {
-            mToggle.setDrawerIndicatorEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     public Toolbar getToolbar() {
@@ -1231,8 +1166,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     public void onContactsViewSelected(ContactsView mode) {
         if (mode == ContactsView.ALL_CONTACTS) {
             switchToAllContacts();
-        } else if (mode == ContactsView.ASSISTANT) {
-            launchAssistant();
         } else {
             throw new IllegalStateException("Unknown view " + mode);
         }
@@ -1292,10 +1225,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         return mCurrentView == ContactsView.GROUP_VIEW;
     }
 
-    protected boolean isAssistantView() {
-        return mCurrentView == ContactsView.ASSISTANT;
-    }
-
     protected boolean isAllContactsView() {
         return mCurrentView == ContactsView.ALL_CONTACTS;
     }
@@ -1305,29 +1234,10 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     public boolean isInSecondLevel() {
-        return isGroupView() || isAssistantView();
-    }
-
-    private boolean isInThirdLevel() {
-        return isLastBackStackTag(TAG_THIRD_LEVEL);
-    }
-
-    private boolean isLastBackStackTag(String tag) {
-        final int count = getFragmentManager().getBackStackEntryCount();
-        if (count > 0) {
-            final FragmentManager.BackStackEntry last =
-                    getFragmentManager().getBackStackEntryAt(count - 1);
-            if (tag == null) {
-                return last.getName() == null;
-            }
-            return tag.equals(last.getName());
-        }
-        return false;
+        return isGroupView();
     }
 
     private void popSecondLevel() {
-        getFragmentManager().popBackStackImmediate(
-                TAG_ASSISTANT_HELPER, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getFragmentManager().popBackStackImmediate(
                 TAG_SECOND_LEVEL, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         mMembersFragment = null;

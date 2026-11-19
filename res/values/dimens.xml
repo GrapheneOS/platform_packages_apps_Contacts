@@ -101,11 +101,6 @@
 
     <dimen name="contact_browser_list_item_height">56dp</dimen>
 
-    <dimen name="nav_new_badge_corners">3dp</dimen>
-    <dimen name="nav_new_badge_vertical_pad">2dp</dimen>
-    <dimen name="nav_new_badge_horizontal_pad">5dp</dimen>
-    <dimen name="nav_new_badge_font_size">11sp</dimen>
-
     <!-- Top padding for the image for empty group view-->
     <dimen name="empty_group_view_image_padding_top">0dp</dimen>
 

@@ -30,9 +30,7 @@ import androidx.annotation.LayoutRes;
 import com.android.contacts.R;
 import com.android.contacts.activities.PeopleActivity.ContactsView;
 import com.android.contacts.domain.debug.usecase.IsDebugEnabled;
-import com.android.contacts.util.SharedPreferenceUtil;
 import com.android.contactsbind.HelpUtils;
-import com.android.contactsbind.ObjectFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,7 @@ public class DrawerAdapter extends BaseAdapter {
 
     // Adapter elements, ordered in this way mItemsList. The ordering is based on:
     //  [Navigation spacer item]
-    //  [Primary items] (Contacts, Suggestions)
+    //  [Primary items] (Contacts)
     //  [Account items] (Account filter dialog)
     //  [Misc items] (dividers, Labels, Settings, Help & Feedback)
     //  [Navigation spacer item]
@@ -87,10 +85,6 @@ public class DrawerAdapter extends BaseAdapter {
         // Primary items
         mPrimaryItems.add(new PrimaryItem(R.id.nav_all_contacts, R.string.contactsList,
                 R.drawable.quantum_ic_account_circle_vd_theme_24, ContactsView.ALL_CONTACTS));
-        if (ObjectFactory.getAssistantFragment() != null) {
-            mPrimaryItems.add(new PrimaryItem(R.id.nav_assistant, R.string.menu_assistant,
-                    R.drawable.quantum_ic_assistant_vd_theme_24, ContactsView.ASSISTANT));
-        }
         mMiscItems.add(new DividerItem());
         mMiscItems.add(
                 new MiscItem(R.id.nav_groups, R.string.menu_title_groups,
@@ -170,10 +164,6 @@ public class DrawerAdapter extends BaseAdapter {
         titleView.setText(item.text);
         final ImageView iconView = (ImageView) result.findViewById(R.id.icon);
         iconView.setImageResource(item.icon);
-        final TextView newBadge = (TextView) result.findViewById(R.id.assistant_new_badge);
-        final boolean showWelcomeBadge = !SharedPreferenceUtil.isWelcomeCardDismissed(mActivity);
-        newBadge.setVisibility(item.contactsView == ContactsView.ASSISTANT && showWelcomeBadge
-                ? View.VISIBLE : View.GONE);
         result.setActivated(item.contactsView == mSelectedView);
         updateSelectedStatus(titleView, iconView, item.contactsView == mSelectedView);
         result.setId(item.id);
@@ -257,8 +247,7 @@ public class DrawerAdapter extends BaseAdapter {
         }
     }
 
-    // Navigation drawer item for Contacts or Suggestions view which contains a name, an icon and
-    // contacts view.
+    // Navigation drawer item for Contacts view which contains a name, an icon and contacts view.
     public static class PrimaryItem extends BaseDrawerItem {
         public final ContactsView contactsView;
 

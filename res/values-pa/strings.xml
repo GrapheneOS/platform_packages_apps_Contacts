@@ -195,8 +195,6 @@
     <string name="editor_account_selector_read_only_title" msgid="4870485850053962114">"<xliff:g id="ACCOUNT">%s</xliff:g> ਤੋਂ ਪ੍ਰਾਪਤ ਸੰਪਰਕ ਜਾਣਕਾਰੀ ਸੰਪਾਦਿਤ ਕਰਨਯੋਗ ਨਹੀਂ ਹੈ"</string>
     <string name="editor_delete_view_description" msgid="4549610631864383156">"<xliff:g id="DATA_TYPE">%1$s </xliff:g><xliff:g id="DATA_KIND">%2$s</xliff:g> ਹਟਾਓ"</string>
     <string name="editor_delete_view_description_short" msgid="6471032197042328181">"<xliff:g id="DATA_KIND">%s</xliff:g> ਹਟਾਓ"</string>
-    <string name="menu_assistant" msgid="3980364519724237934">"ਸੁਝਾਅ"</string>
-    <string name="menu_assistant_new_badge" msgid="1992049406019853898">"ਨਵਾਂ"</string>
     <string name="navigation_drawer_open" msgid="3428713515765555712">"ਨੈਵੀਗੇਸ਼ਨ ਡ੍ਰਾਅਰ ਖੋਲ੍ਹੋ"</string>
     <string name="navigation_drawer_close" msgid="3052989100471689722">"ਨੈਵੀਗੇਸ਼ਨ ਡ੍ਰਾਅਰ ਬੰਦ ਕਰੋ"</string>
     <string name="menu_title_groups" msgid="3722199658759568221">"ਲੇਬਲ"</string>
