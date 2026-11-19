@@ -3,9 +3,9 @@ package com.android.contacts.ui.group.list.screen
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.group.GroupUtil
 import com.android.contacts.tests.factory.AccountModelFactory
+import com.android.contacts.ui.group.detail.GroupActivity
 import com.android.contacts.ui.group.edit.GroupNameEditActivity
 import com.android.contacts.ui.group.list.GroupsActivity
 import com.android.contacts.ui.group.list.screen.model.GroupsEffect as Effect
@@ -27,13 +27,14 @@ internal class GroupsEffectHandlerTest {
 
     private val activity = mockk<Activity>(relaxed = true)
 
-    private val effectHandler = GroupsEffectHandlerImpl(
+    private val effectHandler: GroupsEffectHandler = GroupsEffectHandlerImpl(
         activity = activity,
     )
 
     @Before
     fun setUp() {
         mockkObject(GroupNameEditActivity.Companion)
+        mockkObject(GroupActivity.Companion)
     }
 
     @After
@@ -66,20 +67,31 @@ internal class GroupsEffectHandlerTest {
         }
         assertEquals(
             intent,
-            startedIntent()
+            startedIntent(),
         )
     }
 
     @Test
-    fun whenOpenGroup_opensGroupsScreen() {
-        val groupUri = mockk<Uri>()
+    fun whenOpenGroup_opensTheGroupScreen() {
+        val uri = mockk<Uri>()
+        val intent = Intent()
+        every { GroupActivity.buildIntent(any(), any<Uri>()) } returns intent
 
-        effectHandler.handle(Effect.OpenGroup(groupUri))
+        effectHandler.handle(Effect.OpenGroup(uri))
 
-        val intent = startedIntent()
-        assertEquals(PeopleActivity::class.java.name, intent.component?.className)
-        assertEquals(Intent.ACTION_VIEW, intent.action)
-        assertEquals(groupUri, intent.data)
+        verify { GroupActivity.buildIntent(activity, uri) }
+        assertEquals(
+            intent,
+            startedIntent(),
+        )
+    }
+
+    @Test
+    fun whenOpenGroup_closesTheGroupsScreen() {
+        every { GroupActivity.buildIntent(any(), any<Uri>()) } returns Intent()
+
+        effectHandler.handle(Effect.OpenGroup(mockk()))
+
         verify { activity.finish() }
     }
 

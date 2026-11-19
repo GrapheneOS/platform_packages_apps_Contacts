@@ -34,7 +34,6 @@
     <string name="menu_change_photo" msgid="4911246106907208055">"사진 변경"</string>
     <string name="menu_create_contact_shortcut" msgid="8983436328557825860">"바로가기 만들기"</string>
     <string name="menu_splitAggregate" msgid="2062290275288905833">"연결 해제"</string>
-    <string name="menu_editGroup" msgid="8706562583754054622">"연락처 삭제"</string>
     <string name="menu_renameGroup" msgid="2685886609399776475">"라벨 이름 바꾸기"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"라벨 삭제"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"연락처 추가"</string>
@@ -95,7 +94,6 @@
     <string name="contactPhotoSavedErrorToast" msgid="8568460180541397272">"연락처 사진 변경사항을 저장하지 못했습니다."</string>
     <string name="groupLoadErrorToast" msgid="4141488223976370583">"라벨을 로드하지 못함"</string>
     <string name="groupDeletedToast" msgid="7774363940327847515">"라벨이 삭제되었습니다."</string>
-    <string name="groupCreatedToast" msgid="1685148819468403239">"라벨 생성됨"</string>
     <string name="groupCreateFailedToast" msgid="1836425392831964024">"라벨을 만들 수 없습니다."</string>
     <string name="groupUpdatedToast" msgid="3381549467345607379">"라벨 업데이트됨"</string>
     <string name="groupMembersRemovedToast" msgid="8019566066934628011">"라벨에서 삭제됨"</string>
@@ -117,7 +115,6 @@
     <string name="menu_add_contact" msgid="5822356185421997656">"주소록에 추가"</string>
     <string name="menu_add_contacts" msgid="7114262784903366463">"추가"</string>
     <string name="title_share_via" msgid="3300082736229182956">"{count,plural, =1{연락처 공유에 사용할 애플리케이션:}other{연락처 공유에 사용할 애플리케이션:}}"</string>
-    <string name="dialog_new_group_account" msgid="4326402875327788728">"계정 선택"</string>
     <string name="group_name_dialog_insert_title" msgid="5495572488613178283">"라벨 만들기"</string>
     <string name="group_name_dialog_update_title" msgid="3955919589366745101">"라벨 이름 바꾸기"</string>
     <string name="group_name_dialog_hint" msgid="6023999218213062973">"라벨 이름"</string>
@@ -159,7 +156,6 @@
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"삭제"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"취소"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"연락처 검색"</string>
-    <string name="title_edit_group" msgid="4246193439931854759">"연락처 삭제"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"내 로컬 프로필"</string>
     <string name="external_profile_title" msgid="2706282819025406927">"내 <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> 프로필"</string>
     <string name="contact_editor_title_new_contact" msgid="7534775011591770343">"새 연락처 만들기"</string>
@@ -395,7 +391,6 @@
     <string name="about_open_source_licenses_summary" msgid="4843627659117423491">"오픈소스 소프트웨어 라이선스 세부정보"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"오픈소스 라이선스"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"화상 통화 걸기"</string>
-    <string name="description_delete_contact" msgid="8110643050235441400">"삭제"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"생략 기호"</string>
     <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"이 바로가기는 사용 중지되었습니다."</string>
     <string name="dynamic_shortcut_contact_removed_message" msgid="8331735243566193974">"연락처가 삭제되었습니다."</string>

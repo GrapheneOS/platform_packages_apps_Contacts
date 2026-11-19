@@ -79,32 +79,14 @@ internal class QueryContactsRepositoryDelegateImpl @Inject constructor(
     }
 
     private fun accountSelection(account: AccountQuerySelection): String? {
-        return when (account) {
-            AccountQuerySelection.None -> null
-            AccountQuerySelection.Local -> LOCAL_ACCOUNT_SELECTION
-            is AccountQuerySelection.WithDataSet -> ACCOUNT_WITH_DATA_SET_SELECTION
-            is AccountQuerySelection.WithoutDataSet -> ACCOUNT_WITHOUT_DATA_SET_SELECTION
-        }
+        return account.rawContactSelection?.let { "$RAW_CONTACTS_SELECTION_PREFIX$it)" }
     }
 
     private fun selectionArgs(
         account: AccountQuerySelection,
         excludedContactId: Long?,
     ): Array<String>? {
-        val accountArgs = when (account) {
-            AccountQuerySelection.Local,
-            AccountQuerySelection.None,
-            -> emptyList()
-            is AccountQuerySelection.WithoutDataSet -> listOf(
-                account.name,
-                account.type,
-            )
-            is AccountQuerySelection.WithDataSet -> listOf(
-                account.name,
-                account.type,
-                account.dataSet,
-            )
-        }
+        val accountArgs = account.rawContactSelectionArgs
         return (accountArgs + excludedContactId?.toString())
             .filterNotNull()
             .takeIf { it.isNotEmpty() }
@@ -144,27 +126,9 @@ internal class QueryContactsRepositoryDelegateImpl @Inject constructor(
         @VisibleForTesting
         const val EXCLUDE_CONTACT_SELECTION = Contacts._ID + "!=?"
 
-        @VisibleForTesting
-        const val LOCAL_ACCOUNT_SELECTION =
+        private const val RAW_CONTACTS_SELECTION_PREFIX =
             Contacts._ID + " IN (" +
-                "SELECT ${ContactsContract.RawContacts.CONTACT_ID} FROM view_raw_contacts WHERE " +
-                ContactsContract.RawContacts.ACCOUNT_TYPE + " IS NULL AND " +
-                ContactsContract.RawContacts.ACCOUNT_NAME + " IS NULL AND " +
-                ContactsContract.RawContacts.DATA_SET + " IS NULL" +
-                ")"
-
-        private const val ACCOUNT_SELECTION_PREFIX =
-            Contacts._ID + " IN (" +
-                "SELECT ${ContactsContract.RawContacts.CONTACT_ID} FROM view_raw_contacts WHERE " +
-                ContactsContract.RawContacts.ACCOUNT_NAME + "=? AND " +
-                ContactsContract.RawContacts.ACCOUNT_TYPE + "=? AND " +
-                ContactsContract.RawContacts.DATA_SET
-
-        @VisibleForTesting
-        const val ACCOUNT_WITHOUT_DATA_SET_SELECTION = "$ACCOUNT_SELECTION_PREFIX IS NULL)"
-
-        @VisibleForTesting
-        const val ACCOUNT_WITH_DATA_SET_SELECTION = "$ACCOUNT_SELECTION_PREFIX=?)"
+                "SELECT ${ContactsContract.RawContacts.CONTACT_ID} FROM view_raw_contacts WHERE "
 
         internal fun Cursor.toContactColumns(): List<ContactColumn> {
             val sectionLabels = addressBookSectionLabels()

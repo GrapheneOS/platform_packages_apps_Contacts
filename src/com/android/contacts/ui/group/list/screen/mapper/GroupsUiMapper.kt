@@ -72,7 +72,7 @@ internal class GroupsUiMapperImpl @Inject constructor(
         return GroupUiItem(
             id = group.id,
             name = group.name.trim(),
-            summaryCount = group.summaryCount,
+            membersCount = group.membersCount,
         )
     }
 }

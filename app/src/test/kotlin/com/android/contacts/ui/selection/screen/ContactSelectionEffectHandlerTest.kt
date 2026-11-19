@@ -14,7 +14,7 @@ import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivi
 import com.android.contacts.ui.interactions.shortcut.BuildShortcutIntent
 import com.android.contacts.ui.selection.screen.model.ContactSelectionEffect as Effect
 import com.android.contacts.ui.selection.screen.model.ContactSelectionResult as Result
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -211,7 +211,7 @@ internal class ContactSelectionEffectHandlerTest {
     fun sendTo_startsChooserForAddresses() {
         val addresses = listOf("+1 555 0100", "+1 555 0101")
 
-        handler().handle(Effect.SendTo(SentToGroupTarget.SMS, addresses, chooserTitle = "Send"))
+        handler().handle(Effect.SendTo(SendToGroupTarget.SMS, addresses, chooserTitle = "Send"))
 
         val chooser = startedIntent()
         assertEquals(Intent.ACTION_CHOOSER, chooser.action)
@@ -225,7 +225,7 @@ internal class ContactSelectionEffectHandlerTest {
 
     @Test
     fun sendTo_usesTargetScheme() {
-        handler().handle(Effect.SendTo(SentToGroupTarget.EMAIL, listOf("john@example.com"), null))
+        handler().handle(Effect.SendTo(SendToGroupTarget.EMAIL, listOf("john@example.com"), null))
 
         assertEquals(
             Uri.fromParts("mailto", "john@example.com", null),
@@ -237,7 +237,7 @@ internal class ContactSelectionEffectHandlerTest {
     fun sendTo_whenNoAppIsAvailable_showsToastAndFinishes() {
         every { activity.startActivity(any()) } throws ActivityNotFoundException()
 
-        handler().handle(Effect.SendTo(SentToGroupTarget.SMS, listOf("+1 555 0100"), null))
+        handler().handle(Effect.SendTo(SendToGroupTarget.SMS, listOf("+1 555 0100"), null))
 
         assertEquals(MISSING_APP_MESSAGE, ShadowToast.getTextOfLatestToast())
         verify { activity.finish() }

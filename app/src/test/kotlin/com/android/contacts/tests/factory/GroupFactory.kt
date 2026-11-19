@@ -7,16 +7,16 @@ internal object GroupFactory {
     fun build(
         id: Long = 1L,
         name: String = "Group",
-        summaryCount: Int = 0,
         systemId: String? = null,
         account: AccountModel = AccountModelFactory.build(),
         isReadOnly: Boolean = false,
+        membersCount: Int? = null,
     ) = Group(
         id = id,
         name = name,
-        summaryCount = summaryCount,
         systemId = systemId,
         account = account,
         isReadOnly = isReadOnly,
+        membersCount = membersCount,
     )
 }

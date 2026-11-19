@@ -3,7 +3,7 @@ package com.android.contacts.ui.selection.screen.mapper
 import com.android.contacts.domain.contacts.model.ContactSelectionFilter
 import com.android.contacts.domain.contacts.model.ContactSelectionFilter as Filter
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode as Mode
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ internal class ContactSelectionFilterMapperImpl @Inject constructor() :
                 account = mode.account,
                 excludeIds = mode.existingMemberIds,
             )
-            is Mode.SendToGroup -> mapSentToGroup(mode)
+            is Mode.SendToGroup -> mapSendToGroup(mode)
         }
     }
 
@@ -60,11 +60,11 @@ internal class ContactSelectionFilterMapperImpl @Inject constructor() :
         }
     }
 
-    private fun mapSentToGroup(mode: Mode.SendToGroup): Filter {
+    private fun mapSendToGroup(mode: Mode.SendToGroup): Filter {
         val contactIds = mode.itemIds.toSet()
         return when (mode.target) {
-            SentToGroupTarget.SMS -> Filter.PhoneNumbers(restrictToContactIds = contactIds)
-            SentToGroupTarget.EMAIL -> Filter.Emails(restrictToContactIds = contactIds)
+            SendToGroupTarget.SMS -> Filter.PhoneNumbers(restrictToContactIds = contactIds)
+            SendToGroupTarget.EMAIL -> Filter.Emails(restrictToContactIds = contactIds)
         }
     }
 }

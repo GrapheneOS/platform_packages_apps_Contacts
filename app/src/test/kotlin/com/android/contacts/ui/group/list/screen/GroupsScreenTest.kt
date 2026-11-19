@@ -4,6 +4,7 @@ import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -113,7 +114,22 @@ internal class GroupsScreenTest {
 
         onNodeWithTag(GROUPS_GROUP_TEST_TAG_PREFIX + GROUP.id).assertIsDisplayed()
         onNodeWithText(GROUP.name).assertIsDisplayed()
-        onNodeWithText(GROUP.summaryCount.toString()).assertIsDisplayed()
+        onNodeWithText(GROUP.membersCount.toString()).assertIsDisplayed()
+    }
+
+    @Test
+    fun whenTheMembersCountIsUnknown_showsOnlyTheGroupName() = runComposeUiTest {
+        withState(
+            State.WithAccounts(
+                groups = persistentListOf(
+                    ACCOUNT_GROUPS.copy(groups = persistentListOf(GROUP.copy(membersCount = null))),
+                ),
+                showAccountHeaders = true,
+            ),
+        )
+        setScreenContent()
+
+        onNodeWithTag(GROUPS_GROUP_TEST_TAG_PREFIX + GROUP.id).assertTextEquals(GROUP.name)
     }
 
     @Test
@@ -164,7 +180,7 @@ internal class GroupsScreenTest {
         private val GROUP = GroupUiItem(
             id = 123L,
             name = "Group",
-            summaryCount = 12,
+            membersCount = 12,
         )
         private val ACCOUNT_GROUPS = AccountGroupsItem(
             account = ACCOUNT,

@@ -9,6 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.material3.SnackbarHostState
+import androidx.lifecycle.lifecycleScope
 import com.android.contacts.activities.ContactEditorActivity
 import com.android.contacts.activities.RequestPermissionsActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
@@ -62,11 +64,15 @@ class ContactDetailsActivity : ComponentActivity() {
             return
         }
 
+        val snackbarHostState = SnackbarHostState()
         val effectHandler = ContactDetailsEffectHandlerImpl(
             activity = this,
             clipboardManager = clipboardManager,
             contactEntryIntentFactory = contactEntryIntentFactory,
             launchers = launchers,
+            snackbarHostState = snackbarHostState,
+            coroutineScope = lifecycleScope,
+            onAction = viewModel::onAction,
         )
 
         setContent {
@@ -74,6 +80,7 @@ class ContactDetailsActivity : ComponentActivity() {
                 ContactDetailsScreen(
                     onEffect = effectHandler::handle,
                     onNavigateBack = ::finish,
+                    snackbarHostState = snackbarHostState,
                     screenModel = viewModel,
                 )
             }

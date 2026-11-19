@@ -9,6 +9,7 @@ import com.android.contacts.data.contactdetails.model.LoadedContact
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.data.groups.repository.GroupsRepository
 import com.android.contacts.data.settings.model.DisplayOrder
 import com.android.contacts.data.settings.model.DisplaySettings
 import com.android.contacts.data.settings.model.PhoneticNameDisplay
@@ -19,6 +20,7 @@ import com.android.contacts.domain.contactdetails.model.ContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.BuildContactDetailsCards
 import com.android.contacts.domain.contactdetails.usecase.GetContactDetailsMenu
 import com.android.contacts.domain.contactdetails.usecase.GetContactQuickActions
+import com.android.contacts.domain.groups.GroupEvents
 import com.android.contacts.domain.telecom.usecase.GetCallingSimOptions
 import com.android.contacts.tests.MainDispatcherRule
 import com.android.contacts.tests.factory.contactDetails
@@ -62,6 +64,8 @@ internal abstract class BaseContactDetailsViewModelTest {
     protected val getRecentCalls = mockk<GetRecentCalls>()
     protected val getCallingSimOptions = mockk<GetCallingSimOptions>()
     protected val displaySettingsRepository = mockk<DisplaySettingsRepository>()
+    protected val groupEvents = GroupEvents()
+    protected val groupsRepository = mockk<GroupsRepository>()
     protected val contactDetailsUiStateMapper = mockk<ContactDetailsUiStateMapper>()
 
     protected val loadedContact = LoadedContact(mockk(relaxed = true), mockk(relaxed = true))
@@ -82,6 +86,7 @@ internal abstract class BaseContactDetailsViewModelTest {
         every { getContactQuickActions(any()) } returns emptyList()
         coEvery { getRecentCalls(any()) } returns emptyList()
         coEvery { getCallingSimOptions(any()) } returns null
+        coEvery { groupsRepository.restoreGroup(any()) } returns true
         every { displaySettingsRepository.observeDisplaySettings() } returns
             flowOf(DISPLAY_SETTINGS)
         every {
@@ -104,6 +109,8 @@ internal abstract class BaseContactDetailsViewModelTest {
             contactDetailsRepository = contactDetailsRepository,
             contactActionsRepository = contactActionsRepository,
             contactShortcutRepository = contactShortcutRepository,
+            groupEvents = groupEvents,
+            groupsRepository = groupsRepository,
         )
     }
 

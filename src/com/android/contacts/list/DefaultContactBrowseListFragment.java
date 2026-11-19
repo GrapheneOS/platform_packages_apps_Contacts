@@ -1025,7 +1025,7 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!mContactsAvailable || mActivity.isInSecondLevel()) {
+        if (!mContactsAvailable) {
             // If contacts aren't available or this fragment is not visible, hide all menu items.
             return;
         }

@@ -1,6 +1,7 @@
 package com.android.contacts.ui.contactdetails.screen.model
 
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.domain.groups.model.GroupDeletion
 
 internal sealed interface ContactDetailsAction {
 
@@ -56,4 +57,12 @@ internal sealed interface ContactDetailsAction {
     data class JoinTargetPicked(
         val contactId: Long,
     ) : PickerResult
+
+    data class UndoGroupDeletionClick(
+        val deletion: GroupDeletion,
+    ) : ContactDetailsAction
+
+    data object ScreenStarted : ContactDetailsAction
+
+    data object ScreenStopped : ContactDetailsAction
 }

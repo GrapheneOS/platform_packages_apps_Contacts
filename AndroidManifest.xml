@@ -152,19 +152,6 @@
 
                 <data android:mimeType="vnd.android.cursor.dir/person"/>
                 <data android:mimeType="vnd.android.cursor.dir/contact"/>
-                <data android:mimeType="vnd.android.cursor.item/group"/>
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.EDIT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.item/group"/>
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.INSERT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="vnd.android.cursor.dir/group"/>
             </intent-filter>
 
             <meta-data
@@ -570,11 +557,30 @@
 
         <activity
             android:name=".ui.group.list.GroupsActivity"
-            android:theme="@style/Theme.Compose.Dialog"/>
+            android:exported="true"
+            android:theme="@style/Theme.Compose.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="vnd.android.cursor.dir/group"/>
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.group.edit.GroupNameEditActivity"
             android:theme="@style/Theme.Compose.Dialog"/>
+
+        <activity
+            android:name=".ui.group.detail.GroupActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Compose">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.EDIT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="vnd.android.cursor.item/group"/>
+            </intent-filter>
+        </activity>
 
         <!-- Service that is exclusively for the Phone application that sends out a view
              notification. This service might be removed in future versions of the app.

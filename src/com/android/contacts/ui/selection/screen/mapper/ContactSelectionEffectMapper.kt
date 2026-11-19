@@ -17,7 +17,7 @@ import com.android.contacts.domain.contacts.model.ContactItemKey
 import com.android.contacts.ui.selection.screen.model.ContactSelectionEffect as Effect
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode as Mode
 import com.android.contacts.ui.selection.screen.model.ContactSelectionResult as Result
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -87,7 +87,7 @@ internal class ContactSelectionEffectMapperImpl @Inject constructor(
             is Mode.CreateShortcut -> mapCreateShortcut(mode, contactId)
             is Mode.Join -> mapJoin(contactId)
             is Mode.AddGroupMembers -> mapAddGroupMembers(contactIds)
-            is Mode.SendToGroup -> mapSentToGroup(mode, contactIds)
+            is Mode.SendToGroup -> mapSendToGroup(mode, contactIds)
         }
     }
 
@@ -183,7 +183,7 @@ internal class ContactSelectionEffectMapperImpl @Inject constructor(
         return close(effect)
     }
 
-    private suspend fun mapSentToGroup(
+    private suspend fun mapSendToGroup(
         mode: Mode.SendToGroup,
         contactIds: Set<Long>,
     ): Effect {
@@ -207,12 +207,12 @@ internal class ContactSelectionEffectMapperImpl @Inject constructor(
     }
 
     private suspend fun queryAddresses(
-        target: SentToGroupTarget,
+        target: SendToGroupTarget,
         dataIds: Set<Long>,
     ): List<String> {
         val kind = when (target) {
-            SentToGroupTarget.SMS -> ContactDataKind.Phone()
-            SentToGroupTarget.EMAIL -> ContactDataKind.Email
+            SendToGroupTarget.SMS -> ContactDataKind.Phone()
+            SendToGroupTarget.EMAIL -> ContactDataKind.Email
         }
         return contactsRepository.getContactDataValues(kind, dataIds)
     }

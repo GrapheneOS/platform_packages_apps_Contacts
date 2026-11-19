@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.android.contacts.ContactSaveService
 import com.android.contacts.DynamicShortcuts
 import com.android.contacts.database.SimContactDao
 import com.android.contacts.model.AccountTypeManager
@@ -50,6 +51,14 @@ internal class DataProvidesModule {
         @ApplicationContext context: Context,
     ): SimContactDao {
         return SimContactDao.create(context)
+    }
+
+    @Provides
+    @Reusable
+    fun groupsDao(
+        @ApplicationContext context: Context,
+    ): ContactSaveService.GroupsDao {
+        return ContactSaveService.GroupsDaoImpl(context)
     }
 
     @Provides

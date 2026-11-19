@@ -23,7 +23,7 @@ import com.android.contacts.ui.selection.screen.model.ContactSelectionResult as 
 import com.android.contacts.ui.selection.screen.model.ContactSelectionSearchState as SearchState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionUiState
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -137,7 +137,7 @@ internal class ContactSelectionViewModelTest {
     fun initialState_withSendToGroup_selectsDefaultSelection() =
         runTest(mainDispatcherRule.testDispatcher) {
             val mode = Mode.SendToGroup(
-                target = SentToGroupTarget.SMS,
+                target = SendToGroupTarget.SMS,
                 itemIds = listOf(1L, 2L, 3L),
                 defaultSelection = listOf(1L, 3L),
                 chooserTitle = null,

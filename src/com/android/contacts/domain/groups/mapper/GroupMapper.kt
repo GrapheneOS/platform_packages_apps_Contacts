@@ -14,7 +14,6 @@ internal class GroupMapperImpl @Inject constructor() : GroupMapper {
         return Group(
             id = groupColumn.id,
             name = groupColumn.title,
-            summaryCount = groupColumn.summaryCount,
             systemId = groupColumn.systemId,
             account = AccountModel(
                 name = groupColumn.accountName,

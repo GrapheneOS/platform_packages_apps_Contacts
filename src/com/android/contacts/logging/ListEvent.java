@@ -72,7 +72,6 @@ public final class ListEvent {
         public static final int PICK_EMAIL = 13;
         public static final int PICK_POSTAL = 14;
         public static final int PICK_JOIN = 15;
-        public static final int PICK_GROUP_MEMBERS = 16;
 
         private ListType() {
         }

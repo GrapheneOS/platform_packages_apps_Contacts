@@ -145,13 +145,6 @@ public class UiIntentActions {
             "com.android.contacts.extra.TITLE_EXTRA";
 
     /**
-     * Used as an int extra field in {@link #FILTER_CONTACTS_ACTION}
-     * intents to supply the text on which to filter.
-     */
-    public static final String FILTER_TEXT_EXTRA_KEY =
-            "com.android.contacts.extra.FILTER_TEXT";
-
-    /**
      * Used with JOIN_CONTACT action to set the target for aggregation. This action type
      * uses contact ids instead of contact uris for the sake of backwards compatibility.
      * <p>

@@ -27,6 +27,8 @@ import androidx.compose.ui.text.AnnotatedString
 import com.android.contacts.R
 import com.android.contacts.domain.contacts.model.ContactItemKey
 import com.android.contacts.tests.targetContext
+import com.android.contacts.ui.common.model.ContactListSection as Section
+import com.android.contacts.ui.common.model.ContactUiModel
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_CLOSE_BUTTON_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_CREATE_BUTTON_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_DESCRIPTION_TEST_TAG
@@ -39,14 +41,12 @@ import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_SEARCH_C
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_SEARCH_FIELD_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_SUBMIT_BUTTON_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_TITLE_TEST_TAG
-import com.android.contacts.ui.selection.screen.model.ContactListSection as Section
 import com.android.contacts.ui.selection.screen.model.ContactSelectionAction as Action
 import com.android.contacts.ui.selection.screen.model.ContactSelectionEffect as Effect
 import com.android.contacts.ui.selection.screen.model.ContactSelectionListState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionResult as Result
 import com.android.contacts.ui.selection.screen.model.ContactSelectionSearchState as SearchState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionUiState as UiState
-import com.android.contacts.ui.selection.screen.model.ContactUiModel
 import com.android.contacts.ui.selection.screen.model.contactSelectionContactTestTag
 import com.android.contacts.ui.selection.screen.model.contactSelectionSectionTestTag
 import io.mockk.mockk
