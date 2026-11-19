@@ -16,27 +16,12 @@
 
 package com.android.contacts.group;
 
-import android.app.Fragment;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Groups;
 import android.text.TextUtils;
 
-import com.android.contacts.ContactsUtils;
-import com.android.contacts.ui.selection.ContactSelectionActivity;
-import com.android.contacts.list.ContactsSectionIndexer;
-import com.android.contacts.list.UiIntentActions;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,13 +36,8 @@ public final class GroupUtil {
 
     public static final String ACTION_ADD_TO_GROUP = "addToGroup";
     public static final String ACTION_CREATE_GROUP = "createGroup";
-    public static final String ACTION_DELETE_GROUP = "deleteGroup";
     public static final String ACTION_REMOVE_FROM_GROUP = "removeFromGroup";
-    public static final String ACTION_SWITCH_GROUP = "switchGroup";
     public static final String ACTION_UPDATE_GROUP = "updateGroup";
-
-    public static final int RESULT_GROUP_ADD_MEMBER = 100;
-    public static final int RESULT_SEND_TO_SELECTION = 200;
 
     // System IDs of FFC groups in Google accounts
     private static final Set<String> FFC_GROUPS =
@@ -66,102 +46,11 @@ public final class GroupUtil {
     private GroupUtil() {
     }
 
-    public static List<String> getSendToDataForIds(Context context, long[] ids, String scheme) {
-        final List<String> items = new ArrayList<>();
-        final String sIds = GroupUtil.convertArrayToString(ids);
-        final String select = (ContactsUtils.SCHEME_MAILTO.equals(scheme)
-                ? GroupMembersFragment.Query.EMAIL_SELECTION
-                + " AND " + ContactsContract.CommonDataKinds.Email._ID + " IN (" + sIds + ")"
-                : GroupMembersFragment.Query.PHONE_SELECTION
-                + " AND " + ContactsContract.CommonDataKinds.Phone._ID + " IN (" + sIds + ")");
-        final ContentResolver contentResolver = context.getContentResolver();
-        final Cursor cursor = contentResolver.query(ContactsContract.Data.CONTENT_URI,
-                ContactsUtils.SCHEME_MAILTO.equals(scheme)
-                        ? GroupMembersFragment.Query.EMAIL_PROJECTION
-                        : GroupMembersFragment.Query.PHONE_PROJECTION,
-                select, null, null);
-
-        if (cursor == null) {
-            return items;
-        }
-
-        try {
-            cursor.moveToPosition(-1);
-            while (cursor.moveToNext()) {
-                final String data = cursor.getString(GroupMembersFragment.Query.DATA1);
-
-                if (!TextUtils.isEmpty(data)) {
-                    items.add(data);
-                }
-            }
-        } finally {
-            cursor.close();
-        }
-
-        return items;
-    }
-
-    /** Returns an Intent to send emails/phones to some activity/app */
-    public static void startSendToSelectionActivity(
-            Fragment fragment, String itemsList, String sendScheme, String title) {
-        final Intent intent = new Intent(Intent.ACTION_SENDTO,
-                Uri.fromParts(sendScheme, itemsList, null));
-        fragment.startActivityForResult(
-                Intent.createChooser(intent, title), RESULT_SEND_TO_SELECTION);
-    }
-
-    /** Returns an Intent to pick emails/phones to send to selection (or group) */
-    public static Intent createSendToSelectionPickerIntent(Context context, long[] ids,
-            long[] defaultSelection, String sendScheme, String title) {
-        final Intent intent = new Intent(context, ContactSelectionActivity.class);
-        intent.setAction(UiIntentActions.ACTION_SELECT_ITEMS);
-        intent.setType(ContactsUtils.SCHEME_MAILTO.equals(sendScheme)
-                ? ContactsContract.CommonDataKinds.Email.CONTENT_TYPE
-                : ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-        intent.putExtra(UiIntentActions.SELECTION_ITEM_LIST, ids);
-        intent.putExtra(UiIntentActions.SELECTION_DEFAULT_SELECTION, defaultSelection);
-        intent.putExtra(UiIntentActions.SELECTION_SEND_SCHEME, sendScheme);
-        intent.putExtra(UiIntentActions.SELECTION_SEND_TITLE, title);
-
-        return intent;
-    }
-
-    /** Returns an Intent to pick contacts to add to a group. */
-    public static Intent createPickMemberIntent(Context context,
-            GroupMetaData groupMetaData, ArrayList<String> memberContactIds) {
-        final Intent intent = new Intent(context, ContactSelectionActivity.class);
-        intent.setAction(Intent.ACTION_PICK);
-        intent.setType(Groups.CONTENT_TYPE);
-        intent.putExtra(UiIntentActions.GROUP_ACCOUNT_NAME, groupMetaData.accountName);
-        intent.putExtra(UiIntentActions.GROUP_ACCOUNT_TYPE, groupMetaData.accountType);
-        intent.putExtra(UiIntentActions.GROUP_ACCOUNT_DATA_SET, groupMetaData.dataSet);
-        intent.putExtra(UiIntentActions.GROUP_CONTACT_IDS, memberContactIds);
-        return intent;
-    }
-
-    public static String convertArrayToString(long[] list) {
-        if (list == null || list.length == 0) return "";
-        return Arrays.toString(list).replace("[", "").replace("]", "");
-    }
-
     public static long[] convertLongSetToLongArray(Set<Long> set) {
         final Long[] contactIds = set.toArray(new Long[set.size()]);
         final long[] result = new long[contactIds.length];
         for (int i = 0; i < contactIds.length; i++) {
             result[i] = contactIds[i];
-        }
-        return result;
-    }
-
-    public static long[] convertStringSetToLongArray(Set<String> set) {
-        final String[] contactIds = set.toArray(new String[set.size()]);
-        final long[] result = new long[contactIds.length];
-        for (int i = 0; i < contactIds.length; i++) {
-            try {
-                result[i] = Long.parseLong(contactIds[i]);
-            } catch (NumberFormatException e) {
-                result[i] = -1;
-            }
         }
         return result;
     }
@@ -182,62 +71,5 @@ public final class GroupUtil {
      */
     public static String getGroupsSortOrder() {
         return Groups.TITLE + " COLLATE LOCALIZED ASC";
-    }
-
-    /**
-     * The sum of the last element in counts[] and the last element in positions[] is the total
-     * number of remaining elements in cursor. If count is more than what's in the indexer now,
-     * then we don't need to trim.
-     */
-    public static boolean needTrimming(int count, int[] counts, int[] positions) {
-        // The sum of the last element in counts[] and the last element in positions[] is
-        // the total number of remaining elements in cursor. If mCount is more than
-        // what's in the indexer now, then we don't need to trim.
-        return positions.length > 0 && counts.length > 0
-                && count <= (counts[counts.length - 1] + positions[positions.length - 1]);
-    }
-
-    /**
-     * Update Bundle extras so as to update indexer.
-     */
-    public static void updateBundle(Bundle bundle, ContactsSectionIndexer indexer,
-            List<Integer> subscripts, String[] sections, int[] counts) {
-        for (int i : subscripts) {
-            final int filteredContact = indexer.getSectionForPosition(i);
-            if (filteredContact < counts.length && filteredContact >= 0) {
-                counts[filteredContact]--;
-                if (counts[filteredContact] == 0) {
-                    sections[filteredContact] = "";
-                }
-            }
-        }
-        final String[] newSections = clearEmptyString(sections);
-        bundle.putStringArray(Contacts.EXTRA_ADDRESS_BOOK_INDEX_TITLES, newSections);
-        final int[] newCounts = clearZeros(counts);
-        bundle.putIntArray(Contacts.EXTRA_ADDRESS_BOOK_INDEX_COUNTS, newCounts);
-    }
-
-    private static String[] clearEmptyString(String[] strings) {
-        final List<String> list = new ArrayList<>();
-        for (String s : strings) {
-            if (!TextUtils.isEmpty(s)) {
-                list.add(s);
-            }
-        }
-        return list.toArray(new String[list.size()]);
-    }
-
-    private static int[] clearZeros(int[] numbers) {
-        final List<Integer> list = new ArrayList<>();
-        for (int n : numbers) {
-            if (n > 0) {
-                list.add(n);
-            }
-        }
-        final int[] array = new int[list.size()];
-        for(int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
     }
 }

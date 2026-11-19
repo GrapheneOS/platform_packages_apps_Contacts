@@ -10,6 +10,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.collections.immutable.persistentListOf
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -31,7 +32,7 @@ internal class GroupsUiMapperTest {
         val group = GroupFactory.build(
             id = 123L,
             name = "Group",
-            summaryCount = 20,
+            membersCount = 20,
             account = account,
         )
 
@@ -46,11 +47,22 @@ internal class GroupsUiMapperTest {
                 GroupUiItem(
                     id = 123L,
                     name = "Group",
-                    summaryCount = 20,
+                    membersCount = 20,
                 ),
             ),
             accountGroup.groups,
         )
+    }
+
+    @Test
+    fun whenTheMembersCountIsUnknown_leavesItUnknown() {
+        val account = AccountDisplayModelFactory.build()
+        every { accountDisplayModelMapper.map(account.account) } returns account
+        val group = GroupFactory.build(account = account.account, membersCount = null)
+
+        val result = subject.map(listOf(group), emptyList(), null)
+
+        assertNull(result.first().groups.first().membersCount)
     }
 
     @Test

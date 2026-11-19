@@ -6,5 +6,5 @@ import androidx.compose.runtime.Immutable
 internal data class GroupUiItem(
     val id: Long,
     val name: String,
-    val summaryCount: Int,
+    val membersCount: Int?,
 )

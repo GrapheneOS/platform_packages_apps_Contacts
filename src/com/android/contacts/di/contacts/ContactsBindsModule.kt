@@ -18,6 +18,10 @@ import com.android.contacts.domain.contacts.usecase.GetContactsForSelection
 import com.android.contacts.domain.contacts.usecase.GetContactsForSelectionImpl
 import com.android.contacts.domain.contacts.usecase.LoadRawContacts
 import com.android.contacts.domain.contacts.usecase.LoadRawContactsImpl
+import com.android.contacts.ui.common.mapper.ContactSectionedListMapper
+import com.android.contacts.ui.common.mapper.ContactSectionedListMapperImpl
+import com.android.contacts.ui.common.mapper.ContactUiModelMapper
+import com.android.contacts.ui.common.mapper.ContactUiModelMapperImpl
 import com.android.contacts.ui.editor.springboard.screen.mapper.RawContactUiModelMapper
 import com.android.contacts.ui.editor.springboard.screen.mapper.RawContactUiModelMapperImpl
 import com.android.contacts.ui.selection.screen.mapper.ContactSelectionEffectMapper
@@ -37,6 +41,18 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 internal abstract class ContactsBindsModule {
+
+    @Binds
+    @Reusable
+    abstract fun bindContactUiModelMapper(
+        impl: ContactUiModelMapperImpl,
+    ): ContactUiModelMapper
+
+    @Binds
+    @Reusable
+    abstract fun bindContactSectionedListMapper(
+        impl: ContactSectionedListMapperImpl,
+    ): ContactSectionedListMapper
 
     @Binds
     @Reusable

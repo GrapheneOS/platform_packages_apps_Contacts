@@ -1,10 +1,7 @@
 package com.android.contacts.ui.selection.screen.mapper
 
 import android.content.pm.PackageManager
-import android.content.res.Resources
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import com.android.contacts.R
-import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.domain.accounts.mapper.AccountDisplayModelMapper
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.domain.contacts.model.ContactDirectory
@@ -15,19 +12,19 @@ import com.android.contacts.domain.contacts.model.GetContactsForSelectionResult
 import com.android.contacts.tests.factory.AccountDisplayModelFactory
 import com.android.contacts.tests.factory.AccountModelFactory
 import com.android.contacts.tests.targetContext
-import com.android.contacts.ui.common.components.ContactAvatarImage
-import com.android.contacts.ui.selection.screen.model.ContactListSection as Section
+import com.android.contacts.ui.common.mapper.ContactSectionedListMapperImpl
+import com.android.contacts.ui.common.mapper.ContactUiModelMapperImpl
+import com.android.contacts.ui.common.model.ContactListSection as Section
+import com.android.contacts.ui.common.model.ContactUiModel
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode as Mode
 import com.android.contacts.ui.selection.screen.model.ContactSelectionRequest
 import com.android.contacts.ui.selection.screen.model.ContactSelectionSearchState as SearchState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionUiState
-import com.android.contacts.ui.selection.screen.model.ContactUiModel
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import io.mockk.every
 import io.mockk.mockk
-import java.nio.ByteBuffer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -42,11 +39,17 @@ internal class ContactSelectionUiStateMapperTest {
 
     private val packageManager = mockk<PackageManager>()
     private val accountDisplayModelMapper = mockk<AccountDisplayModelMapper>()
+    private val contactUiModelMapper = ContactUiModelMapperImpl(targetContext.resources)
 
     private val subject: ContactSelectionUiStateMapper = ContactSelectionUiStateMapperImpl(
         resources = targetContext.resources,
-        packageManager = packageManager,
         accountDisplayModelMapper = accountDisplayModelMapper,
+        contactUiModelMapper = contactUiModelMapper,
+        contactSectionedListMapper = ContactSectionedListMapperImpl(
+            resources = targetContext.resources,
+            packageManager = packageManager,
+            contactUiModelMapper = contactUiModelMapper,
+        ),
     )
 
     @Before
@@ -213,7 +216,7 @@ internal class ContactSelectionUiStateMapperTest {
         assertTrue(result.listState.isLoading)
     }
 
-    // Sections
+    // Sections (the section rules are covered by ContactSectionedListMapperTest)
 
     @Test
     fun sections_groupContactsByLetter() {
@@ -238,34 +241,6 @@ internal class ContactSelectionUiStateMapperTest {
     }
 
     @Test
-    fun sections_preferSectionLabelOverFirstLetter() {
-        val result = map(contacts = result(item(1L, "Anna", sectionLabel = "あ")))
-
-        assertEquals(listOf(Section.Alphabetical("あ")), result.listState.contacts.keys.toList())
-    }
-
-    @Test
-    fun sections_withBlankSectionLabel_useFirstLetter() {
-        val result = map(contacts = result(item(1L, "anna", sectionLabel = " ")))
-
-        assertEquals(listOf(Section.Alphabetical("A")), result.listState.contacts.keys.toList())
-    }
-
-    @Test
-    fun sections_withoutLeadingLetter_useOtherSection() {
-        val result = map(contacts = result(item(1L, "+1 555 0100"), item(2L, "")))
-
-        assertEquals(listOf(Section.Alphabetical("#")), result.listState.contacts.keys.toList())
-    }
-
-    @Test
-    fun sections_skipLeadingFormatCharacters() {
-        val result = map(contacts = result(item(1L, "‎john")))
-
-        assertEquals(listOf(Section.Alphabetical("J")), result.listState.contacts.keys.toList())
-    }
-
-    @Test
     fun sections_whenSearching_useSingleUndefinedSection() {
         val result = map(
             contacts = result(
@@ -282,11 +257,6 @@ internal class ContactSelectionUiStateMapperTest {
     }
 
     @Test
-    fun sections_whenSearchingWithoutResults_areEmpty() {
-        assertTrue(map(contacts = result(), query = "a").listState.contacts.isEmpty())
-    }
-
-    @Test
     fun sections_withFavoritesEnabled_showFavoritesFirst() {
         val result = map(
             mode = Mode.Pick(includeFavorites = true),
@@ -299,16 +269,6 @@ internal class ContactSelectionUiStateMapperTest {
             sections.keys.toList(),
         )
         assertEquals(listOf(uiModel(2L, "Bob")), sections[Section.Favorites])
-    }
-
-    @Test
-    fun sections_withFavoritesEnabledButNoFavorites_omitFavorites() {
-        val result = map(
-            mode = Mode.Pick(includeFavorites = true),
-            contacts = result(item(1L, "Anna")),
-        )
-
-        assertFalse(Section.Favorites in result.listState.contacts)
     }
 
     @Test
@@ -349,8 +309,6 @@ internal class ContactSelectionUiStateMapperTest {
         assertEquals(listOf(uiModel(2L, "Bob")), sections[Section.Suggestions])
     }
 
-    // Directories
-
     @Test
     fun sections_showDirectoriesAfterContacts() {
         val directoryContact = ContactItem(key = DIRECTORY_KEY, name = "Remote Contact")
@@ -377,79 +335,6 @@ internal class ContactSelectionUiStateMapperTest {
     }
 
     @Test
-    fun sections_showLoadingDirectoriesAndHideEmptyOnes() {
-        val result = map(
-            contacts = GetContactsForSelectionResult(
-                directories = listOf(
-                    ContactDirectoryResult(
-                        directory = ContactDirectory(id = 10L, displayName = "Loading"),
-                        isLoading = true,
-                    ),
-                    ContactDirectoryResult(
-                        directory = ContactDirectory(id = 11L, displayName = "Empty"),
-                    ),
-                ),
-            ),
-            query = "a",
-        )
-
-        assertEquals(
-            mapOf(
-                Section.Directory(directoryId = 10L, name = "Loading", isLoading = true) to
-                    emptyList<ContactUiModel>(),
-            ),
-            result.listState.contacts,
-        )
-    }
-
-    @Test
-    fun directoryName_withoutDisplayName_usesTypeLabelFromPackage() {
-        val packageResources = mockk<Resources>()
-        every { packageResources.getString(42) } returns "Exchange"
-        every {
-            packageManager.getResourcesForApplication("com.example.directory")
-        } returns packageResources
-
-        assertEquals("Exchange", directorySectionName(DIRECTORY_WITH_TYPE))
-    }
-
-    @Test
-    fun directoryName_whenPackageIsMissing_usesDefaultLabel() {
-        every {
-            packageManager.getResourcesForApplication(any<String>())
-        } throws PackageManager.NameNotFoundException()
-
-        assertEquals("Directory", directorySectionName(DIRECTORY_WITH_TYPE))
-    }
-
-    @Test
-    fun directoryName_whenTypeResourceIsMissing_usesDefaultLabel() {
-        val packageResources = mockk<Resources>()
-        every { packageResources.getString(any()) } throws Resources.NotFoundException()
-        every { packageManager.getResourcesForApplication(any<String>()) } returns packageResources
-
-        assertEquals("Directory", directorySectionName(DIRECTORY_WITH_TYPE))
-    }
-
-    @Test
-    fun directoryName_withoutDisplayNameOrType_usesDefaultLabel() {
-        assertEquals("Directory", directorySectionName(ContactDirectory(id = 10L)))
-        assertEquals(
-            "Directory",
-            directorySectionName(ContactDirectory(id = 10L, packageName = "com.example.directory")),
-        )
-    }
-
-    // Contact UI models
-
-    @Test
-    fun contact_withBlankName_usesMissingName() {
-        val result = map(contacts = result(item(1L, " ")), query = "a")
-
-        assertEquals("(No name)", result.listState.contacts.values.single().single().name)
-    }
-
-    @Test
     fun contact_whenSelected_isMarkedSelected() {
         val state = ContactSelectionState(selectedKeys = setOf(local(2L)))
 
@@ -459,93 +344,6 @@ internal class ContactSelectionUiStateMapperTest {
             listOf(false, true),
             result.listState.contacts.values.single().map { it.isSelected },
         )
-    }
-
-    @Test
-    fun contact_mapsPhotoToAvatarImage() {
-        val bytes = ByteBuffer.wrap(byteArrayOf(1, 2, 3))
-        val result = map(
-            contacts = result(
-                item(1L, photo = ContactPhoto.Uri("content://photo/1")),
-                item(2L, photo = ContactPhoto.Bytes(bytes)),
-                item(3L),
-            ),
-            query = "a",
-        )
-
-        assertEquals(
-            listOf(
-                ContactAvatarImage.Uri("content://photo/1"),
-                ContactAvatarImage.Bytes(bytes),
-                null,
-            ),
-            result.listState.contacts.values.single().map { it.avatarImage },
-        )
-    }
-
-    @Test
-    fun contactDescription_withValueOnly_isTheValue() {
-        val field = ContactItem.Field(
-            value = "john@example.com",
-            kind = ContactItem.FieldKind.EMAIL,
-        )
-
-        assertEquals("john@example.com", descriptionOf(field))
-    }
-
-    @Test
-    fun contactDescription_withType_prefixesTypeLabel() {
-        val field = ContactItem.Field(
-            value = "+1 555 0100",
-            kind = ContactItem.FieldKind.PHONE,
-            type = Phone.TYPE_MOBILE,
-        )
-
-        assertEquals("Mobile · +1 555 0100", descriptionOf(field))
-    }
-
-    @Test
-    fun contactDescription_withCustomType_usesCustomLabel() {
-        val field = ContactItem.Field(
-            value = "+1 555 0100",
-            kind = ContactItem.FieldKind.PHONE,
-            type = Phone.TYPE_CUSTOM,
-            label = "Boat",
-        )
-
-        assertEquals("Boat · +1 555 0100", descriptionOf(field))
-    }
-
-    @Test
-    fun contactDescription_withUnspecifiedKind_ignoresType() {
-        val field = ContactItem.Field(
-            value = "value",
-            kind = ContactItem.FieldKind.UNSPECIFIED,
-            type = Phone.TYPE_MOBILE,
-        )
-
-        assertEquals("value", descriptionOf(field))
-    }
-
-    @Test
-    fun contactDescription_withMultilineAddress_joinsLines() {
-        val field = ContactItem.Field(
-            value = "1600 Amphitheatre Parkway\n\n  Mountain View, CA  \n",
-            kind = ContactItem.FieldKind.POSTAL_ADDRESS,
-        )
-
-        assertEquals(
-            "1600 Amphitheatre Parkway, Mountain View, CA",
-            descriptionOf(field),
-        )
-    }
-
-    @Test
-    fun contactDescription_withBlankValueOrNoField_isNull() {
-        assertNull(
-            descriptionOf(ContactItem.Field(value = "\n ", kind = ContactItem.FieldKind.EMAIL)),
-        )
-        assertNull(descriptionOf(null))
     }
 
     // Flags
@@ -597,26 +395,6 @@ internal class ContactSelectionUiStateMapperTest {
         )
     }
 
-    private fun descriptionOf(field: ContactItem.Field?): String? {
-        val result = map(
-            contacts = result(ContactItem(key = local(1L), name = "Anna", field = field)),
-            query = "a",
-        )
-        return result.listState.contacts.values.single().single().description
-    }
-
-    private fun directorySectionName(directory: ContactDirectory): String {
-        val result = map(
-            contacts = GetContactsForSelectionResult(
-                directories = listOf(
-                    ContactDirectoryResult(directory = directory, isLoading = true),
-                ),
-            ),
-            query = "a",
-        )
-        return (result.listState.contacts.keys.single() as Section.Directory).name
-    }
-
     private fun result(vararg contacts: ContactItem) =
         GetContactsForSelectionResult(contacts = contacts.toList())
 
@@ -627,11 +405,9 @@ internal class ContactSelectionUiStateMapperTest {
         name: String = "Contact $id",
         sectionLabel: String? = null,
         isFavorite: Boolean = false,
-        photo: ContactPhoto? = null,
     ) = ContactItem(
         key = local(id),
         name = name,
-        contactPhoto = photo,
         sectionLabel = sectionLabel,
         isFavorite = isFavorite,
     )
@@ -646,7 +422,7 @@ internal class ContactSelectionUiStateMapperTest {
             existingMemberIds = emptySet(),
         )
         val SEND_TO_GROUP = Mode.SendToGroup(
-            target = SentToGroupTarget.SMS,
+            target = SendToGroupTarget.SMS,
             itemIds = emptyList(),
             defaultSelection = emptyList(),
             chooserTitle = null,
@@ -655,11 +431,6 @@ internal class ContactSelectionUiStateMapperTest {
             directoryId = 10L,
             id = 7L,
             lookupKey = "remote-lookup",
-        )
-        val DIRECTORY_WITH_TYPE = ContactDirectory(
-            id = 10L,
-            packageName = "com.example.directory",
-            typeResourceId = 42,
         )
     }
 }

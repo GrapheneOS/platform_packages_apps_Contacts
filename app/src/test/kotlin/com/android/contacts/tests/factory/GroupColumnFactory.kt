@@ -6,7 +6,6 @@ internal object GroupColumnFactory {
     fun build(
         id: Long = 1L,
         title: String = "Group",
-        summaryCount: Int = 0,
         systemId: String? = null,
         accountName: String? = null,
         accountType: String? = null,
@@ -15,7 +14,6 @@ internal object GroupColumnFactory {
     ) = GroupColumn(
         id = id,
         title = title,
-        summaryCount = summaryCount,
         systemId = systemId,
         accountName = accountName,
         accountType = accountType,

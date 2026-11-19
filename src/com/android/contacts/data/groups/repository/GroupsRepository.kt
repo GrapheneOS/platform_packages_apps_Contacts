@@ -1,10 +1,13 @@
 package com.android.contacts.data.groups.repository
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.database.Cursor
 import android.provider.ContactsContract
+import com.android.contacts.ContactSaveService
 import com.android.contacts.data.groups.model.GroupColumn
 import com.android.contacts.di.core.IoDispatcher
+import com.android.contacts.domain.groups.model.GroupDeletion
 import com.android.contacts.domain.groups.model.GroupFilter
 import com.android.contacts.domain.groups.model.GroupSort
 import com.android.contacts.util.core.observeContentUri
@@ -13,16 +16,25 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 internal interface GroupsRepository {
+
     fun loadGroups(
         filters: List<GroupFilter> = emptyList(),
         sort: GroupSort = GroupSort.UNDEFINED,
     ): Flow<List<GroupColumn>?>
+
+    fun loadGroup(groupId: Long): Flow<GroupColumn?>
+
+    suspend fun deleteGroup(groupId: Long): GroupDeletion?
+
+    suspend fun restoreGroup(deletion: GroupDeletion): Boolean
 }
 
 internal class GroupsRepositoryImpl @Inject constructor(
     private val contentResolver: ContentResolver,
+    private val groupsDao: ContactSaveService.GroupsDao,
     @param:IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
 ) : GroupsRepository {
 
@@ -30,21 +42,63 @@ internal class GroupsRepositoryImpl @Inject constructor(
         filters: List<GroupFilter>,
         sort: GroupSort,
     ): Flow<List<GroupColumn>?> {
-        return observeContentUri(contentResolver, ContactsContract.Groups.CONTENT_SUMMARY_URI)
-            .map { load(filters, sort) }
+        return observeContentUri(contentResolver, ContactsContract.Groups.CONTENT_URI)
+            .map { queryGroups(filters, sort) }
             .flowOn(coroutineDispatcher)
     }
 
-    private fun load(
+    override fun loadGroup(groupId: Long): Flow<GroupColumn?> {
+        return observeContentUri(contentResolver, ContactsContract.Groups.CONTENT_URI)
+            .map {
+                query(
+                    selection = "${ContactsContract.Groups._ID}=? AND " +
+                        "${ContactsContract.Groups.DELETED}=0",
+                    selectionArgs = arrayOf(groupId.toString()),
+                )?.firstOrNull()
+            }
+            .flowOn(coroutineDispatcher)
+    }
+
+    override suspend fun deleteGroup(groupId: Long): GroupDeletion? {
+        return withContext(coroutineDispatcher) {
+            val groupUri = ContentUris.withAppendedId(ContactsContract.Groups.CONTENT_URI, groupId)
+            val undoData = groupsDao.captureDeletionUndoData(groupUri)
+
+            when (groupsDao.delete(groupUri)) {
+                0 -> null
+                else -> GroupDeletion(undoData = undoData)
+            }
+        }
+    }
+
+    override suspend fun restoreGroup(deletion: GroupDeletion): Boolean {
+        return withContext(coroutineDispatcher) {
+            groupsDao.undoDeletion(deletion.undoData) != null
+        }
+    }
+
+    private fun queryGroups(
         filters: List<GroupFilter>,
         sort: GroupSort,
     ): List<GroupColumn>? {
+        return query(
+            selection = selection(filters),
+            selectionArgs = selectionArgs(filters),
+            sortOrder = sortOrder(sort),
+        )
+    }
+
+    private fun query(
+        selection: String,
+        selectionArgs: Array<String>?,
+        sortOrder: String? = null,
+    ): List<GroupColumn>? {
         return contentResolver.query(
-            ContactsContract.Groups.CONTENT_SUMMARY_URI,
+            ContactsContract.Groups.CONTENT_URI,
             GROUP_PROJECTION,
-            selection(filters),
-            selectionArgs(filters),
-            sortOrder(sort),
+            selection,
+            selectionArgs,
+            sortOrder,
         )?.use { cursor ->
             buildList {
                 while (cursor.moveToNext()) {
@@ -112,7 +166,6 @@ internal class GroupsRepositoryImpl @Inject constructor(
         return GroupColumn(
             id = cursor.getLong(GROUP_ID),
             title = cursor.getString(GROUP_TITLE)?.takeIf { it.isNotEmpty() } ?: return null,
-            summaryCount = cursor.getInt(GROUP_SUMMARY_COUNT).coerceAtLeast(0),
             systemId = cursor.getString(GROUP_SYSTEM_ID),
             accountName = cursor.getString(GROUP_ACCOUNT_NAME),
             accountType = cursor.getString(GROUP_ACCOUNT_TYPE),
@@ -125,7 +178,6 @@ internal class GroupsRepositoryImpl @Inject constructor(
         private val GROUP_PROJECTION = arrayOf(
             ContactsContract.Groups._ID,
             ContactsContract.Groups.TITLE,
-            ContactsContract.Groups.SUMMARY_COUNT,
             ContactsContract.Groups.SYSTEM_ID,
             ContactsContract.Groups.ACCOUNT_NAME,
             ContactsContract.Groups.ACCOUNT_TYPE,
@@ -134,11 +186,10 @@ internal class GroupsRepositoryImpl @Inject constructor(
         )
         private const val GROUP_ID = 0
         private const val GROUP_TITLE = 1
-        private const val GROUP_SUMMARY_COUNT = 2
-        private const val GROUP_SYSTEM_ID = 3
-        private const val GROUP_ACCOUNT_NAME = 4
-        private const val GROUP_ACCOUNT_TYPE = 5
-        private const val GROUP_ACCOUNT_DATA_SET = 6
-        private const val GROUP_IS_READ_ONLY = 7
+        private const val GROUP_SYSTEM_ID = 2
+        private const val GROUP_ACCOUNT_NAME = 3
+        private const val GROUP_ACCOUNT_TYPE = 4
+        private const val GROUP_ACCOUNT_DATA_SET = 5
+        private const val GROUP_IS_READ_ONLY = 6
     }
 }

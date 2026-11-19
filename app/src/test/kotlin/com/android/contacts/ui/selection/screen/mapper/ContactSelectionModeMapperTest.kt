@@ -16,7 +16,7 @@ import android.provider.ContactsContract.Intents.Insert
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode as Mode
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import io.mockk.every
 import io.mockk.mockk
@@ -239,7 +239,7 @@ internal class ContactSelectionModeMapperTest {
 
         assertEquals(
             Mode.SendToGroup(
-                target = SentToGroupTarget.SMS,
+                target = SendToGroupTarget.SMS,
                 itemIds = listOf(1L, 2L, 3L),
                 defaultSelection = listOf(2L),
                 chooserTitle = "Send message",
@@ -252,7 +252,7 @@ internal class ContactSelectionModeMapperTest {
     fun selectItems_withEmailTypeAndNoExtras_returnsEmptySendToGroupEmail() {
         assertEquals(
             Mode.SendToGroup(
-                target = SentToGroupTarget.EMAIL,
+                target = SendToGroupTarget.EMAIL,
                 itemIds = emptyList(),
                 defaultSelection = emptyList(),
                 chooserTitle = null,

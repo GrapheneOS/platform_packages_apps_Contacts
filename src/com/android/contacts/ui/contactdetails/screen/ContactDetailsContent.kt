@@ -12,6 +12,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ internal fun ContactDetailsContent(
     uiState: State,
     onAction: (Action) -> Unit,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val content = uiState.content
     val loaded = content as? Content.Loaded
@@ -57,6 +60,7 @@ internal fun ContactDetailsContent(
                 scrollBehavior = scrollBehavior,
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets.safeDrawing,
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { contentPadding ->

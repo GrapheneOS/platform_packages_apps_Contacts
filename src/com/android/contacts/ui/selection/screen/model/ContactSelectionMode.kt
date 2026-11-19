@@ -51,7 +51,7 @@ internal sealed interface ContactSelectionMode : Parcelable {
 
     @Parcelize
     data class SendToGroup(
-        val target: SentToGroupTarget,
+        val target: SendToGroupTarget,
         val itemIds: List<Long>,
         val defaultSelection: List<Long>,
         val chooserTitle: String?,

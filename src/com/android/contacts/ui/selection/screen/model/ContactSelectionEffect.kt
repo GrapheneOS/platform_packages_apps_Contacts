@@ -18,7 +18,7 @@ internal sealed interface ContactSelectionEffect {
     }
 
     data class SendTo(
-        val target: SentToGroupTarget,
+        val target: SendToGroupTarget,
         val addresses: List<String>,
         val chooserTitle: String?,
     ) : ContactSelectionEffect

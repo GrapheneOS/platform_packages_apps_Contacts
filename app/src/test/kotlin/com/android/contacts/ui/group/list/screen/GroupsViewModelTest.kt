@@ -283,7 +283,7 @@ internal class GroupsViewModelTest {
         private val GROUP = GroupUiItem(
             id = 123L,
             name = "Group",
-            summaryCount = 12,
+            membersCount = 12,
         )
         private val ACCOUNT_GROUPS = AccountGroupsItem(
             account = ACCOUNT,

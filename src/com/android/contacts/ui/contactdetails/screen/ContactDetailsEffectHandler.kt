@@ -4,34 +4,39 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ContentUris
 import android.content.Intent
 import android.icu.text.MessageFormat
 import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.CallLog.Calls
 import android.provider.ContactsContract.Contacts
-import android.provider.ContactsContract.Groups
 import android.provider.ContactsContract.Intents
 import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import com.android.contacts.R
-import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.domain.groups.model.GroupDeletion
 import com.android.contacts.editor.ContactEditorFragment
 import com.android.contacts.editor.EditorIntents
 import com.android.contacts.editor.EditorUiUtils
 import com.android.contacts.interactions.ContactDeletionInteraction
 import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
+import com.android.contacts.ui.group.detail.GroupActivity
 import com.android.contacts.ui.interactions.callsubject.CallSubjectActivity
 import com.android.contacts.ui.selection.ContactSelectionActivity
 import com.android.contacts.util.ImplicitIntentsUtil
 import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 internal interface ContactDetailsEffectHandler {
     fun handle(effect: Effect)
@@ -42,6 +47,9 @@ internal class ContactDetailsEffectHandlerImpl(
     private val clipboardManager: ClipboardManager,
     private val contactEntryIntentFactory: ContactEntryIntentFactory,
     private val launchers: ContactDetailsLaunchers,
+    private val snackbarHostState: SnackbarHostState,
+    private val coroutineScope: CoroutineScope,
+    private val onAction: (Action) -> Unit,
 ) : ContactDetailsEffectHandler {
 
     override fun handle(effect: Effect) {
@@ -58,6 +66,7 @@ internal class ContactDetailsEffectHandlerImpl(
             is Effect.PerformEntryAction -> performEntryAction(effect.action)
             is Effect.CallWithNote -> callWithNote(effect)
             is Effect.CopyToClipboard -> copyToClipboard(effect.label, effect.text)
+            is Effect.ShowGroupDeleted -> showGroupDeleted(effect.deletion)
         }
     }
 
@@ -161,11 +170,7 @@ internal class ContactDetailsEffectHandlerImpl(
     }
 
     private fun viewGroupMembers(groupId: Long) {
-        val groupUri = ContentUris.withAppendedId(Groups.CONTENT_URI, groupId)
-        val intent = Intent(Intent.ACTION_VIEW, groupUri)
-            .setClass(activity, PeopleActivity::class.java)
-
-        activity.startActivity(intent)
+        activity.startActivity(GroupActivity.buildIntent(activity, groupId))
     }
 
     private fun viewLinkedContacts(lookupUri: Uri) {
@@ -200,6 +205,19 @@ internal class ContactDetailsEffectHandlerImpl(
             showToast(R.string.missing_app, e)
         } catch (e: ActivityNotFoundException) {
             showToast(R.string.missing_app, e)
+        }
+    }
+
+    private fun showGroupDeleted(deletion: GroupDeletion) {
+        coroutineScope.launch {
+            val result = snackbarHostState.showSnackbar(
+                message = activity.getString(R.string.groupDeletedToast),
+                actionLabel = activity.getString(R.string.undo),
+                duration = SnackbarDuration.Long,
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                onAction(Action.UndoGroupDeletionClick(deletion))
+            }
         }
     }
 

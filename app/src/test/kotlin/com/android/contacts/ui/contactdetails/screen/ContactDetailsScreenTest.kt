@@ -1,5 +1,9 @@
 package com.android.contacts.ui.contactdetails.screen
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
@@ -7,6 +11,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.android.contacts.tests.TestLifecycleOwner
 import com.android.contacts.tests.factory.contactDetailsLoadedContent
 import com.android.contacts.tests.factory.contactHeaderUiModel
 import com.android.contacts.ui.contactdetails.screen.model.CONTACT_DETAILS_STAR_TEST_TAG
@@ -17,6 +24,7 @@ import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsUiState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifyOrder
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Assert.assertEquals
@@ -76,6 +84,50 @@ internal class ContactDetailsScreenTest {
         onNodeWithTag(CONTACT_DETAILS_STAR_TEST_TAG).performClick()
 
         verify { screenModel.onAction(Action.StarClick) }
+    }
+
+    @Test
+    fun whenTheScreenStarts_tellsTheScreenModel() = runComposeUiTest {
+        setScreenContent()
+
+        verify(exactly = 1) { screenModel.onAction(Action.ScreenStarted) }
+        verify(exactly = 0) { screenModel.onAction(Action.ScreenStopped) }
+    }
+
+    @Test
+    fun whenTheScreenStops_tellsTheScreenModel() = runComposeUiTest {
+        val lifecycleOwner = TestLifecycleOwner()
+        setContent {
+            CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
+                ContactDetailsScreen(onEffect = {}, onNavigateBack = {}, screenModel = screenModel)
+            }
+        }
+
+        runOnIdle { lifecycleOwner.registry.currentState = Lifecycle.State.CREATED }
+        waitForIdle()
+
+        verifyOrder {
+            screenModel.onAction(Action.ScreenStarted)
+            screenModel.onAction(Action.ScreenStopped)
+        }
+    }
+
+    @Test
+    fun whenTheScreenIsDisposed_tellsTheScreenModel() = runComposeUiTest {
+        var isShown by mutableStateOf(true)
+        setContent {
+            if (isShown) {
+                ContactDetailsScreen(onEffect = {}, onNavigateBack = {}, screenModel = screenModel)
+            }
+        }
+
+        isShown = false
+        waitForIdle()
+
+        verifyOrder {
+            screenModel.onAction(Action.ScreenStarted)
+            screenModel.onAction(Action.ScreenStopped)
+        }
     }
 
     private fun ComposeUiTest.setScreenContent(

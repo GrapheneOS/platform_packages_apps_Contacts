@@ -1,11 +1,13 @@
 package com.android.contacts.ui.contactdetails.screen.contactdetailsviewmodel
 
+import android.os.Bundle
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactDetailsResult
 import com.android.contacts.data.contactdetails.model.ContactLinkOperation
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.data.telecom.model.PhoneAccountId
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.domain.groups.model.GroupDeletion
 import com.android.contacts.tests.factory.contactCapabilities
 import com.android.contacts.tests.factory.contactDetails
 import com.android.contacts.ui.contactdetails.ContactDetailsActivity
@@ -439,11 +441,74 @@ internal class ContactDetailsViewModelActionTest : BaseContactDetailsViewModelTe
         }
     }
 
+    @Test
+    fun whenAGroupIsDeleted_showsTheGroupDeletedMessage() = runTest {
+        val viewModel = createViewModel()
+        viewModel.onAction(ContactDetailsAction.ScreenStarted)
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            groupEvents.notifyDeleted(GROUP_DELETION)
+            advanceUntilIdle()
+
+            assertEquals(ContactDetailsEffect.ShowGroupDeleted(GROUP_DELETION), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenAGroupIsDeletedBeforeTheScreenStarts_showsTheMessageOnceStarted() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.effects.test {
+            groupEvents.notifyDeleted(GROUP_DELETION)
+            advanceUntilIdle()
+            expectNoEvents()
+
+            viewModel.onAction(ContactDetailsAction.ScreenStarted)
+            advanceUntilIdle()
+
+            assertEquals(ContactDetailsEffect.ShowGroupDeleted(GROUP_DELETION), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun whenAGroupIsDeletedAfterTheScreenStops_leavesTheDeletionForOthers() = runTest {
+        val viewModel = createViewModel()
+        viewModel.onAction(ContactDetailsAction.ScreenStarted)
+        advanceUntilIdle()
+        viewModel.onAction(ContactDetailsAction.ScreenStopped)
+        advanceUntilIdle()
+
+        viewModel.effects.test {
+            groupEvents.notifyDeleted(GROUP_DELETION)
+            advanceUntilIdle()
+
+            expectNoEvents()
+        }
+        groupEvents.deleted.test {
+            assertEquals(GROUP_DELETION, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun onAction_withUndoGroupDeletionClick_restoresTheGroup() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.onAction(ContactDetailsAction.UndoGroupDeletionClick(GROUP_DELETION))
+        advanceUntilIdle()
+
+        coVerify { groupsRepository.restoreGroup(GROUP_DELETION) }
+    }
+
     private fun editContactEffect(): ContactDetailsEffect {
         return ContactDetailsEffect.EditContact(lookupUri = LOOKUP_URI, photoId = 0L)
     }
 
     private companion object {
         const val CONTACT_ID_UNDER_TEST = 7L
+        val GROUP_DELETION = GroupDeletion(undoData = Bundle())
     }
 }
