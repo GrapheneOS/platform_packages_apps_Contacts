@@ -6,10 +6,7 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.Contacts
 import app.cash.turbine.test
 import com.android.contacts.data.contactdetails.model.ContactPhoto
-import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.ACCOUNT_WITHOUT_DATA_SET_SELECTION
-import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.ACCOUNT_WITH_DATA_SET_SELECTION
 import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.EXCLUDE_CONTACT_SELECTION
-import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.LOCAL_ACCOUNT_SELECTION
 import com.android.contacts.data.contacts.delegate.QueryContactsRepositoryDelegateImpl.Companion.PROJECTION
 import com.android.contacts.data.contacts.model.ContactColumn
 import com.android.contacts.data.settings.model.SortOrder
@@ -331,5 +328,19 @@ class QueryContactsRepositoryDelegateTest {
         assertNull(uri.getQueryParameter(ContactsContract.RawContacts.ACCOUNT_NAME))
         assertNull(uri.getQueryParameter(ContactsContract.RawContacts.ACCOUNT_TYPE))
         assertNull(uri.getQueryParameter(ContactsContract.RawContacts.DATA_SET))
+    }
+
+    private companion object {
+        const val LOCAL_ACCOUNT_SELECTION =
+            "_id IN (SELECT contact_id FROM view_raw_contacts WHERE " +
+                "account_type IS NULL AND account_name IS NULL AND data_set IS NULL)"
+
+        const val ACCOUNT_WITHOUT_DATA_SET_SELECTION =
+            "_id IN (SELECT contact_id FROM view_raw_contacts WHERE " +
+                "account_name=? AND account_type=? AND data_set IS NULL)"
+
+        const val ACCOUNT_WITH_DATA_SET_SELECTION =
+            "_id IN (SELECT contact_id FROM view_raw_contacts WHERE " +
+                "account_name=? AND account_type=? AND data_set=?)"
     }
 }

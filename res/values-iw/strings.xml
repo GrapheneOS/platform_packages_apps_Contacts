@@ -34,7 +34,6 @@
     <string name="menu_change_photo" msgid="4911246106907208055">"החלפת תמונה"</string>
     <string name="menu_create_contact_shortcut" msgid="8983436328557825860">"יצירת קיצור דרך"</string>
     <string name="menu_splitAggregate" msgid="2062290275288905833">"ביטול קישור"</string>
-    <string name="menu_editGroup" msgid="8706562583754054622">"הסרה של אנשי הקשר"</string>
     <string name="menu_renameGroup" msgid="2685886609399776475">"שינוי שם התווית"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"מחיקת התווית"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"הוספת איש קשר"</string>
@@ -95,7 +94,6 @@
     <string name="contactPhotoSavedErrorToast" msgid="8568460180541397272">"לא ניתן היה לשמור את השינויים בתמונה של איש הקשר"</string>
     <string name="groupLoadErrorToast" msgid="4141488223976370583">"טעינת התווית נכשלה"</string>
     <string name="groupDeletedToast" msgid="7774363940327847515">"התווית נמחקה"</string>
-    <string name="groupCreatedToast" msgid="1685148819468403239">"התווית נוצרה"</string>
     <string name="groupCreateFailedToast" msgid="1836425392831964024">"לא ניתן ליצור את התווית"</string>
     <string name="groupUpdatedToast" msgid="3381549467345607379">"התווית עודכנה"</string>
     <string name="groupMembersRemovedToast" msgid="8019566066934628011">"הוסר מהתווית"</string>
@@ -117,7 +115,6 @@
     <string name="menu_add_contact" msgid="5822356185421997656">"הוספה לאנשי הקשר"</string>
     <string name="menu_add_contacts" msgid="7114262784903366463">"הוספה"</string>
     <string name="title_share_via" msgid="3300082736229182956">"{count,plural, =1{שיתוף איש הקשר באמצעות}one{שיתוף אנשי הקשר באמצעות}two{שיתוף אנשי הקשר באמצעות}other{שיתוף אנשי הקשר באמצעות}}"</string>
-    <string name="dialog_new_group_account" msgid="4326402875327788728">"בחירת חשבון"</string>
     <string name="group_name_dialog_insert_title" msgid="5495572488613178283">"יצירת תווית"</string>
     <string name="group_name_dialog_update_title" msgid="3955919589366745101">"שינוי שם התווית"</string>
     <string name="group_name_dialog_hint" msgid="6023999218213062973">"שם התווית"</string>
@@ -159,7 +156,6 @@
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"מחק"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"ביטול"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"חיפוש אנשי קשר"</string>
-    <string name="title_edit_group" msgid="4246193439931854759">"הסרה של אנשי הקשר"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"הפרופיל המקומי שלי"</string>
     <string name="external_profile_title" msgid="2706282819025406927">"פרופיל <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> שלי"</string>
     <string name="contact_editor_title_new_contact" msgid="7534775011591770343">"איש קשר חדש"</string>
@@ -397,7 +393,6 @@
     <string name="about_open_source_licenses_summary" msgid="4843627659117423491">"פרטי רישיון לתוכנות קוד פתוח"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"רישיונות קוד פתוח"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"התקשרות בשיחת וידאו"</string>
-    <string name="description_delete_contact" msgid="8110643050235441400">"מחיקה"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"שלוש נקודות"</string>
     <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"קיצור הדרך הזה הושבת"</string>
     <string name="dynamic_shortcut_contact_removed_message" msgid="8331735243566193974">"איש הקשר הוסר"</string>

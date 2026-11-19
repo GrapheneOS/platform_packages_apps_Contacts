@@ -3,7 +3,7 @@ package com.android.contacts.ui.selection.screen.mapper
 import com.android.contacts.domain.contacts.model.ContactSelectionFilter as Filter
 import com.android.contacts.tests.factory.AccountModelFactory
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode as Mode
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -99,19 +99,19 @@ internal class ContactSelectionFilterMapperTest {
 
     @Test
     fun sendToGroupSms_returnsPhoneNumbersRestrictedToItems() {
-        val result = subject.map(sendToGroup(SentToGroupTarget.SMS))
+        val result = subject.map(sendToGroup(SendToGroupTarget.SMS))
 
         assertEquals(Filter.PhoneNumbers(restrictToContactIds = setOf(1L, 2L)), result)
     }
 
     @Test
     fun sendToGroupEmail_returnsEmailsRestrictedToItems() {
-        val result = subject.map(sendToGroup(SentToGroupTarget.EMAIL))
+        val result = subject.map(sendToGroup(SendToGroupTarget.EMAIL))
 
         assertEquals(Filter.Emails(restrictToContactIds = setOf(1L, 2L)), result)
     }
 
-    private fun sendToGroup(target: SentToGroupTarget): Mode.SendToGroup {
+    private fun sendToGroup(target: SendToGroupTarget): Mode.SendToGroup {
         return Mode.SendToGroup(
             target = target,
             itemIds = listOf(1L, 2L, 2L),

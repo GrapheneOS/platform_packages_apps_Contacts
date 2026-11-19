@@ -1,11 +1,10 @@
 package com.android.contacts.ui.group.list.screen
 
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import com.android.contacts.activities.PeopleActivity
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.group.GroupUtil
+import com.android.contacts.ui.group.detail.GroupActivity
 import com.android.contacts.ui.group.edit.GroupNameEditActivity
 import com.android.contacts.ui.group.list.GroupsActivity
 import com.android.contacts.ui.group.list.screen.model.GroupsEffect as Effect
@@ -42,9 +41,7 @@ internal class GroupsEffectHandlerImpl(
     }
 
     private fun openGroup(groupUri: Uri) {
-        val intent = Intent(activity, PeopleActivity::class.java)
-            .setAction(Intent.ACTION_VIEW)
-            .setData(groupUri)
+        val intent = GroupActivity.buildIntent(activity, groupUri)
         activity.startActivity(intent)
         close()
     }

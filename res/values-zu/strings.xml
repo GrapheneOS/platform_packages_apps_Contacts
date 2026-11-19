@@ -34,7 +34,6 @@
     <string name="menu_change_photo" msgid="4911246106907208055">"Guqula isithombe"</string>
     <string name="menu_create_contact_shortcut" msgid="8983436328557825860">"Dala isinqamuleli"</string>
     <string name="menu_splitAggregate" msgid="2062290275288905833">"Susa ukuxhumanisa"</string>
-    <string name="menu_editGroup" msgid="8706562583754054622">"Susa oxhumana nabo"</string>
     <string name="menu_renameGroup" msgid="2685886609399776475">"Qamba kabusha ilebula"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Susa ilebula"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Engeza oxhumana naye"</string>
@@ -95,7 +94,6 @@
     <string name="contactPhotoSavedErrorToast" msgid="8568460180541397272">"Ayikwazanga ukulondoloza ushintsho lwesithombe loxhumana naye"</string>
     <string name="groupLoadErrorToast" msgid="4141488223976370583">"Yehlulekile ukulayisha ilebula"</string>
     <string name="groupDeletedToast" msgid="7774363940327847515">"Ilebula isusiwe"</string>
-    <string name="groupCreatedToast" msgid="1685148819468403239">"Ilebula idaliwe"</string>
     <string name="groupCreateFailedToast" msgid="1836425392831964024">"Ayikwazi ukudala ilebuli"</string>
     <string name="groupUpdatedToast" msgid="3381549467345607379">"Ilebula libuyekeziwe"</string>
     <string name="groupMembersRemovedToast" msgid="8019566066934628011">"Kususiwe kulebula"</string>
@@ -117,7 +115,6 @@
     <string name="menu_add_contact" msgid="5822356185421997656">"Engeza koxhumana nabo"</string>
     <string name="menu_add_contacts" msgid="7114262784903366463">"Yengeza"</string>
     <string name="title_share_via" msgid="3300082736229182956">"{count,plural, =1{Yabelana noxhumana naye nge-}one{Yabelana noxhumana nabo nge-}other{Yabelana noxhumana nabo nge-}}"</string>
-    <string name="dialog_new_group_account" msgid="4326402875327788728">"Khetha i-akhawunti"</string>
     <string name="group_name_dialog_insert_title" msgid="5495572488613178283">"Dala ilebula"</string>
     <string name="group_name_dialog_update_title" msgid="3955919589366745101">"Qamba kabusha ilebula"</string>
     <string name="group_name_dialog_hint" msgid="6023999218213062973">"Igama lelebula"</string>
@@ -159,7 +156,6 @@
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"Lahla"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"Khansela"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"Sesha oxhumana nabo"</string>
-    <string name="title_edit_group" msgid="4246193439931854759">"Susa oxhumana nabo"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"Imininingwane yami yakuleli"</string>
     <string name="external_profile_title" msgid="2706282819025406927">"Imininingwane <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> yami"</string>
     <string name="contact_editor_title_new_contact" msgid="7534775011591770343">"Dala othintana naye omusha"</string>
@@ -397,7 +393,6 @@
     <string name="about_open_source_licenses_summary" msgid="4843627659117423491">"Iminingwane yelayisensi yesofthiwe yomthombo ovulelekile"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"Amalayisense womthombo ovulekile"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"Yenza ikholi yevidiyo"</string>
-    <string name="description_delete_contact" msgid="8110643050235441400">"Susa"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"Isiyingi"</string>
     <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"Lesi sinqamuleli sikhutshaziwe"</string>
     <string name="dynamic_shortcut_contact_removed_message" msgid="8331735243566193974">"Oxhumana naye ususiwe"</string>

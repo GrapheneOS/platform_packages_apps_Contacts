@@ -34,7 +34,6 @@
     <string name="menu_change_photo" msgid="4911246106907208055">"Зураг солих"</string>
     <string name="menu_create_contact_shortcut" msgid="8983436328557825860">"Товчлол үүсгэх"</string>
     <string name="menu_splitAggregate" msgid="2062290275288905833">"Холбоосыг салгах"</string>
-    <string name="menu_editGroup" msgid="8706562583754054622">"Харилцагчдыг арилгах"</string>
     <string name="menu_renameGroup" msgid="2685886609399776475">"Шошгын нэрийг өөрчлөх"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"Шошго устгах"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"Харилцагч нэмэх"</string>
@@ -95,7 +94,6 @@
     <string name="contactPhotoSavedErrorToast" msgid="8568460180541397272">"Харилцагчийн зургийн өөрчлөлтийг хадгалж чадсангүй"</string>
     <string name="groupLoadErrorToast" msgid="4141488223976370583">"Шошгыг ачаалж чадсангүй"</string>
     <string name="groupDeletedToast" msgid="7774363940327847515">"Шошгыг устгасан"</string>
-    <string name="groupCreatedToast" msgid="1685148819468403239">"Шошго үүсгэсэн"</string>
     <string name="groupCreateFailedToast" msgid="1836425392831964024">"Шошго үүсгэх боломжгүй"</string>
     <string name="groupUpdatedToast" msgid="3381549467345607379">"Шошгыг шинэчилсэн"</string>
     <string name="groupMembersRemovedToast" msgid="8019566066934628011">"Шошгоос хассан"</string>
@@ -117,7 +115,6 @@
     <string name="menu_add_contact" msgid="5822356185421997656">"Харилцагчдад нэмэх"</string>
     <string name="menu_add_contacts" msgid="7114262784903366463">"Нэмэх"</string>
     <string name="title_share_via" msgid="3300082736229182956">"{count,plural, =1{Харилцагчийг дараахаар хуваалцах}other{ Харилцагчийг дараахаар хуваалцах}}"</string>
-    <string name="dialog_new_group_account" msgid="4326402875327788728">"Бүртгэл сонгох"</string>
     <string name="group_name_dialog_insert_title" msgid="5495572488613178283">"Шошго үүсгэх"</string>
     <string name="group_name_dialog_update_title" msgid="3955919589366745101">"Шошгын нэрийг өөрчлөх"</string>
     <string name="group_name_dialog_hint" msgid="6023999218213062973">"Шошгын нэр"</string>
@@ -159,7 +156,6 @@
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"Устгах"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"Цуцлах"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"Харилцагчдаас хайх"</string>
-    <string name="title_edit_group" msgid="4246193439931854759">"Харилцагчдыг арилгах"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"Миний дотоод профайл"</string>
     <string name="external_profile_title" msgid="2706282819025406927">"Миний <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> профайл"</string>
     <string name="contact_editor_title_new_contact" msgid="7534775011591770343">"Шинэ харилцагч үүсгэх"</string>
@@ -397,7 +393,6 @@
     <string name="about_open_source_licenses_summary" msgid="4843627659117423491">"Нээлттэй эхийн программ хангамжийн лицензийн мэдээлэл"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"Нээлттэй эхийн лиценз"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"Видео дуудлага хийх"</string>
-    <string name="description_delete_contact" msgid="8110643050235441400">"Устгах"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"Эллипс"</string>
     <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"Энэ товчилборыг идэвхгүй болгосон"</string>
     <string name="dynamic_shortcut_contact_removed_message" msgid="8331735243566193974">"Харилцагчийг хассан"</string>

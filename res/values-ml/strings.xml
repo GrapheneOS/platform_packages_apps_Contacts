@@ -34,7 +34,6 @@
     <string name="menu_change_photo" msgid="4911246106907208055">"ഫോട്ടോ മാറ്റുക"</string>
     <string name="menu_create_contact_shortcut" msgid="8983436328557825860">"കുറുക്കുവഴി സൃഷ്‌ടിക്കുക"</string>
     <string name="menu_splitAggregate" msgid="2062290275288905833">"അൺലിങ്ക് ചെയ്യുക"</string>
-    <string name="menu_editGroup" msgid="8706562583754054622">"കോൺടാക്റ്റ് നീക്കംചെയ്യൂ"</string>
     <string name="menu_renameGroup" msgid="2685886609399776475">"ലേബലിന്റെ പേരുമാറ്റുക"</string>
     <string name="menu_deleteGroup" msgid="1180215594530228294">"ലേബല്‍ ഇല്ലാതാക്കുക"</string>
     <string name="menu_addToGroup" msgid="5034813446697655310">"കോൺടാക്റ്റ് ചേർക്കുക"</string>
@@ -95,7 +94,6 @@
     <string name="contactPhotoSavedErrorToast" msgid="8568460180541397272">"കോൺടാക്റ്റ് ഫോട്ടോയിലെ മാറ്റങ്ങൾ സംരക്ഷിക്കാനായില്ല"</string>
     <string name="groupLoadErrorToast" msgid="4141488223976370583">"ലേബൽ ലോഡുചെയ്യുന്നത് പരാജയപ്പെട്ടു"</string>
     <string name="groupDeletedToast" msgid="7774363940327847515">"ലേബൽ ഇല്ലാതാക്കി"</string>
-    <string name="groupCreatedToast" msgid="1685148819468403239">"ലേബൽ സൃഷ്‌ടിച്ചു"</string>
     <string name="groupCreateFailedToast" msgid="1836425392831964024">"ലേബൽ സൃഷ്‌ടിക്കാൻ കഴിയുന്നില്ല"</string>
     <string name="groupUpdatedToast" msgid="3381549467345607379">"ലേബൽ അപ്ഡേറ്റുചെയ്‌തു"</string>
     <string name="groupMembersRemovedToast" msgid="8019566066934628011">"ലേബലിൽ നിന്ന് നീക്കംചെയ്‌തു"</string>
@@ -117,7 +115,6 @@
     <string name="menu_add_contact" msgid="5822356185421997656">"കോൺടാക്‌റ്റുകളിൽ ചേർക്കുക"</string>
     <string name="menu_add_contacts" msgid="7114262784903366463">"ചേർക്കുക"</string>
     <string name="title_share_via" msgid="3300082736229182956">"{count,plural, =1{കോൺടാക്റ്റ് ഇനിപ്പറയുന്നത് വഴി പങ്കിടുക}other{കോൺടാക്റ്റുകൾ ഇനിപ്പറയുന്നത് വഴി പങ്കിടുക}}"</string>
-    <string name="dialog_new_group_account" msgid="4326402875327788728">"അക്കൗണ്ട് തിരഞ്ഞെടുക്കുക"</string>
     <string name="group_name_dialog_insert_title" msgid="5495572488613178283">"ലേബല്‍ സൃഷ്ടിക്കുക"</string>
     <string name="group_name_dialog_update_title" msgid="3955919589366745101">"ലേബലിന്റെ പേരുമാറ്റുക"</string>
     <string name="group_name_dialog_hint" msgid="6023999218213062973">"ലേബല്‍ പേര്"</string>
@@ -159,7 +156,6 @@
     <string name="cancel_confirmation_dialog_cancel_editing_button" msgid="8280294641821133477">"നിരസിക്കുക"</string>
     <string name="cancel_confirmation_dialog_keep_editing_button" msgid="7117943783437253341">"റദ്ദാക്കൂ"</string>
     <string name="enter_contact_name" msgid="521859148893732679">"കോണ്‍‌ടാക്റ്റുകള്‍ തിരയുക"</string>
-    <string name="title_edit_group" msgid="4246193439931854759">"കോൺടാക്റ്റ് നീക്കംചെയ്യൂ"</string>
     <string name="local_profile_title" msgid="1613784248702623410">"എന്റെ പ്രാദേശിക പ്രൊഫൈൽ"</string>
     <string name="external_profile_title" msgid="2706282819025406927">"എന്റെ <xliff:g id="EXTERNAL_SOURCE">%1$s</xliff:g> പ്രൊഫൈൽ"</string>
     <string name="contact_editor_title_new_contact" msgid="7534775011591770343">"പുതിയ കോൺടാക്റ്റ് സൃഷ്‌ടിക്കൂ"</string>
@@ -397,7 +393,6 @@
     <string name="about_open_source_licenses_summary" msgid="4843627659117423491">"ഓപ്പൺ സോഴ്‌സ് സോഫ്റ്റ്‌വെയറിനായുള്ള ലൈസൻസ് വിശദാംശങ്ങൾ"</string>
     <string name="activity_title_licenses" msgid="6434398894019119709">"ഓപ്പൺ സോഴ്‌സ് ലൈസൻസുകൾ"</string>
     <string name="description_search_video_call" msgid="1768558141309418755">"വീഡിയോ കോൾ ചെയ്യുക"</string>
-    <string name="description_delete_contact" msgid="8110643050235441400">"ഇല്ലാതാക്കുക"</string>
     <string name="description_no_name_header" msgid="8596201864512339003">"എല്ലിപ്‌സിസ്"</string>
     <string name="dynamic_shortcut_disabled_message" msgid="8770462908102469878">"ഈ കുറുക്കുവഴി പ്രവർത്തനരഹിതമാക്കി"</string>
     <string name="dynamic_shortcut_contact_removed_message" msgid="8331735243566193974">"കോൺടാക്‌റ്റ് നീക്കംചെയ്‌തു"</string>

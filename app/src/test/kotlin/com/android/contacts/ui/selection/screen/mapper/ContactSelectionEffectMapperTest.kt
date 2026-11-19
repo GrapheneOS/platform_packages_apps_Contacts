@@ -20,7 +20,7 @@ import com.android.contacts.tests.factory.AccountModelFactory
 import com.android.contacts.ui.selection.screen.model.ContactSelectionEffect as Effect
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode as Mode
 import com.android.contacts.ui.selection.screen.model.ContactSelectionResult as Result
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -291,11 +291,11 @@ internal class ContactSelectionEffectMapperTest {
             contactsRepository.getContactDataValues(ContactDataKind.Phone(), setOf(1L, 2L))
         } returns listOf("+1 555 0100", "+1 555 0101")
 
-        val result = subject.map(sendToGroup(SentToGroupTarget.SMS), localKeys(1L, 2L))
+        val result = subject.map(sendToGroup(SendToGroupTarget.SMS), localKeys(1L, 2L))
 
         assertEquals(
             Effect.SendTo(
-                target = SentToGroupTarget.SMS,
+                target = SendToGroupTarget.SMS,
                 addresses = listOf("+1 555 0100", "+1 555 0101"),
                 chooserTitle = "Send",
             ),
@@ -309,11 +309,11 @@ internal class ContactSelectionEffectMapperTest {
             contactsRepository.getContactDataValues(ContactDataKind.Email, setOf(1L))
         } returns listOf("john@example.com")
 
-        val result = subject.map(sendToGroup(SentToGroupTarget.EMAIL), localKeys(1L))
+        val result = subject.map(sendToGroup(SendToGroupTarget.EMAIL), localKeys(1L))
 
         assertEquals(
             Effect.SendTo(
-                target = SentToGroupTarget.EMAIL,
+                target = SendToGroupTarget.EMAIL,
                 addresses = listOf("john@example.com"),
                 chooserTitle = "Send",
             ),
@@ -325,7 +325,7 @@ internal class ContactSelectionEffectMapperTest {
     fun sendToGroup_withoutAddresses_closesCanceled() = runTest {
         coEvery { contactsRepository.getContactDataValues(any(), any()) } returns emptyList()
 
-        val result = subject.map(sendToGroup(SentToGroupTarget.SMS), localKeys(1L))
+        val result = subject.map(sendToGroup(SendToGroupTarget.SMS), localKeys(1L))
 
         assertEquals(close(Result.Canceled), result)
         coVerify { contactsRepository.getContactDataValues(ContactDataKind.Phone(), setOf(1L)) }
@@ -337,7 +337,7 @@ internal class ContactSelectionEffectMapperTest {
         return ids.mapTo(linkedSetOf()) { ContactItemKey.Local(it) }
     }
 
-    private fun sendToGroup(target: SentToGroupTarget) = Mode.SendToGroup(
+    private fun sendToGroup(target: SendToGroupTarget) = Mode.SendToGroup(
         target = target,
         itemIds = listOf(1L, 2L),
         defaultSelection = emptyList(),

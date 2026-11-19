@@ -109,7 +109,6 @@ public class ContactSaveService extends IntentService {
 
     public static final String ACTION_CREATE_GROUP = "createGroup";
     public static final String ACTION_RENAME_GROUP = "renameGroup";
-    public static final String ACTION_DELETE_GROUP = "deleteGroup";
     public static final String ACTION_UPDATE_GROUP = "updateGroup";
     public static final String EXTRA_GROUP_ID = "groupId";
     public static final String EXTRA_GROUP_LABEL = "groupLabel";
@@ -143,15 +142,13 @@ public class ContactSaveService extends IntentService {
     public static final String ACTION_SET_RINGTONE = "setRingtone";
     public static final String EXTRA_CUSTOM_RINGTONE = "customRingtone";
 
-    public static final String ACTION_UNDO = "undo";
-    public static final String EXTRA_UNDO_ACTION = "undoAction";
+    public static final String ACTION_RESTORE_GROUP = "restoreGroup";
     public static final String EXTRA_UNDO_DATA = "undoData";
 
     // For debugging and testing what happens when requests are queued up.
     public static final String ACTION_SLEEP = "sleep";
     public static final String EXTRA_SLEEP_DURATION = "sleepDuration";
 
-    public static final String BROADCAST_GROUP_DELETED = "groupDeleted";
     public static final String BROADCAST_LINK_COMPLETE = "linkComplete";
     public static final String BROADCAST_UNLINK_COMPLETE = "unlinkComplete";
 
@@ -225,10 +222,6 @@ public class ContactSaveService extends IntentService {
                     + " receive callback from " + ContactSaveService.class.getName());
         }
         sListeners.add(0, listener);
-    }
-
-    public static boolean canUndo(Intent resultIntent) {
-        return resultIntent.hasExtra(EXTRA_UNDO_DATA);
     }
 
     public static void unregisterListener(Listener listener) {
@@ -329,8 +322,6 @@ public class ContactSaveService extends IntentService {
             createGroup(intent);
         } else if (ACTION_RENAME_GROUP.equals(action)) {
             renameGroup(intent);
-        } else if (ACTION_DELETE_GROUP.equals(action)) {
-            deleteGroup(intent);
         } else if (ACTION_UPDATE_GROUP.equals(action)) {
             updateGroup(intent);
         } else if (ACTION_SET_STARRED.equals(action)) {
@@ -353,8 +344,8 @@ public class ContactSaveService extends IntentService {
             setSendToVoicemail(intent);
         } else if (ACTION_SET_RINGTONE.equals(action)) {
             setRingtone(intent);
-        } else if (ACTION_UNDO.equals(action)) {
-            undo(intent);
+        } else if (ACTION_RESTORE_GROUP.equals(action)) {
+            restoreGroup(intent);
         } else if (ACTION_SLEEP.equals(action)) {
             sleepForDebugging(intent);
         }
@@ -843,48 +834,18 @@ public class ContactSaveService extends IntentService {
     }
 
     /**
-     * Creates an intent that can be sent to this service to delete a group.
+     * Creates an intent that can be sent to this service to restore a deleted group.
      */
-    public static Intent createGroupDeletionIntent(Context context, long groupId) {
+    public static Intent createGroupRestoreIntent(Context context, Bundle undoData) {
         final Intent serviceIntent = new Intent(context, ContactSaveService.class);
-        serviceIntent.setAction(ContactSaveService.ACTION_DELETE_GROUP);
-        serviceIntent.putExtra(ContactSaveService.EXTRA_GROUP_ID, groupId);
-
+        serviceIntent.setAction(ContactSaveService.ACTION_RESTORE_GROUP);
+        serviceIntent.putExtra(ContactSaveService.EXTRA_UNDO_DATA, undoData);
         return serviceIntent;
     }
 
-    private void deleteGroup(Intent intent) {
-        long groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1);
-        if (groupId == -1) {
-            Log.e(TAG, "Invalid arguments for deleteGroup request");
-            return;
-        }
-        final Uri groupUri = ContentUris.withAppendedId(Groups.CONTENT_URI, groupId);
-
-        final Intent callbackIntent = new Intent(BROADCAST_GROUP_DELETED);
-        final Bundle undoData = mGroupsDao.captureDeletionUndoData(groupUri);
-        callbackIntent.putExtra(EXTRA_UNDO_ACTION, ACTION_DELETE_GROUP);
-        callbackIntent.putExtra(EXTRA_UNDO_DATA, undoData);
-
-        mGroupsDao.delete(groupUri);
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(callbackIntent);
+    private void restoreGroup(Intent intent) {
+        mGroupsDao.undoDeletion(intent.getBundleExtra(EXTRA_UNDO_DATA));
     }
-
-    public static Intent createUndoIntent(Context context, Intent resultIntent) {
-        final Intent serviceIntent = new Intent(context, ContactSaveService.class);
-        serviceIntent.setAction(ContactSaveService.ACTION_UNDO);
-        serviceIntent.putExtras(resultIntent);
-        return serviceIntent;
-    }
-
-    private void undo(Intent intent) {
-        final String actionToUndo = intent.getStringExtra(EXTRA_UNDO_ACTION);
-        if (ACTION_DELETE_GROUP.equals(actionToUndo)) {
-            mGroupsDao.undoDeletion(intent.getBundleExtra(EXTRA_UNDO_DATA));
-        }
-    }
-
 
     /**
      * Creates an intent that can be sent to this service to rename a group as
@@ -1874,10 +1835,15 @@ public class ContactSaveService extends IntentService {
                     Data.CONTENT_URI, new String[] { Data.RAW_CONTACT_ID },
                     Data.MIMETYPE + "=? AND " + GroupMembership.GROUP_ROW_ID + "=?",
                     new String[] { GroupMembership.CONTENT_ITEM_TYPE, String.valueOf(groupId) }, null);
-            final long[] memberIds = new long[membersCursor.getCount()];
-            int i = 0;
-            while (membersCursor.moveToNext()) {
-                memberIds[i++] = membersCursor.getLong(0);
+            final long[] memberIds;
+            try {
+                memberIds = new long[membersCursor.getCount()];
+                int i = 0;
+                while (membersCursor.moveToNext()) {
+                    memberIds[i++] = membersCursor.getLong(0);
+                }
+            } finally {
+                membersCursor.close();
             }
             result.putLongArray(KEY_GROUP_MEMBERS, memberIds);
             return result;

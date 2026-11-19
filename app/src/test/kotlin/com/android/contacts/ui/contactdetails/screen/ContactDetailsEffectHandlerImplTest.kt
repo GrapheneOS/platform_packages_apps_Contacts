@@ -7,19 +7,24 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Bundle
 import android.provider.CallLog.Calls
 import android.provider.ContactsContract.Contacts
 import android.provider.ContactsContract.Intents
 import android.telecom.TelecomManager
 import androidx.activity.result.ActivityResultLauncher
-import com.android.contacts.activities.PeopleActivity
+import androidx.compose.material3.SnackbarHostState
+import com.android.contacts.R
 import com.android.contacts.data.contactdetails.intent.ContactEntryIntentFactory
 import com.android.contacts.data.contactdetails.model.DirectoryContactPrefill
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.domain.groups.model.GroupDeletion
 import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.contactdetails.ContactDetailsLaunchers
+import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsAction as Action
 import com.android.contacts.ui.contactdetails.screen.model.ContactDetailsEffect as Effect
 import com.android.contacts.ui.editor.springboard.ContactEditorSpringBoardActivity
+import com.android.contacts.ui.group.detail.GroupActivity
 import com.android.contacts.ui.interactions.callsubject.screen.CallSubjectViewModel
 import com.android.contacts.ui.interactions.callsubject.screen.model.CallSubjectArguments
 import com.android.contacts.ui.selection.ContactSelectionActivity
@@ -30,6 +35,9 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -39,6 +47,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
 internal class ContactDetailsEffectHandlerImplTest {
 
@@ -49,6 +58,8 @@ internal class ContactDetailsEffectHandlerImplTest {
     private val ringtoneLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val editorLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
     private val directoryCopyLauncher = mockk<ActivityResultLauncher<Intent>>(relaxed = true)
+    private val snackbarHostState = SnackbarHostState()
+    private val actions = mutableListOf<Action>()
 
     private val handler = ContactDetailsEffectHandlerImpl(
         activity = activity,
@@ -60,6 +71,9 @@ internal class ContactDetailsEffectHandlerImplTest {
             joinTarget = joinTargetLauncher,
             ringtone = ringtoneLauncher,
         ),
+        snackbarHostState = snackbarHostState,
+        coroutineScope = TestScope(UnconfinedTestDispatcher()),
+        onAction = actions::add,
     )
 
     @Before
@@ -176,14 +190,42 @@ internal class ContactDetailsEffectHandlerImplTest {
     }
 
     @Test
-    fun viewGroupMembers_opensTheGroupInTheContactsList() {
+    fun viewGroupMembers_opensTheGroupScreen() {
         handler.handle(Effect.ViewGroupMembers(groupId = 11L))
 
         val intent = startedIntent()
 
         assertEquals(Intent.ACTION_VIEW, intent.action)
         assertEquals("content://com.android.contacts/groups/11", intent.data.toString())
-        assertEquals(PeopleActivity::class.java.name, intent.component?.className)
+        assertEquals(GroupActivity::class.java.name, intent.component?.className)
+    }
+
+    @Test
+    fun showGroupDeleted_showsASnackbarWithUndo() {
+        handler.handle(Effect.ShowGroupDeleted(GROUP_DELETION))
+
+        val visuals = snackbarHostState.currentSnackbarData?.visuals
+        val application = RuntimeEnvironment.getApplication()
+        assertEquals(application.getString(R.string.groupDeletedToast), visuals?.message)
+        assertEquals(application.getString(R.string.undo), visuals?.actionLabel)
+    }
+
+    @Test
+    fun showGroupDeleted_whenUndoIsClicked_requestsTheUndo() {
+        handler.handle(Effect.ShowGroupDeleted(GROUP_DELETION))
+
+        snackbarHostState.currentSnackbarData?.performAction()
+
+        assertEquals(listOf(Action.UndoGroupDeletionClick(GROUP_DELETION)), actions)
+    }
+
+    @Test
+    fun showGroupDeleted_whenDismissed_requestsNothing() {
+        handler.handle(Effect.ShowGroupDeleted(GROUP_DELETION))
+
+        snackbarHostState.currentSnackbarData?.dismiss()
+
+        assertTrue(actions.isEmpty())
     }
 
     @Test
@@ -322,5 +364,6 @@ internal class ContactDetailsEffectHandlerImplTest {
 
     private companion object {
         val LOOKUP_URI: Uri = Uri.parse("content://com.android.contacts/contacts/lookup/key/7")
+        val GROUP_DELETION = GroupDeletion(undoData = Bundle())
     }
 }

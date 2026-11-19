@@ -1,12 +1,15 @@
 package com.android.contacts.ui.group.list
 
+import android.accounts.Account
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract.Intents.Insert
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.android.contacts.ContactSaveService
+import com.android.contacts.activities.RequestPermissionsActivity
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.group.GroupUtil
 import com.android.contacts.ui.core.AppTheme
@@ -25,6 +28,11 @@ class GroupsActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (RequestPermissionsActivity.startPermissionActivityIfNeeded(this)) {
+            return
+        }
+
         enableEdgeToEdge()
         ContactSaveService.registerListener(this)
 
@@ -32,6 +40,10 @@ class GroupsActivity :
             activity = this,
         )
         this.effectHandler = effectHandler
+
+        if (savedInstanceState == null && intent.action == Intent.ACTION_INSERT) {
+            insertAccount()?.let { effectHandler.handle(Effect.CreateNewGroup(it)) }
+        }
 
         setContent {
             AppTheme {
@@ -54,6 +66,16 @@ class GroupsActivity :
                 effectHandler?.handle(Effect.OpenGroup(groupUri))
             }
         }
+    }
+
+    private fun insertAccount(): AccountModel? {
+        val account = intent.getParcelableExtra(Insert.EXTRA_ACCOUNT, Account::class.java)
+            ?: return null
+        return AccountModel(
+            name = account.name,
+            type = account.type,
+            dataSet = intent.getStringExtra(Insert.EXTRA_DATA_SET),
+        )
     }
 
     companion object {

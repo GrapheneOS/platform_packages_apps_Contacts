@@ -26,12 +26,13 @@ private val OverflowMenuWidth = 220.dp
 
 @Composable
 internal fun OverflowMenu(
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.(dismiss: () -> Unit) -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Box {
-        IconButton(onClick = { isExpanded = true }) {
+        IconButton(onClick = { isExpanded = true }, modifier = modifier) {
             Icon(
                 imageVector = Icons.Rounded.MoreVert,
                 contentDescription = stringResource(R.string.more_options),
@@ -52,12 +53,12 @@ internal fun OverflowMenu(
 internal fun OverflowMenuItem(
     labelResId: Int,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     DropdownMenuItem(
-        text = {
-            Text(text = stringResource(labelResId))
-        },
+        text = { Text(text = stringResource(labelResId)) },
         onClick = onClick,
+        modifier = modifier,
     )
 }
 

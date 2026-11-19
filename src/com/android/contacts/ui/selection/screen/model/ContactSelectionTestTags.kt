@@ -1,6 +1,7 @@
 package com.android.contacts.ui.selection.screen.model
 
 import com.android.contacts.domain.contacts.model.ContactItemKey
+import com.android.contacts.ui.common.model.ContactListSection
 
 internal const val CONTACT_SELECTION_CLOSE_BUTTON_TEST_TAG = "contact_selection_close"
 internal const val CONTACT_SELECTION_TITLE_TEST_TAG = "contact_selection_title"

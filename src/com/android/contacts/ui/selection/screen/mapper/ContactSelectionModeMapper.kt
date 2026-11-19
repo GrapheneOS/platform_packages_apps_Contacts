@@ -15,7 +15,7 @@ import android.provider.ContactsContract.Intents.Insert
 import com.android.contacts.domain.accounts.model.AccountModel
 import com.android.contacts.list.UiIntentActions
 import com.android.contacts.ui.selection.screen.model.ContactSelectionMode
-import com.android.contacts.ui.selection.screen.model.SentToGroupTarget
+import com.android.contacts.ui.selection.screen.model.SendToGroupTarget
 import com.android.contacts.ui.selection.screen.model.ShortcutTarget
 import javax.inject.Inject
 
@@ -119,8 +119,8 @@ internal class ContactSelectionModeMapperImpl @Inject constructor(
 
     private fun mapSendToGroup(intent: Intent): ContactSelectionMode? {
         val target = when (resolveType(intent)) {
-            Phone.CONTENT_TYPE -> SentToGroupTarget.SMS
-            Email.CONTENT_TYPE -> SentToGroupTarget.EMAIL
+            Phone.CONTENT_TYPE -> SendToGroupTarget.SMS
+            Email.CONTENT_TYPE -> SendToGroupTarget.EMAIL
             else -> return null
         }
         return ContactSelectionMode.SendToGroup(

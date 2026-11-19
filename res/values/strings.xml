@@ -85,9 +85,6 @@
     <!-- Menu item that splits an item from the contact detail into a separate aggregate -->
     <string name="menu_splitAggregate">Unlink</string>
 
-    <!-- Menu item that edits the currently selected label [CHAR LIMIT=30] -->
-    <string name="menu_editGroup">Remove contacts</string>
-
     <!-- Menu item to rename the currently selected label [CHAR LIMIT=30] -->
     <string name="menu_renameGroup">Rename label</string>
 
@@ -289,9 +286,6 @@
     <!-- Toast or snackbar displayed when a label name is deleted. [CHAR LIMIT=50] -->
     <string name="groupDeletedToast">Label deleted</string>
 
-    <!-- Toast displayed when a new label name is created. [CHAR LIMIT=50] -->
-    <string name="groupCreatedToast">Label created</string>
-
     <!-- Toast displayed when a new label name cannot be created. [CHAR LIMIT=50] -->
     <string name="groupCreateFailedToast">Can\'t create label</string>
 
@@ -313,14 +307,23 @@
     <!-- Toast displayed when some group contacts do not have any emails (for group send) [CHAR LIMIT=50] -->
     <string name="groupSomeContactsNoEmailsToast">Some contacts do not have emails.</string>
 
+    <!-- Toast displayed when none of group contacts selected have any emails (for group send) [CHAR LIMIT=50] -->
+    <string name="groupContactsWithoutEmailsToast">Those contacts do not have emails.</string>
+
     <!-- Toast displayed when some group contacts do not have any phone numbers (for group send) [CHAR LIMIT=50] -->
     <string name="groupSomeContactsNoPhonesToast">Some contacts do not have phone numbers.</string>
+
+    <!-- Toast displayed when none of group contacts selected have any phones (for group send) [CHAR LIMIT=50] -->
+    <string name="groupContactsWithoutPhonesToast">Those contacts do not have phone numbers.</string>
 
     <!-- Option name to send email to all members of a group/selection [CHAR LIMIT=30] -->
     <string name="menu_sendEmailOption">Send email</string>
 
     <!-- Option name to send message to all members of a group/selection [CHAR LIMIT=30] -->
     <string name="menu_sendMessageOption">Send message</string>
+
+    <!-- Option to select all members of a label [CHAR LIMIT=30] -->
+    <string name="menu_select_all">Select all</string>
 
     <!-- Activity title when the user is selecting items [CHAR LIMIT=40] -->
     <string name="pickerSelectContactsActivityTitle">Choose Contacts</string>
@@ -426,9 +429,6 @@
         =1    {Share contact via}
         other {Share contacts via}
     }</string>
-
-    <!-- Title for the disambiguation dialog that requests the user choose an account for the new label to be created under [CHAR LIMIT=NONE] -->
-    <string name="dialog_new_group_account">Choose account</string>
 
     <!-- Title for the create new label dialog. CHAR LIMIT=40] -->
     <string name="group_name_dialog_insert_title">Create label</string>
@@ -588,9 +588,6 @@
 
     <!-- Label to instruct the user to type in a contact's name to add the contact as a member of the current group. [CHAR LIMIT=64] -->
     <string name="enter_contact_name">Search contacts</string>
-
-    <!-- Title of the edit label view in selection mode when contacts are being selected for removal.[CHAR LIMIT=40] -->
-    <string name="title_edit_group">Remove contacts</string>
 
     <!-- Header label in the contact editor for a profile that is local to the device only (and not associated with any account) [CHAR LIMIT=25] -->
     <string name="local_profile_title">My local profile</string>
@@ -1363,9 +1360,6 @@
 
          [CHAR LIMIT=NONE]-->
     <string name="description_search_video_call">Place video call</string>
-
-    <!-- Content description of delete contact button [CHAR LIMIT=30]-->
-    <string name="description_delete_contact">Delete</string>
 
     <!-- Content description for (...) in no name header [CHAR LIMIT=30]-->
     <string name="description_no_name_header">Ellipsis</string>

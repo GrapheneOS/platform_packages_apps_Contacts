@@ -37,17 +37,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.android.contacts.R
 import com.android.contacts.domain.contacts.model.ContactItemKey
 import com.android.contacts.ui.common.components.delayedIndicator
+import com.android.contacts.ui.common.model.ContactListSection
+import com.android.contacts.ui.common.model.ContactUiModel
 import com.android.contacts.ui.core.ContactsPreviewTheme
 import com.android.contacts.ui.core.scrollingScreenPadding
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_DESCRIPTION_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_EMPTY_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_LOADING_TEST_TAG
-import com.android.contacts.ui.selection.screen.model.ContactListSection
 import com.android.contacts.ui.selection.screen.model.ContactSelectionAction as Action
 import com.android.contacts.ui.selection.screen.model.ContactSelectionListState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionSearchState as SearchState
 import com.android.contacts.ui.selection.screen.model.ContactSelectionUiState as State
-import com.android.contacts.ui.selection.screen.model.ContactUiModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 

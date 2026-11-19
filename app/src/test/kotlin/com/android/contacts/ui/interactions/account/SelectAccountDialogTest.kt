@@ -43,7 +43,7 @@ class SelectAccountDialogTest {
     fun showsTitleId() = runComposeUiTest {
         setScreenContent()
 
-        val titleId = R.string.dialog_new_group_account
+        val titleId = R.string.dialog_new_contact_account
         fakeUiStateFlow.value = State(titleId = titleId)
 
         onNodeWithText(resources.getString(titleId)).assertIsDisplayed()

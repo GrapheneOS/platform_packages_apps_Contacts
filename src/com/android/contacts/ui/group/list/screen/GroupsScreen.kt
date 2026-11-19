@@ -246,10 +246,12 @@ private fun GroupCell(
                     .weight(1f)
                     .padding(horizontal = 16.dp),
             )
-            Text(
-                text = group.summaryCount.toString(),
-                style = MaterialTheme.typography.labelMedium,
-            )
+            group.membersCount?.let { membersCount ->
+                Text(
+                    text = membersCount.toString(),
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
         }
     }
 }

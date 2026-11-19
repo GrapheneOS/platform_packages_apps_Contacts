@@ -4,13 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PersonAddAlt
@@ -30,30 +27,21 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.android.contacts.R
 import com.android.contacts.domain.contacts.model.ContactItemKey
-import com.android.contacts.ui.common.components.ContactCell
-import com.android.contacts.ui.common.components.ContactListSectionHeader
+import com.android.contacts.ui.common.components.ContactSectionedListColumn
+import com.android.contacts.ui.common.model.ContactSectionedList
 import com.android.contacts.ui.common.util.messageFormatResource
 import com.android.contacts.ui.core.ContactsPreviewColumn
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_CREATE_BUTTON_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_LIST_HEADER_TEST_TAG
 import com.android.contacts.ui.selection.screen.model.CONTACT_SELECTION_LIST_TEST_TAG
-import com.android.contacts.ui.selection.screen.model.ContactListSection
-import com.android.contacts.ui.selection.screen.model.ContactListSection as Section
-import com.android.contacts.ui.selection.screen.model.ContactUiModel
 import com.android.contacts.ui.selection.screen.model.contactSelectionContactTestTag
 import com.android.contacts.ui.selection.screen.model.contactSelectionSectionTestTag
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
-
-private val ITEMS_HORIZONTAL_PADDING = 16.dp
-private val ITEMS_TOP_PADDING = 4.dp
-private val ITEMS_BOTTOM_PADDING = 32.dp
 
 @Composable
 internal fun ContactSelectionList(
     header: String?,
-    contactSections: ImmutableMap<ContactListSection, ImmutableList<ContactUiModel>>,
+    contactSections: ContactSectionedList,
     canCreate: Boolean,
     allowMultiple: Boolean,
     showAvatars: Boolean,
@@ -62,56 +50,33 @@ internal fun ContactSelectionList(
     contentPadding: PaddingValues,
     lazyListState: LazyListState = rememberLazyListState(),
 ) {
-    LazyColumn(
-        state = lazyListState,
-        contentPadding = PaddingValues(
-            start = ITEMS_HORIZONTAL_PADDING,
-            end = ITEMS_HORIZONTAL_PADDING,
-            top = ITEMS_TOP_PADDING,
-            bottom = ITEMS_BOTTOM_PADDING + contentPadding.calculateBottomPadding(),
-        ),
-        verticalArrangement = Arrangement.spacedBy(1.dp),
-        modifier = Modifier
-            .testTag(CONTACT_SELECTION_LIST_TEST_TAG)
-            .fillMaxSize(),
-    ) {
-        header?.let {
-            item("header") {
-                HeaderText(it)
-            }
-        }
-        if (canCreate) {
-            item("create") {
-                ContactCreateButton(onClick = onCreateClick)
-            }
-        }
-        contactSections.forEach { (section, contacts) ->
-            if (section !is Section.Undefined) {
-                stickyHeader(sectionKey(section)) {
-                    ContactListSectionHeader(
-                        section = section,
-                        modifier = Modifier.testTag(contactSelectionSectionTestTag(section)),
-                    )
+    ContactSectionedListColumn(
+        contactSections = contactSections,
+        isSelectable = allowMultiple,
+        showAvatars = showAvatars,
+        onContactClick = onContactClick,
+        contentPadding = contentPadding,
+        lazyListState = lazyListState,
+        sectionModifier = { section ->
+            Modifier.testTag(contactSelectionSectionTestTag(section))
+        },
+        contactModifier = { section, key ->
+            Modifier.testTag(contactSelectionContactTestTag(section, key))
+        },
+        modifier = Modifier.testTag(CONTACT_SELECTION_LIST_TEST_TAG),
+        leadingContent = {
+            header?.let {
+                item("header") {
+                    HeaderText(it)
                 }
             }
-            itemsIndexed(
-                items = contacts,
-                key = { _, contact -> sectionKey(section) + "_" + contact.key },
-            ) { index, contact ->
-                ContactCell(
-                    contact = contact,
-                    isSelectable = allowMultiple,
-                    showAvatar = showAvatars,
-                    onClick = { onContactClick(contact.key) },
-                    isFirst = index == 0,
-                    isLast = index == contacts.lastIndex,
-                    modifier = Modifier.testTag(
-                        contactSelectionContactTestTag(section, contact.key),
-                    ),
-                )
+            if (canCreate) {
+                item("create") {
+                    ContactCreateButton(onClick = onCreateClick)
+                }
             }
-        }
-    }
+        },
+    )
 }
 
 @Composable
@@ -147,16 +112,6 @@ private fun ContactCreateButton(onClick: () -> Unit) {
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.header_entry_contact_list_adapter_header_title))
         }
-    }
-}
-
-private fun sectionKey(section: Section): String {
-    return when (section) {
-        is Section.Alphabetical -> section.letter
-        Section.Favorites -> "favorites"
-        Section.Undefined -> "undefined"
-        Section.Suggestions -> "suggestions"
-        is Section.Directory -> "directory_${section.directoryId}"
     }
 }
 

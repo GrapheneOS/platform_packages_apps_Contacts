@@ -14,7 +14,10 @@ import com.android.contacts.data.contactdetails.model.ContactPhoto
 import com.android.contacts.data.contactdetails.repository.ContactActionsRepository
 import com.android.contacts.data.contactdetails.repository.ContactDetailsRepository
 import com.android.contacts.data.contactdetails.repository.ContactShortcutRepository
+import com.android.contacts.data.groups.repository.GroupsRepository
 import com.android.contacts.domain.contactdetails.model.ContactEntryAction
+import com.android.contacts.domain.groups.GroupEvents
+import com.android.contacts.domain.groups.model.GroupDeletion
 import com.android.contacts.ui.contactdetails.screen.delegate.ContactDetailsContentDelegate
 import com.android.contacts.ui.contactdetails.screen.delegate.ContactFlagsDelegate
 import com.android.contacts.ui.contactdetails.screen.delegate.ContactLinkDelegate
@@ -28,6 +31,7 @@ import com.android.contacts.ui.interactions.callsubject.screen.model.CallSubject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,8 +39,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
@@ -57,6 +63,7 @@ internal interface ContactDetailsScreenModel {
     fun onAction(action: Action)
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 internal class ContactDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -66,6 +73,8 @@ internal class ContactDetailsViewModel @Inject constructor(
     private val contactDetailsRepository: ContactDetailsRepository,
     private val contactActionsRepository: ContactActionsRepository,
     private val contactShortcutRepository: ContactShortcutRepository,
+    groupEvents: GroupEvents,
+    private val groupsRepository: GroupsRepository,
 ) : ViewModel(),
     ContactDetailsScreenModel {
 
@@ -76,6 +85,8 @@ internal class ContactDetailsViewModel @Inject constructor(
 
     private val _navigationEvents = Channel<NavEvent>(Channel.BUFFERED)
     override val navigationEvents: Flow<NavEvent> = _navigationEvents.receiveAsFlow()
+
+    private val isScreenStarted = MutableStateFlow(false)
 
     private val callingSimPickerVisible = MutableStateFlow(false)
 
@@ -125,6 +136,11 @@ internal class ContactDetailsViewModel @Inject constructor(
             .filterNotNull()
             .onEach { details -> reportShortcutUsed(details) }
             .launchIn(viewModelScope)
+
+        isScreenStarted
+            .flatMapLatest { started -> if (started) groupEvents.deleted else emptyFlow() }
+            .onEach { deletion -> sendEffect(Effect.ShowGroupDeleted(deletion)) }
+            .launchIn(viewModelScope)
     }
 
     override fun bind(
@@ -144,6 +160,9 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.Menu -> onMenuAction(action)
             is Action.Entry -> onEntryAction(action)
             is Action.PickerResult -> onPickerResult(action)
+            is Action.UndoGroupDeletionClick -> undoGroupDeletion(action.deletion)
+            is Action.ScreenStarted -> isScreenStarted.value = true
+            is Action.ScreenStopped -> isScreenStarted.value = false
         }
     }
 
@@ -182,6 +201,12 @@ internal class ContactDetailsViewModel @Inject constructor(
             is Action.CallingSimPicked -> setCallingSims(action.selections)
             is Action.RingtonePicked -> setRingtone(action.ringtone)
             is Action.JoinTargetPicked -> joinContact(action.contactId)
+        }
+    }
+
+    private fun undoGroupDeletion(deletion: GroupDeletion) {
+        viewModelScope.launch {
+            groupsRepository.restoreGroup(deletion)
         }
     }
 
