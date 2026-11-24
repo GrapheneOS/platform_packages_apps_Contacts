@@ -251,9 +251,8 @@ public class ContactEditorActivity extends AppCompatContactsActivity
                 @Override
                 public void onSaveFinished(Intent resultIntent) {
                     if (mFinishActivityOnSaveCompleted) {
-                        if (resultIntent != null) {
-                            // The result may be forwarded to an external caller (like a picker),
-                            // which needs permission to read the returned contact URI
+                        if (resultIntent != null
+                                && Intent.ACTION_INSERT.equals(getIntent().getAction())) {
                             resultIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         }
                         setResult(resultIntent == null ? RESULT_CANCELED : RESULT_OK, resultIntent);
