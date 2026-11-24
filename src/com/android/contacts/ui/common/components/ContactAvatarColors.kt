@@ -30,17 +30,11 @@ internal data class ContactAvatarFallbackColors(
 @Composable
 internal fun resolvedFallbackColors(
     colorSeed: String?,
-    isSelected: Boolean,
 ): ContactAvatarFallbackColors {
     val colorScheme = MaterialTheme.colorScheme
     val isDarkTheme = colorScheme.background.luminance() < DARK_THEME_LUMINANCE_THRESHOLD
 
     return when {
-        isSelected -> ContactAvatarFallbackColors(
-            background = colorScheme.primary,
-            content = colorScheme.onPrimary,
-        )
-
         colorSeed.isNullOrBlank() -> ContactAvatarFallbackColors(
             background = colorScheme.primaryContainer,
             content = colorScheme.onPrimaryContainer,
