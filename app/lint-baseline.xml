@@ -63,7 +63,7 @@
         errorLine2="                ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/ContactEditorActivity.java"
-            line="428"
+            line="433"
             column="17"/>
     </issue>
 
@@ -107,7 +107,7 @@
         errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*manifest*0}"
-            line="434"
+            line="436"
             column="33"/>
     </issue>
 
@@ -118,7 +118,7 @@
         errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/styles.xml"
-            line="190"
+            line="187"
             column="41"/>
     </issue>
 
@@ -129,7 +129,7 @@
         errorLine2="                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/styles.xml"
-            line="193"
+            line="190"
             column="39"/>
     </issue>
 
@@ -140,7 +140,7 @@
         errorLine2="                ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/ContactEditorActivity.java"
-            line="428"
+            line="433"
             column="17"/>
     </issue>
 
@@ -151,7 +151,7 @@
         errorLine2="                           ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="813"
+            line="802"
             column="28"/>
     </issue>
 
@@ -162,7 +162,7 @@
         errorLine2="                ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="834"
+            line="823"
             column="17"/>
     </issue>
 
@@ -217,7 +217,7 @@
         errorLine2="                 ~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/util/SharedPreferenceUtil.java"
-            line="237"
+            line="234"
             column="18"/>
     </issue>
 
@@ -228,7 +228,7 @@
         errorLine2="                 ~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/util/SharedPreferenceUtil.java"
-            line="245"
+            line="242"
             column="18"/>
     </issue>
 
@@ -239,7 +239,7 @@
         errorLine2="                                                     ~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/util/SharedPreferenceUtil.java"
-            line="260"
+            line="246"
             column="54"/>
     </issue>
 
@@ -316,7 +316,7 @@
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="365"
+            line="358"
             column="16"/>
     </issue>
 
@@ -514,7 +514,7 @@
         errorLine2="            ^">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*manifest*0}"
-            line="539"
+            line="542"
             column="13"/>
     </issue>
 
@@ -635,7 +635,7 @@
         errorLine2="                                                                            ~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/drawer/DrawerFragment.java"
-            line="92"
+            line="76"
             column="77"/>
     </issue>
 
@@ -670,6 +670,39 @@
             file="${:app*debug*MAIN*sourceProvider*0*manifest*0}"
             line="29"
             column="22"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of Gradle than 9.8.1 is available: 9.9.1"
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-9.8.1-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/wrapper/gradle-wrapper.properties"
+            line="4"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 9.4.1 is available: 9.5.2"
+        errorLine1="agp = &quot;9.4.1&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.library than 9.4.1 is available: 9.5.2"
+        errorLine1="agp = &quot;9.4.1&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
     </issue>
 
     <issue
@@ -718,7 +751,29 @@
 
     <issue
         id="GradleDependency"
-        message="A newer version of androidx.compose:compose-bom than 2026.06.01 is available: 2026.09.00"
+        message="A newer version of com.google.devtools.ksp than 2.3.12 is available: 2.3.13"
+        errorLine1="ksp = &quot;2.3.12&quot;"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="6"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.devtools.ksp:symbol-processing-gradle-plugin than 2.3.12 is available: 2.3.13"
+        errorLine1="ksp = &quot;2.3.12&quot;"
+        errorLine2="      ~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="6"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2026.06.01 is available: 2026.11.01"
         errorLine1="compose-bom = &quot;2026.06.01&quot;"
         errorLine2="              ~~~~~~~~~~~~">
         <location
@@ -729,7 +784,7 @@
 
     <issue
         id="GradleDependency"
-        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.10.0 is available: 2.11.0"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.10.0 is available: 2.11.1"
         errorLine1="lifecycle = &quot;2.10.0&quot;"
         errorLine2="            ~~~~~~~~">
         <location
@@ -773,6 +828,17 @@
 
     <issue
         id="NewerVersionAvailable"
+        message="A newer version of com.google.guava:guava than 33.7.2-android is available: 33.8.0-android"
+        errorLine1="guava = &quot;33.7.2-android&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="16"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
         message="A newer version of io.coil-kt.coil3:coil-compose than 3.4.0 is available: 3.6.3"
         errorLine1="coil = &quot;3.4.0&quot;"
         errorLine2="       ~~~~~~~">
@@ -780,6 +846,50 @@
             file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
             line="21"
             column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk than 1.14.11 is available: 1.14.12"
+        errorLine1="mockk = &quot;1.14.11&quot;"
+        errorLine2="        ~~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk-agent than 1.14.11 is available: 1.14.12"
+        errorLine1="mockk = &quot;1.14.11&quot;"
+        errorLine2="        ~~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.mockk:mockk-android than 1.14.11 is available: 1.14.12"
+        errorLine1="mockk = &quot;1.14.11&quot;"
+        errorLine2="        ~~~~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.robolectric:robolectric than 4.17 is available: 4.18.1"
+        errorLine1="robolectric = &quot;4.17&quot;"
+        errorLine2="              ~~~~~~">
+        <location
+            file="$HOME/Android/graphene-contacts/gradle/libs.versions.toml"
+            line="25"
+            column="15"/>
     </issue>
 
     <issue
@@ -1299,7 +1409,7 @@
             column="17"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1130"
+            line="1124"
             column="5"
             message="This definition does not require arguments"/>
     </issue>
@@ -1315,7 +1425,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-af/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1331,7 +1441,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-am/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1347,7 +1457,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ar/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1363,7 +1473,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-as/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1379,7 +1489,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-az/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1395,7 +1505,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-b+sr+Latn/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1411,7 +1521,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-be/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1427,7 +1537,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bg/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1443,7 +1553,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bn/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1459,7 +1569,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bs/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1475,7 +1585,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ca/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1491,7 +1601,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-cs/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1507,7 +1617,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-da/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1523,7 +1633,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-de/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1539,7 +1649,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-el/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1555,7 +1665,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-en-rAU/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1571,7 +1681,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-en-rXC/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1587,7 +1697,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-es-rUS/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1603,7 +1713,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-es/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1619,7 +1729,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-et/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1635,7 +1745,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-eu/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1651,7 +1761,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1667,7 +1777,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fi/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1683,7 +1793,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr-rCA/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1699,7 +1809,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1715,7 +1825,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-gl/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1731,7 +1841,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-gu/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1747,7 +1857,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hi/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1763,7 +1873,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hr/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1779,7 +1889,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hu/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1795,7 +1905,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hy/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1811,7 +1921,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-in/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1827,7 +1937,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-is/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1843,7 +1953,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-it/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1859,7 +1969,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-iw/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1875,7 +1985,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ja/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1891,7 +2001,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ka/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1907,7 +2017,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-kk/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1923,7 +2033,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-km/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1939,7 +2049,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-kn/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1955,7 +2065,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ko/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1971,7 +2081,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ky/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -1987,7 +2097,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lo/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2003,7 +2113,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lt/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2019,7 +2129,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lv/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2035,7 +2145,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mk/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2051,7 +2161,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ml/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2067,7 +2177,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mn/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2083,7 +2193,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mr/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2099,7 +2209,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ms/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2115,7 +2225,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-my/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2131,7 +2241,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-nb/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2147,7 +2257,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ne/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2163,7 +2273,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-nl/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2179,7 +2289,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-or/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2195,7 +2305,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pa/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2211,7 +2321,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pl/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2227,7 +2337,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rPT/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2243,7 +2353,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2259,7 +2369,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ro/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2275,7 +2385,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ru/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2291,7 +2401,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-si/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2307,7 +2417,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sk/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2323,7 +2433,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sl/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2339,7 +2449,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sq/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2355,7 +2465,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sr/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2371,7 +2481,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sv/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2387,7 +2497,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sw/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2403,7 +2513,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ta/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2419,7 +2529,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-te/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2435,7 +2545,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-th/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2451,7 +2561,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-tl/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2467,7 +2577,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-tr/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2483,7 +2593,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-uk/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2499,7 +2609,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ur/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2515,7 +2625,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-uz/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2531,7 +2641,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-vi/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2547,7 +2657,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rCN/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2563,7 +2673,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rHK/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2579,7 +2689,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zu/strings.xml"
-            line="63"
+            line="61"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2595,7 +2705,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="160"
+            line="163"
             column="5"
             message="This definition requires 2 arguments"/>
     </issue>
@@ -2611,7 +2721,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-af/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2627,7 +2737,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-am/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2643,7 +2753,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ar/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2659,7 +2769,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-as/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2675,7 +2785,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-az/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2691,7 +2801,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-b+sr+Latn/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2707,7 +2817,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-be/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2723,7 +2833,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bg/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2739,7 +2849,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bn/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2755,7 +2865,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bs/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2771,7 +2881,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ca/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2787,7 +2897,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-cs/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2803,7 +2913,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-da/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2819,7 +2929,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-de/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2835,7 +2945,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-el/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2851,7 +2961,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-en-rAU/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2867,7 +2977,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-en-rXC/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2883,7 +2993,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-es-rUS/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2899,7 +3009,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-es/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2915,7 +3025,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-et/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2931,7 +3041,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-eu/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2947,7 +3057,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2963,7 +3073,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fi/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2979,7 +3089,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr-rCA/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -2995,7 +3105,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3011,7 +3121,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-gl/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3027,7 +3137,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-gu/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3043,7 +3153,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hi/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3059,7 +3169,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hr/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3075,7 +3185,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hu/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3091,7 +3201,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hy/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3107,7 +3217,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-in/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3123,7 +3233,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-is/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3139,7 +3249,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-it/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3155,7 +3265,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-iw/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3171,7 +3281,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ja/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3187,7 +3297,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ka/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3203,7 +3313,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-kk/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3219,7 +3329,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-km/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3235,7 +3345,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-kn/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3251,7 +3361,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ko/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3267,7 +3377,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ky/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3283,7 +3393,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lo/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3299,7 +3409,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lt/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3315,7 +3425,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lv/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3331,7 +3441,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mk/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3347,7 +3457,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ml/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3363,7 +3473,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mn/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3379,7 +3489,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mr/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3395,7 +3505,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ms/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3411,7 +3521,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-my/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3427,7 +3537,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-nb/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3443,7 +3553,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ne/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3459,7 +3569,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-nl/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3475,7 +3585,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-or/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3491,7 +3601,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pa/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3507,7 +3617,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pl/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3523,7 +3633,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rPT/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3539,7 +3649,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3555,7 +3665,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ro/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3571,7 +3681,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ru/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3587,7 +3697,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-si/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3603,7 +3713,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sk/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3619,7 +3729,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sl/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3635,7 +3745,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sq/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3651,7 +3761,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sr/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3667,7 +3777,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sv/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3683,7 +3793,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sw/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3699,7 +3809,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ta/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3715,7 +3825,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-te/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3731,7 +3841,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-th/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3747,7 +3857,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-tl/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3763,7 +3873,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-uk/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3779,7 +3889,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ur/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3795,7 +3905,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-uz/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3811,7 +3921,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-vi/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3827,7 +3937,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rCN/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3843,7 +3953,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rHK/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3859,7 +3969,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rTW/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3875,7 +3985,7 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zu/strings.xml"
-            line="64"
+            line="62"
             column="5"
             message="This definition requires 3 arguments"/>
     </issue>
@@ -3891,9 +4001,31 @@
             column="34"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="163"
+            line="166"
             column="5"
             message="This definition requires 3 arguments"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;contactPickerSelectedTitle&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;lo&quot; (Lao), &quot;pt&quot; (Portuguese), &quot;lt&quot; (Lithuanian), &quot;hr&quot; (Croatian), &quot;lv&quot; (Latvian), &quot;hu&quot; (Hungarian), &quot;hy&quot; (Armenian), &quot;uk&quot; (Ukrainian), &quot;ur&quot; (Urdu), &quot;mk&quot; (Macedonian), &quot;ml&quot; (Malayalam), &quot;mn&quot; (Mongolian), &quot;af&quot; (Afrikaans), &quot;in&quot; (Indonesian), &quot;mr&quot; (Marathi), &quot;uz&quot; (Uzbek), &quot;ms&quot; (Malay), &quot;el&quot; (Greek), &quot;en&quot; (English), &quot;is&quot; (Icelandic), &quot;it&quot; (Italian), &quot;am&quot; (Amharic), &quot;my&quot; (Burmese), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;et&quot; (Estonian), &quot;eu&quot; (Basque), &quot;ar&quot; (Arabic), &quot;as&quot; (Assamese), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;ja&quot; (Japanese), &quot;ne&quot; (Nepali), &quot;az&quot; (Azerbaijani), &quot;fa&quot; (Persian), &quot;zu&quot; (Zulu), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;be&quot; (Belarusian), &quot;fi&quot; (Finnish), &quot;ru&quot; (Russian), &quot;bg&quot; (Bulgarian), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;bs&quot; (Bosnian), &quot;ka&quot; (Georgian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;sl&quot; (Slovenian), &quot;ca&quot; (Catalan), &quot;sq&quot; (Albanian), &quot;sr&quot; (Serbian), &quot;kk&quot; (Kazakh), &quot;km&quot; (Khmer), &quot;kn&quot; (Kannada), &quot;or&quot; (Odia), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;sw&quot; (Swahili), &quot;gl&quot; (Galician), &quot;ta&quot; (Tamil), &quot;gu&quot; (Gujarati), &quot;ky&quot; (Kyrgyz), &quot;cs&quot; (Czech), &quot;pa&quot; (Punjabi), &quot;te&quot; (Telugu), &quot;th&quot; (Thai), &quot;tl&quot; (Tagalog), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;plurals name=&quot;contactPickerSelectedTitle&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
+            line="53"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;contactPickerDoneButton&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;lo&quot; (Lao), &quot;pt&quot; (Portuguese), &quot;lt&quot; (Lithuanian), &quot;hr&quot; (Croatian), &quot;lv&quot; (Latvian), &quot;hu&quot; (Hungarian), &quot;hy&quot; (Armenian), &quot;uk&quot; (Ukrainian), &quot;ur&quot; (Urdu), &quot;mk&quot; (Macedonian), &quot;ml&quot; (Malayalam), &quot;mn&quot; (Mongolian), &quot;af&quot; (Afrikaans), &quot;in&quot; (Indonesian), &quot;mr&quot; (Marathi), &quot;uz&quot; (Uzbek), &quot;ms&quot; (Malay), &quot;el&quot; (Greek), &quot;en&quot; (English), &quot;is&quot; (Icelandic), &quot;it&quot; (Italian), &quot;am&quot; (Amharic), &quot;my&quot; (Burmese), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;et&quot; (Estonian), &quot;eu&quot; (Basque), &quot;ar&quot; (Arabic), &quot;as&quot; (Assamese), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;ja&quot; (Japanese), &quot;ne&quot; (Nepali), &quot;az&quot; (Azerbaijani), &quot;fa&quot; (Persian), &quot;zu&quot; (Zulu), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;be&quot; (Belarusian), &quot;fi&quot; (Finnish), &quot;ru&quot; (Russian), &quot;bg&quot; (Bulgarian), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;bs&quot; (Bosnian), &quot;ka&quot; (Georgian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;sl&quot; (Slovenian), &quot;ca&quot; (Catalan), &quot;sq&quot; (Albanian), &quot;sr&quot; (Serbian), &quot;kk&quot; (Kazakh), &quot;km&quot; (Khmer), &quot;kn&quot; (Kannada), &quot;or&quot; (Odia), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;sw&quot; (Swahili), &quot;gl&quot; (Galician), &quot;ta&quot; (Tamil), &quot;gu&quot; (Gujarati), &quot;ky&quot; (Kyrgyz), &quot;cs&quot; (Czech), &quot;pa&quot; (Punjabi), &quot;te&quot; (Telugu), &quot;th&quot; (Thai), &quot;tl&quot; (Tagalog), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;contactPickerDoneButton&quot;>Done&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
+            line="59"
+            column="13"/>
     </issue>
 
     <issue
@@ -4299,7 +4431,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1256"
+            line="1250"
             column="13"/>
     </issue>
 
@@ -4310,7 +4442,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1259"
+            line="1253"
             column="13"/>
     </issue>
 
@@ -4321,7 +4453,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1262"
+            line="1256"
             column="13"/>
     </issue>
 
@@ -4332,7 +4464,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1265"
+            line="1259"
             column="13"/>
     </issue>
 
@@ -4343,7 +4475,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1268"
+            line="1262"
             column="13"/>
     </issue>
 
@@ -4354,7 +4486,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1271"
+            line="1265"
             column="13"/>
     </issue>
 
@@ -4365,7 +4497,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1310"
+            line="1304"
             column="13"/>
     </issue>
 
@@ -4376,7 +4508,18 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1321"
+            line="1315"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;call_subject_history&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;lo&quot; (Lao), &quot;pt&quot; (Portuguese), &quot;lt&quot; (Lithuanian), &quot;hr&quot; (Croatian), &quot;lv&quot; (Latvian), &quot;hu&quot; (Hungarian), &quot;hy&quot; (Armenian), &quot;uk&quot; (Ukrainian), &quot;ur&quot; (Urdu), &quot;mk&quot; (Macedonian), &quot;ml&quot; (Malayalam), &quot;mn&quot; (Mongolian), &quot;af&quot; (Afrikaans), &quot;in&quot; (Indonesian), &quot;mr&quot; (Marathi), &quot;uz&quot; (Uzbek), &quot;ms&quot; (Malay), &quot;el&quot; (Greek), &quot;en&quot; (English), &quot;is&quot; (Icelandic), &quot;it&quot; (Italian), &quot;am&quot; (Amharic), &quot;my&quot; (Burmese), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;et&quot; (Estonian), &quot;eu&quot; (Basque), &quot;ar&quot; (Arabic), &quot;as&quot; (Assamese), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;ja&quot; (Japanese), &quot;ne&quot; (Nepali), &quot;az&quot; (Azerbaijani), &quot;fa&quot; (Persian), &quot;zu&quot; (Zulu), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;be&quot; (Belarusian), &quot;fi&quot; (Finnish), &quot;ru&quot; (Russian), &quot;bg&quot; (Bulgarian), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;bs&quot; (Bosnian), &quot;ka&quot; (Georgian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;sl&quot; (Slovenian), &quot;ca&quot; (Catalan), &quot;sq&quot; (Albanian), &quot;sr&quot; (Serbian), &quot;kk&quot; (Kazakh), &quot;km&quot; (Khmer), &quot;kn&quot; (Kannada), &quot;or&quot; (Odia), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;sw&quot; (Swahili), &quot;gl&quot; (Galician), &quot;ta&quot; (Tamil), &quot;gu&quot; (Gujarati), &quot;ky&quot; (Kyrgyz), &quot;cs&quot; (Czech), &quot;pa&quot; (Punjabi), &quot;te&quot; (Telugu), &quot;th&quot; (Thai), &quot;tl&quot; (Tagalog), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;call_subject_history&quot;>Recent call notes used&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
+            line="1329"
             column="13"/>
     </issue>
 
@@ -4387,7 +4530,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1383"
+            line="1380"
             column="13"/>
     </issue>
 
@@ -4398,7 +4541,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1406"
+            line="1403"
             column="13"/>
     </issue>
 
@@ -4409,7 +4552,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1409"
+            line="1406"
             column="13"/>
     </issue>
 
@@ -4420,7 +4563,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1412"
+            line="1409"
             column="13"/>
     </issue>
 
@@ -4431,7 +4574,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1415"
+            line="1412"
             column="13"/>
     </issue>
 
@@ -4442,19 +4585,8 @@
         errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1418"
+            line="1415"
             column="14"/>
-    </issue>
-
-    <issue
-        id="MissingTranslation"
-        message="&quot;multi_picker_select_action&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;lo&quot; (Lao), &quot;pt&quot; (Portuguese), &quot;lt&quot; (Lithuanian), &quot;hr&quot; (Croatian), &quot;lv&quot; (Latvian), &quot;hu&quot; (Hungarian), &quot;hy&quot; (Armenian), &quot;uk&quot; (Ukrainian), &quot;ur&quot; (Urdu), &quot;mk&quot; (Macedonian), &quot;ml&quot; (Malayalam), &quot;mn&quot; (Mongolian), &quot;af&quot; (Afrikaans), &quot;in&quot; (Indonesian), &quot;mr&quot; (Marathi), &quot;uz&quot; (Uzbek), &quot;ms&quot; (Malay), &quot;el&quot; (Greek), &quot;en&quot; (English), &quot;is&quot; (Icelandic), &quot;it&quot; (Italian), &quot;am&quot; (Amharic), &quot;my&quot; (Burmese), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;et&quot; (Estonian), &quot;eu&quot; (Basque), &quot;ar&quot; (Arabic), &quot;as&quot; (Assamese), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;ja&quot; (Japanese), &quot;ne&quot; (Nepali), &quot;az&quot; (Azerbaijani), &quot;fa&quot; (Persian), &quot;zu&quot; (Zulu), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;be&quot; (Belarusian), &quot;fi&quot; (Finnish), &quot;ru&quot; (Russian), &quot;bg&quot; (Bulgarian), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;bs&quot; (Bosnian), &quot;ka&quot; (Georgian), &quot;si&quot; (Sinhala), &quot;sk&quot; (Slovak), &quot;sl&quot; (Slovenian), &quot;ca&quot; (Catalan), &quot;sq&quot; (Albanian), &quot;sr&quot; (Serbian), &quot;kk&quot; (Kazakh), &quot;km&quot; (Khmer), &quot;kn&quot; (Kannada), &quot;or&quot; (Odia), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;sw&quot; (Swahili), &quot;gl&quot; (Galician), &quot;ta&quot; (Tamil), &quot;gu&quot; (Gujarati), &quot;ky&quot; (Kyrgyz), &quot;cs&quot; (Czech), &quot;pa&quot; (Punjabi), &quot;te&quot; (Telugu), &quot;th&quot; (Thai), &quot;tl&quot; (Tagalog), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;tr&quot; (Turkish)"
-        errorLine1="    &lt;string name=&quot;multi_picker_select_action&quot;>Select&lt;/string>"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values/strings.xml"
-            line="1475"
-            column="13"/>
     </issue>
 
     <issue
@@ -4716,7 +4848,7 @@
         errorLine2=" ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/drawer_primary_item.xml"
-            line="18"
+            line="17"
             column="2"/>
     </issue>
 
@@ -4958,7 +5090,7 @@
         errorLine2="                                                                             ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-am/strings.xml"
-            line="51"
+            line="50"
             column="78"/>
     </issue>
 
@@ -4969,7 +5101,7 @@
         errorLine2="                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr/strings.xml"
-            line="51"
+            line="50"
             column="78"/>
     </issue>
 
@@ -4980,7 +5112,7 @@
         errorLine2="                                                                             ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rPT/strings.xml"
-            line="51"
+            line="50"
             column="78"/>
     </issue>
 
@@ -4991,7 +5123,7 @@
         errorLine2="                                                                               ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-am/strings.xml"
-            line="52"
+            line="51"
             column="80"/>
     </issue>
 
@@ -5002,7 +5134,7 @@
         errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr/strings.xml"
-            line="52"
+            line="51"
             column="80"/>
     </issue>
 
@@ -5013,7 +5145,7 @@
         errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rPT/strings.xml"
-            line="52"
+            line="51"
             column="80"/>
     </issue>
 
@@ -5024,7 +5156,7 @@
         errorLine2="                                                                                                                                                                                               ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-be/strings.xml"
-            line="64"
+            line="62"
             column="192"/>
     </issue>
 
@@ -5035,7 +5167,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bn/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5046,7 +5178,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5057,7 +5189,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-iw/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5068,7 +5200,7 @@
         errorLine2="                                                                                                                                                                                        ~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-km/strings.xml"
-            line="64"
+            line="62"
             column="185"/>
     </issue>
 
@@ -5079,7 +5211,7 @@
         errorLine2="                                                                                                                                                                                     ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lo/strings.xml"
-            line="64"
+            line="62"
             column="182"/>
     </issue>
 
@@ -5090,7 +5222,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mn/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5101,7 +5233,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mr/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5112,7 +5244,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rBR/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5123,7 +5255,7 @@
         errorLine2="                                                                                                                                                                                 ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt/strings.xml"
-            line="64"
+            line="62"
             column="178"/>
     </issue>
 
@@ -5134,7 +5266,7 @@
         errorLine2="                                                                                                                                                                                  ~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rTW/strings.xml"
-            line="64"
+            line="62"
             column="179"/>
     </issue>
 
@@ -5145,7 +5277,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ar/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5156,7 +5288,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-az/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5167,7 +5299,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-b+sr+Latn/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5178,7 +5310,7 @@
         errorLine2="                                                                        ~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-be/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5189,7 +5321,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bg/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5200,7 +5332,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-bn/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5211,7 +5343,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ca/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5222,7 +5354,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-cs/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5233,7 +5365,7 @@
         errorLine2="                                                                        ~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-da/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5244,7 +5376,7 @@
         errorLine2="                                                                        ~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-de/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5255,7 +5387,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-es-rUS/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5266,7 +5398,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-es/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5277,7 +5409,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-et/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5288,7 +5420,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5299,7 +5431,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fi/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5310,7 +5442,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-gl/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5321,7 +5453,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-gu/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5332,7 +5464,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hr/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5343,7 +5475,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hu/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5354,7 +5486,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hy/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5365,7 +5497,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-in/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5376,7 +5508,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-it/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5387,7 +5519,7 @@
         errorLine2="                                                                        ~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-iw/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5398,7 +5530,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ja/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5409,7 +5541,7 @@
         errorLine2="                                                                        ~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ka/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5420,7 +5552,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-km/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5431,7 +5563,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lo/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5442,7 +5574,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lv/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5453,7 +5585,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mk/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5464,7 +5596,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mn/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5475,7 +5607,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mr/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5486,7 +5618,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ms/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5497,7 +5629,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ne/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5508,7 +5640,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-nl/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5519,7 +5651,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pa/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5530,7 +5662,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rBR/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5541,7 +5673,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rPT/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5552,7 +5684,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5563,7 +5695,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ro/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5574,7 +5706,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-si/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5585,7 +5717,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sl/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5596,7 +5728,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sq/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5607,7 +5739,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sr/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5618,7 +5750,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ta/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5629,7 +5761,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-te/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5640,7 +5772,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-th/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5651,7 +5783,7 @@
         errorLine2="                                                                        ~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-uk/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5662,7 +5794,7 @@
         errorLine2="                                                                        ~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rCN/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5673,7 +5805,7 @@
         errorLine2="                                                                        ~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rHK/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5684,7 +5816,7 @@
         errorLine2="                                                                        ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zu/strings.xml"
-            line="134"
+            line="131"
             column="73"/>
     </issue>
 
@@ -5695,7 +5827,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-az/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5706,7 +5838,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-be/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5717,7 +5849,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fa/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5728,7 +5860,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-km/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5739,7 +5871,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ky/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5750,7 +5882,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lt/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5761,7 +5893,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mn/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5772,7 +5904,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ne/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5783,7 +5915,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rBR/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5794,7 +5926,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5805,7 +5937,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-si/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5816,7 +5948,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sl/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5827,7 +5959,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sq/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5838,7 +5970,7 @@
         errorLine2="                                                                      ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sv/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5849,7 +5981,7 @@
         errorLine2="                                                                      ~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rTW/strings.xml"
-            line="154"
+            line="151"
             column="71"/>
     </issue>
 
@@ -5860,7 +5992,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-af/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5871,7 +6003,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-b+sr+Latn/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5882,7 +6014,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-be/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5893,7 +6025,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-de/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5904,7 +6036,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ms/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5915,7 +6047,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sk/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5926,7 +6058,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sr/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5937,7 +6069,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sv/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5948,7 +6080,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-sw/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5959,7 +6091,7 @@
         errorLine2="                                                                   ~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rCN/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5970,7 +6102,7 @@
         errorLine2="                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zu/strings.xml"
-            line="362"
+            line="357"
             column="68"/>
     </issue>
 
@@ -5981,7 +6113,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ar/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -5992,7 +6124,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-az/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6003,7 +6135,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6014,7 +6146,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hi/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6025,7 +6157,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-hr/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6036,7 +6168,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-in/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6047,7 +6179,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-is/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6058,7 +6190,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-iw/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6069,7 +6201,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ja/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6080,7 +6212,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-kk/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6091,7 +6223,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-km/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6102,7 +6234,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-kn/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6113,7 +6245,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lo/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6124,7 +6256,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-lt/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6135,7 +6267,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-ml/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6146,7 +6278,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mn/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6157,7 +6289,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-mr/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6168,7 +6300,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pa/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6179,7 +6311,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt-rBR/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6190,7 +6322,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-pt/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6201,7 +6333,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-th/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6212,7 +6344,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-vi/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6223,7 +6355,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zh-rTW/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6234,7 +6366,7 @@
         errorLine2="                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-zu/strings.xml"
-            line="394"
+            line="389"
             column="66"/>
     </issue>
 
@@ -6245,7 +6377,7 @@
         errorLine2="                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/values-fr/strings.xml"
-            line="425"
+            line="420"
             column="80"/>
     </issue>
 
@@ -6385,7 +6517,7 @@
         errorLine2="        ^">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="1106"
+            line="1057"
             column="9"/>
     </issue>
 
@@ -6473,7 +6605,7 @@
         errorLine2="     ~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/drawer_primary_item.xml"
-            line="22"
+            line="21"
             column="6"/>
     </issue>
 
@@ -6779,28 +6911,6 @@
     </issue>
 
     <issue
-        id="RtlSymmetry"
-        message="When you define `paddingLeft` you should probably also define `paddingRight` for right-to-left symmetry"
-        errorLine1="        android:paddingLeft=&quot;?attr/list_item_header_text_indent&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="34"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="RtlSymmetry"
-        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
-        errorLine1="        android:paddingStart=&quot;?attr/list_item_header_text_indent&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="35"
-            column="9"/>
-    </issue>
-
-    <issue
         id="RtlHardcoded"
         message="Redundant attribute `paddingLeft`; already defining `paddingStart` with `targetSdkVersion` 36"
         errorLine1="        android:paddingLeft=&quot;@dimen/contact_browser_list_item_text_indent&quot;"
@@ -6853,28 +6963,6 @@
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/contact_list_content.xml"
             line="85"
             column="17"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 36"
-        errorLine1="        android:layout_marginLeft=&quot;?attr/contact_browser_list_padding_left&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/contact_picker_content.xml"
-            line="28"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 36"
-        errorLine1="        android:layout_marginRight=&quot;?attr/contact_browser_list_padding_right&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/contact_picker_content.xml"
-            line="29"
-            column="9"/>
     </issue>
 
     <issue
@@ -6952,61 +7040,6 @@
             file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/item_group_membership.xml"
             line="42"
             column="9"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 36"
-        errorLine1="        android:layout_marginLeft=&quot;@dimen/join_header_left_margin&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="28"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 36"
-        errorLine1="        android:layout_marginRight=&quot;@dimen/join_header_right_margin&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="29"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `paddingLeft`; already defining `paddingStart` with `targetSdkVersion` 36"
-        errorLine1="        android:paddingLeft=&quot;?attr/list_item_header_text_indent&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="34"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `layout_marginLeft`; already defining `layout_marginStart` with `targetSdkVersion` 36"
-        errorLine1="            android:layout_marginLeft=&quot;?attr/contact_browser_list_padding_left&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="49"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="RtlHardcoded"
-        message="Redundant attribute `layout_marginRight`; already defining `layout_marginEnd` with `targetSdkVersion` 36"
-        errorLine1="            android:layout_marginRight=&quot;?attr/contact_browser_list_padding_right&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*1}/layout/join_contact_picker_list_content.xml"
-            line="50"
-            column="13"/>
     </issue>
 
     <issue
