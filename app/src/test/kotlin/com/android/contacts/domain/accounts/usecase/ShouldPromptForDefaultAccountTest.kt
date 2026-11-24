@@ -1,7 +1,6 @@
 package com.android.contacts.domain.accounts.usecase
 
 import com.android.contacts.domain.accounts.mapper.AccountModelMapperImpl
-import com.android.contacts.model.account.AccountWithDataSet
 import com.android.contacts.preference.ContactsPreferences
 import com.android.contacts.tests.factory.AccountModelFactory
 import io.mockk.every
