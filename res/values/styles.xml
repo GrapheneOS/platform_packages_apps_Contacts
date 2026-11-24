@@ -364,11 +364,6 @@ background and text color. See also android:style/Widget.Holo.TextView.ListSepar
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="DrawerItemTextActiveStyle">
-        <item name="android:textColor">@color/primary_color</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="DrawerItemTextInactiveStyle">
         <item name="android:textColor">@color/text_color</item>
         <item name="android:textStyle">bold</item>

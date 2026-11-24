@@ -17,7 +17,6 @@
 package com.android.contacts.drawer;
 
 import android.app.Activity;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 
 import com.android.contacts.R;
-import com.android.contacts.activities.PeopleActivity.ContactsView;
 import com.android.contacts.domain.debug.usecase.IsDebugEnabled;
 import com.android.contactsbind.HelpUtils;
 
@@ -48,12 +46,9 @@ public class DrawerAdapter extends BaseAdapter {
     // This count must be updated if we add more view types.
     private static final int VIEW_TYPE_COUNT = 5;
 
-    private static final int TYPEFACE_STYLE_ACTIVATE = R.style.DrawerItemTextActiveStyle;
     private static final int TYPEFACE_STYLE_INACTIVE = R.style.DrawerItemTextInactiveStyle;
 
-    private final Activity mActivity;
     private final LayoutInflater mInflater;
-    private ContactsView mSelectedView;
 
 
     // Adapter elements, ordered in this way mItemsList. The ordering is based on:
@@ -72,7 +67,6 @@ public class DrawerAdapter extends BaseAdapter {
     public DrawerAdapter(Activity activity) {
         super();
         mInflater = LayoutInflater.from(activity);
-        mActivity = activity;
         isDebugEnabled = EntryPointAccessors
                 .fromApplication(activity.getApplicationContext(), IsDebugEnabled.Provider.class)
                 .isDebugEnabled();
@@ -84,7 +78,7 @@ public class DrawerAdapter extends BaseAdapter {
         mNavSpacerItem = new NavSpacerItem(R.id.nav_drawer_spacer);
         // Primary items
         mPrimaryItems.add(new PrimaryItem(R.id.nav_all_contacts, R.string.contactsList,
-                R.drawable.quantum_ic_account_circle_vd_theme_24, ContactsView.ALL_CONTACTS));
+                R.drawable.quantum_ic_account_circle_vd_theme_24));
         mMiscItems.add(new DividerItem());
         mMiscItems.add(
                 new MiscItem(R.id.nav_groups, R.string.menu_title_groups,
@@ -164,8 +158,7 @@ public class DrawerAdapter extends BaseAdapter {
         titleView.setText(item.text);
         final ImageView iconView = (ImageView) result.findViewById(R.id.icon);
         iconView.setImageResource(item.icon);
-        result.setActivated(item.contactsView == mSelectedView);
-        updateSelectedStatus(titleView, iconView, item.contactsView == mSelectedView);
+        titleView.setTextAppearance(TYPEFACE_STYLE_INACTIVE);
         result.setId(item.id);
         return result;
     }
@@ -190,24 +183,13 @@ public class DrawerAdapter extends BaseAdapter {
         final ImageView iconView = (ImageView) result.findViewById(R.id.icon);
         iconView.setImageResource(item.icon);
         result.setId(item.id);
-        updateSelectedStatus(textView, iconView, false);
+        textView.setTextAppearance(TYPEFACE_STYLE_INACTIVE);
         return result;
     }
 
     @Override
     public int getItemViewType(int position) {
         return getItem(position).viewType;
-    }
-
-    private void updateSelectedStatus(TextView textView, ImageView imageView, boolean activated) {
-        textView.setTextAppearance(mActivity, activated
-                ? TYPEFACE_STYLE_ACTIVATE : TYPEFACE_STYLE_INACTIVE);
-        if (activated) {
-            imageView.setColorFilter(mActivity.getResources().getColor(R.color.primary_color),
-                    PorterDuff.Mode.SRC_ATOP);
-        } else {
-            imageView.clearColorFilter();
-        }
     }
 
     public void setIsAccountSwitcherVisible(boolean isVisible) {
@@ -223,14 +205,6 @@ public class DrawerAdapter extends BaseAdapter {
     private void notifyChangeAndRebuildList() {
         rebuildItemsList();
         notifyDataSetChanged();
-    }
-
-    public void setSelectedContactsView(ContactsView contactsView) {
-        if (mSelectedView == contactsView) {
-            return;
-        }
-        mSelectedView = contactsView;
-        notifyChangeAndRebuildList();
     }
 
     public static class BaseDrawerItem {
@@ -249,11 +223,8 @@ public class DrawerAdapter extends BaseAdapter {
 
     // Navigation drawer item for Contacts view which contains a name, an icon and contacts view.
     public static class PrimaryItem extends BaseDrawerItem {
-        public final ContactsView contactsView;
-
-        public PrimaryItem(int id, int pageName, int iconId, ContactsView contactsView) {
+        public PrimaryItem(int id, int pageName, int iconId) {
             super(VIEW_TYPE_PRIMARY_ITEM, id, pageName, iconId);
-            this.contactsView = contactsView;
         }
     }
 

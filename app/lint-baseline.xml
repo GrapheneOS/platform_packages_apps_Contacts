@@ -151,7 +151,7 @@
         errorLine2="                           ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="703"
+            line="676"
             column="28"/>
     </issue>
 
@@ -162,7 +162,7 @@
         errorLine2="                ~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="724"
+            line="697"
             column="17"/>
     </issue>
 
@@ -316,7 +316,7 @@
         errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="324"
+            line="304"
             column="16"/>
     </issue>
 
@@ -635,7 +635,7 @@
         errorLine2="                                                                            ~~~~">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/drawer/DrawerFragment.java"
-            line="76"
+            line="73"
             column="77"/>
     </issue>
 
@@ -6484,7 +6484,7 @@
         errorLine2="        ^">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*1}/com/android/contacts/activities/PeopleActivity.java"
-            line="849"
+            line="809"
             column="9"/>
     </issue>
 
