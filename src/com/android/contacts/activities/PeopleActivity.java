@@ -69,7 +69,6 @@ import com.android.contacts.list.ContactsIntentResolver;
 import com.android.contacts.list.ContactsRequest;
 import com.android.contacts.list.ContactsUnavailableFragment;
 import com.android.contacts.list.DefaultContactBrowseListFragment;
-import com.android.contacts.list.MultiSelectContactsListFragment;
 import com.android.contacts.list.ProviderStatusWatcher;
 import com.android.contacts.list.ProviderStatusWatcher.ProviderStatusListener;
 import com.android.contacts.logging.Logger;
@@ -112,20 +111,9 @@ import kotlin.Unit;
 public class PeopleActivity extends AppCompatContactsActivity implements
         DrawerFragmentListener {
 
-    /**
-     * Possible views of Contacts app.
-     */
-    public enum ContactsView {
-        NONE,
-        ALL_CONTACTS,
-        ACCOUNT_VIEW,
-    }
-
     private static final String TAG = "PeopleActivity";
     private static final String TAG_ALL = "contacts-all";
     private static final String TAG_UNAVAILABLE = "contacts-unavailable";
-
-    private static final String KEY_CONTACTS_VIEW = "contactsView";
 
     private static final int REQUEST_ACCOUNT_FILTER = 1001;
 
@@ -148,8 +136,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
 
     private ProviderStatusWatcher mProviderStatusWatcher;
     private Integer mProviderStatus;
-
-    private ContactsView mCurrentView;
 
     private CoordinatorLayout mLayoutRoot;
 
@@ -236,7 +222,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         public void onContactListFilterChanged() {
             final ContactListFilter filter = mContactListFilterController.getFilter();
             handleFilterChangeForFragment(filter);
-            handleFilterChangeForActivity(filter);
+            handleFilterChangeForActivity();
         }
     };
 
@@ -275,16 +261,10 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         }
 
         private void stopSearchAndSelection() {
-            final MultiSelectContactsListFragment listFragment;
-            if (isAllContactsView() || isAccountView()) {
-                listFragment = getListFragment();
-            } else {
-                listFragment = null;
-            }
-            if (listFragment == null) {
+            if (mContactsListFragment == null) {
                 return;
             }
-            final ActionBarAdapter actionBarAdapter = listFragment.getActionBarAdapter();
+            final ActionBarAdapter actionBarAdapter = mContactsListFragment.getActionBarAdapter();
             if (actionBarAdapter == null) {
                 return;
             }
@@ -376,13 +356,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(this);
         drawerArrowDrawable.setColor(ContextCompat.getColor(this, R.color.actionbar_icon_color));
         mToggle.setDrawerArrowDrawable(drawerArrowDrawable);
-
-        // Set up navigation mode.
-        if (savedState != null) {
-            mCurrentView = ContactsView.values()[savedState.getInt(KEY_CONTACTS_VIEW)];
-        } else {
-            mCurrentView = ContactsView.ALL_CONTACTS;
-        }
 
         mContactListFilterController.addListener(mFilterListener);
         mProviderStatusWatcher.addListener(mProviderStatusListener);
@@ -785,12 +758,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
                 && mContactsListFragment.getActionBarAdapter().isSearchMode();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CONTACTS_VIEW, mCurrentView.ordinal());
-    }
-
     private void onGroupDeleted(final GroupDeletion deletion) {
         final AccessibilityManager am =
                 (AccessibilityManager) getSystemService(Context.ACCESSIBILITY_SERVICE);
@@ -815,13 +782,10 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     private void onFilterMenuItemClicked(ContactListFilter filter) {
-        mCurrentView = ContactsView.ACCOUNT_VIEW;
         AccountFilterUtil.handleAccountFilterResult(mContactListFilterController, filter);
     }
 
-    public void switchToAllContacts() {
-        mCurrentView = ContactsView.ALL_CONTACTS;
-        mDrawerFragment.setNavigationItemChecked(ContactsView.ALL_CONTACTS);
+    private void switchToAllContacts() {
         showFabWithAnimation(/* showFab */ true);
         mContactsListFragment.scrollToTop();
         resetFilter();
@@ -833,10 +797,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         AccountFilterUtil.handleAccountFilterResult(mContactListFilterController, filter);
     }
 
-    protected DefaultContactBrowseListFragment getListFragment() {
-        return mContactsListFragment;
-    }
-
     private void handleFilterChangeForFragment(ContactListFilter filter) {
         if (mContactsListFragment.canSetActionBar()) {
             mContactsListFragment.setFilterAndUpdateTitle(filter);
@@ -845,7 +805,7 @@ public class PeopleActivity extends AppCompatContactsActivity implements
         }
     }
 
-    private void handleFilterChangeForActivity(ContactListFilter filter) {
+    private void handleFilterChangeForActivity() {
         getWindow().getDecorView()
                 .sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         invalidateOptionsMenu();
@@ -892,12 +852,8 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     }
 
     @Override
-    public void onContactsViewSelected(ContactsView mode) {
-        if (mode == ContactsView.ALL_CONTACTS) {
-            switchToAllContacts();
-        } else {
-            throw new IllegalStateException("Unknown view " + mode);
-        }
+    public void onAllContactsSelected() {
+        switchToAllContacts();
     }
 
     @Override
@@ -948,14 +904,6 @@ public class PeopleActivity extends AppCompatContactsActivity implements
     @Override
     public void onShowDebugOptions() {
         debugOptionsMenu.get().show(this);
-    }
-
-    protected boolean isAllContactsView() {
-        return mCurrentView == ContactsView.ALL_CONTACTS;
-    }
-
-    protected boolean isAccountView() {
-        return mCurrentView == ContactsView.ACCOUNT_VIEW;
     }
 
     public void closeDrawer() {

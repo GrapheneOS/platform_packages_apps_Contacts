@@ -32,16 +32,13 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 
 import com.android.contacts.R;
-import com.android.contacts.activities.PeopleActivity.ContactsView;
 
 public class DrawerFragment extends Fragment {
 
-    private static final String KEY_CONTACTS_VIEW = "contactsView";
     private static final String KEY_IS_ACCOUNT_SWITCHER_VISIBLE = "accountSwitcherVisible";
 
     private ListView mDrawerListView;
     private DrawerAdapter mDrawerAdapter;
-    private ContactsView mCurrentContactsView;
     private boolean mIsAccountSwitcherVisible;
     private DrawerFragmentListener mListener;
     // Transparent scrim drawn at the top of the drawer fragment.
@@ -76,18 +73,9 @@ public class DrawerFragment extends Fragment {
         final View contentView = inflater.inflate(R.layout.drawer_fragment, null);
         mDrawerListView = (ListView) contentView.findViewById(R.id.list);
         mDrawerAdapter = new DrawerAdapter(getActivity());
-        mDrawerAdapter.setSelectedContactsView(mCurrentContactsView);
         mDrawerAdapter.setIsAccountSwitcherVisible(mIsAccountSwitcherVisible);
         mDrawerListView.setAdapter(mDrawerAdapter);
         mDrawerListView.setOnItemClickListener(mOnDrawerItemClickListener);
-
-        if (savedInstanceState != null) {
-            final ContactsView contactsView =
-                    ContactsView.values()[savedInstanceState.getInt(KEY_CONTACTS_VIEW)];
-            setNavigationItemChecked(contactsView);
-        } else {
-            setNavigationItemChecked(ContactsView.ALL_CONTACTS);
-        }
 
         final FrameLayout root = (FrameLayout) contentView.findViewById(R.id.drawer_fragment_root);
         root.setFitsSystemWindows(true);
@@ -103,7 +91,6 @@ public class DrawerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CONTACTS_VIEW, mCurrentContactsView.ordinal());
         outState.putBoolean(KEY_IS_ACCOUNT_SWITCHER_VISIBLE, mIsAccountSwitcherVisible);
     }
 
@@ -121,8 +108,7 @@ public class DrawerFragment extends Fragment {
             }
             final int viewId = v.getId();
             if (viewId == R.id.nav_all_contacts) {
-                mListener.onContactsViewSelected(ContactsView.ALL_CONTACTS);
-                setNavigationItemChecked(ContactsView.ALL_CONTACTS);
+                mListener.onAllContactsSelected();
             } else if (viewId == R.id.nav_accounts) {
                 mListener.onOpenAccountsFilter();
             } else if (viewId == R.id.nav_groups) {
@@ -139,13 +125,6 @@ public class DrawerFragment extends Fragment {
             mListener.onDrawerItemClicked();
         }
     };
-
-    public void setNavigationItemChecked(ContactsView contactsView) {
-        mCurrentContactsView = contactsView;
-        if (mDrawerAdapter != null) {
-            mDrawerAdapter.setSelectedContactsView(contactsView);
-        }
-    }
 
     public void setIsAccountSwitcherVisible(boolean isVisible) {
         mIsAccountSwitcherVisible = isVisible;
@@ -165,7 +144,7 @@ public class DrawerFragment extends Fragment {
     public interface DrawerFragmentListener {
         void onDrawerItemClicked();
 
-        void onContactsViewSelected(ContactsView mode);
+        void onAllContactsSelected();
 
         void onOpenAccountsFilter();
 
