@@ -2,7 +2,6 @@ package com.android.contacts.ui.editor.springboard
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,7 +16,6 @@ import com.android.contacts.ui.editor.springboard.screen.ContactEditorSpringBoar
 import com.android.contacts.ui.editor.springboard.screen.ContactEditorSpringBoardScreen
 import com.android.contacts.ui.editor.springboard.screen.ContactEditorSpringBoardViewModel
 import com.android.contacts.ui.editor.springboard.screen.model.ContactEditorSpringBoardAction as Action
-import com.android.contacts.ui.interactions.showorcreate.screen.ShowOrCreateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

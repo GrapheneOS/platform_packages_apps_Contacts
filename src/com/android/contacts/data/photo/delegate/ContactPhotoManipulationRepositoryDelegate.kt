@@ -11,7 +11,6 @@ import com.android.contacts.data.photo.model.SquareCrop
 import com.android.contacts.di.core.IoDispatcher
 import com.android.contacts.util.ContactPhotoUtils
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.IOException
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
