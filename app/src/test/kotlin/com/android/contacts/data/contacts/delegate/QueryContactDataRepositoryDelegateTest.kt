@@ -69,7 +69,6 @@ class QueryContactDataRepositoryDelegateTest {
             .first()
 
         assertEquals(
-
             filterUri(Phone.ENTERPRISE_CONTENT_FILTER_URI, "alice"),
             queries.single().uri,
         )
